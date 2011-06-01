@@ -22,7 +22,6 @@
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  */     
 
-
 class Database  
 {  
   private $pConnect=FALSE;//permernent connect permission  
@@ -54,7 +53,7 @@ class Database
    * 		 or connect database as defined user
    */
   public function Database($user='', $pwd=''){
-  	$database = require('Dbconfig.php');
+  	$database = require('dbconfig.php');
   	$this->db = $database['dbName'];
   	$this->mHost = $database['host'];
   	$this->mUser = $database['user'];

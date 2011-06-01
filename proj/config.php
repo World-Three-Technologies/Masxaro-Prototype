@@ -29,8 +29,9 @@ define('ROOT_PATH', dirname(__FILE__));
 ini_set('default_charset', 'utf-8');
 
 ini_set('include_path', 
-			ROOT_PATH.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'common'.DIRECTORY_SEPARATOR
-			.ROOT_PATH.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR
+			ROOT_PATH.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'common'.DIRECTORY_SEPARATOR.':'
+			.ROOT_PATH.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.':'
+			.ROOT_PATH.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'control'.DIRECTORY_SEPARATOR.':'
 			//ROOT_PATH.'/php/common/'
         );
 	
@@ -57,5 +58,7 @@ function __autoload($className) {
 session_start();
 
 define("PAGE_SIZE", "20");
+
+date_default_timezone_set("UTC");
 
 ?>
