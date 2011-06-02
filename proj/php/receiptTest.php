@@ -1,6 +1,6 @@
 <?php
 /*
- * Dbconfig.php -- DB configuration 
+ * receipt.php -- receipt logic testing 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,16 +21,39 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  Database configuration file
- *  configure database connection data
+ *  test receipt control API and simple logic
  */
 
+include_once '../config.php';
 
-return array(
-	'host' => '46.51.255.119', 
-    'user' => 'w3t',
-	'pwd' => 'w3t',
-	'dbName' => 'w3tdb'
-);
+//basic info
+$basicInfo = Array('receipt_id'=>"983094867189238-0929347", 'store_id'=>1, 'user_account'=>'test', 'tax'=>0.1, 'total_cost'=>0);
 
+//item list
+$items = Array();
+
+//item 1
+$i = Array('receipt_id'=>"983094867189238-0929347", 'item_id'=>1, 'item_name'=>'test', 'item_qty'=>3, 'item_price'=>10, 'item_discount'=>1);
+
+array_push($items, $i);
+
+//item 2
+$i = Array('receipt_id'=>"983094867189238-0929347", 'item_id'=>2, 'item_name'=>'test2', 'item_qty'=>1, 'item_price'=>20, 'item_discount'=>1);
+
+array_push($items, $i);
+
+
+
+$ctrl = new ReceiptCtrl();
+
+$result = $ctrl->realDelete("983094867189238-0929347");
+$result = $ctrl->insert($basicInfo, $items);
+
+
+if($result){
+	echo "success";
+}
+else{
+	echo "fail";
+}
 ?>

@@ -1,6 +1,6 @@
 <?php
 /*
- * Dbconfig.php -- DB configuration 
+ * userTest.php -- user API testing 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,16 +21,23 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  Database configuration file
- *  configure database connection data
+ *  user API test
  */
+include_once '../config.php';
 
+$param = Array('user_account'=>'testUser', 'first_name'=>'test', 'age_range'=>1, 'ethnicity'=>'Asia', 'pwd'=>'123');
 
-return array(
-	'host' => '46.51.255.119', 
-    'user' => 'w3t',
-	'pwd' => 'w3t',
-	'dbName' => 'w3tdb'
-);
+$ctrl = new UserCtrl();
+
+$result = $ctrl->delete('testUser');
+
+$result = $ctrl->insert($param);
+
+if($result){
+	echo "success";
+}
+else{
+	echo "fail";
+}
 
 ?>

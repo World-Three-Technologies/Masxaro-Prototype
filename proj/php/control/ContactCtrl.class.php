@@ -1,6 +1,6 @@
 <?php
 /*
- * Dbconfig.php -- DB configuration 
+ * ContactCtrl.php -- contact control class 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,16 +21,37 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  Database configuration file
- *  configure database connection data
+ *  contact control APIs
  */
-
-
-return array(
-	'host' => '46.51.255.119', 
-    'user' => 'w3t',
-	'pwd' => 'w3t',
-	'dbName' => 'w3tdb'
-);
-
+class ContactCtrl{
+	private static $db;
+	
+	function __construct(){
+		$this->db = new Database();
+	}
+	
+	public function insertContactType($type){
+		
+	}
+	
+	public function modifyContactType($old, $new){
+		
+	}
+	
+	public function deleteContactType($old, $new){
+		
+	}
+	
+	public function insertContact($info){
+		
+	}
+	
+	public function getContact($con){
+		
+	}
+	
+	public function deleteContact($con){
+		
+	}
+}
 ?>
