@@ -1,6 +1,6 @@
 <?php
 /*
- * userTest.php -- user API testing 
+ * user_contactTest.php -- user API testing 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,17 +21,34 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  user API test
+ *  user, contact API test
  */
 include_once '../config.php';
 
-$param = Array('user_account'=>'testUser', 'first_name'=>'test', 'age_range'=>1, 'ethnicity'=>'Asia', 'pwd'=>'123');
+$param = Array('user_account'=>'test', 'first_name'=>'yaxing', 'age_range'=>1, 'ethnicity'=>'Asia', 'pwd'=>'123');
 
-$ctrl = new UserCtrl();
+//$ctrl = new UserCtrl();
+//
+//$result = $ctrl->delete('testUser');
+//
+//$result = $ctrl->insert($param);
 
-$result = $ctrl->delete('testUser');
+$ctrl = new ContactCtrl();
 
-$result = $ctrl->insert($param);
+$ctrl->insertContactType("email");
+$ctrl->insertContactType("phone");
+
+$param = Array();
+
+$cont = Array('user_account'=>'test', 'contact_type'=>'email', 'value'=>'test@masxaro.com');
+
+array_push($param, $cont);
+
+$cont = Array('user_account'=>'test', 'contact_type'=>'email', 'value'=>'personal@gmail.com');
+
+array_push($param, $cont);
+
+$result = $ctrl->insertContact($param);
 
 if($result){
 	echo "success";

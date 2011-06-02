@@ -31,7 +31,17 @@ class ContactCtrl{
 	}
 	
 	public function insertContactType($type){
+		$sql = "
+			INSERT INTO `contact_type`
+			SET
+			`contact_type`='$type'
+		";
 		
+		if($this->db->insert($sql) <= 0){
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public function modifyContactType($old, $new){
@@ -42,8 +52,54 @@ class ContactCtrl{
 		
 	}
 	
+	/**
+	 * 
+	 * insert a new contact for an user or store
+	 * 
+	 * distinguish an user or store by set certain IDs in $info
+	 *
+	 * @param Array(Array(), ...) $info one line as one contact, in order for group handling
+	 * 
+	 * @return boolean
+	 */
 	public function insertContact($info){
+		$n = count($info);
 		
+		$inserted = Array(); //record inserted contact id within current process
+		
+		for($i = 0; $i < $n; $i ++){
+			$cur = Ctrl::infoArray2SQL($info[$i]);
+			
+			$sql = "
+				INSERT INTO `contact`
+				SET
+				$cur
+			";
+		
+			$insertedId = $this->db->insert($sql);
+			
+			if($insertedId < 0){
+				
+				for($i = 0; $i < count($inserted); $i ++){
+					
+					//rollback
+					$sql = "
+						DELETE FROM `contact`
+						WHERE
+						`contact_id`=$inserted[$i]
+					";
+					
+					$this->db->delete($sql);
+				}
+				echo $insertedId;
+				return false;
+			}
+			else{
+				array_push($inserted, $info[$i]['value']);
+			}
+		}
+		
+		return true;
 	}
 	
 	public function getContact($con){
