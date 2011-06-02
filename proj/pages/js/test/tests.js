@@ -15,19 +15,19 @@ test("HTML5 Boilerplate is sweet",function(){
 // these test things from plugins.js
 test("Environment is good",function(){
   expect(3);
-  ok( !!window.log, "log function present");
+  ok(window.log, "log function present");
   
   var history = log.history && log.history.length || 0;
   log("logging from the test suite.")
   equals( log.history.length - history, 1, "log history keeps track" )
   
-  ok( !!window.Modernizr, "Modernizr global is present")
+  ok(window.Modernizr, "Modernizr global is present")
 })
 
 module("app.js test");
 
-test("Receipt Model can be created",function(){
 
+test("Receipt Model can be created",function(){
   var receipt = new Receipt({
     time:"May 12",
     store:"Here",
@@ -36,4 +36,18 @@ test("Receipt Model can be created",function(){
   });
 
   equals(receipt.get("total_cost"),120)
+});
+
+test("Receipt View can be created",function(){
+  var receipt = new Receipt({
+    time:"May 12",
+    store:"Here",
+    items:"candy",
+    total_cost:120
+  });
+  
+  var receiptView = new ReceiptView({model:receipt});
+
+  equals(receiptView.model,receipt, "receipt model initialized");
+
 });
