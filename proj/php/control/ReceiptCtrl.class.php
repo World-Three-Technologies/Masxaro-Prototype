@@ -58,6 +58,7 @@ class ReceiptCtrl{
 	 */
 	public function insert($basicInfo = "", $items = ""){
 		$totalCost = 0;
+		$code = $basicInfo['receipt_id'];
 		
 		if($basicInfo != null && strlen($basicInfo) > 0){
 			
@@ -65,7 +66,7 @@ class ReceiptCtrl{
 				$basicInfo['receipt_time'] = date("Y-m-d H:i:s");
 			}
 			
-			if($basicInfo['receipt_id'] == null || strlen($basicInfo['receipt_id']) == 0){
+			if($code == null || strlen($code) == 0){
 				$code = $this->codeGen($basicInfo);
 				$basicInfo['receipt_id'] = $code;
 			}
@@ -93,23 +94,29 @@ class ReceiptCtrl{
 				SELECT `total_cost`
 				FROM `receipt`
 				WHERE
-				`receipt_id`='{$items[0]['receipt_id']}'
+				`receipt_id`='$code'
 			";
 			$this->db->select($sql);
+			
 			if($this->db->numRows() > 0){
 				$result = $this->db->fetchObject();
 				$totalCost = $result[0]->total_cost;
 			}
 			else{
-				$this->realDelete($items[0]['receipt_id']);
+				$this->realDelete($code);
 				return false;
 			}
 			
 			$n = count($items);
+			
 			for($i = 0; $i < $n; $i ++){
 				$curCost =  $items[$i]['item_price'] * $items[$i]['item_qty'] * $items[$i]['item_discount'];
 				$totalCost += $curCost;
-				$items[$i]['receipt_id'] = $code;
+				
+				if($code != null && strlen($code) == 0){
+					$items[$i]['receipt_id'] = $code;	
+				}
+				
 				$info = "";
 				$info = Ctrl::infoArray2SQL($items[$i]);
 				$sql = "
@@ -124,6 +131,7 @@ class ReceiptCtrl{
 			}
 			
 			$totalCost += $totalCost * $basicInfo['tax'];
+			
 			$sql = "
 				UPDATE `receipt`
 				SET
@@ -131,7 +139,9 @@ class ReceiptCtrl{
 				WHERE
 				`receipt_id`='$code'
 			";
-			if($this->db->update($sql) < 0){
+			
+			
+			if($this->db->update($sql) <= 0){
 				$this->realDelete($code);
 				return false;
 			}
