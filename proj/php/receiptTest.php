@@ -46,8 +46,10 @@ array_push($items, $i);
 
 $ctrl = new ReceiptCtrl();
 
-$result = $ctrl->realDelete("983094867189238-0929347");
-$result = $ctrl->insert($basicInfo, $items);
+//$result = $ctrl->realDelete("983094867189238-0929347");
+//$result = $ctrl->insert($basicInfo, $items);
+
+$result = $ctrl->recover("983094867189238-0929347");
 
 
 if($result){

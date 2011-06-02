@@ -192,21 +192,24 @@ class ReceiptCtrl{
 		$sql = "
 			UPDATE `receipt_item`
 			SET
-			'deleted' = true
+			`deleted` = true
 			WHERE
 			`receipt_id` = '$id'
 		";
-		if($this->db->delete($sql) <= 0){
+		
+		if($this->db->update($sql) <= 0){
 			return false;
 		}
+		
 		$sql = "
 			UPDATE `receipt`
 			SET
-			'deleted' = true
+			`deleted` = true
 			WHERE
 			`receipt_id` = '$id'
 		";
-		if($this->db->delete($sql) <= 0){
+		
+		if($this->db->update($sql) <= 0){
 			return false;
 		}
 		
@@ -225,22 +228,22 @@ class ReceiptCtrl{
 		$sql = "
 			UPDATE `receipt_item`
 			SET
-			'deleted' = false
+			`deleted` = false
 			WHERE
-			`receipt_id` = $id
+			`receipt_id` = '$id'
 		";
-		if($this->db->delete($sql) <= 0){
+		if($this->db->update($sql) <= 0){
 			return false;
 		}
 		
 		$sql = "
 			UPDATE `receipt`
 			SET
-			'deleted' = false
+			`deleted` = false
 			WHERE
-			`receipt_id` = $id
+			`receipt_id` = '$id'
 		";
-		if($this->db->delete($sql) <= 0){
+		if($this->db->update($sql) <= 0){
 			return false;
 		}
 		
