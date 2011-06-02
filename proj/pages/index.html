@@ -50,31 +50,32 @@
             <div id="user-flash">Hello User!</div>
           </div>
         </div>
-        <nav id="main-tabs">
-          <ul class="tabs clearfix">
-            <li>Recent [15]</li>
-            <li>Catagory V</li>
-            <li>Overview </li>
-            <li style="float:right;">Sort by: Date</li>
-          </ul>
-        </nav>
-        <session id="receipts">
-          <article>
-            <div class="receipt clearfix">
-              <div class="total-cost">$100</div>
-              <div class="receipt-row clearfix">
-                <div class="items">for Burger and Fries </div> 
-                <div class="store">at Macdonald</div>
-              </div>
-              <div class="receipt-row clearfix">
-                <div class="date"> Today</div>
-              </div>
-              <div class="toolbar">
-                show full receipt, add tags
-              </div>
-            </div>
-          </article>
-        </session>
+        <div id="receipts">
+          <div id="search-bar">
+            <form action="#" method="POST">
+              <input type="text" value="search" width="40px"/>
+            </form>
+          </div>
+          <nav id="main-tabs">
+            <ul class="tabs clearfix">
+              <li>Recent [15]</li>
+              <li>Catagory V</li>
+              <li>Overview </li>
+              <li style="float:right;">Sort by: Date</li>
+            </ul>
+          </nav>
+          <table id="receipts-table">
+            <thead>
+              <tr>
+                <th class="amount">Amount</th>
+                <th class="items">Items</th>
+                <th class="store">Store</th>
+                <th class="date">Date</th>
+              </tr>
+            </thead>
+          </table>
+          <button class="more">more</button>
+        </div>
       </div>
       <aside id="sidebar">
         asdasdasdad
@@ -100,6 +101,30 @@
     </div>
   </script>
 
+  <script type="text/tamplate" id="receipt-row-template">
+    <td>$<%= total_cost %></td>
+    <td><%= items %></td>
+    <td><%= store %></td>
+    <td><%= time %></td>
+  </script>
+
+  <script type="text/template" id="receipt-full-template">
+    <td colspan='4' width="100%">
+      <div class="receipt clearfix">
+        <div class="total-cost">$<%= total_cost %></div>
+        <div class="receipt-row clearfix">
+          <div class="items">for <%= items %></div> 
+          <div class="store">at <%= store%></div>
+        </div>
+        <div class="receipt-row clearfix">
+          <div class="date"><%= time %></div>
+        </div>
+        <div class="toolbar invisible">
+          show full receipt, add tags
+        </div>
+      </div>
+    </td>
+  </script>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
   <script>window.jQuery || document.write("<script src='js/vendor/jquery-1.6.1.min.js'>\x3C/script>")</script>

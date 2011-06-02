@@ -189,24 +189,25 @@ aside{
   background-color:#BFB;
 }
 
-session article{
-  border:1px solid #BFB;
-  border-radius: 5px;
+#search-bar{
+  margin:5px;
+  padding:5px;
+}
+
+.receipt{
   padding:3px;
   height: 36px;
-  overflow:hidden;
   width:100%;
 }
 
-session article .receipt .receipt-row{
-  width:400px;
+.receipt .receipt-row{
   float:left;
   margin:1px 5px;
 }
-session article .receipt .receipt-row div{
+.receipt .receipt-row div{
   float:left;
 }
-session article .receipt .total-cost{
+.receipt .total-cost{
   float:left;
   height:30px;
   font-size:26px;
@@ -214,15 +215,33 @@ session article .receipt .total-cost{
   background-color:#BFB;
 }
 
-session article .toolbar{
+.receipt .toolbar{
   float:right
   right:0px;
   bottom:0px;
 }
-session article .toolbar:hover{
-  visibility: visible;
+
+#receipts-table{
+  width:100%;
+  border-collapse: collapse;
 }
 
+#receipts-table td,#receipts-table th{
+  text-align: center;
+  padding: 7px;
+  border-top: 1px #EBE solid;
+  border-bottom: 1px #EBE solid;
+}
+
+#receipts-table th.amount{ width:15%;}
+#receipts-table th.items{ width:45%;}
+#receipts-table th.date{ width:20%;}
+#receipts-table th.store{ width:20%;}
+
+#receipts-table tr.row:hover{
+  cursor:pointer;
+  background-color: #EBE;
+}
 
 .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }
 .hidden { display: none; visibility: hidden; }
