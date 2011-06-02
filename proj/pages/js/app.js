@@ -9,7 +9,8 @@ $(function(){
     total_cost:15,
     items:" greek salad and miso soup",
     store:"pret A monger",
-    time:"1 day ago"
+    time:"1 day ago",
+    image:true
   },
   {
     total_cost:60,
@@ -35,7 +36,8 @@ $(function(){
     total_cost:60,
     items:" L.A Noire",
     store:"Game Stop",
-    time:"May 15"
+    time:"May 15",
+    image:true
   },{
     total_cost:60,
     items:" L.A Noire",
@@ -45,7 +47,8 @@ $(function(){
     total_cost:60,
     items:" L.A Noire",
     store:"Game Stop",
-    time:"May 15"
+    time:"May 15",
+    image:true
   },{
     total_cost:60,
     items:" L.A Noire",
@@ -55,7 +58,8 @@ $(function(){
     total_cost:60,
     items:" L.A Noire",
     store:"Game Stop",
-    time:"May 15"
+    time:"May 15",
+    image:true
   },{
     total_cost:60,
     items:" L.A Noire",
@@ -69,7 +73,7 @@ $(function(){
   }];
 
 
-  window.receipts = new Receipts();
+  var receipts = new Receipts();
   //alert(JSON.stringify(receipts));
 
   window.ReceiptView = Backbone.View.extend({
@@ -102,12 +106,21 @@ $(function(){
         window.lastOpen.render();
       }
       $(this.el).html(this.fullTemplate(this.model.toJSON()));
+      if(this.model.get("image") === true){
+        $(this.el).find("img.receipt-image").prop("src","img/fake_receipt.jpg");
+      }
       window.lastOpen = this;
     }
   });
 
-  var ReceiptsView = Backbone.View.extend({
+  window.ReceiptsView = Backbone.View.extend({
     el:$("#receipts"),
+
+    pageSize:10,
+
+    start:1,
+
+    end:10,
 
     initialize:function(){
       _.bindAll(this,"render","renderMore","renderReceipt");
@@ -120,11 +133,18 @@ $(function(){
       "click .more": "renderMore",
     },
 
+    updateStatus:function(){
+      this.$(".receipts-stat .stat").text(this.start + " to "+ this.end +" in "+receipts.length);
+    },
+
     render:function(){
-      _.each(receipts.first(10),this.renderReceipt);
+      this.updateStatus();
+      _.each(receipts.first(this.pageSize),this.renderReceipt);
     },
 
     renderMore:function(){
+      this.end = (this.end + this.pageSize >= receipts.length) ? receipts.length : this.end + this.pageSize;
+      this.updateStatus();
       _.each(receipts.rest(10),this.renderReceipt);
       this.$(".more").hide();
     },
@@ -135,6 +155,6 @@ $(function(){
     },
   });
 
-  window.receiptsView = new ReceiptsView();
+  var receiptsView = new ReceiptsView();
   receipts.refresh(mockReceipts);
 });
