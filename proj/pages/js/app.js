@@ -1,3 +1,9 @@
+var Receipt = Backbone.Model;
+
+var Receipts = Backbone.Collection.extend({
+  model: Receipt
+});
+
 $(function(){
   var mockReceipts = [{
     total_cost:15,
@@ -62,11 +68,6 @@ $(function(){
     time:"May 15"
   }];
 
-  var Receipt = Backbone.Model;
-
-  var Receipts = Backbone.Collection.extend({
-    model: Receipt
-  });
 
   window.receipts = new Receipts();
   //alert(JSON.stringify(receipts));

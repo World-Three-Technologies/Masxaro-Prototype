@@ -5,6 +5,7 @@
 // below are some general tests but feel free to delete them.
 
 module("example tests");
+
 test("HTML5 Boilerplate is sweet",function(){
   expect(1);
   equals("boilerplate".replace("boilerplate","sweet"),"sweet","Yes. HTML5 Boilerplate is, in fact, sweet");
@@ -22,3 +23,17 @@ test("Environment is good",function(){
   
   ok( !!window.Modernizr, "Modernizr global is present")
 })
+
+module("app.js test");
+
+test("Receipt Model can be created",function(){
+
+  var receipt = new Receipt({
+    time:"May 12",
+    store:"Here",
+    items:"candy",
+    total_cost:120
+  });
+
+  equals(receipt.get("total_cost"),120)
+});
