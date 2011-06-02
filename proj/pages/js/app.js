@@ -72,21 +72,20 @@ $(function(){
   window.receipts = new Receipts();
   //alert(JSON.stringify(receipts));
 
-  var ReceiptView = Backbone.View.extend({
+  window.ReceiptView = Backbone.View.extend({
 
     tagName:"tr",
 
     className:"row",
     
-    template:_.template($('#receipt-row-template').html()),
+    template:_.template($('#receipt-row-template').html() || "<div/>"),
 
-    fullTemplate:_.template($('#receipt-full-template').html()),
+    fullTemplate:_.template($('#receipt-full-template').html() || "<div/>"),
 
     initialize:function(){
       _.bindAll(this,'render','showReceipt');
 
       this.model.bind("change",this.render);
-      this.model.view = this;
     },
 
     events:{
