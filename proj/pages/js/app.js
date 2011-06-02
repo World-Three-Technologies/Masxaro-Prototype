@@ -87,18 +87,23 @@ $(function(){
     fullTemplate:_.template($('#receipt-full-template').html() || "<div/>"),
 
     initialize:function(){
-      _.bindAll(this,'render','showReceipt');
+      _.bindAll(this,'render','showReceipt','showReceiptZoom');
 
       this.model.bind("change",this.render);
     },
 
     events:{
-      "click" : "showReceipt"
+      "click" : "showReceiptZoom"
     },
 
     render:function(){
       $(this.el).html(this.template(this.model.toJSON()));     
+      this.bindFancybox({content:"<img src='img/fake_receipt.jpg'>"});
       return this;
+    },
+
+    bindFancybox:function(model){
+      $(this.el).fancybox(model);
     },
 
     showReceipt:function(){
@@ -110,6 +115,10 @@ $(function(){
         $(this.el).find("img.receipt-image").prop("src","img/fake_receipt.jpg");
       }
       window.lastOpen = this;
+    },
+
+    showReceiptZoom:function(){
+        
     }
   });
 
@@ -138,15 +147,20 @@ $(function(){
     },
 
     render:function(){
+      _.each(receipts.models.slice(0,this.end),this.renderReceipt);
       this.updateStatus();
-      _.each(receipts.first(this.pageSize),this.renderReceipt);
     },
 
     renderMore:function(){
-      this.end = (this.end + this.pageSize >= receipts.length) ? receipts.length : this.end + this.pageSize;
+      var pageLength = (this.end + this.pageSize <= receipts.length) ? this.end + this.pageSize : receipts.length;
+      _.each(receipts.models.slice(this.end,pageLength),this.renderReceipt);
+
+      this.end = pageLength;
       this.updateStatus();
-      _.each(receipts.rest(10),this.renderReceipt);
-      this.$(".more").hide();
+
+      if(this.end === receipts.length){
+        this.$(".more").hide();
+      }
     },
 
     renderReceipt:function(receipt){
