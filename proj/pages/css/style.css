@@ -130,12 +130,6 @@ header{
   right:0;
 }
 
-#header-search{
-  float:left;
-  margin:5px 10px;
-  padding:5px 5px;
-}
-
 #main{
   max-width:1000px;
   margin: 0px auto;
@@ -147,12 +141,13 @@ header{
   padding: 5px;
   text-align:left;
   float:left;
-  width:650px;
+  width:700px;
 }
 
 aside{
+  margin: 10px 0;
   float:right;
-  width:300px;
+  width:270px;
 }
 
 #user{
@@ -192,6 +187,17 @@ aside{
 #search-bar{
   margin:5px;
   padding:5px;
+}
+
+#search-bar button{
+  background-image:url(../img/search_button.png);
+  background-position:0 0;
+  background-color:#fff;
+  width:22px;
+  height:19px;
+  border:0;
+  padding:0;
+  margin:0;
 }
 
 .receipt{

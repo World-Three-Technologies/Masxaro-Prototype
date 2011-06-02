@@ -52,8 +52,9 @@
         </div>
         <div id="receipts">
           <div id="search-bar">
-            <form action="#" method="POST">
-              <input type="text" value="search" width="40px"/>
+            <form action="" method="GET">
+              <input type="text" placeholder="search" width="40px"/>
+              <button type="submit" title="search"></button>
             </form>
           </div>
           <nav id="main-tabs">
@@ -74,7 +75,10 @@
               </tr>
             </thead>
           </table>
-          <button class="more">more</button>
+          <div class="receipts-stat">
+            <span class="stat"></span>
+            <button class="more">more</button>
+          </div>
         </div>
       </div>
       <aside id="sidebar">
@@ -84,22 +88,6 @@
     <footer>
     </footer>
   </div> <!-- eo #container -->
-
-  <script type="text/tamplate" id="receipt-template">
-    <div class="receipt clearfix">
-      <div class="total-cost">$<%= total_cost %></div>
-      <div class="receipt-row clearfix">
-        <div class="items">for <%= items %></div> 
-        <div class="store">at <%= store%></div>
-      </div>
-      <div class="receipt-row clearfix">
-        <div class="date"><%= time %></div>
-      </div>
-      <div class="toolbar invisible">
-        show full receipt, add tags
-      </div>
-    </div>
-  </script>
 
   <script type="text/tamplate" id="receipt-row-template">
     <td>$<%= total_cost %></td>
@@ -111,6 +99,7 @@
   <script type="text/template" id="receipt-full-template">
     <td colspan='4' width="100%">
       <div class="receipt clearfix">
+        <img class="receipt-image"/>
         <div class="total-cost">$<%= total_cost %></div>
         <div class="receipt-row clearfix">
           <div class="items">for <%= items %></div> 
