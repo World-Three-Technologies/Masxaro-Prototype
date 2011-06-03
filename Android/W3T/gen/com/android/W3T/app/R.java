@@ -17,19 +17,20 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int NFC_connecting=0x7f06000c;
-        public static final int configuration_tab=0x7f060006;
-        public static final int keep_login_box=0x7f060009;
-        public static final int password=0x7f060008;
-        public static final int receipt_info_tab=0x7f060003;
-        public static final int receipt_list_spinner=0x7f060005;
-        public static final int receipt_sort_type_spinner=0x7f060004;
-        public static final int reset_button=0x7f06000a;
+        public static final int NFC_connecting=0x7f06000d;
+        public static final int app_tabs=0x7f060000;
+        public static final int configuration_tab=0x7f060007;
+        public static final int keep_login_box=0x7f06000a;
+        public static final int password=0x7f060009;
+        public static final int receipt_info_tab=0x7f060004;
+        public static final int receipt_list_spinner=0x7f060006;
+        public static final int receipt_sort_type_spinner=0x7f060005;
+        public static final int reset_button=0x7f06000c;
         public static final int submit_button=0x7f06000b;
-        public static final int user_info_account_name=0x7f060002;
-        public static final int user_info_name=0x7f060001;
-        public static final int user_info_tab=0x7f060000;
-        public static final int username=0x7f060007;
+        public static final int user_info_account_name=0x7f060003;
+        public static final int user_info_name=0x7f060002;
+        public static final int user_info_tab=0x7f060001;
+        public static final int username=0x7f060008;
     }
     public static final class layout {
         public static final int app_tabs=0x7f030000;

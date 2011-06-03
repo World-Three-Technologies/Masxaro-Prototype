@@ -47,8 +47,8 @@ public class MainLogin extends Activity {
         submit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent submit_intent = new Intent(MainLogin.this, AppTabs.class);
-				//submit_intent.setAction(VALIDATION_PASSED);
+				Intent submit_intent = new Intent();
+				submit_intent.setAction(VALIDATION_PASSED);
 				startActivity(submit_intent);
 			}
         });

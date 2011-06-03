@@ -25,6 +25,7 @@
 
 package com.android.W3T.app;
 
+import android.app.Activity;
 import android.app.TabActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -35,7 +36,7 @@ import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class AppTabs extends TabActivity {
+public class AppTabs extends Activity {
 	private TabHost app_tabs_host;
 	private Spinner sort_spinner;
 	private ArrayAdapter<CharSequence> sort_ba;
@@ -45,38 +46,37 @@ public class AppTabs extends TabActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.app_tabs);
-		
 		String user_tab = getResources().getString(R.string.user_info);
 		String receipt_tab = getResources().getString(R.string.receipt_info);
 		String conf_tab = getResources().getString(R.string.configuration);
 		
 		/* Set the TabHost */
 		// Get the TabHost where to place tabs from the TabActivity
-		app_tabs_host = this.getTabHost();
+		app_tabs_host = (TabHost) findViewById(R.id.app_tabs);
 		
-		LayoutInflater.from(this).inflate(R.layout.app_tabs, 
-				app_tabs_host.getTabContentView(), true);
+		app_tabs_host.setup();
 		
 		app_tabs_host.addTab(app_tabs_host.newTabSpec(user_tab)
 				.setIndicator(user_tab).setContent(R.id.user_info_tab));
 		app_tabs_host.addTab(app_tabs_host.newTabSpec(receipt_tab)
 				.setIndicator(receipt_tab).setContent(R.id.receipt_info_tab));
 		app_tabs_host.addTab(app_tabs_host.newTabSpec(conf_tab)
-				.setIndicator(receipt_tab).setContent(R.id.configuration_tab));
+				.setIndicator(conf_tab).setContent(R.id.configuration_tab));
+		app_tabs_host.setCurrentTab(1);
 		
 		/* Set sort spinner in receipt tab */
-		sort_spinner = (Spinner)this.findViewById(R.id.receipt_sort_type_spinner);
-		ArrayAdapter<CharSequence> sort_ba = ArrayAdapter.createFromResource(
-                this, R.array.sort_types, android.R.layout.simple_spinner_item);
-		sort_ba.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sort_spinner.setAdapter(sort_ba);
-
-		sort_spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			public void onItemSelected(AdapterView<?> parent, View view,
-			int position, long id) { }
-
-			public void onNothingSelected(AdapterView<?> parent) { }
-			});
+//		sort_spinner = (Spinner)this.findViewById(R.id.receipt_sort_type_spinner);
+//		ArrayAdapter<CharSequence> sort_ba = ArrayAdapter.createFromResource(
+//                this, R.array.sort_types, android.R.layout.simple_spinner_item);
+//		sort_ba.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        sort_spinner.setAdapter(sort_ba);
+//
+//		sort_spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+//
+//			public void onItemSelected(AdapterView<?> parent, View view,
+//			int position, long id) { }
+//
+//			public void onNothingSelected(AdapterView<?> parent) { }
+//			});
 	}
 }
