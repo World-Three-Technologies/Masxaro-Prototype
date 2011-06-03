@@ -130,6 +130,10 @@ header{
   right:0;
 }
 
+#header-user #login label{
+  padding:5px;
+}
+
 #main{
   max-width:1000px;
   margin: 0px auto;
@@ -247,6 +251,32 @@ aside{
 #receipts-table tr.row:hover{
   cursor:pointer;
   background-color: #EBE;
+}
+
+#main #register{
+  margin:10px;
+  margin-top:100px;
+  padding:5px;
+  float:left;
+  width:400px;
+}
+
+#main #register td{
+  padding:5px;
+}
+
+#main #product-description{
+  float:left;
+  margin:10px;
+  margin-top:100px;
+  padding:5px;
+}
+
+#main #feature div{
+  float:left;
+  width:28%;
+  margin:10px;
+  padding:10px;
 }
 
 .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }
