@@ -4,6 +4,17 @@ var Receipts = Backbone.Collection.extend({
   model: Receipt
 });
 
+var User = Backbone.Model.extend({
+  initialize:function(){
+    this.auth = document.cookie;           
+  }
+});
+
+var user = new User({
+  username:"John Doe",
+  flash:"You have 3 new receipts."
+});
+
 $(function(){
   var mockReceipts = [{
     total_cost:15,
@@ -72,6 +83,17 @@ $(function(){
     time:"May 15"
   }];
 
+  var UserView = Backbone.View.extend({
+  
+    el:$("#user"),
+
+    initialize:function(){
+       $("#username").text(this.model.get("username")); 
+       this.$("#user-flash").text(this.model.get("flash")); 
+    }
+  });
+
+  window.userView = new UserView({model:user});
 
   var receipts = new Receipts();
   //alert(JSON.stringify(receipts));
@@ -135,8 +157,8 @@ $(function(){
     initialize:function(){
       _.bindAll(this,"render","renderMore","renderReceipt");
 
-      receipts.bind("refresh",this.render);
-      receipts.view = this;
+      this.model.bind("refresh",this.render);
+      this.model.view = this;
     },
 
     events:{
@@ -144,11 +166,11 @@ $(function(){
     },
 
     updateStatus:function(){
-      this.$(".receipts-stat .stat").text(this.start + " to "+ this.end +" in "+receipts.length);
+      this.$(".receipts-stat .stat").text(this.start + " to "+ this.end +" in "+this.model.length);
     },
 
     render:function(){
-      _.each(receipts.models.slice(0,this.end),this.renderReceipt);
+      _.each(this.model.models.slice(0,this.end),this.renderReceipt);
       this.updateStatus();
     },
 
@@ -170,6 +192,6 @@ $(function(){
     },
   });
 
-  var receiptsView = new ReceiptsView();
+  var receiptsView = new ReceiptsView({model:receipts});
   receipts.refresh(mockReceipts);
 });
