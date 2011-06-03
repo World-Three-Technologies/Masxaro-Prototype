@@ -24,11 +24,10 @@
  *  user control class, including all control functions for user
  */
 
-class UserCtrl{
-	private static $db;
+class UserCtrl extends Ctrl{
 	
 	function __construct(){
-		$this->db = new Database();
+		parent::__construct();
 	}
 	
 	/**
@@ -40,7 +39,7 @@ class UserCtrl{
 	 * @return boolean
 	 */
 	public function insert($info){
-		$con = Ctrl::infoArray2SQL($info);
+		$con = Tool::infoArray2SQL($info);
 		
 		$sql = "
 			INSERT INTO `user`
@@ -96,10 +95,6 @@ class UserCtrl{
 		}
 		
 		return true;
-	}
-	
-	public function getUser($con){
-		
 	}
 	
 	public function update($info){

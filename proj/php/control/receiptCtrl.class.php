@@ -24,56 +24,79 @@
  *  receipt control class, including all control functions for receipt
  */
 
-class ReceiptCtrl{
-	private static $db;
+class ReceiptCtrl extends Ctrl{
 	
 	function __construct(){
-		$this->db = new Database();
+		parent::__construct();
 	}
 	
 	/**
 	 * 
-	 * generate an unique receipt code based on its basic information
+	 * generate an unique receipt id based on its basic information
 	 * 
-	 * @param array $basicInfo
+	 * @param array() $basicInfo
 	 */
-	private function codeGen($basicInfo){
-		$code = "983094867189238-0929347";
-		return $code;
+	private function idGen($basicInfo){
+		$receiptId = "983094867189238-0929347";
+		return $receiptId;
 	}
 	
 	/**
 	 * 
-	 * insert a new receipt 
+	 * @example
+	 * insert($basicInfo, $items);
 	 * 
-	 * or new items for a existed receipt 
+	 * insert($basicInfo, null);
 	 * 
-	 * or a new receipt with items
+	 * insert(null, $items);
 	 * 
-	 * @param array $basicInfo
+	 * @param array() $basicInfo
 	 * 
 	 * @param array(array(), array()...) $items
 	 * 
 	 * @return boolean
+	 * 
+	 * @desc
+	 * 
+	 * 1. insert a new receipt with multiple items
+	 * 
+	 * (Unnecessary to set up items' receipt id).
+	 * 
+	 * 2. insert new items for an existed receipt
+	 * 
+	 * (Need to set up the receipt_id for each item, $basicInfo is null).
+	 * 
+	 * 3. insert a new receipt without any items
+	 * 
+	 * ($items is null)
 	 */
 	public function insert($basicInfo = "", $items = ""){
-		$totalCost = 0;
-		$code = $basicInfo['receipt_id'];
 		
-		if($basicInfo != null && strlen($basicInfo) > 0){
+		$basicInfoNull = is_null($basicInfo) || strlen($basicInfo) == 0;
+		$itemsNull = is_null($items) || strlen($items) == 0;
+		
+		$totalCost = 0;
+		
+		if($basicInfoNull && $itemsNull){
+			return false;
+		}
+		
+		if(!$basicInfoNull){
+			
+			$receiptId = $basicInfo['receipt_id'];
 			
 			if($basicInfo['receipt_time'] == null || strlen($basicInfo['receipt_time']) == 0){
 				$basicInfo['receipt_time'] = date("Y-m-d H:i:s");
 			}
 			
-			if($code == null || strlen($code) == 0){
-				$code = $this->codeGen($basicInfo);
-				$basicInfo['receipt_id'] = $code;
+			if($receiptId == null || strlen($receiptId) == 0){
+				$receiptId = $this->idGen($basicInfo);
+				$basicInfo['receipt_id'] = $receiptId;
 			}
 			
 			$info = "";
 			
-			$info = Ctrl::infoArray2SQL($basicInfo);
+			$info = Tool::infoArray2SQL($basicInfo);
 			
 			$sql = "
 				INSERT INTO `receipt`
@@ -83,19 +106,25 @@ class ReceiptCtrl{
 			
 			if($this->db->insert($sql) < 0){
 				//rollback
-				$this->realDelete($code);
+				$this->realDelete($receiptId);
 				return false;
 			}
 			
 		}
+				
+		if(!$itemsNull){
+			
+			if($receiptId == null || strlen($receiptId) == 0){
+				$receiptId = $items[0]['receipt_id'];
+			}
 		
-		if($items != null && strlen($items) > 0){
 			$sql = "
 				SELECT `total_cost`
 				FROM `receipt`
 				WHERE
-				`receipt_id`='$code'
+				`receipt_id`='$receiptId'
 			";
+			
 			$this->db->select($sql);
 			
 			if($this->db->numRows() > 0){
@@ -103,7 +132,7 @@ class ReceiptCtrl{
 				$totalCost = $result[0]->total_cost;
 			}
 			else{
-				$this->realDelete($code);
+				$this->realDelete($receiptId);
 				return false;
 			}
 			
@@ -113,19 +142,19 @@ class ReceiptCtrl{
 				$curCost =  $items[$i]['item_price'] * $items[$i]['item_qty'] * $items[$i]['item_discount'];
 				$totalCost += $curCost;
 				
-				if($code != null && strlen($code) == 0){
-					$items[$i]['receipt_id'] = $code;	
+				if($receiptId != null && strlen($receiptId) == 0){
+					$items[$i]['receipt_id'] = $receiptId;	
 				}
 				
 				$info = "";
-				$info = Ctrl::infoArray2SQL($items[$i]);
+				$info = Tool::infoArray2SQL($items[$i]);
 				$sql = "
 					INSERT INTO `receipt_item`
 					SET
 					$info	
 				";
 				if($this->db->insert($sql) < 0){
-					$this->realDelete($code);
+					$this->realDelete($receiptId);
 					return false;
 				}
 			}
@@ -137,12 +166,11 @@ class ReceiptCtrl{
 				SET
 				`total_cost`=$totalCost
 				WHERE
-				`receipt_id`='$code'
+				`receipt_id`='$receiptId'
 			";
 			
-			
 			if($this->db->update($sql) <= 0){
-				$this->realDelete($code);
+				$this->realDelete($receiptId);
 				return false;
 			}
 		}
@@ -152,28 +180,28 @@ class ReceiptCtrl{
 	
 	/**
 	 * 
-	 * delete completely a receipt and its items
-	 * 
-	 * @param string $id
+	 * @param string $receiptId receipt id
 	 * 
 	 * @return boolean
+	 * 
+	 * @desc
+	 * 
+	 * delete completely a receipt and its items
 	 */
-	public function realDelete($id){
+	public function realDelete($receiptId){
 		$sql = "
 			DELETE from `receipt_item`
 			WHERE
-			`receipt_id` = '$id'
+			`receipt_id` = '$receiptId'
 		";
-		if($this->db->delete($sql) <= 0){
-			return false;
-		}
+		$delItem = $this->db->delete($sql);
 		
 		$sql = "
 			DELETE from `receipt`
 			WHERE
-			`receipt_id` = '$id'
+			`receipt_id` = '$receiptId'
 		";
-		if($this->db->delete($sql) <= 0){
+		if($this->db->delete($sql) <= 0 && $delItem){
 			return false;
 		}
 		
@@ -182,19 +210,22 @@ class ReceiptCtrl{
 	
 	/**
 	 * 
+	 * 
+	 * @param string $receiptId receipt receiptId
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
 	 * fake delete a receipt
 	 * 
-	 * @param string $id
-	 * 
-	 * @return boolean
 	 */
-	public function fakeDelete($id){
+	public function fakeDelete($receiptId){
 		$sql = "
 			UPDATE `receipt_item`
 			SET
 			`deleted` = true
 			WHERE
-			`receipt_id` = '$id'
+			`receipt_id` = '$receiptId'
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -206,7 +237,7 @@ class ReceiptCtrl{
 			SET
 			`deleted` = true
 			WHERE
-			`receipt_id` = '$id'
+			`receipt_id` = '$receiptId'
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -218,19 +249,21 @@ class ReceiptCtrl{
 	
 	/**
 	 * 
-	 * recover a fake-deleted receipt
 	 * 
-	 * @param string $id
+	 * @param string $receiptId
 	 * 
 	 * @return boolean
+	 * 
+	 * @desc
+	 * recover a fake-deleted receipt
 	 */
-	public function recover($id){
+	public function recoverDeleted($receiptId){
 		$sql = "
 			UPDATE `receipt_item`
 			SET
 			`deleted` = false
 			WHERE
-			`receipt_id` = '$id'
+			`receipt_id` = '$receiptId'
 		";
 		if($this->db->update($sql) <= 0){
 			return false;
@@ -241,7 +274,7 @@ class ReceiptCtrl{
 			SET
 			`deleted` = false
 			WHERE
-			`receipt_id` = '$id'
+			`receipt_id` = '$receiptId'
 		";
 		if($this->db->update($sql) <= 0){
 			return false;

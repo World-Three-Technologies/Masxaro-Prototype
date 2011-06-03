@@ -1,6 +1,7 @@
 <?php
+
 /*
- *  Ctrl.class.php -- public common tool functions 
+ * ctrl.class.php -- super class of all control classes 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,24 +22,15 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  tool global functions for all
+ *  
  */
 
-class Ctrl{
-	/**
-	 * infoArray to SQL query
-	 *
-	 * @param array contains item info ([0] key1 => value1, [1] key2 => value2, [2] key3 => value3...)
-	 * 
-	 * @return str SQL query
-	 */
-	public static function infoArray2SQL($info)
-	{
-		$sql = '';
-		foreach ($info as $key => $value)
-			$sql = $sql."`{$key}` = '$value',";
-		$sql = substr($sql, 0, strlen($sql)-1);		
-		return $sql;
+abstract class Ctrl {
+	protected $db;
+	
+	function __construct(){
+		$this->db = new Database();
 	}
 }
+
 ?>
