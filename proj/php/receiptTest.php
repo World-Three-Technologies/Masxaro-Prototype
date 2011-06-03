@@ -26,19 +26,35 @@
 
 include_once '../config.php';
 
+$code  ="983094867189238-0929347";
+
 //basic info
-$basicInfo = Array('receipt_id'=>"983094867189238-0929347", 'store_id'=>1, 'user_account'=>'test', 'tax'=>0.1, 'total_cost'=>0);
+$basicInfo = array('receipt_id'=>$code, 
+				   'store_id'=>1, 
+				   'user_account'=>'test', 
+				   'tax'=>0.1, 
+				   'total_cost'=>0);
 
 //item list
-$items = Array();
+$items = array();
 
 //item 1
-$i = Array('receipt_id'=>"983094867189238-0929347", 'item_id'=>1, 'item_name'=>'test', 'item_qty'=>3, 'item_price'=>10, 'item_discount'=>1);
+$i = array('receipt_id'=>$code, 
+		   'item_id'=>1, 
+		   'item_name'=>'test', 
+		   'item_qty'=>3, 
+		   'item_price'=>10, 
+		   'item_discount'=>1);
 
 array_push($items, $i);
 
 //item 2
-$i = Array('receipt_id'=>"983094867189238-0929347", 'item_id'=>2, 'item_name'=>'test2', 'item_qty'=>1, 'item_price'=>20, 'item_discount'=>1);
+$i = array('receipt_id'=>$code, 
+		   'item_id'=>2, 
+		   'item_name'=>'test2', 
+		   'item_qty'=>1, 
+		   'item_price'=>20, 
+		   'item_discount'=>1);
 
 array_push($items, $i);
 
@@ -46,11 +62,29 @@ array_push($items, $i);
 
 $ctrl = new ReceiptCtrl();
 
-//$result = $ctrl->realDelete("983094867189238-0929347");
-//$result = $ctrl->insert($basicInfo, $items);
+echo "delete".$result = $ctrl->realDelete($code);
 
-$result = $ctrl->recover("983094867189238-0929347");
+echo "</br>receipt insert".$result1 = $ctrl->insert($basicInfo, $items);
 
+$result &= $result1;
+
+//echo "</br>receipt insert".$result1 = $ctrl->insert($basicInfo, null);
+//
+//$result &= $result1;
+//
+//echo "</br>item insert".$result1 = $ctrl->insert(null, $items);
+//
+//$result &= $result1;
+
+echo "</br>fake delete".$result1 = $ctrl->fakeDelete($code);
+
+$result &= $result1;
+
+echo "</br>recover".$result1 = $ctrl->recoverDeleted($code);
+
+$result &= $result1;
+
+echo "</br>";
 
 if($result){
 	echo "success";

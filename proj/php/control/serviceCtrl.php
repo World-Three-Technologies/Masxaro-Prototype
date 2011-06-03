@@ -1,5 +1,6 @@
+<?php
 /*
- * NFCConnection.java -- Android app's NFC screen 
+ * serviceCtrl.class.php -- service control class 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -18,22 +19,14 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Written by Yichao Yu <yichao@Masxaro>
+ *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  This activity just exists when the NFC link is connecting
+ *  
  */
 
-package com.android.W3T.app;
-
-import android.app.Activity;
-import android.os.Bundle;
-
-public class NFCConnection extends Activity {
-	protected void onCreate(Bundle savedInstanceState) {
-        
-        super.onCreate(savedInstanceState);
-        
-        // Just showing a message in the center of the screen
-        setContentView(R.layout.nfc_connecting);
-    }
+class ServiceCtrl extends Ctrl{
+	function __construct(){
+		parent::__construct();
+	}
 }
+?>

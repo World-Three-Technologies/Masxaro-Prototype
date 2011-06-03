@@ -23,13 +23,22 @@
  * 
  *  contact control APIs
  */
-class ContactCtrl{
-	private static $db;
+class ContactCtrl extends Ctrl{
 	
 	function __construct(){
-		$this->db = new Database();
+		parent::__construct();
 	}
 	
+	/**
+	 * 
+	 * @param string $type
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * 
+	 * insert a new contact type
+	 */
 	public function insertContactType($type){
 		$sql = "
 			INSERT INTO `contact_type`
@@ -53,32 +62,32 @@ class ContactCtrl{
 	}
 	
 	/**
+	 *
+	 * @param array(array(), ...) $info one line as one contact, in order for batch processing
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
 	 * 
 	 * insert a new contact for an user or store
 	 * 
-	 * distinguish an user or store by set certain IDs in $info
-	 *
-	 * @param Array(Array(), ...) $info one line as one contact, in order for group handling
-	 * 
-	 * @return boolean
+	 * distinguish an user or store by set certain Account/ID in $info
 	 */
 	public function insertContact($info){
 		$n = count($info);
 		
-		$inserted = Array(); //record inserted contact id within current process
+		$inserted = array(); //record inserted contact value within current process
 		
 		for($i = 0; $i < $n; $i ++){
-			$cur = Ctrl::infoArray2SQL($info[$i]);
+			$cur = Tool::infoArray2SQL($info[$i]);
 			
 			$sql = "
 				INSERT INTO `contact`
 				SET
 				$cur
 			";
-		
-			$insertedId = $this->db->insert($sql);
 			
-			if($insertedId < 0){
+			if($this->db->insert($sql) < 0){
 				
 				for($i = 0; $i < count($inserted); $i ++){
 					
@@ -86,12 +95,12 @@ class ContactCtrl{
 					$sql = "
 						DELETE FROM `contact`
 						WHERE
-						`contact_id`=$inserted[$i]
+						`value`=$inserted[$i]
 					";
 					
 					$this->db->delete($sql);
 				}
-				echo $insertedId;
+				//echo $insertedId;
 				return false;
 			}
 			else{
@@ -102,12 +111,43 @@ class ContactCtrl{
 		return true;
 	}
 	
-	public function getContact($con){
+	public function getContact(){
 		
 	}
 	
-	public function deleteContact($con){
+	
+	public function deleteContact($value){
 		
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $curValue
+	 * 
+	 * @param array() $newInfo
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * update contact
+	 */
+	public function updateContact($curValue, $newInfo){
+		$info = Tool::infoArray2SQL($newInfo);
+		
+		$sql = "
+			UPDATE `contact`
+			SET
+			$newInfo
+			WHERE
+			`value`=$curValue
+		";
+			
+		if($this->db->update($sql) < 0){
+			return false;
+		}
+
+		return true;
 	}
 }
 ?>

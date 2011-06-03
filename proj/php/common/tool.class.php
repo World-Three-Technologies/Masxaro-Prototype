@@ -1,5 +1,6 @@
+<?php
 /*
- * NFCConnection.java -- Android app's NFC screen 
+ *  tool.class.php -- public common tool functions 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -18,22 +19,26 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  Written by Yichao Yu <yichao@Masxaro>
+ *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  This activity just exists when the NFC link is connecting
+ *  tool global functions for all
  */
 
-package com.android.W3T.app;
-
-import android.app.Activity;
-import android.os.Bundle;
-
-public class NFCConnection extends Activity {
-	protected void onCreate(Bundle savedInstanceState) {
-        
-        super.onCreate(savedInstanceState);
-        
-        // Just showing a message in the center of the screen
-        setContentView(R.layout.nfc_connecting);
-    }
+class Tool{
+	/**
+	 * infoArray to SQL query
+	 *
+	 * @param array contains item info ([0] key1 => value1, [1] key2 => value2, [2] key3 => value3...)
+	 * 
+	 * @return str SQL query
+	 */
+	public static function infoArray2SQL($info)
+	{
+		$sql = '';
+		foreach ($info as $key => $value)
+			$sql = $sql."`{$key}` = '$value',";
+		$sql = substr($sql, 0, strlen($sql)-1);		
+		return $sql;
+	}
 }
+?>
