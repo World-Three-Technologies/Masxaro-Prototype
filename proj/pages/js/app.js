@@ -93,12 +93,14 @@ $(function(){
     },
 
     events:{
-      "click" : "showReceiptZoom"
+      "click" : "showReceipt"
     },
 
     render:function(){
       $(this.el).html(this.template(this.model.toJSON()));     
-      this.bindFancybox({content:"<img src='img/fake_receipt.jpg'>"});
+      if(this.model.get("image")===true){
+        this.bindFancybox({content:"<img src='img/fake_receipt.jpg'>"});
+      }
       return this;
     },
 
@@ -110,11 +112,10 @@ $(function(){
       if(window.lastOpen){
         window.lastOpen.render();
       }
-      $(this.el).html(this.fullTemplate(this.model.toJSON()));
-      if(this.model.get("image") === true){
-        $(this.el).find("img.receipt-image").prop("src","img/fake_receipt.jpg");
+      if(this.model.get("image") !== true){
+        $(this.el).html(this.fullTemplate(this.model.toJSON()));
+        window.lastOpen = this;
       }
-      window.lastOpen = this;
     },
 
     showReceiptZoom:function(){
