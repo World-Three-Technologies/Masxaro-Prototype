@@ -1,6 +1,6 @@
 <?php
 /*
- * ContactCtrl.php -- contact control class 
+ *  contactCtrl.class.php -- contact control class 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.

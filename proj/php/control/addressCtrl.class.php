@@ -1,7 +1,6 @@
 <?php
-
 /*
- *  ctrl.class.php -- super class of all control classes 
+ *  addressCtrl.class.php -- address control class 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -25,12 +24,7 @@
  *  
  */
 
-abstract class Ctrl {
-	protected $db;
+class AddressCtrl extends Ctrl{
 	
-	function __construct(){
-		$this->db = new Database();
-	}
 }
-
 ?>

@@ -1,6 +1,6 @@
 <?php
 /*
- * UserCtrl.class.php -- user control class 
+ *  userCtrl.class.php -- user control class 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -179,12 +179,41 @@ class UserCtrl extends Ctrl{
 		return true;
 	}
 	
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc
+	 * 
+	 * @param string $pwd
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * 
+	 * user login
+	 * 
+	 */
 	public function userLogin($acc, $pwd){
 		if(!Tool::securityChk($acc)){
 			return false;
 		}
 		
-		$sql = "";
+		$pwd = md5($pwd);
+		
+		$sql = "
+			SELECT *
+			FROM `user`
+			WHERE
+			`user_account`='$acc'
+			AND
+			`pwd`='$pwd'
+		";
+		
+		$this->db->select($sql);
+		if($this->db->numRows() == 1){
+			return true;
+		}
 		
 		return false;
 	}

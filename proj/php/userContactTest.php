@@ -38,6 +38,10 @@ include_once '../config.php';
 
 $ctrl = new UserCtrl();
 
+var_dump($ctrl->userLogin('test', '123'));
+
+die();
+
 $param = Array('user_account'=>'test', 
 			   'first_name'=>'yaxing', 
 			   'age_range_id'=>1, 
