@@ -116,8 +116,32 @@ class ContactCtrl extends Ctrl{
 	}
 	
 	
+	/**
+	 * 
+	 * @param string $value the value of the contact that needs to be deleted
+	 * 
+	 * @return boolean
+	 * 
+	 */
 	public function deleteContact($value){
+		$regex = "^(.*)[@]masxaro[.]com%";
 		
+		if(preg_match($regex, $value)){
+			return false;
+		}
+		
+		$sql = "DELETE
+				FROM `contact`
+				WHERE
+				`value`='$value'		
+		";
+		
+		if($this->db->delete($sql) <= 0){
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 	
 	/**
@@ -140,7 +164,7 @@ class ContactCtrl extends Ctrl{
 			SET
 			$newInfo
 			WHERE
-			`value`=$curValue
+			`value`='$curValue'
 		";
 			
 		if($this->db->update($sql) < 0){
