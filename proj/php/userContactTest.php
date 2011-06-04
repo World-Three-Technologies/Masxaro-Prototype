@@ -25,13 +25,14 @@
  */
 include_once '../config.php';
 
+
 //contact test
-$ctrl = new ContactCtrl();
-
-echo $ctrl->deleteContact('test@masxaro.com');
-echo $ctrl->deleteContact('personal@gmail.com');
-
-die();
+//$ctrl = new ContactCtrl();
+//
+//print_r($ctrl->deleteContact('test@masxaro.com'));
+//print_r($ctrl->deleteContact('personal@gmail.com'));
+//
+//die();
 
 //user ctrl test
 
@@ -43,16 +44,16 @@ $param = Array('user_account'=>'test',
 			   'ethnicity'=>'Asia', 
 			   'pwd'=>'123');
 
-$result = $ctrl->realDelete('test');
+print_r($ctrl->realDelete('test')."</br>");
 
-$result = $ctrl->insert($param);
+print_r($ctrl->insert($param)."</br>");
 
 
 //contact test
 $ctrl = new ContactCtrl();
 
-$ctrl->insertContactType("email");
-$ctrl->insertContactType("phone");
+print_r($ctrl->insertContactType("email")."</br>");
+print_r($ctrl->insertContactType("phone")."</br>");
 
 $param = Array();
 
@@ -68,13 +69,6 @@ $cont = Array('user_account'=>'test',
 
 array_push($param, $cont);
 
-$result = $ctrl->insertContact($param);
-
-if($result){
-	echo "success";
-}
-else{
-	echo "fail";
-}
+print_r($ctrl->insertContact($param)."</br>");
 
 ?>

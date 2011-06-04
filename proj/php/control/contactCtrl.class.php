@@ -124,7 +124,7 @@ class ContactCtrl extends Ctrl{
 	 * 
 	 */
 	public function deleteContact($value){
-		$regex = "^(.*)[@]masxaro[.]com%";
+		$regex = "(.*@masxaro.com)";
 		
 		if(preg_match($regex, $value)){
 			return false;
