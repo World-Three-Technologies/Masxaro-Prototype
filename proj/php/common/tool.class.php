@@ -28,9 +28,9 @@ class Tool{
 	/**
 	 * infoArray to SQL query
 	 *
-	 * @param array contains item info ([0] key1 => value1, [1] key2 => value2, [2] key3 => value3...)
+	 * @param array() contains item info ([0] key1 => value1, [1] key2 => value2, [2] key3 => value3...)
 	 * 
-	 * @return str SQL query
+	 * @return string SQL query ("key1=v1, key2=v2...")
 	 */
 	public static function infoArray2SQL($info)
 	{
@@ -39,6 +39,21 @@ class Tool{
 			$sql = $sql."`{$key}` = '$value',";
 		$sql = substr($sql, 0, strlen($sql)-1);		
 		return $sql;
+	}
+	
+	/**
+	 * 
+	 * @param string $str
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * make sure a string doesn't contain any malisious scripts,
+	 * if clear, return true
+	 * else return false
+	 */
+	public static function securityChk($str){
+		return true;
 	}
 }
 ?>

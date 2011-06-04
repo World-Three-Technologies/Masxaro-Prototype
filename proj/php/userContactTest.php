@@ -40,20 +40,20 @@ $ctrl = new UserCtrl();
 
 $param = Array('user_account'=>'test', 
 			   'first_name'=>'yaxing', 
-			   'age_range'=>1, 
+			   'age_range_id'=>1, 
 			   'ethnicity'=>'Asia', 
 			   'pwd'=>'123');
 
-print_r($ctrl->realDelete('test')."</br>");
+print_r($ctrl->realDeleteUser('test')." delete user </br>");
 
-print_r($ctrl->insert($param)."</br>");
+print_r($ctrl->insertUser($param)." insert user </br>");
 
 
 //contact test
 $ctrl = new ContactCtrl();
 
-print_r($ctrl->insertContactType("email")."</br>");
-print_r($ctrl->insertContactType("phone")."</br>");
+print_r($ctrl->insertContactType("email")." insert contact type </br>");
+print_r($ctrl->insertContactType("phone")." insert contact type </br>");
 
 $param = Array();
 
@@ -69,6 +69,6 @@ $cont = Array('user_account'=>'test',
 
 array_push($param, $cont);
 
-print_r($ctrl->insertContact($param)."</br>");
+print_r($ctrl->insertContact($param)." insert contacts </br>");
 
 ?>

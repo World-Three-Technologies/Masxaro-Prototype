@@ -70,10 +70,10 @@ class Database
   public function connect(){  
   	
     if($this->pConnect){  
-    	$this->mConn=mysql_pconnect($this->mHost,$this->mUser,$this->mPwd);
+    	$this->mConn=mysql_pconnect($this->mHost,$this->mUser,$this->mPwd) or die(mysql_error());
     }
     else{  
-    	$this->mConn=mysql_connect($this->mHost,$this->mUser,$this->mPwd);//short connect
+    	$this->mConn=mysql_connect($this->mHost,$this->mUser,$this->mPwd) or die(mysql_error());//short connect
     }
   
     if(!$this->mConn){
@@ -102,7 +102,7 @@ class Database
    * change database
    */ 
   public function dbChange($newDb){  
-    $this->db=$newDb;  
+    $this->db = $newDb;  
     $this->connect();  
   }  
   
@@ -110,12 +110,18 @@ class Database
    * execute sql and return source id
    */  
   public function execute($sql){ 
+  	
   	try{ 
-    	$this->result=mysql_query($sql);  
+    	$this->result = mysql_query($sql);  
+    	
+    	if(!is_null(mysql_error()) && strlen(mysql_error()) > 0){
+    		return false;
+    	}
+    	
   	}catch(Exception $e){
   		$this->dbhalt();
   	}
-    return;  
+    return true;  
   }  
   
   /*
@@ -134,13 +140,16 @@ class Database
    * define database error message
    */
   private function dbhalt($errmsg = ''){  
-    $msg=mysql_error();
+    //echo mysql_error();
+  	$msg = mysql_error();
     if($errmsg != null){  
     	if($errmsg != ''){
     		$msg=$errmsg;  
     	}
     }
-    echo $msg;  
+    
+    $this->dbclose();
+    //echo $msg;  
     die();  
   }  
   
@@ -213,8 +222,13 @@ class Database
   		$sql = $sql.";";
   	}
   	$this->connect();
-  	$this->execute($sql);
+  	$execConfirm = $this->execute($sql);
   	$this->dbclose();
+  	
+  	if(!$execConfirm){
+  		return -1;
+  	}
+  	
   	return $this->result;
   }
   
@@ -222,56 +236,80 @@ class Database
    * delete
    */
   public function delete($sql){  
+  	$execConfirm = 0;
+  	
     if(!$this->chkSql($sql)){
   		$sql = $sql.";";
   	}
 	try{    
 		$this->connect();
-  		$this->result=$this->execute($sql);  
+  		$execConfirm = $this->execute($sql);  
 	    $this->affected_rows=mysql_affected_rows($this->mConn);  
 	    //$this->free_result($result);
 	    $this->dbclose();  
-	    return $this->affected_rows;
+	    
   	}catch(Exception $e){
   		$this->dbhalt();
   	}  
+  	
+  	if(!$execConfirm){
+ 		return -1;
+  	}
+    
+    return $this->affected_rows;
   }  
   
   /*
    * insert
    */  
   public function insert($sql){
+  	$execConfirm = 0;
+  	
     if(!$this->chkSql($sql)){
   		$sql = $sql.";";
   	}  
   	try{
   		$this->connect();
-	    $this->result=$this->execute($sql);  
+	    $execConfirm = $this->execute($sql);  
 	    $this->insert_id=mysql_insert_id($this->mConn);  
 	    $this->dbclose();
-	    return $this->insert_id;  
+	      
   	}catch(Exception $e){
   		$this->dbhalt();
   	}
+  	
+  	if(!$execConfirm){
+  		return -1;
+  	}
+  	
+  	return $this->insert_id;
   }  
   
   /*
    * update
    */ 
   public function update($sql){
+  	$execConfirm = 0;
+  	
   	if(!$this->chkSql($sql)){
   		$sql = $sql.";";
   	}  
 	try{    
 		$this->connect();
-	    $this->result=$this->execute($sql);  
+	    $execConfirm = $this->execute($sql);  
 	    $this->affected_rows=mysql_affected_rows($this->mConn);  
 	    //$this->free_result($result);
 	    $this->dbclose();
-		return $this->affected_rows;  
+		  
   	}catch(Exception $e){
   		$this->dbhalt();
   	}
+  	
+  	if(!$execConfirm){
+  		return -1;
+  	}
+  	return $this->affected_rows;
+  	
   }  
 }// end class  
 ?>

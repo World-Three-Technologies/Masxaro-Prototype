@@ -70,9 +70,10 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * ($items is null)
 	 */
-	public function insert($basicInfo = "", $items = ""){
+	public function insertReceipt($basicInfo = "", $items = ""){
 		
 		$basicInfoNull = is_null($basicInfo) || strlen($basicInfo) == 0;
+		
 		$itemsNull = is_null($items) || strlen($items) == 0;
 		
 		$totalCost = 0;
@@ -98,13 +99,17 @@ class ReceiptCtrl extends Ctrl{
 			
 			$info = Tool::infoArray2SQL($basicInfo);
 			
+			if(!Tool::securityChk($info)){
+				return false;
+			}
+			
 			$sql = "
 				INSERT INTO `receipt`
 				SET
 				$info
 			";
 			
-			if($this->db->insert($sql) < 0){
+			if($this->db->insert($sql) <= 0){
 				//rollback
 				$this->realDelete($receiptId);
 				return false;
@@ -148,12 +153,17 @@ class ReceiptCtrl extends Ctrl{
 				
 				$info = "";
 				$info = Tool::infoArray2SQL($items[$i]);
+				
+				if(!Tool::securityChk($info)){
+					return false;
+				}
+				
 				$sql = "
 					INSERT INTO `receipt_item`
 					SET
 					$info	
 				";
-				if($this->db->insert($sql) < 0){
+				if($this->db->insert($sql) <= 0){
 					$this->realDelete($receiptId);
 					return false;
 				}
