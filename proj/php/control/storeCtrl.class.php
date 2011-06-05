@@ -27,8 +27,38 @@ class StoreCtrl extends Ctrl{
 		parent::__construct();
 	}
 	
-	public function addInsertStore(){
+	/**
+	 * 
+	 * 
+	 * @param array() $info
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * insert a new store
+	 */
+	public function insertStore($info){
 		
+		$info['pwd'] = md5($info['pwd']);
+		
+		$info = Tool::infoArray2SQL($info);
+		
+		if(!Tool::securityChk($info)){
+			return false;
+		}
+		
+		$sql = "
+			INSERT
+			INTO `store`
+			SET
+			$info
+		";
+			
+		if($this->db->insert($sql) < 0){
+			return false;
+		}
+		
+		return true;
 	}
 	
 /**
@@ -67,6 +97,70 @@ class StoreCtrl extends Ctrl{
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * @param int $storeId
+	 * 
+	 * @param array() $info
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * 
+	 * update store info
+	 * 
+	 */
+	public function updateStore($storeId, $info){
+		$info = Tool::infoArray2SQL($info);
+		
+		if(!Tool::securityChk($info)){
+			return false;
+		}
+		
+		$sql = "
+			UPDATE `store`
+			SET
+			$info
+			WHERE
+			`store_id`=$storeId
+		";
+			
+		if($this->db->update($sql) <= 0){
+			return false;
+		}
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $storeId
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * 
+	 * delete a store
+	 */
+	public function deleteStore($storeId){
+		$info = Tool::infoArray2SQL($info);
+		
+		if(!Tool::securityChk($info)){
+			return false;
+		}
+		
+		$sql = "
+			DELETE
+			FROM `store`
+			WHERE
+			`store_id`=$storeId
+		";
+		
+		if($this->db->delete($sql) <= 0){
+			return false;
+		}
+		
+		return true;
 	}
 	
 }
