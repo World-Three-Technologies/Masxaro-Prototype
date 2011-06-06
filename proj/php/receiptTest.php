@@ -64,7 +64,7 @@ $ctrl = new ReceiptCtrl();
 
 echo "delete".$result = $ctrl->realDelete($code);
 
-echo "</br>receipt insert".$result1 = $ctrl->insert($basicInfo, $items);
+echo "</br>receipt insert".$result1 = $ctrl->insertReceipt($basicInfo, $items);
 
 $result &= $result1;
 

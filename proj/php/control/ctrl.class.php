@@ -1,7 +1,7 @@
 <?php
 
 /*
- * ctrl.class.php -- super class of all control classes 
+ *  ctrl.class.php -- super class of all control classes 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.

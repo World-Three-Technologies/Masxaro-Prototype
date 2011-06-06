@@ -1,6 +1,6 @@
 <?php
 /*
- * ContactCtrl.php -- contact control class 
+ *  contactCtrl.class.php -- contact control class 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -40,13 +40,17 @@ class ContactCtrl extends Ctrl{
 	 * insert a new contact type
 	 */
 	public function insertContactType($type){
+		if(!Tool::securityChk($type)){
+			return false;
+		}
+		
 		$sql = "
 			INSERT INTO `contact_type`
 			SET
 			`contact_type`='$type'
 		";
 		
-		if($this->db->insert($sql) <= 0){
+		if($this->db->insert($sql) < 0){
 			return false;
 		}
 		
@@ -57,8 +61,30 @@ class ContactCtrl extends Ctrl{
 		
 	}
 	
-	public function deleteContactType($old, $new){
+	
+	/**
+	 * 
+	 * 
+	 * @param string $type
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * delete contact type
+	 */
+	public function deleteContactType($type){
+		$sql = "
+			DELETE
+			FROM `contact_type`
+			WHERE
+			`contact_type`='$type'
+		";
 		
+		if($this->db->delete($sql) <= 0){
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -78,8 +104,19 @@ class ContactCtrl extends Ctrl{
 		
 		$inserted = array(); //record inserted contact value within current process
 		
+		$regex = "(.*@masxaro.com)";
+		
 		for($i = 0; $i < $n; $i ++){
 			$cur = Tool::infoArray2SQL($info[$i]);
+			
+			if(!Tool::securityChk($cur) || preg_match($regex, $info[$i]['value'])){
+				
+				for($i = 0; $i < count($inserted); $i ++){
+					//rollback
+					$this->deleteContact($inserted[$i]);
+				}
+				return false;
+			}
 			
 			$sql = "
 				INSERT INTO `contact`
@@ -90,17 +127,10 @@ class ContactCtrl extends Ctrl{
 			if($this->db->insert($sql) < 0){
 				
 				for($i = 0; $i < count($inserted); $i ++){
-					
 					//rollback
-					$sql = "
-						DELETE FROM `contact`
-						WHERE
-						`value`=$inserted[$i]
-					";
-					
-					$this->db->delete($sql);
+					$this->deleteContact($inserted[$i]);
 				}
-				//echo $insertedId;
+				
 				return false;
 			}
 			else{
@@ -116,8 +146,33 @@ class ContactCtrl extends Ctrl{
 	}
 	
 	
+	/**
+	 * 
+	 * @param string $value the value of the contact that needs to be deleted
+	 * 
+	 * @return boolean
+	 * 
+	 */
 	public function deleteContact($value){
 		
+		$regex = "(.*@masxaro.com)";
+		
+		if(preg_match($regex, $value)){
+			return false;
+		}
+		
+		$sql = "DELETE
+				FROM `contact`
+				WHERE
+				`value`='$value'		
+		";
+		
+		if($this->db->delete($sql) <= 0){
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 	
 	/**
@@ -133,17 +188,27 @@ class ContactCtrl extends Ctrl{
 	 * update contact
 	 */
 	public function updateContact($curValue, $newInfo){
+		$regex = "(.*@masxaro.com)";
+		
+		if(preg_match($regex, $newInfo['value'])){
+			return false;
+		}
+		
 		$info = Tool::infoArray2SQL($newInfo);
+		
+		if(!Tool::securityChk($info)){
+			return false;
+		}
 		
 		$sql = "
 			UPDATE `contact`
 			SET
 			$newInfo
 			WHERE
-			`value`=$curValue
+			`value`='$curValue'
 		";
 			
-		if($this->db->update($sql) < 0){
+		if($this->db->update($sql) <= 0){
 			return false;
 		}
 

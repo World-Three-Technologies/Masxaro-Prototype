@@ -1,6 +1,6 @@
 <?php
 /*
- * UserCtrl.class.php -- user control class 
+ *  userCtrl.class.php -- user control class 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -38,19 +38,27 @@ class UserCtrl extends Ctrl{
 	 * 
 	 * @return boolean
 	 */
-	public function insert($info){
+	public function insertUser($info){
+		$info['pwd'] = md5($info['pwd']); 
+		
 		$con = Tool::infoArray2SQL($info);
+		
+		if(!Tool::securityChk($con)){
+			return false;
+		}
 		
 		$sql = "
 			INSERT INTO `user`
 			SET
 			$con
 		";
+			
+		$result = $this->db->insert($sql);
 		
-		if($this->db->insert($sql) < 0){
+		if($result < 0){
 			return false;
 		}
-			
+		
 		return true;
 	} 
 	
@@ -60,7 +68,12 @@ class UserCtrl extends Ctrl{
 	 * @param string $acc
 	 * @return boolean
 	 */
-	public function fakeDelete($acc){
+	public function fakeDeleteUser($acc){
+		
+		if(!Tool::securityChk($acc)){
+			return false;
+		}
+		
 		$sql = "
 			UPDATE `user`
 			SET
@@ -82,7 +95,12 @@ class UserCtrl extends Ctrl{
 	 * @param string $acc
 	 * @return boolean
 	 */
-	public function realDelete($acc){
+	public function realDeleteUser($acc){
+		
+		if(!Tool::securityChk($acc)){
+			return false;
+		}
+		
 		$sql = "
 			DELETE
 			FROM `user`
@@ -97,8 +115,107 @@ class UserCtrl extends Ctrl{
 		return true;
 	}
 	
-	public function update($info){
+	
+	/**
+	 * 
+	 * @param string $acc
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * check whether a certain account is available
+	 */
+	public function chkAccount($acc){
 		
+		if(!Tool::securityChk($acc)){
+			return false;
+		}
+		
+		$sql = "
+			SELECT count(*)
+			FROM `user`
+			WHERE
+			`user_account`='$acc'
+		";
+		
+		if(!$this->db->select($sql)){
+			return false;
+		}
+		
+		$result = $this->db->fetchObject();
+		
+		if($result[0]->count == 0){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	
+	/**
+	 * 
+	 * @param string $curAcc current account name
+	 * @param array() $info updated info, array('first_name'=>'John', 'age_range_id'=>2, ...)
+	 */
+	public function updateUserInfo($curAcc, $info){
+		$info = Tool::infoArray2SQL($info);
+		
+		if(!Tool::securityChk($info)){
+			return false;
+		}
+		
+		$sql = "
+			UPDATE `user`
+			SET
+			$info
+			WHERE
+			`user_account` = '$curAcc'
+		";
+		
+		if($this->$db->update($sql) <= 0){
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc
+	 * 
+	 * @param string $pwd
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * 
+	 * user login
+	 * 
+	 */
+	public function userLogin($acc, $pwd){
+		if(!Tool::securityChk($acc)){
+			return false;
+		}
+		
+		$pwd = md5($pwd);
+		
+		$sql = "
+			SELECT *
+			FROM `user`
+			WHERE
+			`user_account`='$acc'
+			AND
+			`pwd`='$pwd'
+		";
+		
+		$this->db->select($sql);
+		if($this->db->numRows() == 1){
+			return true;
+		}
+		
+		return false;
 	}
 }
 ?>

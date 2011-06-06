@@ -25,36 +25,54 @@
  */
 include_once '../config.php';
 
-$param = Array('user_account'=>'test', 'first_name'=>'yaxing', 'age_range'=>1, 'ethnicity'=>'Asia', 'pwd'=>'123');
 
-//$ctrl = new UserCtrl();
+//contact test
+//$ctrl = new ContactCtrl();
 //
-//$result = $ctrl->delete('testUser');
+//print_r($ctrl->deleteContact('test@masxaro.com'));
+//print_r($ctrl->deleteContact('personal@gmail.com'));
 //
-//$result = $ctrl->insert($param);
+//die();
 
+//user ctrl test
+
+$ctrl = new UserCtrl();
+
+var_dump($ctrl->userLogin('test', '123'));
+
+die();
+
+$param = Array('user_account'=>'test', 
+			   'first_name'=>'yaxing', 
+			   'age_range_id'=>1, 
+			   'ethnicity'=>'Asia', 
+			   'pwd'=>'123');
+
+print_r($ctrl->realDeleteUser('test')." delete user </br>");
+
+print_r($ctrl->insertUser($param)." insert user </br>");
+
+
+//contact test
 $ctrl = new ContactCtrl();
 
-$ctrl->insertContactType("email");
-$ctrl->insertContactType("phone");
+print_r($ctrl->insertContactType("email")." insert contact type </br>");
+print_r($ctrl->insertContactType("phone")." insert contact type </br>");
 
 $param = Array();
 
-$cont = Array('user_account'=>'test', 'contact_type'=>'email', 'value'=>'test@masxaro.com');
+$cont = Array('user_account'=>'test', 
+			  'contact_type'=>'email', 
+			  'value'=>'test@masxaro.com');
 
 array_push($param, $cont);
 
-$cont = Array('user_account'=>'test', 'contact_type'=>'email', 'value'=>'personal@gmail.com');
+$cont = Array('user_account'=>'test', 
+			  'contact_type'=>'email', 
+			  'value'=>'personal@gmail.com');
 
 array_push($param, $cont);
 
-$result = $ctrl->insertContact($param);
-
-if($result){
-	echo "success";
-}
-else{
-	echo "fail";
-}
+print_r($ctrl->insertContact($param)." insert contacts </br>");
 
 ?>
