@@ -26,6 +26,7 @@
 
 include_once '../config.php';
 
+
 $code  ="983094867189238-0929347";
 
 //basic info
@@ -68,11 +69,11 @@ echo "</br>receipt insert".$result1 = $ctrl->insertReceipt($basicInfo, $items);
 
 $result &= $result1;
 
-//echo "</br>receipt insert".$result1 = $ctrl->insert($basicInfo, null);
+echo "</br>receipt insert".$result1 = $ctrl->insertReceipt($basicInfo, null);
 //
 //$result &= $result1;
 //
-//echo "</br>item insert".$result1 = $ctrl->insert(null, $items);
+echo "</br>item insert".$result1 = $ctrl->insertReceipt(null, $items);
 //
 //$result &= $result1;
 
@@ -92,4 +93,9 @@ if($result){
 else{
 	echo "fail";
 }
+
+$ctrl = new ReceiptCtrl();
+$ctrl->userGetAllReceipt('test');
+
+die();
 ?>

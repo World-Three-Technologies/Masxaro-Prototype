@@ -215,6 +215,39 @@ class UserCtrl extends Ctrl{
 			return true;
 		}
 		
+		setcookie("user_acc", "$acc");
+		
+		return false;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc
+	 * 
+	 * @desc
+	 * user log off
+	 */
+	public function userLogoff($acc){
+		setcookie("user_acc", "", time()-3600);
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc
+	 * 
+	 * @param boolean
+	 * 
+	 * @desc
+	 * 
+	 * authenticate user log in status
+	 */
+	public function userAuthenticate($acc){
+		if(!empty($_COOKIE['user_acc']) && $_COOKIE['user_acc'] == "$acc"){
+			return true;
+		}
+		
 		return false;
 	}
 }
