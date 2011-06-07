@@ -26,6 +26,8 @@
 
 class ReceiptCtrl extends Ctrl{
 	
+	public $user = 0;
+	
 	function __construct(){
 		parent::__construct();
 	}
@@ -293,5 +295,37 @@ class ReceiptCtrl extends Ctrl{
 		return true;
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param string $userAcc
+	 * 
+	 * @return JSON
+	 * 
+	 * @desc
+	 * get all receipt based on a certain user account
+	 */
+	public function userGetAllReceipt($userAcc){
+		
+		$sql = "
+			SELECT *
+			FROM `receipt`
+			WHERE
+			`user_account`='$userAcc'
+		";
+		
+		$this->db->select($sql);
+		
+		if($this->db->numRows() == 0){
+			echo "";
+		}
+		
+		else{
+			$result = $this->db->fetchObject();
+			echo json_encode($result);
+		}
+		
+		return;
+	}
 }
 ?>
