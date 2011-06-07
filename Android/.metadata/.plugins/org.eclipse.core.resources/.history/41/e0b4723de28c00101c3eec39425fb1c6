@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">W3T_app</string>
+    <string name="main_label_user">Username:</string>
+    <string name="main_label_password">Password:</string>
+    <string name="main_button_submit">Submit</string>
+    <string name="main_button_cancel">Cancel</string>
+    <string name="user_info">User</string>
+    <string name="receipt_info">Receipt</string>
+    <string name="nfc">nfc_view</string>
+</resources>
