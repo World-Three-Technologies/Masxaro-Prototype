@@ -1,0 +1,16 @@
+package com.android.W3T.app;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+public class NFCconnection extends Activity {
+	protected void onCreate(Bundle savedInstanceState) {
+        // Be sure to call the super class.
+        super.onCreate(savedInstanceState);
+        
+        // See assets/res/any/layout/translucent_background.xml for this
+        // view layout definition, which is being set here as
+        // the content of our screen.
+        setContentView(R.layout.);
+    }
+}

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+/*
+ * app_tabs.xml - The layout XML file of the app tabs screen  
+ *
+ *  Copyright 2011 World Three Technologies, Inc. 
+ *  All Rights Reserved.
+ * 
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Written by Yichao Yu <yichao@Masxaro>
+ *
+ */
+ -->
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/app_tabs" 
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+> 
+	<LinearLayout android:orientation="vertical" 
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+	>
+        <TabWidget android:id="@android:id/tabs"  
+            android:layout_width="fill_parent"  
+            android:layout_height="wrap_content"
+        />  
+        <FrameLayout android:id="@android:id/tabcontent"  
+            android:layout_width="fill_parent"  
+            android:layout_height="fill_parent"
+        >  
+            <!-- This tab is to show the user info -->
+			<LinearLayout android:id="@+id/user_info_tab"
+				android:layout_width = "fill_parent" android:layout_height="fill_parent"
+				android:orientation="vertical"
+			>
+				<TextView android:text="@string/user_info_name_label" 
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+				<TextView android:id="@+id/user_info_name"
+					android:text="Yichao Yu"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					
+				/>
+				<TextView android:text="@string/user_info_account_name_label" 
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+				<TextView android:id="@+id/user_info_account_name"
+					android:text="yichao@Masxaro.com"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+				/>
+			</LinearLayout>
+			
+			<!-- This tab is to show the receipts info -->
+			<LinearLayout android:id="@+id/receipt_info_tab"
+				android:layout_width = "fill_parent" android:layout_height="fill_parent"
+				android:orientation="vertical"
+			>	
+				<!-- This spinner is to sort the receipts, such as by date, by store name. -->
+				<TextView android:text="@string/receipt_info_sort_label"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+				<Spinner android.id="@+id/receipt_sort_type_spinner"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+				/>
+				<!-- This spinner lists the receipts by the way of sorting. -->
+				<TextView android:text="@string/receipt_info_list_label"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+				<Spinner android.id="@+id/receipt_list_spinner"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+				/>
+				
+				<!-- Receipt ID -->
+				<TextView android:text="@string/receipt_info_id_label"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+				<TextView android:text="ID@1234"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+				
+				<!-- Receipt Date -->
+				<TextView android:text="@string/receipt_info_date_label"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+				<TextView android:text="06-01-2011"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+				
+				<!-- Store name -->
+				<TextView android:text="@string/receipt_info_store_name_label"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+				<TextView android:text="Wendy's"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+				
+				<!-- Total cost -->
+				<TextView android:text="@string/receipt_info_total_label"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+				<TextView android:text="12.32USD"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:gravity="left"
+				/>
+			</LinearLayout>
+			
+			<!-- This tab is to configure the settings -->
+			<LinearLayout android:id="@+id/configuration_tab"
+				android:layout_width = "fill_parent" android:layout_height="fill_parent"
+				android:orientation="vertical"
+			>
+			
+			</LinearLayout>
+		            
+            
+        </FrameLayout>
+    </LinearLayout>
+</TabHost>

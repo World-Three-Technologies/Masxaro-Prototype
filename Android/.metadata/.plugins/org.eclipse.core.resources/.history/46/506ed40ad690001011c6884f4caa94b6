@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+-->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Normal 1" />
+
+    <item android:id="@+id/submenu"
+        android:title="Emotions">
+
+        <menu>        
+
+            <item android:id="@+id/happy"
+                android:title="Happy"
+                android:icon="@drawable/stat_happy" />
+        
+            <item android:id="@+id/neutral"
+                android:title="Neutral"
+                android:icon="@drawable/stat_neutral" />
+        
+            <item android:id="@+id/sad"
+                android:title="Sad"
+                android:icon="@drawable/stat_sad" />
+        
+        </menu>
+    
+    </item>
+
+    <item android:title="Normal 2" />
+
+</menu>

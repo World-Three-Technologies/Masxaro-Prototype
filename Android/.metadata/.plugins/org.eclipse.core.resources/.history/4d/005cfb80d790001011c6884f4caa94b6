@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+/*
+ * front_page_menu.xml - The layout XML file of the menu bar  
+ *
+ *  Copyright 2011 World Three Technologies, Inc. 
+ *  All Rights Reserved.
+ * 
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Written by Yichao Yu <yichao@Masxaro>
+ *
+ */
+ -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="View Receipts"
+    	android:id="@+id/view_receipt_option"
+    	android:icon="@drawable/view"
+    />
+    
+    <item android:title="My Coupons"
+    	android:id="@+id/view_coupon_option"
+    	android:icon="@drawable/coupon"
+    />
+    
+    <item android:title="Login"
+    	android:id="@+id/Login_option"
+    	android:icon="@drawable/login"
+    	android:visible="true"
+    />
+    
+    <item android:title="Logout"
+    	android:id="@+id/logout_option"
+    	android:icon="@drawable/logout"
+    	android:visible="false"
+    />
+    
+    <item android:id="@+id/submenu"
+        android:title="Emotions">
+
+        <menu>        
+
+            <item android:id="@+id/happy"
+                android:title="Happy"
+                android:icon="@drawable/stat_happy" />
+        
+            <item android:id="@+id/neutral"
+                android:title="Neutral"
+                android:icon="@drawable/stat_neutral" />
+        
+            <item android:id="@+id/sad"
+                android:title="Sad"
+                android:icon="@drawable/stat_sad" />
+        
+        </menu>
+    
+    </item>
+
+    
+
+</menu>

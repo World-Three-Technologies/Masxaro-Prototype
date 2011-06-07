@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+/*
+ * front_page.xml - The layout XML file of the front page  
+ *
+ *  Copyright 2011 World Three Technologies, Inc. 
+ *  All Rights Reserved.
+ * 
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Written by Yichao Yu <yichao@Masxaro>
+ *
+ */
+ -->
+<LinearLayout
+  	xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:layout_width="match_parent"
+  	android:layout_height="match_parent"
+  	android:orientation="vertical"
+  	android:id="@+id/front_page"
+    <!-- This label shows the username who has logged in. -->
+    <TextView android:text="User Name" android:id="@+id/Username" 
+      	android:layout_width="fill_parent" android:layout_height="wrap_content"
+      	android:gravity="center" android:textSize="20dip"
+    />
+    <!-- This part displays the Fractal Fern image as main part of the front page -->
+    <ImageView android:id="@+id/FractalFern" 
+      	android:layout_width="fill_parent" android:layout_height="fill_parent"
+      	android:src="@drawable/fracfern" android:layout_gravity="center_vertical"
+    />
+</LinearLayout>

@@ -11,8 +11,8 @@
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
         <!-- the logging-in progress bar will be in this activity -->
-        <activity android:name=".MainLogin"
-        	android:label="@string/app_name">
+        <activity android:name=".FrontPage"
+        	android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,18 +21,18 @@
 		
 		<!-- This activity is intended to show the app tabs after successfully passed
 			username-password check or when the app is running. -->
-		<activity android:name=".AppTabs"
-			android:theme="@android:style/Theme.NoTitleBar">
+		<activity android:name=".ReceiptsView"
+			android:label="@string/app_name">
 			<intent-filter>
 				<!-- This action is the user successfully login our system. -->
-				<action android:name="com.android.W3T.app.intent.action.VALIDATION_PASSED" />
+				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>	  	  
 		</activity>
 		
 		<!-- This is the NFC communication activity which indicates the NFC link
 			is connecting after the cell phone is put close to a vendor machine. -->
-		<activity android:name=".NFCConnection"
+		<activity android:name="NFCConnecting"
 			android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 				<action android:name="com.android.W3T.app.intent.action.NFC_DETECTED" />
