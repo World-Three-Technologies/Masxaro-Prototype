@@ -35,8 +35,14 @@ class Tool{
 	public static function infoArray2SQL($info)
 	{
 		$sql = '';
-		foreach ($info as $key => $value)
+		foreach ($info as $key => $value){
+			
+			if(($value == null || $value == 'null' || $value == 'NULL') && $value != 0){
+				$sql = $sql."`{$key}` = NULL,";
+				continue;
+			}
 			$sql = $sql."`{$key}` = '$value',";
+		}
 		$sql = substr($sql, 0, strlen($sql)-1);		
 		return $sql;
 	}
@@ -72,7 +78,7 @@ class Tool{
 			return true;
 		}
 		
-		else if(isset($_COOKIE['store_id']) && $_COOKIE['store_id'] == $acc){
+		else if(isset($_COOKIE['store_acc']) && $_COOKIE['store_acc'] == $acc){
 			return true;
 		}
 		
@@ -99,7 +105,7 @@ class Tool{
 				setcookie('user_acc', $acc, time() + 20 * 60 * 60); //1 day
 				break;
 			case 'store':
-				setcookie('store_id', $acc, time() + 20 * 60 * 60); //1 day
+				setcookie('store_acc', $acc, time() + 20 * 60 * 60); //1 day
 				break;
 		}
 	}
@@ -115,7 +121,7 @@ class Tool{
 	 */
 	public static function logoff($acc){
 		setcookie('user_acc', '');
-		setcookie('store_id', '');
+		setcookie('store_acc', '');
 	}
 }
 ?>

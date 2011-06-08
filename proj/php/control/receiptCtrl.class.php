@@ -72,11 +72,11 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * ($items is null)
 	 */
-	public function insertReceipt($basicInfo = "", $items = ""){
+	public function insertReceipt($basicInfo, $items){
 		
-		$basicInfoNull = is_null($basicInfo) || strlen($basicInfo) == 0;
+		$basicInfoNull = is_null($basicInfo);
 		
-		$itemsNull = is_null($items) || strlen($items) == 0;
+		$itemsNull = is_null($items);
 		
 		$totalCost = 0;
 		
@@ -88,13 +88,17 @@ class ReceiptCtrl extends Ctrl{
 			
 			$receiptId = $basicInfo['receipt_id'];
 			
-			if($basicInfo['receipt_time'] == null || strlen($basicInfo['receipt_time']) == 0){
+			if(empty($basicInfo['receipt_time']) || strlen($basicInfo['receipt_time']) == 0){
 				$basicInfo['receipt_time'] = date("Y-m-d H:i:s");
 			}
 			
-			if($receiptId == null || strlen($receiptId) == 0){
+			if(empty($receiptId) || strlen($receiptId) == 0){
 				$receiptId = $this->idGen($basicInfo);
 				$basicInfo['receipt_id'] = $receiptId;
+			}
+			
+			if(empty($basicInfo['total_cost']) || strlen($basicInfo['total_cost']) == 0){
+				$basicInfo['total_cost'] = $totalCost;
 			}
 			
 			$info = "";
@@ -132,6 +136,8 @@ class ReceiptCtrl extends Ctrl{
 				`receipt_id`='$receiptId'
 			";
 			
+			echo $sql;
+			
 			$this->db->select($sql);
 			
 			if($this->db->numRows() > 0){
@@ -165,6 +171,7 @@ class ReceiptCtrl extends Ctrl{
 					SET
 					$info	
 				";
+					
 				if($this->db->insert($sql) < 0){
 					$this->realDelete($receiptId);
 					return false;
@@ -313,6 +320,8 @@ class ReceiptCtrl extends Ctrl{
 			FROM `receipt`
 			WHERE
 			`user_account`='$userAcc'
+			AND
+			`deleted`=0
 		";
 		
 		$this->db->select($sql);
@@ -325,6 +334,30 @@ class ReceiptCtrl extends Ctrl{
 			$result = $this->db->fetchObject();
 			return $result;
 		}
+	}
+	
+	public function userGetAllReceiptItems($receiptId){
+		
+		$sql = "
+			SELECT *
+			FROM `receipt_item`
+			WHERE
+			`receipt_id`='$receiptId'
+			AND
+			`deleted`=0
+		";
+		
+		$this->db->select($sql);
+		
+		if($this->db->numRows() == 0){
+			return "";
+		}
+		
+		else{
+			$result = $this->db->fetchObject();
+			return $result;
+		}
+		
 	}
 }
 ?>

@@ -86,7 +86,7 @@ class StoreCtrl extends Ctrl{
 			SELECT *
 			FROM `store`
 			WHERE
-			`store_name`='$acc'
+			`store_account`='$acc'
 			AND
 			`pwd`='$pwd'
 		";
@@ -111,7 +111,7 @@ class StoreCtrl extends Ctrl{
 	 * update store info
 	 * 
 	 */
-	public function updateStore($storeId, $info){
+	public function updateStore($storeAcc, $info){
 		$info = Tool::infoArray2SQL($info);
 		
 		if(!Tool::securityChk($info)){
@@ -123,7 +123,7 @@ class StoreCtrl extends Ctrl{
 			SET
 			$info
 			WHERE
-			`store_id`=$storeId
+			`store_account`='$storeAcc'
 		";
 			
 		if($this->db->update($sql) <= 0){
@@ -142,7 +142,7 @@ class StoreCtrl extends Ctrl{
 	 * 
 	 * delete a store
 	 */
-	public function deleteStore($storeId){
+	public function deleteStore($storeAcc){
 		$info = Tool::infoArray2SQL($info);
 		
 		if(!Tool::securityChk($info)){
@@ -153,7 +153,7 @@ class StoreCtrl extends Ctrl{
 			DELETE
 			FROM `store`
 			WHERE
-			`store_id`=$storeId
+			`store_account`='$storeAcc'
 		";
 		
 		if($this->db->delete($sql) <= 0){
