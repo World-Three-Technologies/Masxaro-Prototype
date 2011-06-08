@@ -65,11 +65,13 @@
   		android:orientation="horizontal"
   	>
 		<Button android:text="@string/login_button_submit"
+			android:id="@+id/sumbit_button"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_weight="1.0"
 		/>
 		
-		<Button android:text="@string/login_button_cancel" 	
+		<Button android:text="@string/login_button_cancel"
+			android:id="@+id/cancel_button"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_weight="1.0"
 		/>

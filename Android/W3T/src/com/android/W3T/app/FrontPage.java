@@ -29,7 +29,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +38,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 public class FrontPage extends Activity {
@@ -53,6 +54,8 @@ public class FrontPage extends Activity {
 	private long mUptime;
 	private long mDowntime;
 	private Menu mMenu;
+	private Dialog mLoginDialog;
+	private AlertDialog mLogoutDialog;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,23 +66,42 @@ public class FrontPage extends Activity {
 	@Override
 	public Dialog onCreateDialog(int id) {
 		super.onCreateDialog(id);
-		Dialog dialog = new Dialog(FrontPage.this);
 
 		switch(id) {
 		case DIALOG_LOGIN:
-			dialog.setContentView(R.layout.login_dialog);
-			dialog.setTitle("Log In:");
-			break;
+			mLoginDialog = new Dialog(FrontPage.this);
+			mLoginDialog.setContentView(R.layout.login_dialog);
+			mLoginDialog.setTitle("Log In:");
+			findViewById(R.id.sumbit_button).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mLoginDialog.cancel();
+					// Send account info to server and show a progress bar
+					ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
+					progresslog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+					progresslog.setMessage("Logging in...");
+					progresslog.setCancelable(true);
+					progresslog.show();
+				}
+			});
+			findViewById(R.id.cancel_button).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mLoginDialog.cancel();
+				}
+			});
+			return mLoginDialog;
 		case DIALOG_LOGOUT:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(getResources().getString(R.string.logout_promote))
 			       .setCancelable(false)
 			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			           public void onClick(DialogInterface dialog, int id) {
+			        	   dialog.cancel();
 			        	   // Send account info to server and show a progress bar
 			        	   ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
 			        	   progresslog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			        	   progresslog.setMessage("Logging in...");
+			        	   progresslog.setMessage("Logging out...");
 			        	   progresslog.setCancelable(true);
 			        	   progresslog.show();
 			           }
@@ -89,14 +111,11 @@ public class FrontPage extends Activity {
 			        	   dialog.cancel();
 			           }
 			       });
-			dialog = builder.create();
-			break;
+			mLogoutDialog = builder.create();
+			return mLogoutDialog;
 		default:
-			dialog = null;
-			break;
+			return null;
 		}
-		
-		return dialog;
 	}
 	
 	@Override
