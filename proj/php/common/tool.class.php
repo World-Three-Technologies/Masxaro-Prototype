@@ -35,8 +35,14 @@ class Tool{
 	public static function infoArray2SQL($info)
 	{
 		$sql = '';
-		foreach ($info as $key => $value)
+		foreach ($info as $key => $value){
+			
+			if(($value == null || $value == 'null' || $value == 'NULL') && $value != 0){
+				$sql = $sql."`{$key}` = NULL,";
+				continue;
+			}
 			$sql = $sql."`{$key}` = '$value',";
+		}
 		$sql = substr($sql, 0, strlen($sql)-1);		
 		return $sql;
 	}
@@ -54,6 +60,68 @@ class Tool{
 	 */
 	public static function securityChk($str){
 		return true;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc (user account) OR int $acc (store id)
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * 
+	 * authenticate user/store log in status
+	 */
+	public static function authenticate($acc){
+		if(isset($_COOKIE['user_acc']) && $_COOKIE['user_acc'] == $acc){
+			return true;
+		}
+		
+		else if(isset($_COOKIE['store_acc']) && $_COOKIE['store_acc'] == $acc){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc (user account or store id)
+	 * 
+	 * @param string $pwd
+	 * 
+	 * @param string $type (user or store)
+	 * 
+	 * @desc
+	 * 
+	 * user / store login cookie set
+	 */
+	public static function login($acc, $pwd, $type){
+		switch($type){
+			case 'user':
+				setcookie('user_acc', $acc, time() + 20 * 60 * 60); //1 day
+				break;
+			case 'store':
+				setcookie('store_acc', $acc, time() + 20 * 60 * 60); //1 day
+				break;
+		}
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc (user account or store id)
+	 * 
+	 * @desc
+	 * 
+	 * user / store log off
+	 */
+	public static function logoff($acc){
+		setcookie('user_acc', '');
+		setcookie('store_acc', '');
 	}
 }
 ?>

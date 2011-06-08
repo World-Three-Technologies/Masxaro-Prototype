@@ -100,16 +100,18 @@ class ContactCtrl extends Ctrl{
 	 * distinguish an user or store by set certain Account/ID in $info
 	 */
 	public function insertContact($info){
+		
 		$n = count($info);
 		
 		$inserted = array(); //record inserted contact value within current process
 		
-		$regex = "(.*@masxaro.com)";
+		//$regex = "(.*@masxaro.com)";
 		
 		for($i = 0; $i < $n; $i ++){
+			
 			$cur = Tool::infoArray2SQL($info[$i]);
 			
-			if(!Tool::securityChk($cur) || preg_match($regex, $info[$i]['value'])){
+			if(!Tool::securityChk($cur)){
 				
 				for($i = 0; $i < count($inserted); $i ++){
 					//rollback
