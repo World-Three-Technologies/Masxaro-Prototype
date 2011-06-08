@@ -67,35 +67,16 @@ echo "delete".$result = $ctrl->realDelete($code);
 
 echo "</br>receipt insert".$result1 = $ctrl->insertReceipt($basicInfo, $items);
 
-$result &= $result1;
+//echo "</br>receipt insert".$result1 = $ctrl->insertReceipt($basicInfo, null);
 
-echo "</br>receipt insert".$result1 = $ctrl->insertReceipt($basicInfo, null);
-//
-//$result &= $result1;
-//
-echo "</br>item insert".$result1 = $ctrl->insertReceipt(null, $items);
-//
-//$result &= $result1;
+//echo "</br>item insert".$result1 = $ctrl->insertReceipt(null, $items);
 
 echo "</br>fake delete".$result1 = $ctrl->fakeDelete($code);
 
-$result &= $result1;
-
 echo "</br>recover".$result1 = $ctrl->recoverDeleted($code);
-
-$result &= $result1;
 
 echo "</br>";
 
-if($result){
-	echo "success";
-}
-else{
-	echo "fail";
-}
+echo $ctrl->userGetAllReceipt('test');
 
-$ctrl = new ReceiptCtrl();
-$ctrl->userGetAllReceipt('test');
-
-die();
 ?>

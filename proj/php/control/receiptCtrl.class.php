@@ -110,8 +110,8 @@ class ReceiptCtrl extends Ctrl{
 				SET
 				$info
 			";
-			
-			if($this->db->insert($sql) <= 0){
+				
+			if($this->db->insert($sql) < 0){
 				//rollback
 				$this->realDelete($receiptId);
 				return false;
@@ -165,7 +165,7 @@ class ReceiptCtrl extends Ctrl{
 					SET
 					$info	
 				";
-				if($this->db->insert($sql) <= 0){
+				if($this->db->insert($sql) < 0){
 					$this->realDelete($receiptId);
 					return false;
 				}
@@ -213,7 +213,8 @@ class ReceiptCtrl extends Ctrl{
 			WHERE
 			`receipt_id` = '$receiptId'
 		";
-		if($this->db->delete($sql) <= 0 && $delItem){
+		
+		if($this->db->delete($sql) <= 0 || $delItem <= 0){
 			return false;
 		}
 		
@@ -300,7 +301,7 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * @param string $userAcc
 	 * 
-	 * @return JSON
+	 * @return array(object, object...);
 	 * 
 	 * @desc
 	 * get all receipt based on a certain user account
@@ -317,15 +318,13 @@ class ReceiptCtrl extends Ctrl{
 		$this->db->select($sql);
 		
 		if($this->db->numRows() == 0){
-			echo "";
+			return "";
 		}
 		
 		else{
 			$result = $this->db->fetchObject();
-			echo json_encode($result);
+			return $result;
 		}
-		
-		return;
 	}
 }
 ?>

@@ -191,10 +191,10 @@ class UserCtrl extends Ctrl{
 	 * 
 	 * @desc
 	 * 
-	 * user login
+	 * find user 
 	 * 
 	 */
-	public function userLogin($acc, $pwd){
+	public function findUser($acc, $pwd){
 		if(!Tool::securityChk($acc)){
 			return false;
 		}
@@ -212,39 +212,6 @@ class UserCtrl extends Ctrl{
 		
 		$this->db->select($sql);
 		if($this->db->numRows() == 1){
-			return true;
-		}
-		
-		setcookie("user_acc", "$acc");
-		
-		return false;
-	}
-	
-	/**
-	 * 
-	 * 
-	 * @param string $acc
-	 * 
-	 * @desc
-	 * user log off
-	 */
-	public function userLogoff($acc){
-		setcookie("user_acc", "", time()-3600);
-	}
-	
-	/**
-	 * 
-	 * 
-	 * @param string $acc
-	 * 
-	 * @param boolean
-	 * 
-	 * @desc
-	 * 
-	 * authenticate user log in status
-	 */
-	public function userAuthenticate($acc){
-		if(!empty($_COOKIE['user_acc']) && $_COOKIE['user_acc'] == "$acc"){
 			return true;
 		}
 		

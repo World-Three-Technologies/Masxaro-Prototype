@@ -38,9 +38,9 @@ include_once '../config.php';
 
 $ctrl = new UserCtrl();
 
-var_dump($ctrl->userLogin('test', '123'));
+//var_dump($ctrl->userLogin('test', '123'));
 
-die();
+//die();
 
 $param = Array('user_account'=>'test', 
 			   'first_name'=>'yaxing', 
@@ -48,16 +48,16 @@ $param = Array('user_account'=>'test',
 			   'ethnicity'=>'Asia', 
 			   'pwd'=>'123');
 
-print_r($ctrl->realDeleteUser('test')." delete user </br>");
+var_dump($ctrl->realDeleteUser('test')." delete user </br>");
 
-print_r($ctrl->insertUser($param)." insert user </br>");
+var_dump($ctrl->insertUser($param)." insert user </br>");
 
 
 //contact test
 $ctrl = new ContactCtrl();
 
-print_r($ctrl->insertContactType("email")." insert contact type </br>");
-print_r($ctrl->insertContactType("phone")." insert contact type </br>");
+var_dump($ctrl->insertContactType("email")." insert contact type </br>");
+var_dump($ctrl->insertContactType("phone")." insert contact type </br>");
 
 $param = Array();
 
@@ -73,6 +73,6 @@ $cont = Array('user_account'=>'test',
 
 array_push($param, $cont);
 
-print_r($ctrl->insertContact($param)." insert contacts </br>");
+var_dump($ctrl->insertContact($param)." insert contacts </br>");
 
 ?>

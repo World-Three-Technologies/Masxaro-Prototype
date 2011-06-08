@@ -72,10 +72,10 @@ class StoreCtrl extends Ctrl{
 	 * 
 	 * @desc
 	 * 
-	 * store login
+	 * find store
 	 * 
 	 */
-	public function storeLogin($acc, $pwd){
+	public function findStore($acc, $pwd){
 		if(!Tool::securityChk($acc)){
 			return false;
 		}
