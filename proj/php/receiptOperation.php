@@ -26,9 +26,9 @@
 
 include_once '../config.php';
 
-//$opcode = $_POST['opcode'];
+$opcode = $_POST['opcode'];
 
-$opcode = 'user_get_all_receipt_item';
+//$opcode = 'user_get_all_receipt_item';
 
 $ctrl = new ReceiptCtrl();
 
