@@ -43,62 +43,84 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 public class FrontPage extends Activity {
-	public final static int MENU_ITEM = Menu.FIRST;
+	// Indicators for every dialog view.
 	public final static int DIALOG_LOGIN = 1;
 	public final static int DIALOG_LOGOUT = 2;
+	// Indicators for logged in or no one logged in.
 	public final static boolean OFFLINE = false;
 	public final static boolean ONLINE = true;
-	
+	// Flag for whether any user logged in or not
 	public static boolean log_status = OFFLINE;
 	
+	// Screen touch event holding time
 	private long mUptime;
 	private long mDowntime;
+	
+	// Menu bar in this activity 
 	private Menu mMenu;
+	
+	// Dialogs will show in this activity
 	private Dialog mLoginDialog;
 	private AlertDialog mLogoutDialog;
 	
 	@Override
+	// Create the activity
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.front_page);
 	}
 	
+	// Create the dialogs: 1.Login dialog; 2.Logout dialog
 	@Override
 	public Dialog onCreateDialog(int id) {
 		super.onCreateDialog(id);
-
+		// Choose a certain dialog to create.
 		switch(id) {
 		case DIALOG_LOGIN:
+			// Login dialog is a custom dialog, we take care of every details of it.
 			mLoginDialog = new Dialog(FrontPage.this);
 			mLoginDialog.setContentView(R.layout.login_dialog);
 			mLoginDialog.setTitle("Log In:");
+			// Deal with submit button click event
 			findViewById(R.id.sumbit_button).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					// Close the Login dialog when trying to log in.
 					mLoginDialog.cancel();
-					// Send account info to server and show a progress bar
+					// Show a progress bar and send account info to server.
 					ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
 					progresslog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 					progresslog.setMessage("Logging in...");
 					progresslog.setCancelable(true);
 					progresslog.show();
+					
+					sendAcctData();
+				}
+				// To be implemented later
+				private void sendAcctData() {
+					// TODO Auto-generated method stub
+					
 				}
 			});
+			// Deal with cancel button click event
 			findViewById(R.id.cancel_button).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					// Just close the Login dialog.
 					mLoginDialog.cancel();
 				}
 			});
 			return mLoginDialog;
 		case DIALOG_LOGOUT:
+			// Logout dialog is an alert dialog. One message and two buttons on it.
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(getResources().getString(R.string.logout_promote))
 			       .setCancelable(false)
+			       // Deal with logout button click event
 			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			           public void onClick(DialogInterface dialog, int id) {
 			        	   dialog.cancel();
-			        	   // Send account info to server and show a progress bar
+			        	   // Show a progress bar and send log off signal to server.
 			        	   ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
 			        	   progresslog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			        	   progresslog.setMessage("Logging out...");
@@ -106,11 +128,13 @@ public class FrontPage extends Activity {
 			        	   progresslog.show();
 			           }
 			       })
+			       // 
 			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
 			           public void onClick(DialogInterface dialog, int id) {
 			        	   dialog.cancel();
 			           }
 			       });
+			// create the Logout dialog.
 			mLogoutDialog = builder.create();
 			return mLogoutDialog;
 		default:
@@ -126,7 +150,7 @@ public class FrontPage extends Activity {
         
         // Inflate the currently selected menu XML resource.
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.front_page_menu, menu);
+        inflater.inflate(R.menu.front_page_menu, mMenu);
 
         return true;
     }
@@ -136,15 +160,12 @@ public class FrontPage extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.view_receipt_option:
+			// Start the receipt view activity
 			Intent receipt_view_intent = new Intent(FrontPage.this, ReceiptsView.class);
 			startActivity(receipt_view_intent);
 			break;
 		case R.id.search_option:
 			Toast.makeText(this, "Start Search receipts activity!", Toast.LENGTH_SHORT).show();
-			return true;
-		case R.id.Log_option:
-			showDialog(DIALOG_LOGIN);
-			Toast.makeText(this, "Start log activity!", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.view_coupon_option:
 			Toast.makeText(this, "Start view coupon activity!", Toast.LENGTH_SHORT).show();
@@ -152,12 +173,19 @@ public class FrontPage extends Activity {
 		case R.id.conf_option:
 			Toast.makeText(this, "Start configuration activity!", Toast.LENGTH_SHORT).show();
 			return false;
+		case R.id.Log_option:
+			// Pop up the login or the logout dialog
+			showDialog(DIALOG_LOGOUT);
+			Toast.makeText(this, "Start log activity!", Toast.LENGTH_SHORT).show();
+			return true;
 		}
 		return false;
 		
 	}
 	
-	@Override 
+	@Override
+	// To prevent a mistaken touch, users are required to touch the screen for a little while.
+	// Validate the touch screen event.
 	public boolean onTouchEvent(MotionEvent event) {
 		int action = event.getAction();
 		long duration = 0;
@@ -165,6 +193,7 @@ public class FrontPage extends Activity {
 			mUptime = event.getEventTime();
 			duration = mUptime - mDowntime;
 			if (duration >= 100) {
+				// A valid touch screen event.
 				openOptionsMenu();
 //				System.out.println("Going to call menu bar activity.");
 			}
@@ -176,6 +205,7 @@ public class FrontPage extends Activity {
 	}
 	
 	@Override
+	// Deal with any key press event
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_CENTER:
