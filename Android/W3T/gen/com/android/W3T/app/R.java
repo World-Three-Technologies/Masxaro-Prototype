@@ -26,25 +26,29 @@ public final class R {
     }
     public static final class id {
         public static final int FractalFern=0x7f070002;
-        public static final int Login_option=0x7f07000d;
-        public static final int NFC_connecting=0x7f070003;
+        public static final int Log_option=0x7f07000f;
+        public static final int NFC_connecting=0x7f070005;
         public static final int Username=0x7f070001;
-        public static final int conf_option=0x7f07000c;
-        public static final int date_text=0x7f070006;
+        public static final int conf_option=0x7f07000e;
+        public static final int date_text=0x7f070008;
         public static final int front_page=0x7f070000;
-        public static final int id_text=0x7f070005;
-        public static final int logout_option=0x7f07000e;
-        public static final int receipt_view=0x7f070004;
-        public static final int search_option=0x7f07000a;
-        public static final int store_name_text=0x7f070007;
-        public static final int total_cost_text=0x7f070008;
-        public static final int view_coupon_option=0x7f07000b;
-        public static final int view_receipt_option=0x7f070009;
+        public static final int id_text=0x7f070007;
+        public static final int login_password=0x7f070004;
+        public static final int login_username=0x7f070003;
+        public static final int logout_option=0x7f070010;
+        public static final int receipt_view=0x7f070006;
+        public static final int search_option=0x7f07000c;
+        public static final int store_name_text=0x7f070009;
+        public static final int total_cost_text=0x7f07000a;
+        public static final int view_coupon_option=0x7f07000d;
+        public static final int view_receipt_option=0x7f07000b;
     }
     public static final class layout {
         public static final int front_page=0x7f030000;
-        public static final int nfc_connecting=0x7f030001;
-        public static final int receipt_view=0x7f030002;
+        public static final int login_dialog=0x7f030001;
+        public static final int logout_dialog=0x7f030002;
+        public static final int nfc_connecting=0x7f030003;
+        public static final int receipt_view=0x7f030004;
     }
     public static final class menu {
         public static final int front_page_menu=0x7f060000;
@@ -54,11 +58,12 @@ public final class R {
         public static final int NFC_text=0x7f05000d;
         public static final int app_name=0x7f050000;
         public static final int configuration=0x7f05000b;
-        public static final int keep_login_label=0x7f050005;
-        public static final int main_button_cancel=0x7f050004;
-        public static final int main_button_submit=0x7f050003;
-        public static final int main_label_password=0x7f050002;
-        public static final int main_label_user=0x7f050001;
+        public static final int login_button_cancel=0x7f050004;
+        public static final int login_button_submit=0x7f050003;
+        public static final int login_keep_label=0x7f050005;
+        public static final int login_label_password=0x7f050002;
+        public static final int login_label_username=0x7f050001;
+        public static final int logout_promote=0x7f05000e;
         public static final int menu_bar_view=0x7f05000c;
         public static final int receipt_info_date_label=0x7f050008;
         public static final int receipt_info_id_label=0x7f050009;

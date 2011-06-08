@@ -47,7 +47,7 @@
 	/>
 		    
 	<item android:title="Login"
-	  	android:id="@+id/Login_option"
+	  	android:id="@+id/Log_option"
 	   	android:icon="@drawable/login"
 	   	android:visible="true"
 	/>

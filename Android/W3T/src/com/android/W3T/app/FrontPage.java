@@ -26,6 +26,11 @@
 package com.android.W3T.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +43,12 @@ import android.widget.Toast;
 
 public class FrontPage extends Activity {
 	public final static int MENU_ITEM = Menu.FIRST;
+	public final static int DIALOG_LOGIN = 1;
+	public final static int DIALOG_LOGOUT = 2;
+	public final static boolean OFFLINE = false;
+	public final static boolean ONLINE = true;
+	
+	public static boolean log_status = OFFLINE;
 	
 	private long mUptime;
 	private long mDowntime;
@@ -49,22 +60,43 @@ public class FrontPage extends Activity {
         setContentView(R.layout.front_page);
 	}
 	
-	@Override 
-	public boolean onTouchEvent(MotionEvent event) {
-		int action = event.getAction();
-		long duration = 0;
-		if (action == MotionEvent.ACTION_UP) {
-			mUptime = event.getEventTime();
-			duration = mUptime - mDowntime;
-			if (duration >= 100) {
-				openOptionsMenu();
-				System.out.println("Going to call menu bar activity.");
-			}
+	@Override
+	public Dialog onCreateDialog(int id) {
+		super.onCreateDialog(id);
+		Dialog dialog = new Dialog(FrontPage.this);
+
+		switch(id) {
+		case DIALOG_LOGIN:
+			dialog.setContentView(R.layout.login_dialog);
+			dialog.setTitle("Log In:");
+			break;
+		case DIALOG_LOGOUT:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(getResources().getString(R.string.logout_promote))
+			       .setCancelable(false)
+			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	   // Send account info to server and show a progress bar
+			        	   ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
+			        	   progresslog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			        	   progresslog.setMessage("Logging in...");
+			        	   progresslog.setCancelable(true);
+			        	   progresslog.show();
+			           }
+			       })
+			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	   dialog.cancel();
+			           }
+			       });
+			dialog = builder.create();
+			break;
+		default:
+			dialog = null;
+			break;
 		}
-		else if(action == MotionEvent.ACTION_DOWN)
-			mDowntime = event.getEventTime();
-				
-		return true;
+		
+		return dialog;
 	}
 	
 	@Override
@@ -91,8 +123,9 @@ public class FrontPage extends Activity {
 		case R.id.search_option:
 			Toast.makeText(this, "Start Search receipts activity!", Toast.LENGTH_SHORT).show();
 			return true;
-		case R.id.Login_option:
-			Toast.makeText(this, "Start login activity!", Toast.LENGTH_SHORT).show();
+		case R.id.Log_option:
+			showDialog(DIALOG_LOGIN);
+			Toast.makeText(this, "Start log activity!", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.view_coupon_option:
 			Toast.makeText(this, "Start view coupon activity!", Toast.LENGTH_SHORT).show();
@@ -103,6 +136,24 @@ public class FrontPage extends Activity {
 		}
 		return false;
 		
+	}
+	
+	@Override 
+	public boolean onTouchEvent(MotionEvent event) {
+		int action = event.getAction();
+		long duration = 0;
+		if (action == MotionEvent.ACTION_UP) {
+			mUptime = event.getEventTime();
+			duration = mUptime - mDowntime;
+			if (duration >= 100) {
+				openOptionsMenu();
+//				System.out.println("Going to call menu bar activity.");
+			}
+		}
+		else if(action == MotionEvent.ACTION_DOWN)
+			mDowntime = event.getEventTime();
+				
+		return true;
 	}
 	
 	@Override
