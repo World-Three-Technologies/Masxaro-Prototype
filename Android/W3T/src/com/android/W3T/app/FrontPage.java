@@ -82,34 +82,34 @@ public class FrontPage extends Activity {
 			mLoginDialog.setContentView(R.layout.login_dialog);
 			mLoginDialog.setTitle("Log In:");
 			// Deal with submit button click event
-			findViewById(R.id.sumbit_button).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
+//			findViewById(R.id.sumbit_button).setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
 					// Close the Login dialog when trying to log in.
-					mLoginDialog.cancel();
-					// Show a progress bar and send account info to server.
-					ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
-					progresslog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-					progresslog.setMessage("Logging in...");
-					progresslog.setCancelable(true);
-					progresslog.show();
+//					mLoginDialog.cancel();
+//					// Show a progress bar and send account info to server.
+//					ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
+//					progresslog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//					progresslog.setMessage("Logging in...");
+//					progresslog.setCancelable(true);
+//					progresslog.show();
 					
-					sendAcctData();
-				}
+//					sendAcctData();
+//				}
 				// To be implemented later
-				private void sendAcctData() {
+//				private void sendAcctData() {
 					// TODO Auto-generated method stub
 					
-				}
-			});
+//				}
+//			});
 			// Deal with cancel button click event
-			findViewById(R.id.cancel_button).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					// Just close the Login dialog.
-					mLoginDialog.cancel();
-				}
-			});
+//			findViewById(R.id.cancel_button).setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					// Just close the Login dialog.
+//					mLoginDialog.cancel();
+//				}
+//			});
 			return mLoginDialog;
 		case DIALOG_LOGOUT:
 			// Logout dialog is an alert dialog. One message and two buttons on it.
@@ -175,7 +175,7 @@ public class FrontPage extends Activity {
 			return false;
 		case R.id.Log_option:
 			// Pop up the login or the logout dialog
-			showDialog(DIALOG_LOGOUT);
+			showDialog(DIALOG_LOGIN);
 			Toast.makeText(this, "Start log activity!", Toast.LENGTH_SHORT).show();
 			return true;
 		}

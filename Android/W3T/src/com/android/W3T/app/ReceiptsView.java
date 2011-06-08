@@ -30,6 +30,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ReceiptsView extends Activity {
@@ -51,21 +52,25 @@ public class ReceiptsView extends Activity {
 	};
 	
 	private int mCurReceipt = 1;
+	private LinearLayout mReceiptView;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt_view);
+        mReceiptView = (LinearLayout)findViewById(R.id.receipt_view);
 	}
 	
 	@Override
-	public boolean onKeyDown (int keyCode, KeyEvent event) {
+	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_LEFT:
 			getPrevReceipt(mCurReceipt);
+			setContentView(mReceiptView);
 			return true;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
 			getNextReceipt(mCurReceipt);
+			setContentView(mReceiptView);
 			return true;
 		default:
 			return false;
