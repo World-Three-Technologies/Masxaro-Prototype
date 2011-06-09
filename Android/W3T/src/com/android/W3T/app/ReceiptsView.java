@@ -134,14 +134,15 @@ public class ReceiptsView extends Activity {
 		case KeyEvent.KEYCODE_DPAD_LEFT:
 			new Thread(mPrevUpdate).start();
 //			fillReceiptView(getPrevReceipt(mCurReceipt));
-			return true;
+			break;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
 			new Thread(mNextUpdate).start();
 //			fillReceiptView(getNextReceipt(mCurReceipt));
-			return true;
+			break;
 		default:
-			return false;
+			break;
 		}
+		return super.onKeyUp(keyCode, event);
 	}
 	
 	private int getPrevReceipt(int num) {

@@ -211,10 +211,11 @@ public class FrontPage extends Activity {
 		case KeyEvent.KEYCODE_DPAD_CENTER:
 			openOptionsMenu();
 			System.out.println("Going to call menu bar activity.");
-			return true;
+			break;
 		default:
-			return false;
+			break;
 		}
+		return super.onKeyUp(keyCode, event);
 	}
 	
 }
