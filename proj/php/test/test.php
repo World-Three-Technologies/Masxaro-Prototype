@@ -2,6 +2,7 @@
 
 include_once dirname(__FILE__)."/../../config.php";
 include_once "recTest.php";
+include_once "userCtrlTest.php";
 
 //use global varible to pass the success/false flag to prevent $this and return
 
@@ -68,7 +69,8 @@ class Runner{
 
     foreach($testCase->getTests() as $test){
       $testCase->runBefore();
-
+      //set test flag
+      $testResult = true;
       try{
         //execute test case
         $testCase->$test();

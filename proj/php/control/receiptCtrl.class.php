@@ -35,12 +35,12 @@ class ReceiptCtrl extends Ctrl{
 	/**
 	 * 
 	 * generate an unique receipt id based on its basic information
+   * with format : "000000000000000-0000000"
 	 * 
 	 * @param array() $basicInfo
 	 */
 	private function idGen($basicInfo){
-		$receiptId = "983094867189238-0929347";
-		return $receiptId;
+    return vsprintf("%015d-%07d",array(rand(1,999999999999999),rand(1,9999999)));
 	}
 	
 	/**
@@ -114,6 +114,7 @@ class ReceiptCtrl extends Ctrl{
 				SET
 				$info
 			";
+      echo $sql;
 				
 			if($this->db->insert($sql) < 0){
 				//rollback
@@ -135,9 +136,7 @@ class ReceiptCtrl extends Ctrl{
 				WHERE
 				`receipt_id`='$receiptId'
 			";
-			
 			echo $sql;
-			
 			$this->db->select($sql);
 			
 			if($this->db->numRows() > 0){
@@ -155,11 +154,10 @@ class ReceiptCtrl extends Ctrl{
 				$curCost =  $items[$i]['item_price'] * $items[$i]['item_qty'] * $items[$i]['item_discount'];
 				$totalCost += $curCost;
 				
-				if($receiptId != null && strlen($receiptId) == 0){
+				if($receiptId != null && strlen($receiptId) != 0){
 					$items[$i]['receipt_id'] = $receiptId;	
 				}
 				
-				$info = "";
 				$info = Tool::infoArray2SQL($items[$i]);
 				
 				if(!Tool::securityChk($info)){
@@ -171,6 +169,7 @@ class ReceiptCtrl extends Ctrl{
 					SET
 					$info	
 				";
+        echo $sql;
 					
 				if($this->db->insert($sql) < 0){
 					$this->realDelete($receiptId);
@@ -187,6 +186,7 @@ class ReceiptCtrl extends Ctrl{
 				WHERE
 				`receipt_id`='$receiptId'
 			";
+      echo $sql;
 			
 			if($this->db->update($sql) <= 0){
 				$this->realDelete($receiptId);

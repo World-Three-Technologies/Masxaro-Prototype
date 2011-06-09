@@ -121,7 +121,7 @@ $(function(){
     render:function(){
       $(this.el).html(this.template(this.model.toJSON()));     
       if(this.model.get("image")===true){
-        this.bindFancybox({content:"<img src='img/fake_receipt.jpg'>"});
+        this.bindFancybox({content:"<img src='assets/img/fake_receipt.jpg'>"});
       }
       return this;
     },
