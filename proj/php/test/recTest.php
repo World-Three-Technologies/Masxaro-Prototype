@@ -31,12 +31,8 @@ class RecTest extends TestStory{
            'item_discount'=>1));
   }
 
-  public function integrate_db_can_access(){
-    $ctrl = new ReceiptCtrl();
-    should_be_true(false);
-  }
-
   public function integrate_can_get_receipt_data_and_items_by_id(){
+    $control = new ReceiptCtrl();
     should_be_true(true);
   }
 

@@ -1,0 +1,15 @@
+#!/usr/bin/php -q
+<?php 
+  require "config.php";
+
+  if($argv[1]=="test"){
+    system("php ./php/test/test.php");
+  }else{
+    usage();
+  }
+
+  function usage(){
+    echo "usage...\n";
+    echo "./cake test :: run testcase\n";
+  }
+?>
