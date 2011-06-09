@@ -26,14 +26,36 @@
 package com.android.W3T.app.nfc;
 
 import com.android.W3T.app.R;
+import com.android.W3T.app.rmanager.ReceiptManager;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class TagView extends Activity {
+	private Button mRejectBtn;
+	private Button mConfirmBtn;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tag_view);
+        
+        mRejectBtn = (Button)findViewById(R.id.receipt_reject_btn);
+        mRejectBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			
+			}
+        });
+        mConfirmBtn = (Button)findViewById(R.id.receipt_confirm_btn);
+        mConfirmBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ReceiptManager.addNewReceipt();
+			}
+        });
 	}
 }

@@ -37,24 +37,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.android.W3T.app.rmanager.ReceiptManager;;
+
 
 public class ReceiptsView extends Activity {
 	public final static int NUM_RECEIPT = 7;
 	public final static int NUM_RECEIPT_ITEM = 4;
-	
-	public final static String[][] FakeReceipts = {
-		{"ID@1234", "06-01-2011", "Wendy's", "12.32USD"},
-		{"ID@1234", "06-02-2011", "Starbucks", "4.63USD"},
-		{"ID@1234", "06-02-2011", "J Street", "10.02USD"},
-		{"ID@1234", "06-03-2011", "Starbucks", "4.63USD"},
-		{"ID@1234", "06-03-2011", "Penn Grill", "8.76USD"},
-		{"ID@1234", "06-04-2011", "Starbucks", "7.56USD"},
-		{"ID@1234", "06-04-2011", "Wendy's", "6.22USD"}
-	};
-	
-	public final static int[] ReceiptViewElements = {
-		R.id.id_text, R.id.date_text, R.id.store_name_text, R.id.total_cost_text
-	};
 	
 	private int mCurReceipt = 1;
 	private Handler mUpdateHandler = new Handler() {  
@@ -126,7 +114,6 @@ public class ReceiptsView extends Activity {
 			return false;
 		}
 		return false;
-		
 	}	
 	
 	@Override
@@ -160,8 +147,8 @@ public class ReceiptsView extends Activity {
 	
 	private void fillReceiptView(int item_num) {
 		for (int i = 0;i < NUM_RECEIPT_ITEM;i++) {
-			((TextView)findViewById(ReceiptViewElements[i]))
-				.setText(FakeReceipts[item_num][i]);
+			((TextView)findViewById(ReceiptManager.ReceiptViewElements[i]))
+				.setText(ReceiptManager.FakeReceipts[item_num][i]);
 		}
 	}
 }
