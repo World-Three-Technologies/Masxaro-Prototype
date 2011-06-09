@@ -98,13 +98,13 @@ public class ReceiptsView extends Activity {
 	// All Toast messages are implemented later.
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.refresh_option:
+		case R.id.refresh_opt:
 			Toast.makeText(this, "Refresh the receipt list!", Toast.LENGTH_SHORT).show();
 			return true;
-		case R.id.sw_receipt_option:
+		case R.id.sw_receipt_opt:
 			Toast.makeText(this, "Switch to anther receipt view!", Toast.LENGTH_SHORT).show();
 			return true;
-		case R.id.b_to_fp_option:
+		case R.id.b_to_fp_opt:
 			// Back to Front Page activity
 			Intent front_page_intent = new Intent(ReceiptsView.this, FrontPage.class);
 			startActivity(front_page_intent);

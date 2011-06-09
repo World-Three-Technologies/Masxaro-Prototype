@@ -27,17 +27,17 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:title="Refresh"
-	   	android:id="@+id/refresh_option"
+	   	android:id="@+id/refresh_opt"
 		android:icon="@drawable/refresh"
 	/>
 		    
 	<item android:title="Switch Image View"
-	   	android:id="@+id/sw_receipt_option"
+	   	android:id="@+id/sw_receipt_opt"
 	   	android:icon="@drawable/image_view"
 	/>
 
 	<item android:title="Back to Front page"
-	   	android:id="@+id/b_to_fp_option"
+	   	android:id="@+id/b_to_fp_opt"
 	   	android:icon="@drawable/back"
 	/>
 

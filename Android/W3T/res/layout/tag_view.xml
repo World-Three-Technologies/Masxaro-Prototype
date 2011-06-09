@@ -36,45 +36,45 @@
 		android:orientation="vertical"
 	>
 		<!-- Receipt ID -->
-		<TextView android:text="@string/receipt_info_id_label"
+		<TextView android:text="@string/receipt_info_id_lab"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:gravity="left"
 		/>
 		<TextView android:text="ID@1234"
-			android:id="@+id/tag_id_text"
+			android:id="@+id/tag_id_txt"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:gravity="left"
 		/>
 		
 		<!-- Receipt Date -->
-		<TextView android:text="@string/receipt_info_date_label"
+		<TextView android:text="@string/receipt_info_date_lab"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:gravity="left"
 		/>
 		<TextView android:text="06-01-2011"
-			android:id="@+id/tag_date_text"
+			android:id="@+id/tag_date_txt"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:gravity="left"
 		/>
 		
 		<!-- Store name -->
-		<TextView android:text="@string/receipt_info_store_name_label"
+		<TextView android:text="@string/receipt_info_store_name_lab"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:gravity="left"
 		/>
 		<TextView android:text="Wendy's"
-			android:id="@+id/tag_store_name_text"
+			android:id="@+id/tag_store_name_txt"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:gravity="left"
 		/>
 					
 		<!-- Total cost -->
-		<TextView android:text="@string/receipt_info_total_label"
+		<TextView android:text="@string/receipt_info_total_lab"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:gravity="left"
 		/>
 		<TextView android:text="12.32USD"
-			android:id="@+id/tag_total_cost_text"
+			android:id="@+id/tag_total_cost_txt"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:gravity="left"
 		/>
@@ -86,13 +86,13 @@
 		android:gravity="bottom"
 	>
 		<Button android:id="@+id/receipt_confirm_btn"
-			android:text="@string/receipt_confirm_label"
+			android:text="@string/receipt_confirm_lab"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_weight="1.0"
 		/>
 		
 		<Button android:id="@+id/receipt_reject_btn"
-			android:text="@string/receipt_reject_label"
+			android:text="@string/receipt_reject_lab"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_weight="1.0"
 		/>

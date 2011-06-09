@@ -159,21 +159,21 @@ public class FrontPage extends Activity {
 	// All Toast messages are implemented later.
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.view_receipt_option:
+		case R.id.view_receipt_opt:
 			// Start the receipt view activity
 			final Intent receipt_view_intent = new Intent(FrontPage.this, ReceiptsView.class);
 			startActivity(receipt_view_intent);
 			break;
-		case R.id.search_option:
+		case R.id.search_opt:
 			Toast.makeText(this, "Start Search receipts activity!", Toast.LENGTH_SHORT).show();
 			return true;
-		case R.id.view_coupon_option:
+		case R.id.view_coupon_opt:
 			Toast.makeText(this, "Start view coupon activity!", Toast.LENGTH_SHORT).show();
 			return true;
-		case R.id.conf_option:
+		case R.id.conf_opt:
 			Toast.makeText(this, "Start configuration activity!", Toast.LENGTH_SHORT).show();
 			return false;
-		case R.id.Log_option:
+		case R.id.log_opt:
 			// Pop up the login or the logout dialog
 			showDialog(DIALOG_LOGIN);
 			Toast.makeText(this, "Start log activity!", Toast.LENGTH_SHORT).show();
@@ -211,7 +211,6 @@ public class FrontPage extends Activity {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_CENTER:
 			openOptionsMenu();
-			System.out.println("Going to call menu bar activity.");
 			break;
 		default:
 			break;

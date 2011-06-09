@@ -19,7 +19,7 @@ public class ReceiptManager extends Activity {
 	};
 	
 	public final static int[] ReceiptViewElements = {
-		R.id.id_text, R.id.date_text, R.id.store_name_text, R.id.total_cost_text
+		R.id.id_txt, R.id.date_txt, R.id.store_name_txt, R.id.total_cost_txt
 	};
 	
 	public static void addNewReceipt() {
