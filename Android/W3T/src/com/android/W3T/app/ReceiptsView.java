@@ -29,6 +29,8 @@ package com.android.W3T.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,34 +57,34 @@ public class ReceiptsView extends Activity {
 	};
 	
 	private int mCurReceipt = 1;
-//	private Handler mUpdateHandler = new Handler() {  
-//	    public void handleMessage(Message msg) {
-//	    	super.handleMessage(msg);
-//	    	fillReceiptView(msg.getData().getInt("num"));
-//	    }
-//	};
-//	private Runnable mPrevUpdate = new Runnable() {
-//		@Override
-//		public void run() {
-//			int pos = getPrevReceipt(mCurReceipt);
-//			Bundle data = new Bundle();
-//			data.putInt("num", pos);
-//			Message msg = new Message();
-//			msg.setData(data);
-//			mUpdateHandler.sendMessage(msg);
-//		}
-//	};
-//	private Runnable mNextUpdate = new Runnable() {
-//		@Override
-//		public void run() {
-//			int pos = getNextReceipt(mCurReceipt);
-//			Bundle data = new Bundle();
-//			data.putInt("num", pos);
-//			Message msg = new Message();
-//			msg.setData(data);
-//			mUpdateHandler.sendMessage(msg);
-//		}
-//	};
+	private Handler mUpdateHandler = new Handler() {  
+	    public void handleMessage(Message msg) {
+	    	super.handleMessage(msg);
+	    	fillReceiptView(msg.getData().getInt("num"));
+	    }
+	};
+	private Runnable mPrevUpdate = new Runnable() {
+		@Override
+		public void run() {
+			int pos = getPrevReceipt(mCurReceipt);
+			Bundle data = new Bundle();
+			data.putInt("num", pos);
+			Message msg = new Message();
+			msg.setData(data);
+			mUpdateHandler.sendMessage(msg);
+		}
+	};
+	private Runnable mNextUpdate = new Runnable() {
+		@Override
+		public void run() {
+			int pos = getNextReceipt(mCurReceipt);
+			Bundle data = new Bundle();
+			data.putInt("num", pos);
+			Message msg = new Message();
+			msg.setData(data);
+			mUpdateHandler.sendMessage(msg);
+		}
+	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -130,12 +132,12 @@ public class ReceiptsView extends Activity {
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_LEFT:
-//			new Thread(mPrevUpdate).start();
-			fillReceiptView(getPrevReceipt(mCurReceipt));
+			new Thread(mPrevUpdate).start();
+//			fillReceiptView(getPrevReceipt(mCurReceipt));
 			return true;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
-//			new Thread(mNextUpdate).start();
-			fillReceiptView(getNextReceipt(mCurReceipt));
+			new Thread(mNextUpdate).start();
+//			fillReceiptView(getNextReceipt(mCurReceipt));
 			return true;
 		default:
 			return false;
