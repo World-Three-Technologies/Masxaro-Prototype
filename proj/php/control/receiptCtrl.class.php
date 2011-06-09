@@ -316,12 +316,20 @@ class ReceiptCtrl extends Ctrl{
 	public function userGetAllReceipt($userAcc){
 		
 		$sql = "
-			SELECT *
-			FROM `receipt`
+      SELECT r.receipt_id,r.user_account,s.store_name,r.receipt_time,
+      i.item_name,i.item_price,i.item_qty,r.total_cost 
+			FROM `receipt` as r 
+      LEFT JOIN receipt_item as i 
+      ON r.receipt_id = i.receipt_id 
+      LEFT JOIN store as s
+      ON r.store_account = s.store_account  
 			WHERE
-			`user_account`='$userAcc'
-			AND
-			`deleted`=0
+			r.user_account='$userAcc'
+      AND 
+			r.`deleted`=0
+      AND 
+			i.`deleted`=0 
+      ORDER BY r.receipt_time DESC 
 		";
 		
 		$this->db->select($sql);
@@ -329,12 +337,44 @@ class ReceiptCtrl extends Ctrl{
 		if($this->db->numRows() == 0){
 			return "";
 		}
-		
 		else{
 			$result = $this->db->fetchObject();
-			return $result;
+      $first = $result[0];
+			return $this->reduceReceipt($result);
 		}
 	}
+
+  public function reduceReceipt($result){
+    $reduced = array();
+    $last_id = 0;
+    foreach($result as $item){
+      if($last_id == $item->receipt_id){
+        $reduced[count($reduced)-1]["items"][] = $this->buildReceiptItem($item); 
+      }else{
+        $reduced[] = $this->buildReceipt($item);
+      }
+      $last_id = $item->receipt_id;
+    }
+    return $reduced;
+  }
+
+  private function buildReceiptItem($item){
+    return array(
+      "item_name"=>$item->item_name,
+      "item_price"=>$item->item_price,
+      "item_qty"=>$item->item_qty,
+    );
+  }
+
+  private function buildReceipt($item){
+    return array(
+      "receipt_id"=>$item->receipt_id,
+      "store_name"=>$item->store_name,
+      "receipt_time"=>$item->receipt_time,
+      "total_cost"=>$item->total_cost,
+      "items" => array($this->buildReceiptItem($item))
+    );
+  }
 	
 	public function userGetAllReceiptItems($receiptId){
 		

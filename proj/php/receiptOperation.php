@@ -24,19 +24,19 @@
  *  
  */
 
-include_once '../config.php';
+include_once dirname(__FILE__).'/../config.php';
 
-$opcode = $_POST['opcode'];
+//$opcode = $_POST['opcode'];
 
-//$opcode = 'user_get_all_receipt_item';
+$opcode = 'user_get_all_receipt';
 
 $ctrl = new ReceiptCtrl();
 
 switch($opcode){
 	case 'new_receipt':
 		
-		//$code = "983094867189238-0929347";
-		$code = $_POST['code'];
+		$code = "983094867189238-0929347";
+		//$code = $_POST['code'];
 
 		
 		//basic info
@@ -86,17 +86,13 @@ switch($opcode){
 		
 		
 	case 'user_get_all_receipt':
-		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
+		echo json_encode($ctrl->userGetAllReceipt('w3t'));
 		break;
 		
 		
 	case 'user_get_all_receipt_item':
-		echo json_encode($ctrl->userGetAllReceiptItems($_POST['receiptId']));
+		echo json_encode($ctrl->userGetAllReceiptItems('w3t'));
 		break;
 }
-
-
-
-
 
 ?>

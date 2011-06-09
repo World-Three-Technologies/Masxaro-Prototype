@@ -7,7 +7,7 @@ include_once "userCtrlTest.php";
 //use global varible to pass the success/false flag to prevent $this and return
 
 //Assertion
-$testResult = true;
+static $testResult = true;
 
 function should_be_true($value){
   $testResult = ($value == true);
@@ -70,7 +70,6 @@ class Runner{
     foreach($testCase->getTests() as $test){
       $testCase->runBefore();
       //set test flag
-      $testResult = true;
       try{
         //execute test case
         $testCase->$test();
@@ -78,12 +77,12 @@ class Runner{
         $testResult = false;
       }
       $this->count += 1;
-      if($testResult == false){
-        $this->fail += 1;
-        echo "F(",get_class($testCase),"::$test)";
-      }else{
+      if($testResult == true){
         $this->success += 1;
         echo "T";
+      }else{
+        $this->fail += 1;
+        echo "F(",get_class($testCase),"::$test)";
       }
       $testCase->runAfter();
       //reset global flag

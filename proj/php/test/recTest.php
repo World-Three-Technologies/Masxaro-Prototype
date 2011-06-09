@@ -9,6 +9,7 @@ class RecTest extends TestStory{
   public function integrate_can_get_all_receipt_by_account(){
     $control = new ReceiptCtrl();
     $receipts = $control->userGetAllReceipt("w3t");
+    var_dump($receipts);
     should_be_equal($receipts[0]->user_account,"w3t");
   }
 
