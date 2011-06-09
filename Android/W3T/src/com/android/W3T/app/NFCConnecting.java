@@ -20,18 +20,40 @@
  *
  *  Written by Yichao Yu <yichao@Masxaro>
  * 
- *  This activity just exists when the NFC link is connecting
+ *  Assumption: This activity is triggered by user when he is ready to retrieve the receipt
+ *  from a vendor. When the retrieval finished, a verification screen will popup.
  */
 
 package com.android.W3T.app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
 
 public class NFCConnecting extends Activity {
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         // Just showing a message in the center of the screen
 		setContentView(R.layout.nfc_connecting);
     }
+	
+	@Override
+	// Deal with any key press event
+	public boolean onKeyUp (int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_DPAD_CENTER:
+			final Intent tag_intent = new Intent(NfcAdapter.ACTION_NDEF_DISCOVERED);
+			startActivity(tag_intent);
+			System.out.println("Get a fake tag.");
+			break;
+		default:
+			break;
+		}
+		return super.onKeyUp(keyCode, event);
+	}
 }

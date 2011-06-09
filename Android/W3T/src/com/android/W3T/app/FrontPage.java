@@ -161,7 +161,7 @@ public class FrontPage extends Activity {
 		switch (item.getItemId()) {
 		case R.id.view_receipt_option:
 			// Start the receipt view activity
-			Intent receipt_view_intent = new Intent(FrontPage.this, ReceiptsView.class);
+			final Intent receipt_view_intent = new Intent(FrontPage.this, ReceiptsView.class);
 			startActivity(receipt_view_intent);
 			break;
 		case R.id.search_option:
@@ -194,7 +194,7 @@ public class FrontPage extends Activity {
 			duration = mUptime - mDowntime;
 			if (duration >= 100) {
 				// A valid touch screen event.
-				Intent nfc_intent = new Intent(FrontPage.this, NFCConnecting.class);
+				final Intent nfc_intent = new Intent(FrontPage.this, NFCConnecting.class);
 				startActivity(nfc_intent);
 //				System.out.println("Going to call menu bar activity.");
 			}

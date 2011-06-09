@@ -120,6 +120,7 @@ public class ReceiptsView extends Activity {
 			// Back to Front Page activity
 			Intent front_page_intent = new Intent(ReceiptsView.this, FrontPage.class);
 			startActivity(front_page_intent);
+			finish();
 			break;
 		default:
 			return false;

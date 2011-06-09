@@ -40,5 +40,7 @@
     <string name="configuration">Settings</string>
     <string name="menu_bar_view">Menu bar</string><string name="NFC_text">NFC Communicating</string>
     <string name="logout_promote">Do you want to log out?</string>
+    <string name="receipt_confirm_label">Confirm</string>
+    <string name="receipt_reject_label">Reject</string>
     
 </resources>
