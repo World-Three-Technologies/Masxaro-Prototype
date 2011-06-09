@@ -197,6 +197,42 @@ class ReceiptCtrl extends Ctrl{
 		return true;
 	}
 	
+	
+	/**
+	 * @param string $receiptId
+	 * 
+	 * @param array() $param
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * update basic receipt info
+	 * 
+	 */
+	public function updateReceiptBasic($receiptId, $param){
+		
+		$info = Tool::infoArray2SQL($param);
+		
+		if(!Tool::securityChk($info)){
+			return false;
+		}
+		
+		$sql = "
+			UPDATE `receipt`
+			SET
+			$info
+			WHERE
+			`receipt_id`='$receiptId'
+		";
+		
+		if($this->db->update($sql) <= 0){
+			return false;
+		}
+			
+		return true;
+	}
+	
+	
 	/**
 	 * 
 	 * @param string $receiptId receipt id
@@ -336,6 +372,15 @@ class ReceiptCtrl extends Ctrl{
 		}
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param string $receiptId
+	 * 
+	 * @return array(obj, ...) items
+	 * 
+	 * return all items of a receipt
+	 */
 	public function userGetAllReceiptItems($receiptId){
 		
 		$sql = "
@@ -358,6 +403,31 @@ class ReceiptCtrl extends Ctrl{
 			return $result;
 		}
 		
+	}
+	
+	
+	/**
+	 * 
+	 * @param string receiptId
+	 * 
+	 * @return object receipt or img blob
+	 * 
+	 * @desc
+	 * 
+	 * return detail information of a certain receipt
+	 */
+	public function getReceiptDetail($receiptId){
+		$sql = "
+			SELECT *
+			FROM `receipt`
+			WHERE
+			`receipt_id`='$receiptId'
+		";
+		
+		$this->db->select($sql);
+		$result = $this->db->fetchObject();
+		
+		return $result;
 	}
 }
 ?>

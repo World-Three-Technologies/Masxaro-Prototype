@@ -131,5 +131,16 @@ class Tool{
 		setcookie('user_acc', '');
 		setcookie('store_acc', '');
 	}
+	
+	
+	/**
+	 * 
+	 * @param string $path image path
+	 * 
+	 * @return string blob string
+	 */
+	public static function imgToBlob($path){
+		return addslashes(fread(fopen($path,"r"),filesize($path)));
+	}
 }
 ?>
