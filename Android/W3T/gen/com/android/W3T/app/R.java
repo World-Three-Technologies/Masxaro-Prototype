@@ -14,34 +14,43 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int conf=0x7f020000;
-        public static final int coupon=0x7f020001;
-        public static final int fracfern=0x7f020002;
-        public static final int icon=0x7f020003;
-        public static final int login=0x7f020004;
-        public static final int logout=0x7f020005;
-        public static final int more=0x7f020006;
-        public static final int search=0x7f020007;
-        public static final int view=0x7f020008;
+        public static final int back=0x7f020000;
+        public static final int conf=0x7f020001;
+        public static final int coupon=0x7f020002;
+        public static final int fracfern=0x7f020003;
+        public static final int icon=0x7f020004;
+        public static final int image_view=0x7f020005;
+        public static final int login=0x7f020006;
+        public static final int logout=0x7f020007;
+        public static final int more=0x7f020008;
+        public static final int refresh=0x7f020009;
+        public static final int search=0x7f02000a;
+        public static final int text_view=0x7f02000b;
+        public static final int view=0x7f02000c;
     }
     public static final class id {
         public static final int FractalFern=0x7f070002;
-        public static final int Log_option=0x7f07000f;
-        public static final int NFC_connecting=0x7f070005;
+        public static final int Log_option=0x7f070011;
+        public static final int NFC_connecting=0x7f070007;
         public static final int Username=0x7f070001;
-        public static final int conf_option=0x7f07000e;
-        public static final int date_text=0x7f070008;
+        public static final int b_to_fp_option=0x7f070015;
+        public static final int cancel_button=0x7f070006;
+        public static final int conf_option=0x7f070010;
+        public static final int date_text=0x7f07000a;
         public static final int front_page=0x7f070000;
-        public static final int id_text=0x7f070007;
+        public static final int id_text=0x7f070009;
         public static final int login_password=0x7f070004;
         public static final int login_username=0x7f070003;
-        public static final int logout_option=0x7f070010;
-        public static final int receipt_view=0x7f070006;
-        public static final int search_option=0x7f07000c;
-        public static final int store_name_text=0x7f070009;
-        public static final int total_cost_text=0x7f07000a;
-        public static final int view_coupon_option=0x7f07000d;
-        public static final int view_receipt_option=0x7f07000b;
+        public static final int logout_option=0x7f070012;
+        public static final int receipt_view=0x7f070008;
+        public static final int refresh_option=0x7f070013;
+        public static final int search_option=0x7f07000e;
+        public static final int store_name_text=0x7f07000b;
+        public static final int sumbit_button=0x7f070005;
+        public static final int sw_receipt_option=0x7f070014;
+        public static final int total_cost_text=0x7f07000c;
+        public static final int view_coupon_option=0x7f07000f;
+        public static final int view_receipt_option=0x7f07000d;
     }
     public static final class layout {
         public static final int front_page=0x7f030000;

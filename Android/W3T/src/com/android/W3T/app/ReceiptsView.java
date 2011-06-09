@@ -27,11 +27,14 @@
 package com.android.W3T.app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ReceiptsView extends Activity {
 	public final static int NUM_RECEIPT = 7;
@@ -52,41 +55,103 @@ public class ReceiptsView extends Activity {
 	};
 	
 	private int mCurReceipt = 1;
-	private LinearLayout mReceiptView;
+//	private Handler mUpdateHandler = new Handler() {  
+//	    public void handleMessage(Message msg) {
+//	    	super.handleMessage(msg);
+//	    	fillReceiptView(msg.getData().getInt("num"));
+//	    }
+//	};
+//	private Runnable mPrevUpdate = new Runnable() {
+//		@Override
+//		public void run() {
+//			int pos = getPrevReceipt(mCurReceipt);
+//			Bundle data = new Bundle();
+//			data.putInt("num", pos);
+//			Message msg = new Message();
+//			msg.setData(data);
+//			mUpdateHandler.sendMessage(msg);
+//		}
+//	};
+//	private Runnable mNextUpdate = new Runnable() {
+//		@Override
+//		public void run() {
+//			int pos = getNextReceipt(mCurReceipt);
+//			Bundle data = new Bundle();
+//			data.putInt("num", pos);
+//			Message msg = new Message();
+//			msg.setData(data);
+//			mUpdateHandler.sendMessage(msg);
+//		}
+//	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt_view);
-        mReceiptView = (LinearLayout)findViewById(R.id.receipt_view);
+//        mReceiptView = (LinearLayout)findViewById(R.id.receipt_view);
 	}
+	
+	@Override
+	// Thinking of using context menu to display the menu bar next time.
+	public boolean onCreateOptionsMenu(Menu menu) {
+        // Hold on to this
+//        mMenu = menu;
+        
+        // Inflate the currently selected menu XML resource.
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.receipt_view_menu, menu);
+
+        return true;
+    }
+	
+	@Override
+	// All Toast messages are implemented later.
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.refresh_option:
+			Toast.makeText(this, "Refresh the receipt list!", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.sw_receipt_option:
+			Toast.makeText(this, "Switch to anther receipt view!", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.b_to_fp_option:
+			// Back to Front Page activity
+			Intent front_page_intent = new Intent(ReceiptsView.this, FrontPage.class);
+			startActivity(front_page_intent);
+			break;
+		default:
+			return false;
+		}
+		return false;
+		
+	}	
 	
 	@Override
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_LEFT:
-			getPrevReceipt(mCurReceipt);
-			setContentView(mReceiptView);
+//			new Thread(mPrevUpdate).start();
+			fillReceiptView(getPrevReceipt(mCurReceipt));
 			return true;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			getNextReceipt(mCurReceipt);
-			setContentView(mReceiptView);
+//			new Thread(mNextUpdate).start();
+			fillReceiptView(getNextReceipt(mCurReceipt));
 			return true;
 		default:
 			return false;
 		}
 	}
 	
-	private void getPrevReceipt(int num) {
-		fillReceiptView((num+6)/NUM_RECEIPT);
+	private int getPrevReceipt(int num) {
 		mCurReceipt = (num+6)%NUM_RECEIPT;
-		System.out.println(mCurReceipt);
+//		System.out.println(mCurReceipt);
+		return (num+6)%NUM_RECEIPT;
 	}
 	
-	private void getNextReceipt(int num) {
-		fillReceiptView((num+1)/NUM_RECEIPT);
+	private int getNextReceipt(int num) {
 		mCurReceipt = (num+1)%NUM_RECEIPT;
-		System.out.println(mCurReceipt);
+//		System.out.println(mCurReceipt);
+		return (num+1)%NUM_RECEIPT;
 	}
 	
 	private void fillReceiptView(int item_num) {
