@@ -30,10 +30,8 @@ import android.os.Bundle;
 
 public class NFCConnecting extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
-        
-        super.onCreate(savedInstanceState);
-        
+		super.onCreate(savedInstanceState);
         // Just showing a message in the center of the screen
-        setContentView(R.layout.nfc_connecting);
+		setContentView(R.layout.nfc_connecting);
     }
 }

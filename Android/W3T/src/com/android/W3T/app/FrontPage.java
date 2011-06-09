@@ -194,7 +194,8 @@ public class FrontPage extends Activity {
 			duration = mUptime - mDowntime;
 			if (duration >= 100) {
 				// A valid touch screen event.
-				openOptionsMenu();
+				Intent nfc_intent = new Intent(FrontPage.this, NFCConnecting.class);
+				startActivity(nfc_intent);
 //				System.out.println("Going to call menu bar activity.");
 			}
 		}
