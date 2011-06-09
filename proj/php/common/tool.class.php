@@ -35,15 +35,23 @@ class Tool{
 	public static function infoArray2SQL($info)
 	{
 		$sql = '';
+		
+		$regxFunc = '(^.*\(\))';
+		$regxNumber = '(^[0-9]+)';
+		
 		foreach ($info as $key => $value){
 			
-			if(($value == null || $value == 'null' || $value == 'NULL') && $value != 0){
+			if(preg_match($regxFunc, $value) || preg_match($regxNumber, $value)){
+				$sql = $sql."`{$key}` = {$value},";
+			}
+			
+			if(empty($value) || $value == 'null' || $value == 'NULL'){
 				$sql = $sql."`{$key}` = NULL,";
 				continue;
 			}
 			$sql = $sql."`{$key}` = '$value',";
 		}
-		$sql = substr($sql, 0, strlen($sql)-1);		
+		$sql = substr($sql, 0, -1);		
 		return $sql;
 	}
 	
