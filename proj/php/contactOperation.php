@@ -1,6 +1,6 @@
 <?php
 /*
- *  receiptOperation.php -- receipt logic 
+ *  contactOperation.php -- contact operation class 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,61 +21,42 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  
  */
 
 include_once '../config.php';
 
-$opcode = $_POST['opcode'];
+$acc = $_POST['acc'];
 
-//$opcode = 'user_get_all_receipt_item';
-
-$ctrl = new ReceiptCtrl();
-
-switch($opcode){
-	case 'new_receipt':
-		
-		//$code = "983094867189238-0929347";
-		
-		//1-d array
-		$basicInfo = $_POST['receipt'];
-					
-		echo $ctrl->insertReceipt($basicInfo, null);
-		
-		break;
-		
-	
-	case 'new_item':
-		
-		//2-d array
-		$items = $_POST['items'];
-		
-		echo $ctrl->insertReceipt(null, $items);
-		break;
-		
-		
-	case 'delete_receipt':
-		echo $ctrl->fakeDelete($_POST['receiptId']);
-		break;
-		
-		
-	case 'recover':
-		echo $ctrl->fakeDelete($_POST['receiptId']);
-		break;
-		
-		
-	case 'user_get_all_receipt':
-		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
-		break;
-		
-		
-	case 'user_get_all_receipt_item':
-		echo json_encode($ctrl->userGetAllReceiptItems($_POST['receiptId']));
-		break;
+if(!Tool::authenticate($acc)){
+	echo "error: need login";
+	die();
 }
 
+$opcode = $_POST['opcode'];
 
+//var_dump($opcode);
+//die();
 
-
+switch($opcode){
+	case 'new_contacts':
+		$contacts = $_POST['contacts'];
+		$ctrl = new ContactCtrl();
+		echo $ctrl->insertContact($contacts);
+		break;
+		
+	case 'delete_contacts':
+		$values = $_POST['values'];
+		$ctrl = new ContactCtrl();
+		$n = count($values);
+		$result = true;
+		for($i = 0; $i < $n; $i ++){
+			$result &= $ctrl->deleteContact($values[$i]['value']);
+		}
+		echo $result;
+		break;
+		
+	default:
+		break;
+}
 
 ?>

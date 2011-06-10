@@ -39,6 +39,7 @@ class UserCtrl extends Ctrl{
 	 * @return boolean
 	 */
 	public function insertUser($info){
+		
 		$info['pwd'] = md5($info['pwd']); 
 		
 		$info['register_time'] = date("Y-m-d H:i:s");
@@ -135,9 +136,11 @@ class UserCtrl extends Ctrl{
 		
 		$sql = "
 			SELECT count(*)
-			FROM `user`
+			FROM `user`, `store`
 			WHERE
 			`user_account`='$acc'
+			OR
+			`store_account`='$acc'
 		";
 		
 		if(!$this->db->select($sql)){

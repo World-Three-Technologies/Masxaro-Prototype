@@ -28,9 +28,10 @@ include_once '../config.php';
 
 $acc = $_POST['acc'];
 
+//$acc = 'new';//for test
 //$acc = 'Mc_NYU';//for test
 
-echo Tool::authenticate($acc);
+var_dump(Tool::authenticate($acc));
 
 ?>
 

@@ -1,6 +1,6 @@
 <?php
 /*
- *  receiptOperation.php -- receipt logic 
+ * imgTest.php -- test image functions 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,61 +21,33 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  
  */
 
-include_once '../config.php';
+include_once '../../config.php';
 
-$opcode = $_POST['opcode'];
+$path = ROOT_PATH."/buffer/test.jpg";
 
-//$opcode = 'user_get_all_receipt_item';
+//header ("Content-type: image/jpeg");
+
+$img = Tool::imgToBlob($path);
 
 $ctrl = new ReceiptCtrl();
 
-switch($opcode){
-	case 'new_receipt':
-		
-		//$code = "983094867189238-0929347";
-		
-		//1-d array
-		$basicInfo = $_POST['receipt'];
-					
-		echo $ctrl->insertReceipt($basicInfo, null);
-		
-		break;
-		
-	
-	case 'new_item':
-		
-		//2-d array
-		$items = $_POST['items'];
-		
-		echo $ctrl->insertReceipt(null, $items);
-		break;
-		
-		
-	case 'delete_receipt':
-		echo $ctrl->fakeDelete($_POST['receiptId']);
-		break;
-		
-		
-	case 'recover':
-		echo $ctrl->fakeDelete($_POST['receiptId']);
-		break;
-		
-		
-	case 'user_get_all_receipt':
-		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
-		break;
-		
-		
-	case 'user_get_all_receipt_item':
-		echo json_encode($ctrl->userGetAllReceiptItems($_POST['receiptId']));
-		break;
+$receiptId = "983094867189238-0929347";
+
+$param = array('img'=>$img);
+
+print_r($ctrl->updateReceiptBasic($receiptId, $param));
+
+$result = $ctrl->getReceiptDetail("983094867189238-0929347");
+
+if(!empty($result[0]->img)){
+	header ("Content-type: image/jpeg");
+	echo $result[0]->img;
 }
 
-
-
-
+else{
+	print_r($result[0]);
+}
 
 ?>

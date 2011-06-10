@@ -35,15 +35,24 @@ class Tool{
 	public static function infoArray2SQL($info)
 	{
 		$sql = '';
+		
+		$regxFunc = '(^.*\(\))';
+		$regxNumber = '(^[0-9]+)';
+		
 		foreach ($info as $key => $value){
+			if(preg_match($regxFunc, $value) || preg_match($regxNumber, $value)){
+				$sql = $sql."`{$key}` = {$value},";
+			}
 			
-			if(($value == null || $value == 'null' || $value == 'NULL') && $value != 0){
+			else if(empty($value) || $value == 'null' || $value == 'NULL'){
 				$sql = $sql."`{$key}` = NULL,";
 				continue;
 			}
-			$sql = $sql."`{$key}` = '$value',";
+			else{
+				$sql = $sql."`{$key}` = '$value',";
+			}
 		}
-		$sql = substr($sql, 0, strlen($sql)-1);		
+		$sql = substr($sql, 0, -1);		
 		return $sql;
 	}
 	
@@ -74,11 +83,21 @@ class Tool{
 	 * authenticate user/store log in status
 	 */
 	public static function authenticate($acc){
-		if(isset($_COOKIE['user_acc']) && $_COOKIE['user_acc'] == $acc){
+		if(!isset($_COOKIE['user_acc']) && !isset($_COOKIE['store_acc'])){
+			return false;
+		}
+		
+		else if(isset($_COOKIE['user_acc'])){
+			if(!empty($acc) && strlen($acc) > 0 && $_COOKIE['user_acc'] != $acc){
+				return false;
+			}
 			return true;
 		}
 		
-		else if(isset($_COOKIE['store_acc']) && $_COOKIE['store_acc'] == $acc){
+		else if(isset($_COOKIE['store_acc'])){
+			if(!empty($acc) && strlen($acc) > 0  && $_COOKIE['store_acc'] == $acc){
+				return false;
+			}
 			return true;
 		}
 		
@@ -102,10 +121,10 @@ class Tool{
 	public static function login($acc, $pwd, $type){
 		switch($type){
 			case 'user':
-				setcookie('user_acc', $acc, time() + 20 * 60 * 60); //1 day
+				return setcookie('user_acc', $acc, time() + 20 * 60 * 60); //1 day
 				break;
 			case 'store':
-				setcookie('store_acc', $acc, time() + 20 * 60 * 60); //1 day
+				return setcookie('store_acc', $acc, time() + 20 * 60 * 60); //1 day
 				break;
 		}
 	}
@@ -122,6 +141,17 @@ class Tool{
 	public static function logoff($acc){
 		setcookie('user_acc', '');
 		setcookie('store_acc', '');
+	}
+	
+	
+	/**
+	 * 
+	 * @param string $path image path
+	 * 
+	 * @return string blob string
+	 */
+	public static function imgToBlob($path){
+		return addslashes(fread(fopen($path,"r"),filesize($path)));
 	}
 }
 ?>

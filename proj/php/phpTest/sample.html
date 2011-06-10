@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="../../pages/js/vendor/jquery.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	
+		var curReceiptId = 1;
+		
+		/************
+		call corresponding functions using following statements
+		notice Ajax needs time to return
+		*************/
+		
+		//login();
+		//addContacts();
+		//deleteContacts();
+		//logoff();
+		//newReceipt();
+		//newItem();
+		
+		function returnDataHandle(data){
+			if(data == true){
+				alert('successfully logged in');
+			}
+			else if(data == false){
+				alert('sth was wrong when logging in');
+			}
+			else{
+				alert(data);
+			}
+		}
+		
+		function login(){
+			$.post(
+				"../login.php",
+				{
+					acc  : "new",
+					pwd  : "123",
+					type : "user"
+				},
+				function(data){
+					returnDataHandle(data);
+				}
+			);
+		}
+		
+		function logoff(){
+			$.post("../logoff.php", {}, function(data){
+				alert("logged off!");
+			});
+		}
+	
+		function deleteContacts(){
+			$.post("../contactOperation.php", 
+				  	{
+						opcode : "delete_contacts",
+						values : {
+							0 : {value : "brian@gmail.com"},
+							1 : {value : "nyumacd@gmail.com"}
+						}
+				  	},
+				  function(data){
+				  		returnDataHandle(data);
+				  }
+			);
+		}
+	
+		function addContacts(){
+			$.post("../contactOperation.php", 
+					{
+						opcode : "new_contacts", 
+						contacts : {
+										0 : {
+											user_account : "new", 
+											contact_type : "email", 
+											value : "brian@gmail.com"
+										   },
+										
+										 1 : {
+											store_account : "Mc_NYU", 
+											contact_type : "email", 
+											value : "nyumacd@gmail.com"
+										   }
+									}
+					}, 
+					function(data){
+						returnDataHandle(data);
+					}
+			);
+		}
+		
+		function newReceipt(){
+			//receipt total cost can be null or 0 here, when adding items, total cost would be 
+			//calculated and updated.
+			$basicInfo = {
+					store_account : "Mc_NYU",
+					user_account : "new",
+					receipt_time : "now()",
+					tax : 0.1
+			};
+			
+			$.post(
+				"../receiptOperation.php",
+				{
+					opcode : "new_receipt",
+					receipt : $basicInfo
+				},
+				function(data){
+					if(data == false){
+						alert('sth was wrong when adding new receipt');
+					}
+					else{
+						curReceiptId = data;
+						alert('new receipt: '+data);
+					}
+					
+				}
+			);
+		}
+		
+		function newItem(){
+			$items = {
+					receipt_id : curReceiptId,
+					
+					0 : {
+							item_id : 11,
+							item_name : 'cheese burg',
+							item_qty : 1,
+							item_price : 2.5
+						},
+			
+					1 : {
+						item_id : 12,
+						item_name : 'coke',
+						item_qty : 2,
+						item_price : 1.25
+					},
+					
+					2 : {
+						item_id : 10,
+						item_name : 'fries-mid',
+						item_qty : 2,
+						item_price : 2.25
+					}
+			};
+			
+			$.post(
+				"../receiptOperation.php",
+				{
+					opcode : "new_item",
+					items : $items
+				},
+				function(data){
+					if(data == false){
+						alert('sth was wrong when adding new items to receipt ' + curReceiptId);
+					}
+					else{
+						alert('new items has been added for receipt: ' + curReceiptId);
+					}
+				}
+			);
+		}
+		
+
+});
+</script>
+
+</head>
+<body>
+
+</body>
+</html>

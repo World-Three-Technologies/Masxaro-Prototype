@@ -25,8 +25,47 @@
  */
 class ContactCtrl extends Ctrl{
 	
+	public $regex = "(^.*@masxaro.com)";
+	
 	function __construct(){
 		parent::__construct();
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc store or user account
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * 
+	 * check whether the certain account is available, true: available, false: not available
+	 */
+	public function chkAccMail($acc, $value){
+		
+		if(!preg_match($this->regex, $value)){
+			return true;
+		}
+		
+		$sql = "
+			SELECT `value`
+			FROM `contact`, `user`, `store`
+			WHERE
+			`value` regexp '$this->regex'
+			AND
+			`user_account`='$acc'
+			OR
+			`store_account`='$acc'
+		";
+		
+		$this->db->select($sql);
+		
+		if($this->db->numRows() > 0){
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -109,6 +148,10 @@ class ContactCtrl extends Ctrl{
 		
 		for($i = 0; $i < $n; $i ++){
 			
+			if(!$this->chkAccMail($info[$i]['user_account'], $info[$i]['value'])){
+				return false;
+			}
+			
 			$cur = Tool::infoArray2SQL($info[$i]);
 			
 			if(!Tool::securityChk($cur)){
@@ -127,7 +170,6 @@ class ContactCtrl extends Ctrl{
 			";
 			
 			if($this->db->insert($sql) < 0){
-				
 				for($i = 0; $i < count($inserted); $i ++){
 					//rollback
 					$this->deleteContact($inserted[$i]);
@@ -157,9 +199,7 @@ class ContactCtrl extends Ctrl{
 	 */
 	public function deleteContact($value){
 		
-		$regex = "(.*@masxaro.com)";
-		
-		if(preg_match($regex, $value)){
+		if(preg_match($this->regex, $value)){
 			return false;
 		}
 		

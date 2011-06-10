@@ -23,7 +23,7 @@
  * 
  *  user, contact API test
  */
-include_once '../config.php';
+include_once '../../config.php';
 
 
 //contact test
