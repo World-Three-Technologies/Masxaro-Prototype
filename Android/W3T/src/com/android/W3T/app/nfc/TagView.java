@@ -40,7 +40,7 @@ public class TagView extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tag_view);
+        setContentView(R.layout.received_tag_view);
         
         mRejectBtn = (Button)findViewById(R.id.receipt_reject_btn);
         mRejectBtn.setOnClickListener(new OnClickListener() {

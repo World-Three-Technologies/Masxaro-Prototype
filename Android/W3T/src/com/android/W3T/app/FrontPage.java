@@ -40,7 +40,10 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+import com.android.W3T.app.user.*;
 
 public class FrontPage extends Activity {
 	// Indicators for every dialog view.
@@ -62,6 +65,12 @@ public class FrontPage extends Activity {
 	// Dialogs will show in this activity
 	private Dialog mLoginDialog;
 	private AlertDialog mLogoutDialog;
+//	private ProgressDialog mLogProgress = new ProgressDialog(FrontPage.this);
+	
+	private Button mSubmitBtn;
+	private Button mCancelBtn;
+	
+	
 	
 	@Override
 	// Create the activity
@@ -74,42 +83,38 @@ public class FrontPage extends Activity {
 	@Override
 	public Dialog onCreateDialog(int id) {
 		super.onCreateDialog(id);
+			
 		// Choose a certain dialog to create.
 		switch(id) {
 		case DIALOG_LOGIN:
 			// Login dialog is a custom dialog, we take care of every details of it.
 			mLoginDialog = new Dialog(FrontPage.this);
+			// Set the Login dialog view
 			mLoginDialog.setContentView(R.layout.login_dialog);
 			mLoginDialog.setTitle("Log In:");
+			
 			// Deal with submit button click event
-//			findViewById(R.id.sumbit_button).setOnClickListener(new OnClickListener() {
-//				@Override
-//				public void onClick(View v) {
-					// Close the Login dialog when trying to log in.
-//					mLoginDialog.cancel();
-//					// Show a progress bar and send account info to server.
-//					ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
-//					progresslog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//					progresslog.setMessage("Logging in...");
-//					progresslog.setCancelable(true);
-//					progresslog.show();
+			// IMPORTENT: Get button by id from login_dialog.xml, not from 
+			// front_page.xml, which has no such component, "submit_btn".
+			mSubmitBtn= (Button) mLoginDialog.findViewById(R.id.submit_btn);
+			mSubmitBtn.setOnClickListener(new OnClickListener() {
+	            public void onClick(View v) {
+	            	// Close the Login dialog when trying to log in.
+					mLoginDialog.cancel();
+					// Show a progress bar and send account info to server.
+//					ProgressDialog mLogProgress = new ProgressDialog(FrontPage.this);
+//					mLogProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//					mLogProgress.setMessage("Logging in...");
+//					mLogProgress.setCancelable(true);
+//					mLogProgress.show();
+					((TextView) findViewById(R.id.Username))
+						.setText(((TextView)mLoginDialog.findViewById(R.id.login_username))
+								.getText());
 					
-//					sendAcctData();
-//				}
-				// To be implemented later
-//				private void sendAcctData() {
-					// TODO Auto-generated method stub
-					
-//				}
-//			});
-			// Deal with cancel button click event
-//			findViewById(R.id.cancel_button).setOnClickListener(new OnClickListener() {
-//				@Override
-//				public void onClick(View v) {
-//					// Just close the Login dialog.
-//					mLoginDialog.cancel();
-//				}
-//			});
+	            	log_status = ONLINE;
+	            }
+	        });
+			
 			return mLoginDialog;
 		case DIALOG_LOGOUT:
 			// Logout dialog is an alert dialog. One message and two buttons on it.
@@ -126,6 +131,7 @@ public class FrontPage extends Activity {
 			        	   progresslog.setMessage("Logging out...");
 			        	   progresslog.setCancelable(true);
 			        	   progresslog.show();
+			        	   log_status = OFFLINE;
 			           }
 			       })
 			       // 
@@ -156,6 +162,22 @@ public class FrontPage extends Activity {
     }
 	
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		super.onPrepareOptionsMenu(menu);
+		if (log_status == OFFLINE) {
+			mMenu.setGroupVisible(R.id.group_login, true);
+			mMenu.setGroupVisible(R.id.group_logout, false);
+		}
+		else {
+			mMenu.setGroupVisible(R.id.group_login, false);
+			mMenu.setGroupVisible(R.id.group_logout, true);
+		}
+		
+		return true;
+	}
+	
+	@Override
 	// All Toast messages are implemented later.
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -173,9 +195,16 @@ public class FrontPage extends Activity {
 		case R.id.conf_opt:
 			Toast.makeText(this, "Start configuration activity!", Toast.LENGTH_SHORT).show();
 			return false;
-		case R.id.log_opt:
+		case R.id.login_opt:
 			// Pop up the login or the logout dialog
+			log_status = ONLINE;
 			showDialog(DIALOG_LOGIN);
+			Toast.makeText(this, "Start log activity!", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.logout_opt:
+			// Pop up the login or the logout dialog
+			log_status = OFFLINE;
+			showDialog(DIALOG_LOGOUT);
 			Toast.makeText(this, "Start log activity!", Toast.LENGTH_SHORT).show();
 			return true;
 		}
@@ -217,5 +246,4 @@ public class FrontPage extends Activity {
 		}
 		return super.onKeyUp(keyCode, event);
 	}
-	
 }

@@ -26,6 +26,8 @@
  -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<group android:id="@+id/group_login"
+		android:visible="true">
 	<item android:title="View Receipts"
 	   	android:id="@+id/view_receipt_opt"
 		android:icon="@drawable/view"
@@ -47,8 +49,38 @@
 	/>
 		    
 	<item android:title="Login"
-	  	android:id="@+id/log_opt"
+	  	android:id="@+id/login_opt"
 	   	android:icon="@drawable/login"
 	/>
+	</group>
+	
+	<group android:id="@+id/group_logout"
+		android:visible="false">
+	<item android:title="View Receipts"
+	   	android:id="@id/view_receipt_opt"
+		android:icon="@drawable/view"
+	/>
+		    
+	<item android:title="Search Receipts"
+	   	android:id="@id/search_opt"
+	   	android:icon="@drawable/search"
+	/>
+		    
+	<item android:title="My Coupons"
+	   	android:id="@id/view_coupon_opt"
+	   	android:icon="@drawable/coupon"
+	/>
+		    
+	<item android:title="Configuration"
+	   	android:id="@id/conf_opt"
+	  	android:icon="@drawable/conf"
+	/>
+		    
+	<item android:title="Logout"
+	  	android:id="@+id/logout_opt"
+	   	android:icon="@drawable/logout"
+	/>
+	</group>
+	
 
 </menu>

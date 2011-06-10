@@ -44,6 +44,8 @@ public class ReceiptsView extends Activity {
 	public final static int NUM_RECEIPT = 7;
 	public final static int NUM_RECEIPT_ITEM = 4;
 	
+	private static ReceiptManager mRM = new ReceiptManager();
+	
 	private int mCurReceipt = 1;
 	private Handler mUpdateHandler = new Handler() {  
 	    public void handleMessage(Message msg) {
