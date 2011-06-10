@@ -24,11 +24,13 @@
  *  
  */
 
-include_once '../config.php';
+include_once dirname(__FILE__).'/../config.php';
+
+$method = $_SERVER['REQUEST_METHOD'];
 
 $opcode = $_POST['opcode'];
 
-//$opcode = 'user_get_all_receipt_item';
+//$opcode = 'user_get_all_receipt';
 
 $ctrl = new ReceiptCtrl();
 
@@ -43,7 +45,6 @@ switch($opcode){
 		echo $ctrl->insertReceipt($basicInfo, null);
 		
 		break;
-		
 	
 	case 'new_item':
 		
@@ -73,9 +74,5 @@ switch($opcode){
 		echo json_encode($ctrl->userGetAllReceiptItems($_POST['receiptId']));
 		break;
 }
-
-
-
-
 
 ?>

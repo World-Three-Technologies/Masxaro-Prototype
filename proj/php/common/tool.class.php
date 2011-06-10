@@ -143,7 +143,6 @@ class Tool{
 		setcookie('store_acc', '');
 	}
 	
-	
 	/**
 	 * 
 	 * @param string $path image path
@@ -153,5 +152,16 @@ class Tool{
 	public static function imgToBlob($path){
 		return addslashes(fread(fopen($path,"r"),filesize($path)));
 	}
+
+  /**
+   * @param string $path redirect path
+   * 
+   * redirect user to path
+   */
+  public static function redirect($path){
+    Header("HTTP/1.1 301 Redirect");
+    Header("Location: $path");
+  }
+    
 }
 ?>

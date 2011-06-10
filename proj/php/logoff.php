@@ -23,10 +23,16 @@
  */
 include_once '../config.php';
 
-$acc = $_POST['acc'];
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+  $acc = $_POST['acc'];
+}else{
+  $acc = $_GET['acc'];
+}
 
 //$acc = 'test';//for test
 
 Tool::logoff($acc);
+
+Tool::redirect("/php/product.html");
 
 ?>

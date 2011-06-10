@@ -1,86 +1,62 @@
+var readCookie =function(name){
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(";");
+  for(var i = 0; i<ca.length;i++){
+    var c = ca[i];
+    while (c.charAt(0)== ' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+}
+
+var User = Backbone.Model;
+
+var user = new User({
+  account:readCookie("user_acc"),
+  flash:"You have 3 new receipts."
+});
+
+
+
 var Receipt = Backbone.Model;
 
 var Receipts = Backbone.Collection.extend({
-  model: Receipt
-});
+  model: Receipt,
 
-var User = Backbone.Model.extend({
-  initialize:function(){
-    this.auth = document.cookie;           
+  sync:function(method,model,success,error){
+    $.post("./receiptOperation.php",{
+      opcode : "user_get_all_receipt",
+      acc: user.get("account")
+    },function(data){
+      console.log(data);
+      $("#ajax-loader").hide();
+      model.refresh(JSON.parse(data));
+    });
   }
 });
 
-var user = new User({
-  username:"John Doe",
-  flash:"You have 3 new receipts."
-});
+
 
 $(function(){
   var mockReceipts = [{
     total_cost:15,
-    items:" greek salad and miso soup",
-    store:"pret A monger",
-    time:"1 day ago",
+    items:[
+      {
+        item_name:"test",
+        item_price:12,
+        item_qty:3
+      },{
+        item_name:"test2",
+        item_price:34,
+        item_qty:1
+      },{
+        item_name:"test3",
+        item_price:56,
+        item_qty:2
+      }  
+    ], 
+    store_name:"pret A monger",
+    receipt_time:"1 day ago",
     image:true
-  },
-  {
-    total_cost:60,
-    items:" L.A Noire",
-    store:"Game Stop",
-    time:"May 15"
-  },{
-    total_cost:60,
-    items:" L.A Noire",
-    store:"Game Stop",
-    time:"May 15"
-  },{
-    total_cost:60,
-    items:" L.A Noire",
-    store:"Game Stop",
-    time:"May 15"
-  },{
-    total_cost:60,
-    items:" L.A Noire",
-    store:"Game Stop",
-    time:"May 15"
-  },{
-    total_cost:60,
-    items:" L.A Noire",
-    store:"Game Stop",
-    time:"May 15",
-    image:true
-  },{
-    total_cost:60,
-    items:" L.A Noire",
-    store:"Game Stop",
-    time:"May 15"
-  },{
-    total_cost:60,
-    items:" L.A Noire",
-    store:"Game Stop",
-    time:"May 15",
-    image:true
-  },{
-    total_cost:60,
-    items:" L.A Noire",
-    store:"Game Stop",
-    time:"May 15"
-  },{
-    total_cost:60,
-    items:" L.A Noire",
-    store:"Game Stop",
-    time:"May 15",
-    image:true
-  },{
-    total_cost:60,
-    items:" L.A Noire",
-    store:"Game Stop",
-    time:"May 15"
-  },{
-    total_cost:60,
-    items:" L.A Noire",
-    store:"Game Stop",
-    time:"May 15"
   }];
 
   var UserView = Backbone.View.extend({
@@ -88,7 +64,7 @@ $(function(){
     el:$("#user"),
 
     initialize:function(){
-       $("#username").text(this.model.get("username")); 
+       $("#username").text(this.model.get("account")); 
        this.$("#user-flash").text(this.model.get("flash")); 
     }
   });
@@ -119,9 +95,19 @@ $(function(){
     },
 
     render:function(){
-      $(this.el).html(this.template(this.model.toJSON()));     
+      var view = $(this.el);
+      view.html(this.template(this.model.toJSON()));
+
+      var text = _.reduce(this.model.get("items"),function(memo,item){
+        return memo + item.item_name + " x" + item.item_qty+" ,";
+      },"");
+
+      //console.log(text);
+
+      view.find(".items").html(text);
+      window.lastOpen = this;
       if(this.model.get("image")===true){
-        this.bindFancybox({content:"<img src='img/fake_receipt.jpg'>"});
+        this.bindFancybox({content:"<img src='assets/img/fake_receipt.jpg'>"});
       }
       return this;
     },
@@ -136,6 +122,10 @@ $(function(){
       }
       if(this.model.get("image") !== true){
         $(this.el).html(this.fullTemplate(this.model.toJSON()));
+        var items = $(this.el).find('.items');
+        _.each(this.model.get("items"),function(model){
+          items.append("<div>"+model.item_name +"     - $" +model.item_price + " x " + model.item_qty+"</div>");
+        });
         window.lastOpen = this;
       }
     },
@@ -152,13 +142,16 @@ $(function(){
 
     start:1,
 
-    end:10,
+    end:2,
 
     initialize:function(){
       _.bindAll(this,"render","renderMore","renderReceipt");
-
+      this.end = 10 < this.model.length + 1 ? 10 : this.model.length + 1;
       this.model.bind("refresh",this.render);
+      this.model.bind("change",this.render);
       this.model.view = this;
+      this.model.fetch();
+
     },
 
     events:{
@@ -172,6 +165,9 @@ $(function(){
     render:function(){
       _.each(this.model.models.slice(0,this.end),this.renderReceipt);
       this.updateStatus();
+      if(this.end >= this.model.length ){
+        this.$(".more").hide();
+      }
     },
 
     renderMore:function(){
@@ -192,6 +188,5 @@ $(function(){
     },
   });
 
-  var receiptsView = new ReceiptsView({model:receipts});
-  receipts.refresh(mockReceipts);
+  window.receiptsView = new ReceiptsView({model:receipts});
 });

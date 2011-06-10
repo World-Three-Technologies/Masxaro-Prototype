@@ -60,5 +60,7 @@ switch($type){
 		break;
 }
 
-echo Tool::login($acc, $pwd, $type);
+if(Tool::login($acc, $pwd, $type)) 
+  Tool::redirect("/php/index.html");
+
 ?>
