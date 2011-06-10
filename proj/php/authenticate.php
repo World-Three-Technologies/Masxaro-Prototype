@@ -1,5 +1,6 @@
+<?php
 /*
- * PHPREADME.txt -- read me file for php project configuration 
+ *  authenticate.php -- user/store login authenticate 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -20,22 +21,16 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  read me file for php project configuration
+ *  user/store login authenticate
  */
- 
-In order to configure the PHP project, please follow these steps:
 
-1. Locate your Apache web root path
-   LINUX: ../htdocs/
-   Windows: ../www/
-   
-2. Create new folder w3t
+include_once '../config.php';
 
-3. Copy php/ and config.php to your web ROOT_PATH/
+$acc = $_POST['acc'];
 
+//$acc = 'Mc_NYU';//for test
 
+echo Tool::authenticate($acc);
 
+?>
 
-
- 
- 

@@ -41,6 +41,8 @@ class UserCtrl extends Ctrl{
 	public function insertUser($info){
 		$info['pwd'] = md5($info['pwd']); 
 		
+		$info['register_time'] = date("Y-m-d H:i:s");
+		
 		$con = Tool::infoArray2SQL($info);
 		
 		if(!Tool::securityChk($con)){
@@ -52,7 +54,7 @@ class UserCtrl extends Ctrl{
 			SET
 			$con
 		";
-			
+				
 		$result = $this->db->insert($sql);
 		
 		if($result < 0){
@@ -191,10 +193,10 @@ class UserCtrl extends Ctrl{
 	 * 
 	 * @desc
 	 * 
-	 * user login
+	 * find user 
 	 * 
 	 */
-	public function userLogin($acc, $pwd){
+	public function findUser($acc, $pwd){
 		if(!Tool::securityChk($acc)){
 			return false;
 		}

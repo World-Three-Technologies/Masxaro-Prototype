@@ -1,5 +1,7 @@
+<?php
+
 /*
- * PHPREADME.txt -- read me file for php project configuration 
+ *  login.php -- user/store login 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -20,22 +22,49 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  read me file for php project configuration
+ *  user/store login
  */
- 
-In order to configure the PHP project, please follow these steps:
+include_once '../config.php';
 
-1. Locate your Apache web root path
-   LINUX: ../htdocs/
-   Windows: ../www/
-   
-2. Create new folder w3t
-
-3. Copy php/ and config.php to your web ROOT_PATH/
+$acc = $_POST['acc'];
+$pwd = $_POST['pwd'];
+$type = $_POST['type']; // string, 'user' or 'store'
 
 
+//for test
+//$acc = 'new';
+//$pwd = '123';
+//$type = 'user';
 
+//$acc = 'Mc_NYU';
+//$pwd = '123';
+//$type = 'store';
 
-
- 
- 
+switch($type){
+	case 'user':
+		$ctrl = new UserCtrl();
+		if(!$ctrl->findUser($acc, $pwd)){
+			echo false;
+		}
+		else{
+			Tool::login($acc, $pwd, $type);
+			echo true;
+		}
+		break;
+		
+	case 'store':
+		$ctrl = new StoreCtrl();
+		if(!$ctrl->findStore($acc, $pwd)){
+			echo false;
+		}
+		else{
+			Tool::login($acc, $pwd, $type);
+			echo true;
+		}
+		break;
+		
+	default:
+		echo 'wrong login';
+		break;
+}
+?>

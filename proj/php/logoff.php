@@ -1,5 +1,6 @@
+<?php
 /*
- * PHPREADME.txt -- read me file for php project configuration 
+ *  logoff.php -- user/store logoff 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -19,23 +20,13 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
- * 
- *  read me file for php project configuration
  */
- 
-In order to configure the PHP project, please follow these steps:
+include_once '../config.php';
 
-1. Locate your Apache web root path
-   LINUX: ../htdocs/
-   Windows: ../www/
-   
-2. Create new folder w3t
+$acc = $_POST['acc'];
 
-3. Copy php/ and config.php to your web ROOT_PATH/
+//$acc = 'test';//for test
 
+Tool::logoff($acc);
 
-
-
-
- 
- 
+?>
