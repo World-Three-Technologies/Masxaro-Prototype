@@ -26,9 +26,11 @@
 
 include_once dirname(__FILE__).'/../config.php';
 
-//$opcode = $_POST['opcode'];
+$method = $_SERVER['REQUEST_METHOD'];
 
-$opcode = 'user_get_all_receipt';
+$opcode = $_POST['opcode'];
+
+//$opcode = 'user_get_all_receipt';
 
 $ctrl = new ReceiptCtrl();
 
@@ -86,12 +88,12 @@ switch($opcode){
 		
 		
 	case 'user_get_all_receipt':
-		echo json_encode($ctrl->userGetAllReceipt('w3t'));
+		echo json_encode($ctrl->userGetAllReceipt($_POST["acc"]));
 		break;
 		
 		
 	case 'user_get_all_receipt_item':
-		echo json_encode($ctrl->userGetAllReceiptItems('w3t'));
+		echo json_encode($ctrl->userGetAllReceiptItems($_POST["acc"]));
 		break;
 }
 

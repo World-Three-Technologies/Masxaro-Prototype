@@ -49,7 +49,8 @@ switch($type){
 		else{
 			Tool::login($acc, $pwd, $type);
 			echo true;
-		}
+    }
+    redirectToPortal();
 		break;
 		
 	case 'store':
@@ -67,4 +68,10 @@ switch($type){
 		echo 'wrong login';
 		break;
 }
+
+function redirectToPortal(){
+  Header("HTTP/1.1 301 Moved Permanently");
+  Header("Location: /php/index.html");
+}
+
 ?>

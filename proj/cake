@@ -6,7 +6,9 @@
     runTest();
   } else if($argv[1] =="seed"){
     seed();
-  }else{
+  } else if($argv[1] =="deploy")
+    system("cp -rf ./ /Library/WebServer/Documents/");
+  else{
     usage();
   }
 

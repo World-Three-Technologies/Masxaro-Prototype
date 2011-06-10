@@ -206,20 +206,18 @@ aside{
 
 .receipt{
   padding:3px;
-  height: 36px;
   width:100%;
 }
 
 .receipt .receipt-row{
-  float:left;
+  text-align:left;
   margin:1px 5px;
 }
-.receipt .receipt-row div{
-  float:left;
-}
+
 .receipt .total-cost{
-  float:left;
+  text-align:left;
   height:30px;
+  width:200px;
   font-size:26px;
   padding: 3px;
   background-color:#BFB;
@@ -241,6 +239,10 @@ aside{
   padding: 7px;
   border-top: 1px #EBE solid;
   border-bottom: 1px #EBE solid;
+}
+
+#receipts-table td.items{
+  text-align: left;
 }
 
 #receipts-table th.amount{ width:15%;}

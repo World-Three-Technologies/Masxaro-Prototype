@@ -178,7 +178,7 @@ class ReceiptCtrl extends Ctrl{
 			}
 			
 			$totalCost += $totalCost * $basicInfo['tax'];
-			
+
 			$sql = "
 				UPDATE `receipt`
 				SET
@@ -317,7 +317,7 @@ class ReceiptCtrl extends Ctrl{
 		
 		$sql = "
       SELECT r.receipt_id,r.user_account,s.store_name,r.receipt_time,
-      i.item_name,i.item_price,i.item_qty,r.total_cost 
+      i.item_name,i.item_price,isNULL(r.img) as image,i.item_qty,r.total_cost 
 			FROM `receipt` as r 
       LEFT JOIN receipt_item as i 
       ON r.receipt_id = i.receipt_id 
@@ -361,18 +361,19 @@ class ReceiptCtrl extends Ctrl{
   private function buildReceiptItem($item){
     return array(
       "item_name"=>$item->item_name,
-      "item_price"=>$item->item_price,
-      "item_qty"=>$item->item_qty,
+      "item_price"=>round($item->item_price,2),
+      "item_qty"=>$item->item_qty
     );
   }
 
   private function buildReceipt($item){
     return array(
-      "receipt_id"=>$item->receipt_id,
+      "id"=>$item->receipt_id,
       "store_name"=>$item->store_name,
       "receipt_time"=>$item->receipt_time,
-      "total_cost"=>$item->total_cost,
-      "items" => array($this->buildReceiptItem($item))
+      "total_cost"=>round($item->total_cost,2),
+      "items" => array($this->buildReceiptItem($item)),
+      "image" => $item->image
     );
   }
 	

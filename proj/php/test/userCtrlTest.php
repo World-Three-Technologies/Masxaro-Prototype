@@ -6,7 +6,5 @@ class userCtrlTest extends TestStory{
     $userControl = new UserCtrl();
     should_be_true($userControl->findUser("w3t","w3t"));
   }
-
 }
-
 ?>
