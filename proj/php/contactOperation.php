@@ -25,23 +25,34 @@
 
 include_once '../config.php';
 
-$opcode = $_POST['op'];
+$acc = $_POST['acc'];
+
+if(!Tool::authenticate($acc)){
+	echo "error: need login";
+	die();
+}
+
+$opcode = $_POST['opcode'];
 
 //var_dump($opcode);
 //die();
 
 switch($opcode){
 	case 'new_contacts':
-		
 		$contacts = $_POST['contacts'];
-		//$contacts = json_decode($contacts);
-		
-//		var_dump($contacts);
-//		die();
-		
 		$ctrl = new ContactCtrl();
-		//$ctrl->insertContact($contacts);
-		var_dump($ctrl->insertContact($contacts));
+		echo $ctrl->insertContact($contacts);
+		break;
+		
+	case 'delete_contacts':
+		$values = $_POST['values'];
+		$ctrl = new ContactCtrl();
+		$n = count($values);
+		$result = true;
+		for($i = 0; $i < $n; $i ++){
+			$result &= $ctrl->deleteContact($values[$i]['value']);
+		}
+		echo $result;
 		break;
 		
 	default:

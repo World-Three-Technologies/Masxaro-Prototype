@@ -74,6 +74,8 @@ class ReceiptCtrl extends Ctrl{
 	 */
 	public function insertReceipt($basicInfo, $items){
 		
+		$receiptId = 0;
+		
 		$basicInfoNull = is_null($basicInfo);
 		
 		$itemsNull = is_null($items);
@@ -86,15 +88,8 @@ class ReceiptCtrl extends Ctrl{
 		
 		if(!$basicInfoNull){
 			
-			$receiptId = $basicInfo['receipt_id'];
-			
 			if(empty($basicInfo['receipt_time']) || strlen($basicInfo['receipt_time']) == 0){
 				$basicInfo['receipt_time'] = date("Y-m-d H:i:s");
-			}
-			
-			if(empty($receiptId) || strlen($receiptId) == 0){
-				$receiptId = $this->idGen($basicInfo);
-				$basicInfo['receipt_id'] = $receiptId;
 			}
 			
 			if(empty($basicInfo['total_cost']) || strlen($basicInfo['total_cost']) == 0){
@@ -114,10 +109,10 @@ class ReceiptCtrl extends Ctrl{
 				SET
 				$info
 			";
+
+			$receiptId = $this->db->insert($sql);
 				
-			if($this->db->insert($sql) < 0){
-				//rollback
-				$this->realDelete($receiptId);
+			if($receiptId < 0){
 				return false;
 			}
 			
@@ -125,18 +120,16 @@ class ReceiptCtrl extends Ctrl{
 				
 		if(!$itemsNull){
 			
-			if($receiptId == null || strlen($receiptId) == 0){
-				$receiptId = $items[0]['receipt_id'];
+			if($receiptId == null || strlen($receiptId) == 0 || $receiptId == 0){
+				$receiptId = $items['receipt_id']; // if current receipt id is not set, items[0] should be the receipt id.
 			}
 		
 			$sql = "
 				SELECT `total_cost`
 				FROM `receipt`
 				WHERE
-				`receipt_id`='$receiptId'
+				`receipt_id`=$receiptId
 			";
-			
-			echo $sql;
 			
 			$this->db->select($sql);
 			
@@ -145,19 +138,26 @@ class ReceiptCtrl extends Ctrl{
 				$totalCost = $result[0]->total_cost;
 			}
 			else{
-				$this->realDelete($receiptId);
+				//$this->realDelete($receiptId);
 				return false;
 			}
 			
 			$n = count($items);
 			
 			for($i = 0; $i < $n; $i ++){
+				
+				if(empty($items[$i])){
+					continue;
+				}
+				
+				if(empty($items[$i]['item_discount']) || $items[$i]['item_discount'] == 0){
+					$items[$i]['item_discount'] = 1;
+				}
+				
 				$curCost =  $items[$i]['item_price'] * $items[$i]['item_qty'] * $items[$i]['item_discount'];
 				$totalCost += $curCost;
 				
-				if($receiptId != null && strlen($receiptId) == 0){
-					$items[$i]['receipt_id'] = $receiptId;	
-				}
+				$items[$i]['receipt_id'] = $receiptId;	
 				
 				$info = "";
 				$info = Tool::infoArray2SQL($items[$i]);
@@ -173,7 +173,7 @@ class ReceiptCtrl extends Ctrl{
 				";
 					
 				if($this->db->insert($sql) < 0){
-					$this->realDelete($receiptId);
+					//$this->realDelete($receiptId);
 					return false;
 				}
 			}
@@ -189,12 +189,12 @@ class ReceiptCtrl extends Ctrl{
 			";
 			
 			if($this->db->update($sql) <= 0){
-				$this->realDelete($receiptId);
+				//$this->realDelete($receiptId);
 				return false;
 			}
 		}
 		
-		return true;
+		return $receiptId;
 	}
 	
 	

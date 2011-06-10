@@ -36,40 +36,19 @@ switch($opcode){
 	case 'new_receipt':
 		
 		//$code = "983094867189238-0929347";
-		$code = $_POST['code'];
-
 		
-		//basic info
-		$basicInfo = array(
-						'receipt_id'=>$code, 
-					 	'store_account'=>$_POST['storeAcc'], 
-						'user_account'=>$_POST['userAcc'], 
-						'tax'=>$_POST['tax'], 
-						'total_cost'=>$_POST['total_cost']
-					);
+		//1-d array
+		$basicInfo = $_POST['receipt'];
 					
 		echo $ctrl->insertReceipt($basicInfo, null);
+		
 		break;
 		
 	
 	case 'new_item':
 		
-		$code = $_POST['code'];
-		//$code = "983094867189238-0929347";
-		
-		//item list
-		$items = array();
-		
-		for($i = 0; ; $i ++){
-			$it = array('receipt_id'=>$code, 
-				   'item_id'=>$_POST['item'.$i]['itemId'], 
-				   'item_name'=>$_POST['item'.$i]['itemName'], 
-				   'item_qty'=>$_POST['item'.$i]['itemQty'], 
-				   'item_price'=>$_POST['item'.$i]['itemPrice'], 
-				   'item_discount'=>$_POST['item'.$i]['itemDiscount']);
-		
-			array_push($items, $it);
-		}
+		//2-d array
+		$items = $_POST['items'];
 		
 		echo $ctrl->insertReceipt(null, $items);
 		break;

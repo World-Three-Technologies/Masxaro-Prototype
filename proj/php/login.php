@@ -60,5 +60,5 @@ switch($type){
 		break;
 }
 
-var_dump(Tool::login($acc, $pwd, $type));
+echo Tool::login($acc, $pwd, $type);
 ?>

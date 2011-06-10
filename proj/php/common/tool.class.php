@@ -37,10 +37,9 @@ class Tool{
 		$sql = '';
 		
 		$regxFunc = '(^.*\(\))';
-		$regxNumber = '(^[0-9]+%)';
+		$regxNumber = '(^[0-9]+)';
 		
 		foreach ($info as $key => $value){
-			
 			if(preg_match($regxFunc, $value) || preg_match($regxNumber, $value)){
 				$sql = $sql."`{$key}` = {$value},";
 			}
@@ -84,11 +83,21 @@ class Tool{
 	 * authenticate user/store log in status
 	 */
 	public static function authenticate($acc){
-		if(isset($_COOKIE['user_acc']) && $_COOKIE['user_acc'] == $acc){
+		if(!isset($_COOKIE['user_acc']) && !isset($_COOKIE['store_acc'])){
+			return false;
+		}
+		
+		else if(isset($_COOKIE['user_acc'])){
+			if(!empty($acc) && strlen($acc) > 0 && $_COOKIE['user_acc'] != $acc){
+				return false;
+			}
 			return true;
 		}
 		
-		else if(isset($_COOKIE['store_acc']) && $_COOKIE['store_acc'] == $acc){
+		else if(isset($_COOKIE['store_acc'])){
+			if(!empty($acc) && strlen($acc) > 0  && $_COOKIE['store_acc'] == $acc){
+				return false;
+			}
 			return true;
 		}
 		
