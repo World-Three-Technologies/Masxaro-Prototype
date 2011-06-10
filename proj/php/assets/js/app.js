@@ -1,13 +1,21 @@
-var User = Backbone.Model.extend({
-  initialize:function(){
-    this.auth = document.cookie;           
+var readCookie =function(name){
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(";");
+  for(var i = 0; i<ca.length;i++){
+    var c = ca[i];
+    while (c.charAt(0)== ' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
   }
-});
+}
+
+var User = Backbone.Model;
 
 var user = new User({
-  account:"w3t",
+  account:readCookie("user_acc"),
   flash:"You have 3 new receipts."
 });
+
+
 
 var Receipt = Backbone.Model;
 

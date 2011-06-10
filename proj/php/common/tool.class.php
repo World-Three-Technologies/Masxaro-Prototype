@@ -123,5 +123,11 @@ class Tool{
 		setcookie('user_acc', '');
 		setcookie('store_acc', '');
 	}
+
+  public static function redirect($path){
+    Header("HTTP/1.1 301 Redirect");
+    Header("Location: $path");
+  }
+    
 }
 ?>
