@@ -31,6 +31,11 @@ return array(
     'user' => 'w3t',
 	'pwd' => 'w3t',
 	'dbName' => 'w3tdb'
+	
+//	'host' => 'localhost', 
+//    'user' => 'root',
+//	'pwd' => 'root',
+//	'dbName' => 'w3tdb'
 );
 
 ?>

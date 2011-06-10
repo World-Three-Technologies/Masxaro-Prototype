@@ -37,7 +37,7 @@ class Tool{
 		$sql = '';
 		
 		$regxFunc = '(^.*\(\))';
-		$regxNumber = '(^[0-9]+)';
+		$regxNumber = '(^[0-9]+%)';
 		
 		foreach ($info as $key => $value){
 			
@@ -45,11 +45,13 @@ class Tool{
 				$sql = $sql."`{$key}` = {$value},";
 			}
 			
-			if(empty($value) || $value == 'null' || $value == 'NULL'){
+			else if(empty($value) || $value == 'null' || $value == 'NULL'){
 				$sql = $sql."`{$key}` = NULL,";
 				continue;
 			}
-			$sql = $sql."`{$key}` = '$value',";
+			else{
+				$sql = $sql."`{$key}` = '$value',";
+			}
 		}
 		$sql = substr($sql, 0, -1);		
 		return $sql;
@@ -110,10 +112,10 @@ class Tool{
 	public static function login($acc, $pwd, $type){
 		switch($type){
 			case 'user':
-				setcookie('user_acc', $acc, time() + 20 * 60 * 60); //1 day
+				return setcookie('user_acc', $acc, time() + 20 * 60 * 60); //1 day
 				break;
 			case 'store':
-				setcookie('store_acc', $acc, time() + 20 * 60 * 60); //1 day
+				return setcookie('store_acc', $acc, time() + 20 * 60 * 60); //1 day
 				break;
 		}
 	}

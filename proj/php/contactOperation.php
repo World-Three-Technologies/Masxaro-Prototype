@@ -27,16 +27,23 @@ include_once '../config.php';
 
 $opcode = $_POST['op'];
 
+//var_dump($opcode);
+//die();
+
 switch($opcode){
 	case 'new_contacts':
 		
-		$param = $_POST['contacts'];
-		$contacts = json_decode($param);
+		$contacts = $_POST['contacts'];
+		//$contacts = json_decode($contacts);
+		
+//		var_dump($contacts);
+//		die();
 		
 		$ctrl = new ContactCtrl();
-		
-		echo $ctrl->insertContact($contacts);
+		//$ctrl->insertContact($contacts);
+		var_dump($ctrl->insertContact($contacts));
 		break;
+		
 	default:
 		break;
 }

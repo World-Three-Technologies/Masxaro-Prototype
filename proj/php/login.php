@@ -46,10 +46,6 @@ switch($type){
 		if(!$ctrl->findUser($acc, $pwd)){
 			echo false;
 		}
-		else{
-			Tool::login($acc, $pwd, $type);
-			echo true;
-		}
 		break;
 		
 	case 'store':
@@ -57,14 +53,12 @@ switch($type){
 		if(!$ctrl->findStore($acc, $pwd)){
 			echo false;
 		}
-		else{
-			Tool::login($acc, $pwd, $type);
-			echo true;
-		}
 		break;
 		
 	default:
 		echo 'wrong login';
 		break;
 }
+
+var_dump(Tool::login($acc, $pwd, $type));
 ?>
