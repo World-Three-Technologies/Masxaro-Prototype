@@ -26,13 +26,16 @@
 package com.android.W3T.app.nfc;
 
 import com.android.W3T.app.R;
-import com.android.W3T.app.rmanager.ReceiptManager;
+import com.android.W3T.app.ReceiptsView;
+import com.android.W3T.app.rmanager.*;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class TagView extends Activity {
 	private Button mRejectBtn;
@@ -54,7 +57,15 @@ public class TagView extends Activity {
         mConfirmBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ReceiptManager.addNewReceipt();
+				Receipt r = new Receipt();
+				r.setId((String)((TextView)findViewById(R.id.tag_id_txt)).getText());
+				r.setDate((String)((TextView)findViewById(R.id.tag_date_txt)).getText());
+				r.setTotal((String)((TextView)findViewById(R.id.tag_total_cost_txt)).getText());
+				r.setStoreName((String)((TextView)findViewById(R.id.tag_store_name_txt)).getText());
+				r.setValid(true);
+				ReceiptManager.addNewReceipt(r);
+				startActivity(new Intent(TagView.this, ReceiptsView.class));
+				finish();
 			}
         });
 	}

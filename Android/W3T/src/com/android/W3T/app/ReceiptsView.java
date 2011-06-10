@@ -37,16 +37,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.android.W3T.app.rmanager.ReceiptManager;;
+
+import com.android.W3T.app.rmanager.*;
 
 
 public class ReceiptsView extends Activity {
-	public final static int NUM_RECEIPT = 7;
-	public final static int NUM_RECEIPT_ITEM = 4;
-	
 	private static ReceiptManager mRM = new ReceiptManager();
 	
-	private int mCurReceipt = 1;
+	private int mCurReceipt = 0;
 	private Handler mUpdateHandler = new Handler() {  
 	    public void handleMessage(Message msg) {
 	    	super.handleMessage(msg);
@@ -136,21 +134,23 @@ public class ReceiptsView extends Activity {
 	}
 	
 	private int getPrevReceipt(int num) {
-		mCurReceipt = (num+6)%NUM_RECEIPT;
-//		System.out.println(mCurReceipt);
-		return (num+6)%NUM_RECEIPT;
+		mCurReceipt = (num+ReceiptManager.getNumValid()-1)%ReceiptManager.getNumValid();
+		System.out.println(ReceiptManager.getNumValid());
+		System.out.println(mCurReceipt);
+		return (num+ReceiptManager.getNumValid()-1)%ReceiptManager.getNumValid();
 	}
 	
 	private int getNextReceipt(int num) {
-		mCurReceipt = (num+1)%NUM_RECEIPT;
-//		System.out.println(mCurReceipt);
-		return (num+1)%NUM_RECEIPT;
+		mCurReceipt = (num+1)%ReceiptManager.getNumValid();
+		System.out.println(ReceiptManager.getNumValid());
+		System.out.println(mCurReceipt);
+		return (num+1)%ReceiptManager.getNumValid();
 	}
 	
-	private void fillReceiptView(int item_num) {
-		for (int i = 0;i < NUM_RECEIPT_ITEM;i++) {
+	private void fillReceiptView(int num) {
+		for (int i = 0;i < ReceiptManager.NUM_RECEIPT_ITEM;i++) {
 			((TextView)findViewById(ReceiptManager.ReceiptViewElements[i]))
-				.setText(ReceiptManager.FakeReceipts[item_num][i]);
+				.setText(ReceiptManager.getReceipts().get(num).getItem(i));
 		}
 	}
 }

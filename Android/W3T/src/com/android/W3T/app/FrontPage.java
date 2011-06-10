@@ -114,7 +114,13 @@ public class FrontPage extends Activity {
 	            	log_status = ONLINE;
 	            }
 	        });
-			
+			mCancelBtn= (Button) mLoginDialog.findViewById(R.id.cancel_btn);
+			mCancelBtn.setOnClickListener(new OnClickListener() {
+	            public void onClick(View v) {
+	            	// Close the Login dialog when trying to log in.
+					mLoginDialog.cancel();
+	            }
+			});
 			return mLoginDialog;
 		case DIALOG_LOGOUT:
 			// Logout dialog is an alert dialog. One message and two buttons on it.
@@ -197,13 +203,11 @@ public class FrontPage extends Activity {
 			return false;
 		case R.id.login_opt:
 			// Pop up the login or the logout dialog
-			log_status = ONLINE;
 			showDialog(DIALOG_LOGIN);
 			Toast.makeText(this, "Start log activity!", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.logout_opt:
 			// Pop up the login or the logout dialog
-			log_status = OFFLINE;
 			showDialog(DIALOG_LOGOUT);
 			Toast.makeText(this, "Start log activity!", Toast.LENGTH_SHORT).show();
 			return true;
