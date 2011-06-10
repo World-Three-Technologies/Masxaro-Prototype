@@ -1,5 +1,5 @@
 /*
- * NFCConnection.java -- Android app's NFC screen 
+ * TagView.java -- Viewing the tag after received one. 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -23,17 +23,39 @@
  *  This activity just exists when the NFC link is connecting
  */
 
-package com.android.W3T.app;
+package com.android.W3T.app.nfc;
+
+import com.android.W3T.app.R;
+import com.android.W3T.app.rmanager.ReceiptManager;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
-public class NFCConnection extends Activity {
-	protected void onCreate(Bundle savedInstanceState) {
-        
+public class TagView extends Activity {
+	private Button mRejectBtn;
+	private Button mConfirmBtn;
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.received_tag_view);
         
-        // Just showing a message in the center of the screen
-        setContentView(R.layout.nfc_connecting);
-    }
+        mRejectBtn = (Button)findViewById(R.id.receipt_reject_btn);
+        mRejectBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			
+			}
+        });
+        mConfirmBtn = (Button)findViewById(R.id.receipt_confirm_btn);
+        mConfirmBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ReceiptManager.addNewReceipt();
+			}
+        });
+	}
 }

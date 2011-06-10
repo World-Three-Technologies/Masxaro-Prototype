@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+/*
+ * received_tag_view.xml - The layout XML file of the received tag view  
+ *
+ *  Copyright 2011 World Three Technologies, Inc. 
+ *  All Rights Reserved.
+ * 
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Written by Yichao Yu <yichao@Masxaro>
+ *
+ */
+ -->
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/received_tag_view"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+>
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+	>
+		<!-- Receipt ID -->
+		<TextView android:text="@string/receipt_info_id_lab"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:gravity="left"
+		/>
+		<TextView android:text="ID@1240"
+			android:id="@+id/tag_id_txt"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:gravity="left"
+		/>
+		
+		<!-- Receipt Date -->
+		<TextView android:text="@string/receipt_info_date_lab"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:gravity="left"
+		/>
+		<TextView android:text="06-10-2011"
+			android:id="@+id/tag_date_txt"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:gravity="left"
+		/>
+		
+		<!-- Store name -->
+		<TextView android:text="@string/receipt_info_store_name_lab"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:gravity="left"
+		/>
+		<TextView android:text="KFC"
+			android:id="@+id/tag_store_name_txt"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:gravity="left"
+		/>
+					
+		<!-- Total cost -->
+		<TextView android:text="@string/receipt_info_total_lab"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:gravity="left"
+		/>
+		<TextView android:text="15.00RMB"
+			android:id="@+id/tag_total_cost_txt"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:gravity="left"
+		/>
+	</LinearLayout>
+	
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="horizontal"
+		android:gravity="bottom"
+	>
+		<Button android:id="@+id/receipt_confirm_btn"
+			android:text="@string/receipt_confirm_lab"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1.0"
+		/>
+		
+		<Button android:id="@+id/receipt_reject_btn"
+			android:text="@string/receipt_reject_lab"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1.0"
+		/>
+	
+	</LinearLayout>
+</LinearLayout>
