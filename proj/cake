@@ -39,7 +39,8 @@
     $receipt = array(
       "store_account" => "Mc_NYU",
       "user_account" => "w3t",
-      "tax" => 0.0875
+      "tax" => 0.0875 ,
+      "receipt_time" => "now()"
     );
 
     $items = array();

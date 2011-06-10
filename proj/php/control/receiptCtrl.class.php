@@ -105,10 +105,11 @@ class ReceiptCtrl extends Ctrl{
 			}
 			
 			$sql = "
-				INSERT INTO `receipt`
-				SET
+				INSERT INTO `receipt` 
+				SET 
 				$info
 			";
+      echo $sql;
 
 			$receiptId = $this->db->insert($sql);
 				
