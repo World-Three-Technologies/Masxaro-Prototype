@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title></title>
+  <title>Masxaro</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -15,8 +15,9 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-  <link rel="stylesheet" href="css/style.css?v=2">
-  <script src="js/vendor/modernizr-1.7.min.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css?v=2">
+  <script src="assets/js/vendor/modernizr-1.7.min.js"></script>
+
 
 </head>
 
@@ -37,7 +38,7 @@
             </ul>
           </nav>
           <div id="header-user">
-            <a id="username">Username</a> | <a>Logout</a>
+            <a id="username"></a> | <a href="logoff.php?acc=user">Logout</a>
           </div>
         </div>
       </div>
@@ -46,7 +47,7 @@
       <div id="content">
         <div id="user" class="clearfix">
           <div id="user-inner">
-            <div><img src="img/avator.png"></img></div>
+            <div><img src="assets/img/avator.png"></img></div>
             <div id="user-flash">Hello User!</div>
           </div>
         </div>
@@ -74,6 +75,7 @@
                 <th class="date">Date</th>
               </tr>
             </thead>
+            <td id="ajax-loader" colspan="4"><img src="assets/img/ajax-loader.gif"/></td>
           </table>
           <div class="receipts-stat">
             <span class="stat"></span>
@@ -92,9 +94,9 @@
 
   <script type="text/tamplate" id="receipt-row-template">
     <td>$<%= total_cost %></td>
-    <td><%= items %></td>
-    <td><%= store %></td>
-    <td><%= time %></td>
+    <td class="items"></td>
+    <td><%= store_name %></td>
+    <td><%= receipt_time %></td>
   </script>
 
   <script type="text/template" id="receipt-full-template">
@@ -102,11 +104,11 @@
       <div class="receipt clearfix">
         <div class="total-cost">$<%= total_cost %></div>
         <div class="receipt-row clearfix">
-          <div class="items">for <%= items %></div> 
-          <div class="store">at <%= store%></div>
+          <div class="items"></div> 
+          <div class="store">at <%= store_name%></div>
         </div>
         <div class="receipt-row clearfix">
-          <div class="date"><%= time %></div>
+          <div class="date"><%= receipt_time %></div>
         </div>
         <div class="toolbar invisible">
           show full receipt, add tags
@@ -116,14 +118,13 @@
   </script>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
-  <script>window.jQuery || document.write("<script src='js/vendor/jquery-1.6.1.min.js'>\x3C/script>")</script>
-  <script src="js/vendor/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-  <link rel="stylesheet" href="js/vendor/fancybox/jquery.fancybox-1.3.4.css">
-  <script src="js/vendor/json2.js"></script>
-  <script src="js/vendor/underscore-min.js"></script>
-  <script src="js/vendor/backbone-min.js"></script>
-  <script src="js/vendor/backbone-localstorage.js"></script>
-  <script src="js/app.js"></script>
+  <script>window.jQuery || document.write("<script src='assets/js/vendor/jquery-1.6.1.min.js'>\x3C/script>")</script>
+  <script src="assets/js/vendor/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+  <link rel="stylesheet" href="assets/js/vendor/fancybox/jquery.fancybox-1.3.4.css">
+  <script src="assets/js/vendor/json2.js"></script>
+  <script src="assets/js/vendor/underscore-min.js"></script>
+  <script src="assets/js/vendor/backbone.js"></script>
+  <script src="assets/js/app.js"></script>
 
 </body>
 </html>

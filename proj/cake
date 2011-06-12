@@ -1,0 +1,74 @@
+#!/usr/bin/php -q
+<?php 
+  require "config.php";
+
+  if($argv[1]=="test"){
+    runTest();
+  } else if($argv[1] =="seed"){
+    seed();
+  } else if($argv[1] =="deploy")
+    system("cp -rf ./ /Library/WebServer/Documents/");
+  else{
+    usage();
+  }
+
+  function usage(){
+    echo "usage...\n";
+    echo "./cake test :: run testcase\n";
+    echo "./cake seed :: insert data to database\n";
+  }
+
+  function runTest(){
+    system("php ./php/test/test.php");
+  }
+
+  function seed(){
+
+    //insert user;
+    $userControl = new UserCtrl();
+    if($userControl->chkAccount("w3t")){
+      $user = array(
+      "user_account" => "w3t",
+      "pwd" => "w3t",
+      "first_name" => "W3Tester");
+      $userControl->insertUser($user);
+    }
+
+    //insert receipts;
+    $receiptControl = new ReceiptCtrl();
+    $receipt = array(
+      "store_account" => "Mc_NYU",
+      "user_account" => "w3t",
+      "tax" => 0.0875 ,
+      "receipt_time" => "now()"
+    );
+
+    $items = array();
+
+    array_push($items, array( 
+           'item_id'=>'3',
+           'item_name'=>'Harry-Potter - I', 
+           'item_qty'=>1, 
+           'item_price'=>10.99, 
+           'item_discount'=>1));
+
+    array_push($items, array( 
+           'item_id'=>'4',
+           'item_name'=>'Harry-potter - II', 
+           'item_qty'=>2, 
+           'item_price'=>39.99, 
+           'item_discount'=>1));
+
+    array_push($items, array( 
+           'item_id'=>'5',
+           'item_name'=>'Harry-potter - III', 
+           'item_qty'=>5, 
+           'item_price'=>19.99, 
+           'item_discount'=>1));
+
+    $flag = $receiptControl->insertReceipt($receipt,$items);
+    if(!$flag){
+      echo "insert fails\n";
+    }
+  }
+?>
