@@ -26,8 +26,6 @@
 
 class ReceiptCtrl extends Ctrl{
 	
-	public $user = 0;
-	
 	function __construct(){
 		parent::__construct();
 	}
@@ -222,7 +220,7 @@ class ReceiptCtrl extends Ctrl{
 			SET
 			$info
 			WHERE
-			`receipt_id`='$receiptId'
+			`receipt_id`=$receiptId
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -247,14 +245,14 @@ class ReceiptCtrl extends Ctrl{
 		$sql = "
 			DELETE from `receipt_item`
 			WHERE
-			`receipt_id` = '$receiptId'
+			`receipt_id` = $receiptId
 		";
 		$delItem = $this->db->delete($sql);
 		
 		$sql = "
 			DELETE from `receipt`
 			WHERE
-			`receipt_id` = '$receiptId'
+			`receipt_id` = $receiptId
 		";
 		
 		if($this->db->delete($sql) <= 0 || $delItem <= 0){
@@ -281,7 +279,7 @@ class ReceiptCtrl extends Ctrl{
 			SET
 			`deleted` = true
 			WHERE
-			`receipt_id` = '$receiptId'
+			`receipt_id` = $receiptId
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -293,7 +291,7 @@ class ReceiptCtrl extends Ctrl{
 			SET
 			`deleted` = true
 			WHERE
-			`receipt_id` = '$receiptId'
+			`receipt_id` = $receiptId
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -381,13 +379,13 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * return all items of a receipt
 	 */
-	public function userGetAllReceiptItems($receiptId){
+	public function userGetReceiptItems($receiptId){
 		
 		$sql = "
 			SELECT *
 			FROM `receipt_item`
 			WHERE
-			`receipt_id`='$receiptId'
+			`receipt_id`=$receiptId
 			AND
 			`deleted`=0
 		";
@@ -421,7 +419,7 @@ class ReceiptCtrl extends Ctrl{
 			SELECT *
 			FROM `receipt`
 			WHERE
-			`receipt_id`='$receiptId'
+			`receipt_id`=$receiptId
 		";
 		
 		$this->db->select($sql);

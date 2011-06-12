@@ -185,10 +185,6 @@ class ContactCtrl extends Ctrl{
 		return true;
 	}
 	
-	public function getContact(){
-		
-	}
-	
 	
 	/**
 	 * 
@@ -255,6 +251,35 @@ class ContactCtrl extends Ctrl{
 		}
 
 		return true;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc
+	 * 
+	 * @param string $who store or user
+	 * 
+	 * @return object
+	 * 
+	 * @desc
+	 * 
+	 * get all contacts of a certain account
+	 */
+	public function getContacts($acc, $who){
+		
+		$who .= '_account';
+		
+		$sql = "
+			SELECT *
+			FROM `contact`
+			WHERE
+			`$who`='$acc'
+		";
+		
+		$this->db->select($sql);
+		
+		return $this->db->fetchObject();
 	}
 }
 ?>

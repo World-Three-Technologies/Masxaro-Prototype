@@ -34,43 +34,40 @@ $ctrl = new ReceiptCtrl();
 
 switch($opcode){
 	case 'new_receipt':
-		
 		//$code = "983094867189238-0929347";
-		
 		//1-d array
 		$basicInfo = $_POST['receipt'];
-					
 		echo $ctrl->insertReceipt($basicInfo, null);
-		
 		break;
-		
 	
 	case 'new_item':
-		
 		//2-d array
 		$items = $_POST['items'];
-		
 		echo $ctrl->insertReceipt(null, $items);
 		break;
 		
+	case 'f_delete_receipt':
+		echo $ctrl->fakeDelete($_POST['receipt_id']);
+		break;
 		
 	case 'delete_receipt':
-		echo $ctrl->fakeDelete($_POST['receiptId']);
+		echo $ctrl->realDelete($_POST['receipt_id']);
 		break;
-		
 		
 	case 'recover':
-		echo $ctrl->fakeDelete($_POST['receiptId']);
+		echo $ctrl->recoverDeleted($_POST['receipt_id']);
 		break;
-		
 		
 	case 'user_get_all_receipt':
 		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
 		break;
 		
-		
 	case 'user_get_all_receipt_item':
-		echo json_encode($ctrl->userGetAllReceiptItems($_POST['receiptId']));
+		echo json_encode($ctrl->userGetReceiptItems($_POST['receipt_id']));
+		break;
+		
+	case 'user_get_receipt_detail':
+		echo json_encode($ctrl->getReceiptDetail($_POST['receipt_id']));
 		break;
 }
 

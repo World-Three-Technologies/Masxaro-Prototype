@@ -222,5 +222,29 @@ class UserCtrl extends Ctrl{
 		
 		return false;
 	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc
+	 * 
+	 * @return object
+	 * 
+	 * @desc
+	 * 
+	 * according to user account, return user profile object
+	 */
+	public function getUserProfile($acc){
+		$sql = "
+			SELECT *
+			FROM `user`
+			WHERE `user_account`='$acc'
+		";
+		
+		$this->db->select($sql);
+		$result = $this->db->fetchObject();
+		
+		return $result;
+	}
 }
 ?>

@@ -37,22 +37,27 @@ $opcode = $_POST['opcode'];
 //var_dump($opcode);
 //die();
 
+
+$ctrl = new ContactCtrl();
+
 switch($opcode){
 	case 'new_contacts':
 		$contacts = $_POST['contacts'];
-		$ctrl = new ContactCtrl();
 		echo $ctrl->insertContact($contacts);
 		break;
 		
 	case 'delete_contacts':
 		$values = $_POST['values'];
-		$ctrl = new ContactCtrl();
 		$n = count($values);
 		$result = true;
 		for($i = 0; $i < $n; $i ++){
 			$result &= $ctrl->deleteContact($values[$i]['value']);
 		}
 		echo $result;
+		break;
+		 
+	case 'get_contacts':
+		echo json_encode($ctrl->getContacts($_POST['acc'], $_POST['who']));
 		break;
 		
 	default:

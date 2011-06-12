@@ -33,13 +33,13 @@ $img = Tool::imgToBlob($path);
 
 $ctrl = new ReceiptCtrl();
 
-$receiptId = "983094867189238-0929347";
+$receiptId = 1;
 
 $param = array('img'=>$img);
 
 print_r($ctrl->updateReceiptBasic($receiptId, $param));
 
-$result = $ctrl->getReceiptDetail("983094867189238-0929347");
+$result = $ctrl->getReceiptDetail(1);
 
 if(!empty($result[0]->img)){
 	header ("Content-type: image/jpeg");
