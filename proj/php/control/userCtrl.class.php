@@ -42,7 +42,7 @@ class UserCtrl extends Ctrl{
 		
 		$info['pwd'] = md5($info['pwd']); 
 		
-		$info['register_time'] = date("Y-m-d H:i:s");
+		//$info['register_time'] = date("Y-m-d H:i:s");
 		
 		$con = Tool::infoArray2SQL($info);
 		
@@ -55,7 +55,7 @@ class UserCtrl extends Ctrl{
 			SET
 			$con
 		";
-				
+			
 		$result = $this->db->insert($sql);
 		
 		if($result < 0){
@@ -143,7 +143,7 @@ class UserCtrl extends Ctrl{
 			`store_account`='$acc'
 		";
 		
-		if(!$this->db->select($sql)){
+		if($this->db->select($sql) < 0){
 			return false;
 		}
 		

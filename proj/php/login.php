@@ -45,7 +45,7 @@ switch($type){
 		$ctrl = new UserCtrl();
 		if(!$ctrl->findUser($acc, $pwd)){
 			echo false;
-			return;
+			die();
 		}
 		break;
 		
@@ -53,7 +53,7 @@ switch($type){
 		$ctrl = new StoreCtrl();
 		if(!$ctrl->findStore($acc, $pwd)){
 			echo false;
-			return;
+			die();
 		}
 		break;
 		
