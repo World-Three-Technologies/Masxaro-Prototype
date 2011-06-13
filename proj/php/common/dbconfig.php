@@ -27,15 +27,15 @@
 
 
 return array(
-//	'host' => '46.51.255.119', 
-//    'user' => 'w3t',
-//	'pwd' => 'w3t',
-//	'dbName' => 'w3tdb'
-//	
-	'host' => 'localhost', 
-    'user' => 'root',
-	'pwd' => 'root',
+	'host' => '46.51.255.119', 
+    'user' => 'w3t',
+	'pwd' => 'w3t',
 	'dbName' => 'w3tdb'
+	
+//	'host' => 'localhost', 
+//    'user' => 'root',
+//	'pwd' => 'root',
+//	'dbName' => 'w3tdb'
 );
 
 ?>
