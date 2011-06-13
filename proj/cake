@@ -19,7 +19,8 @@
   }
 
   function runTest(){
-    system("php ./php/test/test.php");
+    $path = dirname(__FILE__);
+    system("phpunit $path/php/test");
   }
 
   function seed(){

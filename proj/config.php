@@ -29,6 +29,7 @@ define('ROOT_PATH', dirname(__FILE__));
 ini_set('default_charset', 'utf-8');
 
 ini_set('include_path', 
+      get_include_path().PATH_SEPARATOR.
 			ROOT_PATH.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'common'.DIRECTORY_SEPARATOR.':'
 			.ROOT_PATH.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.':'
 			.ROOT_PATH.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'control'.DIRECTORY_SEPARATOR.':'
