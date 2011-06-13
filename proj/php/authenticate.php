@@ -28,7 +28,7 @@ include_once '../config.php';
 
 $acc = $_POST['acc'];
 
-var_dump(Tool::authenticate($acc));
+echo Tool::authenticate($acc);
 
 ?>
 

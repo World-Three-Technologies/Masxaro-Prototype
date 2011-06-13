@@ -45,6 +45,7 @@ switch($type){
 		$ctrl = new UserCtrl();
 		if(!$ctrl->findUser($acc, $pwd)){
 			echo false;
+			return;
 		}
 		break;
 		
@@ -52,11 +53,13 @@ switch($type){
 		$ctrl = new StoreCtrl();
 		if(!$ctrl->findStore($acc, $pwd)){
 			echo false;
+			return;
 		}
 		break;
 		
 	default:
 		echo 'wrong login';
+		return;
 		break;
 }
 
