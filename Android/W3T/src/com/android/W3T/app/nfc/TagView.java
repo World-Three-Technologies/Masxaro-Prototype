@@ -31,11 +31,14 @@ import com.android.W3T.app.rmanager.*;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TagView extends Activity {
 	private Button mRejectBtn;
@@ -69,4 +72,25 @@ public class TagView extends Activity {
 			}
         });
 	}
+	
+	@Override
+    public void onNewIntent(Intent intent) {
+        setIntent(intent);
+        String action = intent.getAction();
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
+	        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_TAG);
+	        if (rawMsgs != null)
+	        	Toast.makeText(this, "Is a nfc tag.", Toast.LENGTH_SHORT).show();
+	        else
+	        	Toast.makeText(this, "Not a nfc tag.", Toast.LENGTH_SHORT).show();
+	        rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+	        if (rawMsgs != null)
+	        	Toast.makeText(this, "Is a ndef tag.", Toast.LENGTH_SHORT).show();
+	        else
+	        	Toast.makeText(this, "Not a ndef tag.", Toast.LENGTH_SHORT).show();
+        }
+        else {
+        	Toast.makeText(this, "Not a tag intent", Toast.LENGTH_SHORT).show();
+        }
+    }	
 }
