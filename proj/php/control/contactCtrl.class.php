@@ -144,8 +144,6 @@ class ContactCtrl extends Ctrl{
 		
 		$inserted = array(); //record inserted contact value within current process
 		
-		//$regex = "(.*@masxaro.com)";
-		
 		for($i = 0; $i < $n; $i ++){
 			
 			if(!$this->chkAccMail($info[$i]['user_account'], $info[$i]['value'])){

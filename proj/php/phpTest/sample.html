@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- 
+ *  sample.html -- ajax sample 
+ *
+ *  Copyright 2011 World Three Technologies, Inc. 
+ *  All Rights Reserved.
+ * 
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Written by Yaxing Chen <Yaxing@masxaro.com>
+ * 
+ *  
+ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PHP Test page</title>
+<script type="text/javascript" src="../../pages/js/vendor/jquery.js"></script>
+
+<script type="text/javascript">
+$(function(){
+
+		var curReceiptId = 1;
+
+		/************
+		call corresponding functions using following statements
+		notice Ajax needs time to return
+		*************/
+		login();
+		//addContacts();
+		//deleteContacts();
+		//logoff();
+		//newReceipt();
+		//newItem();
+		//fakeDeleteReceipt();
+		//recoverDeletedReceipt();
+		//userGetAllReceipt();
+		//userGetReceiptItem();
+		//getReceiptDetail();
+		//getUserProfile();
+
+
+		function returnDataHandle(data){
+			if(data == true){
+				alert('successfully operated');
+			}
+			else if(data == false){
+				alert('sth was wrong');
+			}
+			else{
+				alert(data);
+			}
+		}
+
+		function login(){
+			$.post(
+				"../login.php",
+				{
+					acc  : "new",
+					pwd  : "123",
+					type : "user"
+				},
+				function(data){
+					returnDataHandle(data);
+				}
+			);
+		}
+
+		function logoff(){
+			$.post("../logoff.php", {}, function(data){
+				alert("logged off!");
+			});
+		}
+
+		function deleteContacts(){
+			$.post("../contactOperation.php", 
+				  	{
+						opcode : "delete_contacts",
+						values : {
+							0 : {value : "brian@gmail.com"},
+							1 : {value : "nyumacd@gmail.com"}
+						}
+				  	},
+				  function(data){
+				  		returnDataHandle(data);
+				  }
+			);
+		}
+
+		function addContacts(){
+			$.post("../contactOperation.php", 
+					{
+						opcode : "new_contacts", 
+						contacts : {
+										0 : {
+											user_account : "new", 
+											contact_type : "email", 
+											value : "brian@gmail.com"
+										   },
+
+										 1 : {
+											store_account : "Mc_NYU", 
+											contact_type : "email", 
+											value : "nyumacd@gmail.com"
+										   }
+									}
+					}, 
+					function(data){
+						returnDataHandle(data);
+					}
+			);
+		}
+
+		function newReceipt(){
+			//receipt total cost can be null or 0 here, when adding items, total cost would be 
+			//calculated and updated.
+			$basicInfo = {
+					//receipt_id : 1,
+					store_account : "Mc_NYU",
+					user_account : "new",
+					receipt_time : "now()",
+					tax : 0.1
+			};
+
+			$.post(
+				"../receiptOperation.php",
+				{
+					opcode : "new_receipt",
+					receipt : $basicInfo
+				},
+				function(data){
+					if(data == false){
+						alert('sth was wrong when adding new receipt');
+					}
+					else{
+						curReceiptId = data;
+						alert('new receipt: '+data);
+					}
+
+				}
+			);
+		}
+
+		function newItem(){
+			$items = {
+					receipt_id : curReceiptId,
+
+					0 : {
+							item_id : 11,
+							item_name : 'cheese burg',
+							item_qty : 1,
+							item_price : 2.5
+						},
+
+					1 : {
+						item_id : 12,
+						item_name : 'coke',
+						item_qty : 2,
+						item_price : 1.25
+					},
+
+					2 : {
+						item_id : 10,
+						item_name : 'fries-mid',
+						item_qty : 2,
+						item_price : 2.25
+					}
+			};
+
+			$.post(
+				"../receiptOperation.php",
+				{
+					opcode : "new_item",
+					items : $items
+				},
+				function(data){
+					if(data == false){
+						alert('sth was wrong when adding new items to receipt ' + curReceiptId);
+					}
+					else{
+						alert('new items has been added for receipt: ' + curReceiptId);
+					}
+				}
+			);
+		}
+
+		function fakeDeleteReceipt(){
+			$.post(
+				"../receiptOperation.php",
+				{
+					receipt_id : curReceiptId,
+					opcode : "f_delete_receipt"
+				},
+				function(data){
+					returnDataHandle(data);
+				}
+			);
+		}
+
+		function recoverDeletedReceipt(){
+			$.post(
+					"../receiptOperation.php",
+					{
+						receipt_id : curReceiptId,
+						opcode : "recover"
+					},
+					function(data){
+						returnDataHandle(data);
+					}
+				);
+		}
+
+		function userGetAllReceipt(){
+			$.post(
+					"../receiptOperation.php",
+					{
+						opcode : 'user_get_all_receipt',
+						acc : 'new'
+					},
+					function(data){
+						data = $.parseJSON(data);
+						var i = 0;
+						var store = "";
+						for(; i < data.length; i ++){
+							store += data[i]['store_account'] + ",";
+						}
+
+						alert(store);
+
+						//alert(data[0]['store_account']);
+					}
+				);
+		}
+
+		function userGetReceiptItem(){
+			$.post(
+					"../receiptOperation.php",
+					{
+						opcode : 'user_get_all_receipt_item',
+						receipt_id : curReceiptId
+					},
+					function(data){
+						data = $.parseJSON(data);
+						var i = 0;
+						var items = "";
+						for(; i < data.length; i ++){
+							items += data[i]['item_name'] + ", ";
+						}
+
+						alert(items);
+					}
+				);
+		}
+
+		function getReceiptDetail(){
+			$.post(
+					"../receiptOperation.php",
+					{
+						opcode : 'user_get_receipt_detail',
+						receipt_id : curReceiptId
+					},
+					function(data){
+						data = $.parseJSON(data);
+						alert(data[0]['receipt_time']);
+					}
+				);
+		}
+
+		function getUserProfile(){
+			$.post(
+					"../userProfile.php",
+					{
+						acc : 'new'
+					},
+					function(data){
+						data = $.parseJSON(data);
+						alert(data[0]['first_name']);
+					}
+				);
+		}
+
+
+});
+</script>
+
+</head>
+<body>
+
+</body>
+</html>
