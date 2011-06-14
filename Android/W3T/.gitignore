@@ -1,0 +1,5 @@
+bin/*
+gen/*
+.metadata/*
+
+!bin/W3T.apk

@@ -25,7 +25,7 @@
 
 include_once '../../config.php';
 
-$path = ROOT_PATH."/buffer/test.jpg";
+$path = ROOT_PATH."/buffer/fake_receipt.jpg";
 
 //header ("Content-type: image/jpeg");
 
@@ -37,7 +37,7 @@ $receiptId = 1;
 
 $param = array('img'=>$img);
 
-print_r($ctrl->updateReceiptBasic($receiptId, $param));
+$ctrl->updateReceiptBasic($receiptId, $param);
 
 $result = $ctrl->getReceiptDetail(1);
 
