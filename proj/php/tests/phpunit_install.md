@@ -14,14 +14,14 @@
 
 3.set pear include path:
 
-    $ pear config-get php_dir> /usr/share/lib/php/ (or local path like /Users/Jimmy/pear/share/pear)
+    $ pear config-get php_dir> /usr/share/lib/php/ (or local path like /Users/Jimmy/pear/share/pear)  
 
 check where the php.ini file is
 
-    $ php --ini
+    $ php --ini  
 
 open php.ini and add include path with the path of pear php_dir:
 
 in php.ini:
 
-    include_path = "... : /path/to/pear/lib"
+    include_path = "... : /path/to/pear/lib"  
