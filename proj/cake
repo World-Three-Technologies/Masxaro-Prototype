@@ -47,21 +47,18 @@
     $items = array();
 
     array_push($items, array( 
-           'item_id'=>'3',
            'item_name'=>'Harry-Potter - I', 
            'item_qty'=>1, 
            'item_price'=>10.99, 
            'item_discount'=>1));
 
     array_push($items, array( 
-           'item_id'=>'4',
            'item_name'=>'Harry-potter - II', 
            'item_qty'=>2, 
            'item_price'=>39.99, 
            'item_discount'=>1));
 
     array_push($items, array( 
-           'item_id'=>'5',
            'item_name'=>'Harry-potter - III', 
            'item_qty'=>5, 
            'item_price'=>19.99, 

@@ -1,19 +1,18 @@
 <?php
 
 require_once dirname(__FILE__).'/../../config.php';
+require_once "ctrl.class.php";
+require_once "receiptCtrl.class.php";
   
-class StackTest extends PHPUnit_Framework_TestCase{
-  public function test_push_and_pop(){
-    $stack = array();
-    $this->assertEquals(0,count($stack));
+class ReceiptCtrlTest extends PHPUnit_Framework_TestCase{
 
-    array_push($stack, 'foo');
+  public function test_it_can_return_users_receipt(){
 
-    $this->assertEquals('foo', $stack[count($stack)-1]);
-    $this->assertEquals(1, count($stack));
+    $control = new ReceiptCtrl();
 
-    $this->assertEquals('foo', array_pop($stack));
-    $this->assertEquals(0, count($stack));
+    $receipts = $control->userGetAllReceipt("w3t");   
+
+    $this->assertEquals("Arraystore_name",$receipts[0].store_name);
 
   }
 }

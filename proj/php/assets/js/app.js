@@ -34,31 +34,29 @@ var Receipts = Backbone.Collection.extend({
   }
 });
 
-
+var mockReceipts = [{
+  total_cost:15,
+  items:[
+    {
+      item_name:"test",
+      item_price:12,
+      item_qty:3
+    },{
+      item_name:"test2",
+      item_price:34,
+      item_qty:1
+    },{
+      item_name:"test3",
+      item_price:56,
+      item_qty:2
+    }  
+  ], 
+  store_name:"pret A monger",
+  receipt_time:"1 day ago",
+  image:true
+}];
 
 $(function(){
-  var mockReceipts = [{
-    total_cost:15,
-    items:[
-      {
-        item_name:"test",
-        item_price:12,
-        item_qty:3
-      },{
-        item_name:"test2",
-        item_price:34,
-        item_qty:1
-      },{
-        item_name:"test3",
-        item_price:56,
-        item_qty:2
-      }  
-    ], 
-    store_name:"pret A monger",
-    receipt_time:"1 day ago",
-    image:true
-  }];
-
   var UserView = Backbone.View.extend({
   
     el:$("#user"),
@@ -97,19 +95,19 @@ $(function(){
     render:function(){
       var view = $(this.el);
       view.html(this.template(this.model.toJSON()));
+      view.find(".items").html(this.renderItem());
 
-      var text = _.reduce(this.model.get("items"),function(memo,item){
-        return memo + item.item_name + " x" + item.item_qty+" ,";
-      },"");
-
-      //console.log(text);
-
-      view.find(".items").html(text);
       window.lastOpen = this;
       if(this.model.get("image")===true){
         this.bindFancybox({content:"<img src='assets/img/fake_receipt.jpg'>"});
       }
       return this;
+    },
+
+    renderItem:function(){
+      return _.reduce(this.model.get("items"),function(memo,item){
+        return memo + item.item_name + " x" + item.item_qty+" ,";
+      },"");
     },
 
     bindFancybox:function(model){

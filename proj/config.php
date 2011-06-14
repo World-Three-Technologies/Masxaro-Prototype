@@ -52,7 +52,7 @@ ini_set ( 'display_startup_errors', IS_DEBUG );
 	
 ///configuration file
 function __autoload($className) {
-	include_once($className.'.class.php');
+	require_once($className.'.class.php');
 }
 
 //session manage

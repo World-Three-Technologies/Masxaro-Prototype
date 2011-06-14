@@ -24,7 +24,7 @@
  *  database test file
  */
 
-include_once '../config.php';
+include_once '../../config.php';
 
 $db = new Database();
 $sql = "insert into `age_range` values(null, '25-30')";
