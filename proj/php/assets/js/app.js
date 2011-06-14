@@ -4,12 +4,15 @@ var Receipt = Backbone.Model;
 var Receipts = Backbone.Collection.extend({
   model: Receipt,
 
+  initialize:function(){
+    _.bindAll(this,"sync");
+  },
+
   sync:function(method,model,success,error){
     $.post("./receiptOperation.php",{
       opcode : "user_get_all_receipt",
-      acc: this.account,
+      acc: this.account
     },function(data){
-      console.log(data);
       $("#ajax-loader").hide();
       model.refresh(JSON.parse(data));
     });
@@ -54,8 +57,6 @@ var ReceiptView = Backbone.View.extend({
       return memo + item.item_name + " x" + item.item_qty+" ,";
     },"");
 
-    //console.log(text);
-
     view.find(".items").html(text);
     window.lastOpen = this;
     if(this.model.get("image")===true){
@@ -94,16 +95,14 @@ window.ReceiptsView = Backbone.View.extend({
 
   start:1,
 
-  end:2,
+  end:1,
 
   initialize:function(){
-    _.bindAll(this,"render","renderMore","renderReceipt");
-    this.end = 10 < this.model.length + 1 ? 10 : this.model.length + 1;
+    _.bindAll(this,"render","renderMore","renderReceipt","setEnd");
     this.model.bind("refresh",this.render);
     this.model.bind("change",this.render);
     this.model.view = this;
     this.model.fetch();
-
   },
 
   events:{
@@ -115,6 +114,7 @@ window.ReceiptsView = Backbone.View.extend({
   },
 
   render:function(){
+    this.setEnd();
     _.each(this.model.models.slice(0,this.end),this.renderReceipt);
     this.updateStatus();
     if(this.end >= this.model.length ){
@@ -138,6 +138,10 @@ window.ReceiptsView = Backbone.View.extend({
     var view = new ReceiptView({model:receipt});
     this.el.children("table").append(view.render().el);
   },
+
+  setEnd:function(){
+    this.end = (this.model.length > 10) ? 10 : this.model.length;       
+  }
 });
 
 
@@ -151,9 +155,8 @@ $(function(){
 
   window.userView = new UserView({model:user});
 
-  var receipts = new Receipts({
-    account:user.get("account")
-  });
+  var receipts = new Receipts();
+  receipts.account = user.get("account");
 
   window.receiptsView = new ReceiptsView({model:receipts });
 });
