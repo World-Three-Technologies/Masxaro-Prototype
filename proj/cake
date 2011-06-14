@@ -20,7 +20,7 @@
 
   function runTest(){
     $path = dirname(__FILE__);
-    system("phpunit $path/php/test");
+    system("phpunit $path/php/tests ");
   }
 
   function seed(){
