@@ -75,14 +75,6 @@ class ReceiptCtrl extends Ctrl{
 		
 		if(!$basicInfoNull){
 			
-			if(empty($basicInfo['receipt_time']) || strlen($basicInfo['receipt_time']) == 0){
-				$basicInfo['receipt_time'] = date("Y-m-d H:i:s");
-			}
-			
-			if(empty($basicInfo['total_cost']) || strlen($basicInfo['total_cost']) == 0){
-				$basicInfo['total_cost'] = $totalCost;
-			}
-			
 			$info = "";
 			
 			$info = Tool::infoArray2SQL($basicInfo);
