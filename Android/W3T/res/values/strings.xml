@@ -26,7 +26,7 @@
  -->
 <resources>
     <string name="app_name">Masxaro</string>
-    <string name="login_username_lab">Username:</string>
+    <string name="fp_not_login">Not Login</string><string name="login_username_lab">Username:</string>
     <string name="login_password_lab">Password:</string>
     <string name="login_submit_btn">Submit</string>
     <string name="login_cancel_btn">Cancel</string>
@@ -39,5 +39,6 @@
     <string name="logout_promote">Do you want to log out?</string>
     <string name="receipt_confirm_lab">Confirm</string>
     <string name="receipt_reject_lab">Reject</string>
+    
     
 </resources>

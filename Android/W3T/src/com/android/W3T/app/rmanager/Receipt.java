@@ -27,7 +27,7 @@
 package com.android.W3T.app.rmanager;
 
 public class Receipt {
-	public final static String[][] FakeReceiptsInfo = {
+	public final static String[][] sFakeReceiptsInfo = {
 		{"ID@1234", "06-01-2011", "Wendy's", "12.32USD"},
 		{"ID@1235", "06-02-2011", "Starbucks", "4.63USD"},
 		{"ID@1236", "06-02-2011", "J Street", "10.02USD"},

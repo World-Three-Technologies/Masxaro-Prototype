@@ -42,7 +42,7 @@ import com.android.W3T.app.rmanager.*;
 
 
 public class ReceiptsView extends Activity {
-	private static ReceiptManager mRM = new ReceiptManager();
+	private static ReceiptsManager sRM = new ReceiptsManager();
 	
 	private int mCurReceipt = 0;
 	private Handler mUpdateHandler = new Handler() {  
@@ -78,7 +78,6 @@ public class ReceiptsView extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt_view);
-//        mReceiptView = (LinearLayout)findViewById(R.id.receipt_view);
 	}
 	
 	@Override
@@ -105,10 +104,7 @@ public class ReceiptsView extends Activity {
 			Toast.makeText(this, "Switch to anther receipt view!", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.b_to_fp_opt:
-			// Back to Front Page activity
-			Intent front_page_intent = new Intent(ReceiptsView.this, FrontPage.class);
-			startActivity(front_page_intent);
-			finish();
+			setBackIntent();
 			break;
 		default:
 			return false;
@@ -120,12 +116,15 @@ public class ReceiptsView extends Activity {
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_LEFT:
-			new Thread(mPrevUpdate).start();
-//			fillReceiptView(getPrevReceipt(mCurReceipt));
+//			new Thread(mPrevUpdate).start();
+			fillReceiptView(getPrevReceipt(mCurReceipt));
 			break;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			new Thread(mNextUpdate).start();
-//			fillReceiptView(getNextReceipt(mCurReceipt));
+//			new Thread(mNextUpdate).start();
+			fillReceiptView(getNextReceipt(mCurReceipt));
+			break;
+		case KeyEvent.KEYCODE_BACK:
+			setBackIntent();
 			break;
 		default:
 			break;
@@ -133,24 +132,30 @@ public class ReceiptsView extends Activity {
 		return super.onKeyUp(keyCode, event);
 	}
 	
+	private void setBackIntent() {
+		// Back to Front Page activity
+		Intent front_page_intent = new Intent(ReceiptsView.this, FrontPage.class);
+		front_page_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivity(front_page_intent);
+	}
+	
 	private int getPrevReceipt(int num) {
-		mCurReceipt = (num+ReceiptManager.getNumValid()-1)%ReceiptManager.getNumValid();
-		System.out.println(ReceiptManager.getNumValid());
-		System.out.println(mCurReceipt);
-		return (num+ReceiptManager.getNumValid()-1)%ReceiptManager.getNumValid();
+		mCurReceipt = (num+ReceiptsManager.getNumValid()-1)%ReceiptsManager.getNumValid();
+//		System.out.println(ReceiptsManager.getNumValid());
+//		System.out.println(mCurReceipt);
+		return (num+ReceiptsManager.getNumValid()-1)%ReceiptsManager.getNumValid();
 	}
 	
 	private int getNextReceipt(int num) {
-		mCurReceipt = (num+1)%ReceiptManager.getNumValid();
-		System.out.println(ReceiptManager.getNumValid());
-		System.out.println(mCurReceipt);
-		return (num+1)%ReceiptManager.getNumValid();
+		mCurReceipt = (num+1)%ReceiptsManager.getNumValid();
+//		System.out.println(mCurReceipt);
+		return (num+1)%ReceiptsManager.getNumValid();
 	}
 	
 	private void fillReceiptView(int num) {
-		for (int i = 0;i < ReceiptManager.NUM_RECEIPT_ITEM;i++) {
-			((TextView)findViewById(ReceiptManager.ReceiptViewElements[i]))
-				.setText(ReceiptManager.getReceipts().get(num).getItem(i));
+		for (int i = 0;i < ReceiptsManager.NUM_RECEIPT_ITEM;i++) {
+			((TextView)findViewById(ReceiptsManager.ReceiptViewElements[i]))
+				.setText(ReceiptsManager.getReceipts().get(num).getItem(i));
 		}
 	}
 }

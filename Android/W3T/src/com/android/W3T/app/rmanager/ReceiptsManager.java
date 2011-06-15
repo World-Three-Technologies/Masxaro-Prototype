@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import com.android.W3T.app.R;
 import com.android.W3T.app.ReceiptsView;
 
-public class ReceiptManager {
+public class ReceiptsManager {
 	public final static int NUM_RECEIPT = 7;
 	public final static int NUM_RECEIPT_ITEM = 4;
 	
@@ -44,7 +44,11 @@ public class ReceiptManager {
 	private static ArrayList<Receipt> FakeReceipt = new ArrayList<Receipt>();
 	private static int mNumValidReceipt = 0;
 	
-	public ReceiptManager() {
+	public ReceiptsManager() {
+		initReceiptsManager();
+	}
+	
+	public static void initReceiptsManager() {
 		for(int i=0;i<NUM_RECEIPT;i++) {
 			FakeReceipt.add(i, new Receipt());
 		}
@@ -54,12 +58,12 @@ public class ReceiptManager {
 	}
 	
 	/*----------------- Test part ------------------*/
-	private void addFakeReceipts() {
+	private static void addFakeReceipts() {
 		for (int i=0;i<3;i++) { 
-			FakeReceipt.get(i).setId(Receipt.FakeReceiptsInfo[i][0]);
-			FakeReceipt.get(i).setDate(Receipt.FakeReceiptsInfo[i][1]);
-			FakeReceipt.get(i).setStoreName(Receipt.FakeReceiptsInfo[i][2]);
-			FakeReceipt.get(i).setTotal(Receipt.FakeReceiptsInfo[i][3]);
+			FakeReceipt.get(i).setId(Receipt.sFakeReceiptsInfo[i][0]);
+			FakeReceipt.get(i).setDate(Receipt.sFakeReceiptsInfo[i][1]);
+			FakeReceipt.get(i).setStoreName(Receipt.sFakeReceiptsInfo[i][2]);
+			FakeReceipt.get(i).setTotal(Receipt.sFakeReceiptsInfo[i][3]);
 			FakeReceipt.get(i).setValid(true);
 			mNumValidReceipt++;
 		}

@@ -41,6 +41,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.W3T.app.user.*;
@@ -49,11 +50,12 @@ public class FrontPage extends Activity {
 	// Indicators for every dialog view.
 	public final static int DIALOG_LOGIN = 1;
 	public final static int DIALOG_LOGOUT = 2;
-	// Indicators for logged in or no one logged in.
-	public final static boolean OFFLINE = false;
-	public final static boolean ONLINE = true;
-	// Flag for whether any user logged in or not
-	public static boolean log_status = OFFLINE;
+	
+	private final static boolean OFF_LINE = UserProfile.OFFLINE;
+	private final static boolean ON_LINE = UserProfile.ONLINE;
+	
+	private TextView mUname;
+	private ImageView mFractalImg;
 	
 	// Screen touch event holding time
 	private long mUptime;
@@ -68,92 +70,46 @@ public class FrontPage extends Activity {
 //	private ProgressDialog mLogProgress = new ProgressDialog(FrontPage.this);
 	
 	private Button mSubmitBtn;
-	private Button mCancelBtn;
-	
-	
+	private Button mCancelBtn;	
 	
 	@Override
 	// Create the activity
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.front_page);
+        
+        mUname = (TextView)this.findViewById(R.id.Username);
+        mFractalImg = (ImageView)this.findViewById(R.id.FractalFern);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		setFrontPage(UserProfile.getUname(), 0);
+	}
+	
+	private void setFrontPage(String uname, int pic) {
+		mUname.setText((CharSequence)uname);
+        // TODO: set the front page's fractal fern image to indicate different status.
 	}
 	
 	// Create the dialogs: 1.Login dialog; 2.Logout dialog
 	@Override
 	public Dialog onCreateDialog(int id) {
 		super.onCreateDialog(id);
-			
 		// Choose a certain dialog to create.
 		switch(id) {
 		case DIALOG_LOGIN:
-			// Login dialog is a custom dialog, we take care of every details of it.
-			mLoginDialog = new Dialog(FrontPage.this);
-			// Set the Login dialog view
-			mLoginDialog.setContentView(R.layout.login_dialog);
-			mLoginDialog.setTitle("Log In:");
-			
-			// Deal with submit button click event
-			// IMPORTENT: Get button by id from login_dialog.xml, not from 
-			// front_page.xml, which has no such component, "submit_btn".
-			mSubmitBtn= (Button) mLoginDialog.findViewById(R.id.submit_btn);
-			mSubmitBtn.setOnClickListener(new OnClickListener() {
-	            public void onClick(View v) {
-	            	// Close the Login dialog when trying to log in.
-					mLoginDialog.cancel();
-					// Show a progress bar and send account info to server.
-//					ProgressDialog mLogProgress = new ProgressDialog(FrontPage.this);
-//					mLogProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//					mLogProgress.setMessage("Logging in...");
-//					mLogProgress.setCancelable(true);
-//					mLogProgress.show();
-					((TextView) findViewById(R.id.Username))
-						.setText(((TextView)mLoginDialog.findViewById(R.id.login_username))
-								.getText());
-					
-	            	log_status = ONLINE;
-	            }
-	        });
-			mCancelBtn= (Button) mLoginDialog.findViewById(R.id.cancel_btn);
-			mCancelBtn.setOnClickListener(new OnClickListener() {
-	            public void onClick(View v) {
-	            	// Close the Login dialog when trying to log in.
-					mLoginDialog.cancel();
-	            }
-			});
+			setLoginDialog();
 			return mLoginDialog;
 		case DIALOG_LOGOUT:
-			// Logout dialog is an alert dialog. One message and two buttons on it.
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(getResources().getString(R.string.logout_promote))
-			       .setCancelable(false)
-			       // Deal with logout button click event
-			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			        	   dialog.cancel();
-			        	   // Show a progress bar and send log off signal to server.
-			        	   ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
-			        	   progresslog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			        	   progresslog.setMessage("Logging out...");
-			        	   progresslog.setCancelable(true);
-			        	   progresslog.show();
-			        	   log_status = OFFLINE;
-			           }
-			       })
-			       // 
-			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			        	   dialog.cancel();
-			           }
-			       });
-			// create the Logout dialog.
-			mLogoutDialog = builder.create();
+			setLogoutDialog();
 			return mLogoutDialog;
 		default:
 			return null;
 		}
 	}
-	
+		
 	@Override
 	// Thinking of using context menu to display the menu bar next time.
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -171,7 +127,7 @@ public class FrontPage extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
 		super.onPrepareOptionsMenu(menu);
-		if (log_status == OFFLINE) {
+		if (UserProfile.getStatus() == OFF_LINE) {
 			mMenu.setGroupVisible(R.id.group_login, true);
 			mMenu.setGroupVisible(R.id.group_logout, false);
 		}
@@ -190,6 +146,7 @@ public class FrontPage extends Activity {
 		case R.id.view_receipt_opt:
 			// Start the receipt view activity
 			final Intent receipt_view_intent = new Intent(FrontPage.this, ReceiptsView.class);
+			receipt_view_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(receipt_view_intent);
 			break;
 		case R.id.search_opt:
@@ -204,12 +161,10 @@ public class FrontPage extends Activity {
 		case R.id.login_opt:
 			// Pop up the login or the logout dialog
 			showDialog(DIALOG_LOGIN);
-			Toast.makeText(this, "Start log activity!", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.logout_opt:
 			// Pop up the login or the logout dialog
 			showDialog(DIALOG_LOGOUT);
-			Toast.makeText(this, "Start log activity!", Toast.LENGTH_SHORT).show();
 			return true;
 		}
 		return false;
@@ -225,9 +180,10 @@ public class FrontPage extends Activity {
 		if (action == MotionEvent.ACTION_UP) {
 			mUptime = event.getEventTime();
 			duration = mUptime - mDowntime;
-			if (duration >= 100) {
+			if (duration >= 100 && UserProfile.getStatus() == ON_LINE) {
 				// A valid touch screen event.
-				final Intent nfc_intent = new Intent(FrontPage.this, NFCConnecting.class);
+				final Intent nfc_intent = new Intent(FrontPage.this, NfcConnecting.class);
+				nfc_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 				startActivity(nfc_intent);
 //				System.out.println("Going to call menu bar activity.");
 			}
@@ -249,5 +205,69 @@ public class FrontPage extends Activity {
 			break;
 		}
 		return super.onKeyUp(keyCode, event);
+	}
+	
+	private void setLoginDialog() {
+		// Login dialog is a custom dialog, we take care of every details of it.
+		mLoginDialog = new Dialog(FrontPage.this);
+		// Set the Login dialog view
+		mLoginDialog.setContentView(R.layout.login_dialog);
+		mLoginDialog.setTitle("Log In:");
+		
+		// Deal with submit button click event
+		// IMPORTENT: Get button by id from login_dialog.xml, not from 
+		// front_page.xml, which has no such component, "submit_btn".
+		mSubmitBtn= (Button) mLoginDialog.findViewById(R.id.submit_btn);
+		mSubmitBtn.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+            	// Close the Login dialog when trying to log in.
+				mLoginDialog.cancel();
+				// Show a progress bar and send account info to server.
+//				ProgressDialog mLogProgress = new ProgressDialog(FrontPage.this);
+//				mLogProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//				mLogProgress.setMessage("Logging in...");
+//				mLogProgress.setCancelable(true);
+//				mLogProgress.show();
+				UserProfile.setUname(((TextView)mLoginDialog.findViewById(R.id.login_username))
+						.getText().toString());
+				setFrontPage(UserProfile.getUname(), 0);
+				UserProfile.setStatus(ON_LINE);
+            }
+        });
+		mCancelBtn= (Button) mLoginDialog.findViewById(R.id.cancel_btn);
+		mCancelBtn.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+            	// Close the Login dialog when trying to log in.
+				mLoginDialog.cancel();
+            }
+		});
+	}
+	
+	private void setLogoutDialog() {
+		// Logout dialog is an alert dialog. One message and two buttons on it.
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(getResources().getString(R.string.logout_promote))
+		       .setCancelable(false)
+		       // Deal with logout button click event
+		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   dialog.cancel();
+		        	   // Show a progress bar and send log off signal to server.
+		        	   ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
+		        	   progresslog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		        	   progresslog.setMessage("Logging out...");
+		        	   progresslog.setCancelable(true);
+		        	   progresslog.show();
+		        	   UserProfile.setStatus(OFF_LINE);
+		           }
+		       })
+		       // 
+		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   dialog.cancel();
+		           }
+		       });
+		// create the Logout dialog.
+		mLogoutDialog = builder.create();
 	}
 }

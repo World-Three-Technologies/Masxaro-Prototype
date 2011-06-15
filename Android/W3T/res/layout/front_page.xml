@@ -32,7 +32,7 @@
   	android:id="@+id/front_page"
   	>
     <!-- This label shows the username who has logged in. -->
-    <TextView android:text="User Name" android:id="@+id/Username" 
+    <TextView android:text="@string/fp_not_login" android:id="@+id/Username" 
       	android:layout_width="fill_parent" android:layout_height="wrap_content"
       	android:gravity="center" android:textSize="20dip"
     />

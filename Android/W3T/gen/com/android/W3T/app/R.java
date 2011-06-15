@@ -31,34 +31,37 @@ public final class R {
     public static final class id {
         public static final int FractalFern=0x7f070002;
         public static final int Username=0x7f070001;
-        public static final int b_to_fp_opt=0x7f07001d;
+        public static final int b_to_fp_opt=0x7f070020;
         public static final int cancel_btn=0x7f070007;
-        public static final int conf_opt=0x7f070019;
+        public static final int conf_opt=0x7f07001c;
         public static final int date_txt=0x7f07000c;
         public static final int front_page=0x7f070000;
+        public static final int group_login=0x7f070016;
+        public static final int group_logout=0x7f070018;
         public static final int id_txt=0x7f07000b;
-        public static final int log_opt=0x7f07001a;
         public static final int login_dialog=0x7f070003;
+        public static final int login_opt=0x7f070017;
         public static final int login_password=0x7f070005;
         public static final int login_username=0x7f070004;
         public static final int logout_dialog=0x7f070008;
+        public static final int logout_opt=0x7f07001d;
         public static final int nfc_connecting=0x7f070009;
         public static final int receipt_confirm_btn=0x7f070014;
         public static final int receipt_reject_btn=0x7f070015;
         public static final int receipt_view=0x7f07000a;
-        public static final int refresh_opt=0x7f07001b;
-        public static final int search_opt=0x7f070017;
+        public static final int received_tag_view=0x7f07000f;
+        public static final int refresh_opt=0x7f07001e;
+        public static final int search_opt=0x7f07001a;
         public static final int store_name_txt=0x7f07000d;
-        public static final int sumbit_btn=0x7f070006;
-        public static final int sw_receipt_opt=0x7f07001c;
+        public static final int submit_btn=0x7f070006;
+        public static final int sw_receipt_opt=0x7f07001f;
         public static final int tag_date_txt=0x7f070011;
         public static final int tag_id_txt=0x7f070010;
         public static final int tag_store_name_txt=0x7f070012;
         public static final int tag_total_cost_txt=0x7f070013;
-        public static final int tag_view=0x7f07000f;
         public static final int total_cost_txt=0x7f07000e;
-        public static final int view_coupon_opt=0x7f070018;
-        public static final int view_receipt_opt=0x7f070016;
+        public static final int view_coupon_opt=0x7f07001b;
+        public static final int view_receipt_opt=0x7f070019;
     }
     public static final class layout {
         public static final int front_page=0x7f030000;
@@ -66,7 +69,7 @@ public final class R {
         public static final int logout_dialog=0x7f030002;
         public static final int nfc_connecting=0x7f030003;
         public static final int receipt_view=0x7f030004;
-        public static final int tag_view=0x7f030005;
+        public static final int received_tag_view=0x7f030005;
     }
     public static final class menu {
         public static final int front_page_menu=0x7f060000;
@@ -74,19 +77,20 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f050000;
-        public static final int login_cancel_btn=0x7f050004;
-        public static final int login_keep_lab=0x7f050005;
-        public static final int login_password_lab=0x7f050002;
-        public static final int login_submit_btn=0x7f050003;
-        public static final int login_username_lab=0x7f050001;
-        public static final int logout_promote=0x7f05000c;
-        public static final int nfc_txt=0x7f05000b;
-        public static final int receipt_confirm_lab=0x7f05000d;
-        public static final int receipt_info_date_lab=0x7f050008;
-        public static final int receipt_info_id_lab=0x7f050009;
-        public static final int receipt_info_list_lab=0x7f050006;
-        public static final int receipt_info_store_name_lab=0x7f050007;
-        public static final int receipt_info_total_lab=0x7f05000a;
-        public static final int receipt_reject_lab=0x7f05000e;
+        public static final int fp_not_login=0x7f050001;
+        public static final int login_cancel_btn=0x7f050005;
+        public static final int login_keep_lab=0x7f050006;
+        public static final int login_password_lab=0x7f050003;
+        public static final int login_submit_btn=0x7f050004;
+        public static final int login_username_lab=0x7f050002;
+        public static final int logout_promote=0x7f05000d;
+        public static final int nfc_txt=0x7f05000c;
+        public static final int receipt_confirm_lab=0x7f05000e;
+        public static final int receipt_info_date_lab=0x7f050009;
+        public static final int receipt_info_id_lab=0x7f05000a;
+        public static final int receipt_info_list_lab=0x7f050007;
+        public static final int receipt_info_store_name_lab=0x7f050008;
+        public static final int receipt_info_total_lab=0x7f05000b;
+        public static final int receipt_reject_lab=0x7f05000f;
     }
 }
