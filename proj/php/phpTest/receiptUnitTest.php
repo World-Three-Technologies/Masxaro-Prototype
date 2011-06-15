@@ -117,10 +117,13 @@ class ReceiptUnitTest extends UnitTest{
 	}
 }
 
+
 $test = new ReceiptUnitTest();
 
 $test->insertReceipt_Full_Test();
+
 $test->insertReceipt_Empty_Test();
+
 $test->insertReceipt_NewItem_Test();
 
 ?>
