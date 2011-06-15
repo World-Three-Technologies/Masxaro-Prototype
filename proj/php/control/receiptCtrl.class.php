@@ -92,11 +92,11 @@ class ReceiptCtrl extends Ctrl{
 			}
 			
 			$sql = "
-				INSERT INTO `receipt` 
+				INSERT INTO 
+					`receipt` 
 				SET 
-				$info
+					$info
 			";
-      echo $sql;
 
 			$receiptId = $this->db->insert($sql);
 				
@@ -113,12 +113,13 @@ class ReceiptCtrl extends Ctrl{
 			}
 		
 			$sql = "
-				SELECT `total_cost`
-				FROM `receipt`
+				SELECT 
+					`total_cost`
+				FROM 	
+					`receipt`
 				WHERE
-				`receipt_id`=$receiptId
+					`receipt_id`=$receiptId
 			";
-			echo $sql;
 			$this->db->select($sql);
 			
 			if($this->db->numRows() > 0){
@@ -154,9 +155,11 @@ class ReceiptCtrl extends Ctrl{
 				}
 				
 				$sql = "
-					INSERT INTO `receipt_item`
+					INSERT 
+					INTO 
+						`receipt_item`
 					SET
-					$info	
+						$info	
 				";
 					
 				if($this->db->insert($sql) < 0){
@@ -168,13 +171,13 @@ class ReceiptCtrl extends Ctrl{
 			$totalCost += $totalCost * $basicInfo['tax'];
 
 			$sql = "
-				UPDATE `receipt`
+				UPDATE 
+					`receipt`
 				SET
-				`total_cost`=$totalCost
+					`total_cost`=$totalCost
 				WHERE
-				`receipt_id`='$receiptId'
+					`receipt_id`='$receiptId'
 			";
-      echo $sql;
 			
 			if($this->db->update($sql) <= 0){
 				//$this->realDelete($receiptId);
@@ -206,11 +209,12 @@ class ReceiptCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `receipt`
+			UPDATE `
+				receipt`
 			SET
-			$info
+				$info
 			WHERE
-			`receipt_id`=$receiptId
+				`receipt_id`=$receiptId
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -233,16 +237,20 @@ class ReceiptCtrl extends Ctrl{
 	 */
 	public function realDelete($receiptId){
 		$sql = "
-			DELETE from `receipt_item`
+			DELETE 
+			FROM 
+				`receipt_item`
 			WHERE
-			`receipt_id` = $receiptId
+				`receipt_id` = $receiptId
 		";
 		$delItem = $this->db->delete($sql);
 		
 		$sql = "
-			DELETE from `receipt`
+			DELETE 
+			FROM 
+				`receipt`
 			WHERE
-			`receipt_id` = $receiptId
+				`receipt_id` = $receiptId
 		";
 		
 		if($this->db->delete($sql) <= 0 || $delItem <= 0){
@@ -265,11 +273,12 @@ class ReceiptCtrl extends Ctrl{
 	 */
 	public function fakeDelete($receiptId){
 		$sql = "
-			UPDATE `receipt_item`
+			UPDATE 
+				`receipt_item`
 			SET
-			`deleted` = true
+				`deleted` = true
 			WHERE
-			`receipt_id` = $receiptId
+				`receipt_id` = $receiptId
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -277,11 +286,12 @@ class ReceiptCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `receipt`
+			UPDATE 
+				`receipt`
 			SET
-			`deleted` = true
+				`deleted` = true
 			WHERE
-			`receipt_id` = $receiptId
+				`receipt_id` = $receiptId
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -303,22 +313,24 @@ class ReceiptCtrl extends Ctrl{
 	 */
 	public function recoverDeleted($receiptId){
 		$sql = "
-			UPDATE `receipt_item`
+			UPDATE 
+				`receipt_item`
 			SET
-			`deleted` = false
+				`deleted` = false
 			WHERE
-			`receipt_id` = '$receiptId'
+				`receipt_id` = '$receiptId'
 		";
 		if($this->db->update($sql) <= 0){
 			return false;
 		}
 		
 		$sql = "
-			UPDATE `receipt`
+			UPDATE 
+				`receipt`
 			SET
-			`deleted` = false
+				`deleted` = false
 			WHERE
-			`receipt_id` = '$receiptId'
+				`receipt_id` = '$receiptId'
 		";
 		if($this->db->update($sql) <= 0){
 			return false;
@@ -429,10 +441,12 @@ class ReceiptCtrl extends Ctrl{
 	 */
 	public function getReceiptDetail($receiptId){
 		$sql = "
-			SELECT *
-			FROM `receipt`
+			SELECT 
+				*
+			FROM 
+				`receipt`
 			WHERE
-			`receipt_id`=$receiptId
+				`receipt_id`=$receiptId
 		";
 		
 		$this->db->select($sql);
