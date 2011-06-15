@@ -47,7 +47,7 @@ $(function(){
 		//fakeDeleteReceipt();
 		//recoverDeletedReceipt();
 		//userGetAllReceipt();
-		//userGetReceiptItem();
+		userGetReceiptItem();
 		//getReceiptDetail();
 		//getUserProfile();
 
@@ -231,13 +231,30 @@ $(function(){
 					},
 					function(data){
 						data = $.parseJSON(data);
-						var i = 0;
-						var store = "";
-						for(; i < data.length; i ++){
-							store += data[i]['store_account'] + ",";
+						//var i = 0;
+						//var store = "";
+						$("body").append("<table id='receipt' border='1px'>");
+						$("body").append("<tr>");
+						$("body").append("<td>ReceiptID</td>");
+						$("body").append("<td>User Acc</td>");
+						$("body").append("<td>Tax</td>");
+						$("body").append("<td>Total Cost</td>");
+						$("body").append("<td>Store Name</td>");
+						$("body").append("<td>Time</td>");
+						$("body").append("</tr>");
+						
+						for(var i in data){
+							$("body").append("<tr>");
+							$("body").append("<td>" + data[i]['receipt_id'] + "</td>");
+							$("body").append("<td>" + data[i]['user_account'] + "</td>");
+							$("body").append("<td>" + data[i]['tax'] + "</td>");
+							$("body").append("<td>" + data[i]['total_cost'] + "</td>");
+							$("body").append("<td>" + data[i]['store_name'] + "</td>");
+							$("body").append("<td>" + data[i]['receipt_time'] + "</td>");
+							$("body").append("</tr>");
 						}
-
-						alert(store);
+						
+						$("body").append("</table>");
 
 						//alert(data[0]['store_account']);
 					}
@@ -245,6 +262,7 @@ $(function(){
 		}
 
 		function userGetReceiptItem(){
+			
 			$.post(
 					"../receiptOperation.php",
 					{
@@ -253,13 +271,33 @@ $(function(){
 					},
 					function(data){
 						data = $.parseJSON(data);
-						var i = 0;
 						var items = "";
-						for(; i < data.length; i ++){
-							items += data[i]['item_name'] + ", ";
+						
+						$("body").append("<table>");
+						$("body").append("<tr>");
+						$("body").append("<td>Receipt ID</td>");
+						$("body").append("<td>Item ID</td>");
+						$("body").append("<td>item name</td>");
+						$("body").append("<td>Qty</td>");
+						$("body").append("<td>Discount</td>");
+						$("body").append("<td>Price</td>");
+						$("body").append("</tr>");
+						
+						for(var i in data){
+							$("body").append("<tr>");
+							
+							for(var p in data[i]){
+								if(p == 'deleted'){
+									continue;
+								}
+								$("body").append("<td>" + data[i][p] + "</td>");
+								
+							}
+							$("body").append("</tr>");
+							//items += data[i]['item_name'] + ", ";
 						}
-
-						alert(items);
+						
+						$("body").append("</table>");
 					}
 				);
 		}

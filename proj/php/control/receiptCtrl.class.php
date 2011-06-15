@@ -32,17 +32,6 @@ class ReceiptCtrl extends Ctrl{
 	
 	/**
 	 * 
-	 * generate an unique receipt id based on its basic information
-   * with format : "000000000000000-0000000"
-	 * 
-	 * @param array() $basicInfo
-	 */
-	private function idGen($basicInfo){
-    return vsprintf("%015d-%07d",array(rand(1,999999999999999),rand(1,9999999)));
-	}
-	
-	/**
-	 * 
 	 * @example
 	 * insert($basicInfo, $items);
 	 * 
@@ -350,21 +339,38 @@ class ReceiptCtrl extends Ctrl{
 	 */
 	public function userGetAllReceipt($userAcc){
 		
+//		$sql = "
+//		      SELECT 
+//		      r.`receipt_id`,r.`user_account`,s.`store_name`,r.`receipt_time`,
+//		      i.`item_name`,i.`item_price`,isNULL(r.`img`) as `image`,i.item_qty,r.`total_cost` 
+//			  FROM `receipt` as r 
+//		      LEFT JOIN `receipt_item` as i 
+//		      ON r.`receipt_id` = i.`receipt_id` 
+//		      LEFT JOIN `store` as s
+//		      ON r.`store_account` = s.`store_account`  
+//					WHERE
+//					r.`user_account` = '$userAcc'
+//		      AND 
+//					r.`deleted` = 0
+//		      AND 
+//					i.`deleted` = 0 
+//		      ORDER BY r.`receipt_time` DESC 
+//		";
+
 		$sql = "
-      SELECT r.receipt_id,r.user_account,s.store_name,r.receipt_time,
-      i.item_name,i.item_price,isNULL(r.img) as image,i.item_qty,r.total_cost 
-			FROM `receipt` as r 
-      LEFT JOIN receipt_item as i 
-      ON r.receipt_id = i.receipt_id 
-      LEFT JOIN store as s
-      ON r.store_account = s.store_account  
-			WHERE
-			r.user_account='$userAcc'
-      AND 
-			r.`deleted`=0
-      AND 
-			i.`deleted`=0 
-      ORDER BY r.receipt_time DESC 
+			SELECT 
+				r.`receipt_id`,r.`user_account`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`
+			FROM 
+				`receipt` as r
+			JOIN 
+				`store` as s
+			ON
+				r.`store_account`=s.`store_account`
+			AND
+				r.`user_account`='$userAcc'
+			ORDER BY
+				r.`receipt_time`
+			DESC;
 		";
 		
 		$this->db->select($sql);
@@ -372,49 +378,9 @@ class ReceiptCtrl extends Ctrl{
 		if($this->db->numRows() == 0){
 			return "";
 		} else{
-			$result = $this->db->fetchObject();
-			return $this->reduceReceipt($result);
+			return $this->db->fetchObject();
 		}
 	}
-
-  /**
-   * @param $result : the result object from db with table receipt
-   * 
-   * build nested associate array with receipt and items 
-   * for the usage of JSON
-   */
-  public function reduceReceipt($result){
-    $reduced = array();
-    $last_id = 0;
-    foreach($result as $item){
-      if($last_id == $item->receipt_id){
-        $reduced[count($reduced)-1]["items"][] = $this->buildReceiptItem($item); 
-      }else{
-        $reduced[] = $this->buildReceipt($item);
-      }
-      $last_id = $item->receipt_id;
-    }
-    return $reduced;
-  }
-
-  private function buildReceiptItem($item){
-    return array(
-      "item_name"=>$item->item_name,
-      "item_price"=>round($item->item_price,2),
-      "item_qty"=>$item->item_qty
-    );
-  }
-
-  private function buildReceipt($item){
-    return array(
-      "id"=>$item->receipt_id,
-      "store_name"=>$item->store_name,
-      "receipt_time"=>$item->receipt_time,
-      "total_cost"=>round($item->total_cost,2),
-      "items" => array($this->buildReceiptItem($item)),
-      "image" => $item->image
-    );
-  }
 	
 	/**
 	 * 
@@ -428,12 +394,14 @@ class ReceiptCtrl extends Ctrl{
 	public function userGetReceiptItems($receiptId){
 		
 		$sql = "
-			SELECT *
-			FROM `receipt_item`
+			SELECT
+				*
+			FROM 
+				`receipt_item`
 			WHERE
-			`receipt_id`=$receiptId
+				`receipt_id`=$receiptId
 			AND
-			`deleted`=0
+				`deleted`=0
 		";
 		
 		$this->db->select($sql);
