@@ -432,7 +432,8 @@ class ReceiptCtrl extends Ctrl{
 			WHERE
 				r.`user_account`='$userAcc'
 			ORDER BY
-				r.`receipt_id`
+				r.`receipt_time`
+			DESC
 		";
 		
 		$this->db->select($sql);

@@ -30,7 +30,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 $opcode = $_POST['opcode'];
 
-$opcode = 'user_get_all_receipt';
+//$opcode = 'user_get_all_receipt';
 
 $ctrl = new ReceiptCtrl();
 
