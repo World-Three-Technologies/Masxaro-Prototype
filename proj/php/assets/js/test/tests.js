@@ -1,4 +1,3 @@
-
 // documentation on writing tests here: http://docs.jquery.com/QUnit
 // example tests: https://github.com/jquery/qunit/blob/master/test/same.js
 
@@ -25,7 +24,6 @@ test("Environment is good",function(){
 })
 
 module("app.js test");
-
 
 test("Receipt Model can be created",function(){
   var receipt = new Receipt({
