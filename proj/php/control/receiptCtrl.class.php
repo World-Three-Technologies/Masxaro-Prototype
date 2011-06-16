@@ -336,30 +336,12 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * @param string $userAcc
 	 * 
-	 * @return array(object, object...);
+	 * @return array(object);
 	 * 
 	 * @desc
 	 * get all receipt based on a certain user account
 	 */
-	public function userGetAllReceipt($userAcc){
-		
-//		$sql = "
-//		      SELECT 
-//		      r.`receipt_id`,r.`user_account`,s.`store_name`,r.`receipt_time`,
-//		      i.`item_name`,i.`item_price`,isNULL(r.`img`) as `image`,i.item_qty,r.`total_cost` 
-//			  FROM `receipt` as r 
-//		      LEFT JOIN `receipt_item` as i 
-//		      ON r.`receipt_id` = i.`receipt_id` 
-//		      LEFT JOIN `store` as s
-//		      ON r.`store_account` = s.`store_account`  
-//					WHERE
-//					r.`user_account` = '$userAcc'
-//		      AND 
-//					r.`deleted` = 0
-//		      AND 
-//					i.`deleted` = 0 
-//		      ORDER BY r.`receipt_time` DESC 
-//		";
+	public function userGetAllReceiptBasic($userAcc){
 
 		$sql = "
 			SELECT 
@@ -421,6 +403,84 @@ class ReceiptCtrl extends Ctrl{
 		
 	}
 	
+	
+	/**
+	 * 
+	 * @param string $userAcc
+	 * 
+	 * @return array(obj,...) each ReceiptEntity obj conclude 2 arrays, basicInfo & items (array(array(),..))
+	 * 
+	 * @desc
+	 * 
+	 * return detail information of a certain receipt
+	 */
+	public function userGetAllReceipt($userAcc){
+		$sql = "
+			SELECT 
+				r.`receipt_id`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`,ri.`item_id`,
+        		ri.`item_name`, ri.`item_qty`, ri.`item_discount`, ri.`item_price`
+			FROM 
+				`receipt` as r 
+			LEFT JOIN
+				`receipt_item` as ri
+			ON
+				r.`receipt_id`=ri.`receipt_id`
+			LEFT JOIN
+				`store` as s
+			ON
+				r.`store_account`=s.`store_account`
+			WHERE
+				r.`user_account`='$userAcc'
+			ORDER BY
+				r.`receipt_id`
+		";
+		
+		$this->db->select($sql);
+		$tmp = $this->db->fetchAssoc();
+		
+		$result = array();
+		
+		if(count($tmp) > 0){
+			$curId = 0;
+			$curRec = null;
+			$curItems = null;
+			$itemRegex = "(^item)";
+			
+			foreach($tmp as $cur){
+				
+				$curItems = array();
+				
+				if($cur['receipt_id'] != $curId){
+					
+					
+					$curRec = new ReceiptEntity();
+					
+				} 
+				
+				foreach($cur as $key=>$value){
+					
+					if(!preg_match($itemRegex, $key)){
+						$curRec->basicInfo["$key"] = $value;
+					}
+					else{
+						$curItems["$key"] = $value;
+					}
+				}
+				
+				array_push($curRec->items, $curItems);
+				
+				if($cur['receipt_id'] != $curId){
+					if(!empty($curRec)){
+						array_push($result, $curRec);
+					}
+					$curId = $cur['receipt_id'];
+				}
+			}
+		}
+		
+		return $result;
+	}
+	
 	/**
 	 * 
 	 * @param string receiptId
@@ -434,10 +494,14 @@ class ReceiptCtrl extends Ctrl{
 	public function getReceiptDetail($receiptId){
 		$sql = "
 			SELECT 
-				*
+				r.`receipt_id`,r.`user_account`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`
 			FROM 
-				`receipt`
-			WHERE
+				`receipt` as r 
+			JOIN
+				`store` as s
+			ON
+				r.`store_account`=s.`store_account`
+			AND
 				`receipt_id`=$receiptId
 		";
 		

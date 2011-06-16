@@ -30,13 +30,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 $opcode = $_POST['opcode'];
 
-//$opcode = 'user_get_all_receipt';
+$opcode = 'user_get_all_receipt';
 
 $ctrl = new ReceiptCtrl();
 
 switch($opcode){
 	case 'new_receipt':
-		//$code = "983094867189238-0929347";
 		//1-d array
 		$basicInfo = $_POST['receipt'];
 		echo $ctrl->insertReceipt($basicInfo, null);
@@ -60,12 +59,16 @@ switch($opcode){
 		echo $ctrl->recoverDeleted($_POST['receipt_id']);
 		break;
 		
-	case 'user_get_all_receipt':
-		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
+	case 'user_get_all_receipt_basic':
+		echo json_encode($ctrl->userGetAllReceiptBasic($_POST['acc']));
 		break;
 		
-	case 'user_get_all_receipt_item':
+	case 'user_get_receipt_item':
 		echo json_encode($ctrl->userGetReceiptItems($_POST['receipt_id']));
+		break;
+		
+	case 'user_get_all_receipt':
+		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
 		break;
 		
 	case 'user_get_receipt_detail':
