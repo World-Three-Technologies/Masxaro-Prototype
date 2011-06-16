@@ -27,7 +27,7 @@ include_once '../config.php';
 
 $registerType = $_POST['type']; //user / store
 
-//$registerType = 'store';
+//$registerType = 'user';
 
 switch($registerType){
 	case 'user':
@@ -42,8 +42,8 @@ switch($registerType){
 		);
 
 //		$param = array(
-//					'user_account'=>'new', 
-//					'first_name'=>'Brian',
+//					'user_account'=>'newww', 
+//					'first_name'=>'W3tTest',
 //					'age_range_id'=>'null',
 //					'ethnicity'=>null,
 //					'pwd'=>'123',

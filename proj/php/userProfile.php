@@ -26,12 +26,28 @@
 
 include_once '../config.php';
 
+$opcode = $_POST['opcode'];
+
 $acc = $_POST['acc'];
 
 //$acc = 'new';
 
 $ctrl = new UserCtrl();
 
-echo json_encode($ctrl->getUserProfile($acc));
+switch(opcode){
+	case 'get_profile':
+		echo json_encode($ctrl->getUserProfile($acc));
+		break;
+	
+	case 'update_profile':
+		echo $ctrl->updateUserInfo($acc, $_POST['info']);
+		break;
+		
+	default:
+		echo false;
+		break;
+}
+
+
 
 ?>

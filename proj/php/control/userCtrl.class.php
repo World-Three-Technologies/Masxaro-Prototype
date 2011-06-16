@@ -42,7 +42,7 @@ class UserCtrl extends Ctrl{
 		
 		$info['pwd'] = md5($info['pwd']); 
 		
-		$info['register_time'] = date("Y-m-d H:i:s");
+		//$info['register_time'] = date("Y-m-d H:i:s");
 		
 		$con = Tool::infoArray2SQL($info);
 		
@@ -51,11 +51,12 @@ class UserCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			INSERT INTO `user`
+			INSERT INTO 
+				`user`
 			SET
-			$con
+				$con
 		";
-				
+			
 		$result = $this->db->insert($sql);
 		
 		if($result < 0){
@@ -78,11 +79,12 @@ class UserCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `user`
+			UPDATE 
+				`user`
 			SET
-			`deleted`=true
+				`deleted`=true
 			WHERE
-			`user_account`='$acc';
+				`user_account`='$acc';
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -106,9 +108,10 @@ class UserCtrl extends Ctrl{
 		
 		$sql = "
 			DELETE
-			FROM `user`
+			FROM 
+				`user`
 			WHERE
-			`user_account`='$acc';
+				`user_account`='$acc';
 		";
 		
 		if($this->db->delete($sql) <= 0){
@@ -135,15 +138,17 @@ class UserCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			SELECT count(*)
-			FROM `user`, `store`
+			SELECT 
+				count(*)
+			FROM 
+				`user`, `store`
 			WHERE
-			`user_account`='$acc'
+				`user_account`='$acc'
 			OR
-			`store_account`='$acc'
+				`store_account`='$acc'
 		";
 		
-		if(!$this->db->select($sql)){
+		if($this->db->select($sql) < 0){
 			return false;
 		}
 		
@@ -170,11 +175,12 @@ class UserCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `user`
+			UPDATE 
+				`user`
 			SET
-			$info
+				$info
 			WHERE
-			`user_account` = '$curAcc'
+				`user_account` = '$curAcc'
 		";
 		
 		if($this->$db->update($sql) <= 0){
@@ -207,12 +213,14 @@ class UserCtrl extends Ctrl{
 		$pwd = md5($pwd);
 		
 		$sql = "
-			SELECT *
-			FROM `user`
+			SELECT 
+				*
+			FROM 
+				`user`
 			WHERE
-			`user_account`='$acc'
+				`user_account`='$acc'
 			AND
-			`pwd`='$pwd'
+				`pwd`='$pwd'
 		";
 		
 		$this->db->select($sql);
@@ -236,9 +244,12 @@ class UserCtrl extends Ctrl{
 	 */
 	public function getUserProfile($acc){
 		$sql = "
-			SELECT *
-			FROM `user`
-			WHERE `user_account`='$acc'
+			SELECT 
+				*
+			FROM 
+				`user`
+			WHERE 
+				`user_account`='$acc'
 		";
 		
 		$this->db->select($sql);

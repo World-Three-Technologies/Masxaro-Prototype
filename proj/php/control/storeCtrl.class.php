@@ -49,9 +49,10 @@ class StoreCtrl extends Ctrl{
 		
 		$sql = "
 			INSERT
-			INTO `store`
+			INTO 
+				`store`
 			SET
-			$info
+				$info
 		";
 			
 		if($this->db->insert($sql) < 0){
@@ -83,12 +84,14 @@ class StoreCtrl extends Ctrl{
 		$pwd = md5($pwd);
 		
 		$sql = "
-			SELECT *
-			FROM `store`
+			SELECT 
+				*
+			FROM 
+				`store`
 			WHERE
-			`store_account`='$acc'
+				`store_account`='$acc'
 			AND
-			`pwd`='$pwd'
+				`pwd`='$pwd'
 		";
 		
 		$this->db->select($sql);
@@ -119,11 +122,12 @@ class StoreCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `store`
+			UPDATE 
+				`store`
 			SET
-			$info
+				$info
 			WHERE
-			`store_account`='$storeAcc'
+				`store_account`='$storeAcc'
 		";
 			
 		if($this->db->update($sql) <= 0){
@@ -151,9 +155,10 @@ class StoreCtrl extends Ctrl{
 		
 		$sql = "
 			DELETE
-			FROM `store`
+			FROM 
+				`store`
 			WHERE
-			`store_account`='$storeAcc'
+				`store_account`='$storeAcc'
 		";
 		
 		if($this->db->delete($sql) <= 0){

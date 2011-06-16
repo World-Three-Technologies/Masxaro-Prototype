@@ -49,14 +49,16 @@ class ContactCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			SELECT `value`
-			FROM `contact`, `user`, `store`
+			SELECT 
+				`value`
+			FROM 
+				`contact`, `user`, `store`
 			WHERE
-			`value` regexp '$this->regex'
+				`value` regexp '$this->regex'
 			AND
-			`user_account`='$acc'
+				`user_account`='$acc'
 			OR
-			`store_account`='$acc'
+				`store_account`='$acc'
 		";
 		
 		$this->db->select($sql);
@@ -84,9 +86,11 @@ class ContactCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			INSERT INTO `contact_type`
+			INSERT 
+			INTO 
+				`contact_type`
 			SET
-			`contact_type`='$type'
+				`contact_type`='$type'
 		";
 		
 		if($this->db->insert($sql) < 0){
@@ -114,9 +118,10 @@ class ContactCtrl extends Ctrl{
 	public function deleteContactType($type){
 		$sql = "
 			DELETE
-			FROM `contact_type`
+			FROM 
+				`contact_type`
 			WHERE
-			`contact_type`='$type'
+				`contact_type`='$type'
 		";
 		
 		if($this->db->delete($sql) <= 0){
@@ -144,8 +149,6 @@ class ContactCtrl extends Ctrl{
 		
 		$inserted = array(); //record inserted contact value within current process
 		
-		//$regex = "(.*@masxaro.com)";
-		
 		for($i = 0; $i < $n; $i ++){
 			
 			if(!$this->chkAccMail($info[$i]['user_account'], $info[$i]['value'])){
@@ -164,9 +167,11 @@ class ContactCtrl extends Ctrl{
 			}
 			
 			$sql = "
-				INSERT INTO `contact`
+				INSERT 
+				INTO 
+					`contact`
 				SET
-				$cur
+					$cur
 			";
 			
 			if($this->db->insert($sql) < 0){
@@ -200,9 +205,10 @@ class ContactCtrl extends Ctrl{
 		}
 		
 		$sql = "DELETE
-				FROM `contact`
+				FROM 
+					`contact`
 				WHERE
-				`value`='$value'		
+					`value`='$value'		
 		";
 		
 		if($this->db->delete($sql) <= 0){
@@ -239,11 +245,12 @@ class ContactCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `contact`
+			UPDATE 
+				`contact`
 			SET
-			$newInfo
+				$newInfo
 			WHERE
-			`value`='$curValue'
+				`value`='$curValue'
 		";
 			
 		if($this->db->update($sql) <= 0){
@@ -271,10 +278,12 @@ class ContactCtrl extends Ctrl{
 		$who .= '_account';
 		
 		$sql = "
-			SELECT *
-			FROM `contact`
+			SELECT 
+				*
+			FROM 
+				`contact`
 			WHERE
-			`$who`='$acc'
+				`$who`='$acc'
 		";
 		
 		$this->db->select($sql);
