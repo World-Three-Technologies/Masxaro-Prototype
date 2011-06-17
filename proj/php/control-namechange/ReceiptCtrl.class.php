@@ -463,12 +463,14 @@ class ReceiptCtrl extends Ctrl{
 					if(!preg_match($itemRegex, $key)){
 						$curRec->basicInfo["$key"] = $value;
 					}
-					else{
+					else if(!empty($value)){
 						$curItems["$key"] = $value;
 					}
 				}
 				
-				array_push($curRec->items, $curItems);
+				if(!empty($curItems)){
+					array_push($curRec->items, $curItems);
+				}
 				
 				if($cur['receipt_id'] != $curId){
 					if(!empty($curRec)){
