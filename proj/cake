@@ -13,7 +13,7 @@
   } else if($task =="build"){
     concatJavascripts();
   } else if($task =="spec"){
-    system("open php/assets/spec/index.html");
+    system("open php/assets/spec/SpecRunner.html");
   } else{
     usage();
   }
