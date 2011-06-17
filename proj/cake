@@ -2,13 +2,19 @@
 <?php 
   require "config.php";
 
-  if($argv[1]=="test"){
+  $task = $argv[1];
+
+  if($task=="test"){
     runTest();
-  } else if($argv[1] =="seed"){
+  } else if($task =="seed"){
     seed();
-  } else if($argv[1] =="deploy")
+  } else if($task =="deploy"){
     system("cp -rf ./ /Library/WebServer/Documents/");
-  else{
+  } else if($task =="build"){
+    concatJavascripts();
+  } else if($task =="spec"){
+    system("open php/assets/spec/index.html");
+  } else{
     usage();
   }
 
@@ -20,6 +26,14 @@
 
   function runTest(){
     system("php ./php/test/test.php");
+  }
+
+  function concatJavascripts(){
+
+    system("cat php/assets/app/models/*.js > php/assets/js/app.js");
+    system("cat php/assets/app/views/*.js >> php/assets/js/app.js");
+    system("cat php/assets/app/controllers/*.js >> php/assets/js/app.js");
+    system("cat php/assets/app/app.js >> php/assets/js/app.js");
   }
 
   function seed(){
