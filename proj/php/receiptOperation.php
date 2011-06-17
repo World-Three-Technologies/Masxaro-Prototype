@@ -24,7 +24,7 @@
  *  
  */
 
-include_once dirname(__FILE__).'/../config.php';
+include_once '../config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
