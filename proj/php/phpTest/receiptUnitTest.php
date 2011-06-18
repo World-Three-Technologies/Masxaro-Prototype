@@ -27,6 +27,8 @@ include_once '../../config.php';
 
 class ReceiptUnitTest extends UnitTest{
 	
+	public $testId = 0;
+	
 	/**
 	 * 
 	 * @desc
@@ -61,7 +63,7 @@ class ReceiptUnitTest extends UnitTest{
 						
 		$ctrl = new ReceiptCtrl();
 						
-		$this->assertTrue($ctrl->insertReceipt($basicInfo, $items));
+		$this->assertTrue(($this->testId = $ctrl->insertReceipt($basicInfo, $items)) > 0);
 	}
 	
 	
@@ -79,7 +81,7 @@ class ReceiptUnitTest extends UnitTest{
 						
 		$ctrl = new ReceiptCtrl();
 						
-		$this->assertTrue($ctrl->insertReceipt($basicInfo, null));
+		$this->assertTrue(($this->testId = $ctrl->insertReceipt($basicInfo, null)) > 0);
 	}
 	
 	/**
@@ -89,9 +91,9 @@ class ReceiptUnitTest extends UnitTest{
 	 * 
 	 * modify receipt id before perform test
 	 */
-	function insertReceipt_NewItem_Test(){
+	function insertReceipt_NewItem_Test($testId){
 						
-		$items = array("receipt_id"=>1);
+		$items = array("receipt_id"=>$testId);
 		
 		$item = array(
 						"item_id"=>23,
@@ -115,6 +117,33 @@ class ReceiptUnitTest extends UnitTest{
 						
 		$this->assertTrue($ctrl->insertReceipt(null, $items));
 	}
+	
+	/**
+	 * @desc
+	 * fake delete test
+	 */
+	function fakeDelete_Test($id){
+		$ctrl = new ReceiptCtrl();
+		$this->assertTrue($ctrl->fakeDelete($id));
+	}
+	
+	/**
+	 * @desc
+	 * recover test
+	 */
+	function recoverDeleted_Test($id){
+		$ctrl = new ReceiptCtrl();
+		$this->assertTrue($ctrl->recoverDeleted($id));
+	}
+	
+	/**
+	 * @desc
+	 * real delete test
+	 */
+	function realDelete_Test($id){
+		$ctrl = new ReceiptCtrl();
+		$this->assertTrue($ctrl->realDelete($id));
+	}
 }
 
 
@@ -124,6 +153,12 @@ $test->insertReceipt_Full_Test();
 
 $test->insertReceipt_Empty_Test();
 
-$test->insertReceipt_NewItem_Test();
+$test->insertReceipt_NewItem_Test($test->testId);
+
+$test->fakeDelete_Test($test->testId);
+
+$test->recoverDeleted_Test($test->testId);
+
+$test->realDelete_Test($test->testId);
 
 ?>
