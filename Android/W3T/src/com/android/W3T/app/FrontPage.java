@@ -31,6 +31,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -44,6 +45,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.user.*;
 
 public class FrontPage extends Activity {
@@ -78,8 +81,8 @@ public class FrontPage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.front_page);
         
-        mUname = (TextView)this.findViewById(R.id.Username);
-        mFractalImg = (ImageView)this.findViewById(R.id.FractalFern);
+        mUname = (TextView)findViewById(R.id.Username);
+        mFractalImg = (ImageView)findViewById(R.id.FractalFern);
 	}
 	
 	@Override
@@ -101,6 +104,7 @@ public class FrontPage extends Activity {
 		switch(id) {
 		case DIALOG_LOGIN:
 			setLoginDialog();
+			setLoginListener();
 			return mLoginDialog;
 		case DIALOG_LOGOUT:
 			setLogoutDialog();
@@ -214,27 +218,33 @@ public class FrontPage extends Activity {
 		mLoginDialog.setContentView(R.layout.login_dialog);
 		mLoginDialog.setTitle("Log In:");
 		
-		// Deal with submit button click event
 		// IMPORTENT: Get button by id from login_dialog.xml, not from 
 		// front_page.xml, which has no such component, "submit_btn".
-		mSubmitBtn= (Button) mLoginDialog.findViewById(R.id.submit_btn);
+		mSubmitBtn = (Button) mLoginDialog.findViewById(R.id.submit_btn);
+		mCancelBtn = (Button) mLoginDialog.findViewById(R.id.cancel_btn);
+	}
+	
+	private void setLoginListener() {
+		// Deal with submit button click event
 		mSubmitBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
             	// Close the Login dialog when trying to log in.
 				mLoginDialog.cancel();
+				UserProfile.setUname(((TextView)mLoginDialog.findViewById(R.id.login_username))
+						.getText().toString());
+				setFrontPage(UserProfile.getUname(), 0);
+				UserProfile.setStatus(ON_LINE);
+				
+				new LoginTask().execute(new Void[3]);
 				// Show a progress bar and send account info to server.
 //				ProgressDialog mLogProgress = new ProgressDialog(FrontPage.this);
 //				mLogProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 //				mLogProgress.setMessage("Logging in...");
 //				mLogProgress.setCancelable(true);
 //				mLogProgress.show();
-				UserProfile.setUname(((TextView)mLoginDialog.findViewById(R.id.login_username))
-						.getText().toString());
-				setFrontPage(UserProfile.getUname(), 0);
-				UserProfile.setStatus(ON_LINE);
             }
         });
-		mCancelBtn= (Button) mLoginDialog.findViewById(R.id.cancel_btn);
+
 		mCancelBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
             	// Close the Login dialog when trying to log in.
@@ -261,7 +271,6 @@ public class FrontPage extends Activity {
 		        	   UserProfile.setStatus(OFF_LINE);
 		           }
 		       })
-		       // 
 		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		        	   dialog.cancel();
@@ -269,5 +278,23 @@ public class FrontPage extends Activity {
 		       });
 		// create the Logout dialog.
 		mLogoutDialog = builder.create();
+	}
+	
+	private class LoginTask extends AsyncTask<Void, Void, Void> {
+	    /** The system calls this to perform work in a worker thread and
+	      * delivers it the parameters given to AsyncTask.execute() */
+		@Override
+		protected Void doInBackground(Void... params) {
+			NetworkUtil.attemptLogin(null);
+			return null;
+		}
+	    
+	    /** The system calls this to perform work in the UI thread and delivers
+	      * the result from doInBackground() */
+	    protected void onPostExecute(Void result) {
+	    	Toast.makeText(FrontPage.this, "finished login!", Toast.LENGTH_SHORT).show();
+	    }
+
+		
 	}
 }

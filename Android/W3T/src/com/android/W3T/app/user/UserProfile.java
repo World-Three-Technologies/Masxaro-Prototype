@@ -7,9 +7,11 @@ public class UserProfile {
 	
 	
 	// Flag for whether any user logged in or not
-	public static boolean sLogStatus = OFFLINE;
-
+	private static boolean sLogStatus = OFFLINE;
+	
 	private static String sUname = new String("Not Login");
+	private static String sPassword = new String();
+	
 	
 	public static void setStatus(boolean s) {
 		sLogStatus = s;
