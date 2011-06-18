@@ -96,6 +96,34 @@ class UserCtrl extends Ctrl{
 	
 	/**
 	 * 
+	 * recover a fake deleted user
+	 * @param string $acc
+	 * @return boolean
+	 */
+	public function recoverDeletedUser($acc){
+		
+		if(!Tool::securityChk($acc)){
+			return false;
+		}
+		
+		$sql = "
+			UPDATE 
+				`user`
+			SET
+				`deleted`=false
+			WHERE
+				`user_account`='$acc';
+		";
+		
+		if($this->db->update($sql) <= 0){
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * 
 	 * real delete account
 	 * @param string $acc
 	 * @return boolean
@@ -221,6 +249,8 @@ class UserCtrl extends Ctrl{
 				`user_account`='$acc'
 			AND
 				`pwd`='$pwd'
+			AND 
+				`deleted`=false
 		";
 		
 		$this->db->select($sql);

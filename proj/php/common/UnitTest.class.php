@@ -25,6 +25,10 @@
 
 class UnitTest{
 	
+	public function __construct(){
+		
+	}
+	
 	public function assertTrue($value){
 		$back = debug_backtrace();
 		$curCall = $back[1]['function']."(".get_called_class().")";
