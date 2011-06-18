@@ -30,7 +30,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 $opcode = $_POST['opcode'];
 
-$opcode = 'user_get_all_receipt';
+//$opcode = 'user_get_all_receipt';
 
 $ctrl = new ReceiptCtrl();
 
@@ -68,7 +68,7 @@ switch($opcode){
 		break;
 		
 	case 'user_get_all_receipt':
-		echo json_encode($ctrl->userGetAllReceipt('new'));
+		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
 		break;
 		
 	case 'user_get_receipt_detail':

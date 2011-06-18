@@ -25,7 +25,18 @@
  */
 
 class ReceiptEntity{
-	public $basicInfo = array();
+//	public $basicInfo = array();
+
+	public $receipt_id = NULL;
+	public $store_account = NULL;
+	public $store_name = NULL;
+	public $user_account = NULL;
+	public $receipt_time = NULL;
+	public $tax = 1;
+	public $total_cost = 0;
+	public $img = NULL;
+	public $deleted = 0;
+	
 	public $items = array();
 }
 ?>

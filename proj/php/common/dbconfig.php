@@ -27,14 +27,31 @@
 
 
 return array(
+	/**
+	 * AWS
+	 * MariaDB
+	 */
 	'host' => '46.51.255.119', 
     'user' => 'w3t',
 	'pwd' => 'w3t',
 	'dbName' => 'w3tdb'
 	
+	/**
+	 * localhost
+	 */
 //	'host' => 'localhost', 
 //    'user' => 'root',
 //	'pwd' => 'root',
+//	'dbName' => 'w3tdb'
+	
+	/**
+	 * Godaddy
+	 * 
+	 * MySQL
+	 */
+//	'host' => 'w3tdb.db.7762973.hostedresource.com', 
+//    'user' => 'w3tdb',
+//	'pwd' => 'W3TAdmin',
 //	'dbName' => 'w3tdb'
 );
 

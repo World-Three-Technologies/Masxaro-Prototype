@@ -30,7 +30,6 @@ $acc = $_POST['acc'];
 $pwd = $_POST['pwd'];
 $type = $_POST['type']; // string, 'user' or 'store'
 
-
 //for test
 //$acc = 'new';
 //$pwd = '123';
@@ -63,7 +62,10 @@ switch($type){
 		break;
 }
 
-if(Tool::login($acc, $pwd, $type)) 
-  Tool::redirect("/php/index.html");
+if(($result = Tool::login($acc, $pwd, $type)) == true){
+	  echo $result;
+	  //Tool::redirect("/php/index.html");
+} 
+
 
 ?>

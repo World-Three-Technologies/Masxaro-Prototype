@@ -452,8 +452,6 @@ class ReceiptCtrl extends Ctrl{
 				$curItems = array();
 				
 				if($cur['receipt_id'] != $curId){
-					
-					
 					$curRec = new ReceiptEntity();
 					
 				} 
@@ -461,7 +459,7 @@ class ReceiptCtrl extends Ctrl{
 				foreach($cur as $key=>$value){
 					
 					if(!preg_match($itemRegex, $key)){
-						$curRec->basicInfo["$key"] = $value;
+						$curRec->$key = $value;
 					}
 					else if(!empty($value)){
 						$curItems["$key"] = $value;
