@@ -30,7 +30,6 @@ package com.android.W3T.app.rmanager;
 
 import java.util.ArrayList;
 import com.android.W3T.app.R;
-import com.android.W3T.app.ReceiptsView;
 
 public class ReceiptsManager {
 	public final static int NUM_RECEIPT = 7;
@@ -42,17 +41,13 @@ public class ReceiptsManager {
 	
 
 	private static ArrayList<Receipt> FakeReceipt = new ArrayList<Receipt>();
-	private static int mNumValidReceipt = 0;
-	
-	public ReceiptsManager() {
-		initReceiptsManager();
-	}
+	private static int sNumValidReceipt = 0;
 	
 	public static void initReceiptsManager() {
 		for(int i=0;i<NUM_RECEIPT;i++) {
 			FakeReceipt.add(i, new Receipt());
 		}
-		mNumValidReceipt = 0;
+		sNumValidReceipt = 0;
 		
 		addFakeReceipts();
 	}
@@ -65,14 +60,14 @@ public class ReceiptsManager {
 			FakeReceipt.get(i).setStoreName(Receipt.sFakeReceiptsInfo[i][2]);
 			FakeReceipt.get(i).setTotal(Receipt.sFakeReceiptsInfo[i][3]);
 			FakeReceipt.get(i).setValid(true);
-			mNumValidReceipt++;
+			sNumValidReceipt++;
 		}
 			
 	}
 	
 	
 	public static int getNumValid() {
-		return mNumValidReceipt;
+		return sNumValidReceipt;
 	}
 	
 	public static ArrayList<Receipt> getReceipts() {
@@ -80,8 +75,8 @@ public class ReceiptsManager {
 	}
 	
 	public static void addNewReceipt(Receipt r) {
-		FakeReceipt.add(mNumValidReceipt, r);
-		mNumValidReceipt++;
+		FakeReceipt.add(sNumValidReceipt, r);
+		sNumValidReceipt++;
 //		System.out.println("Any un-delivered receipt?");
 //		
 //		System.out.println("Add a new receipt");

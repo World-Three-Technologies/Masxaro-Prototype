@@ -34,6 +34,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -96,14 +97,9 @@ public class FrontPage extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		setFrontPage(UserProfile.getUname(), 0);
+		setFrontPage(UserProfile.getUsername(), 0);
 	}
-	
-	private void setFrontPage(String uname, int pic) {
-		mUname.setText((CharSequence)uname);
-        // TODO: set the front page's fractal fern image to indicate different status.
-	}
-	
+		
 	// Create the dialogs: 1.Login dialog; 2.Logout dialog
 	@Override
 	public Dialog onCreateDialog(int id) {
@@ -221,18 +217,20 @@ public class FrontPage extends Activity {
 
 	private void setLoginDialog() {
 		// Login dialog is a custom dialog, we take care of every details of it.
-		mLoginDialog = new Dialog(FrontPage.this);
-		// Set the Login dialog view
-		mLoginDialog.setContentView(R.layout.login_dialog);
-		mLoginDialog.setTitle("Log In:");
-		
-		// IMPORTENT: Get button by id from login_dialog.xml, not from 
-		// front_page.xml, which has no such component, "submit_btn".
-		mSubmitBtn = (Button) mLoginDialog.findViewById(R.id.submit_btn);
-		mCancelBtn = (Button) mLoginDialog.findViewById(R.id.cancel_btn);
-		
-		mUnameEdit = (EditText) mLoginDialog.findViewById(R.id.login_username);
-        mPwdEdit = (EditText) mLoginDialog.findViewById(R.id.login_password);
+		if (mLoginDialog == null) {
+			mLoginDialog = new Dialog(FrontPage.this);
+			// Set the Login dialog view
+			mLoginDialog.setContentView(R.layout.login_dialog);
+			mLoginDialog.setTitle("Log In:");
+			
+			// IMPORTENT: Get button by id from login_dialog.xml, not from 
+			// front_page.xml, which has no such component, "submit_btn".
+			mSubmitBtn = (Button) mLoginDialog.findViewById(R.id.submit_btn);
+			mCancelBtn = (Button) mLoginDialog.findViewById(R.id.cancel_btn);
+			
+			mUnameEdit = (EditText) mLoginDialog.findViewById(R.id.login_username);
+	        mPwdEdit = (EditText) mLoginDialog.findViewById(R.id.login_password);
+		}
 	}
 	
 	private void setLoginListener() {
@@ -241,18 +239,26 @@ public class FrontPage extends Activity {
             public void onClick(View v) {
             	// Close the Login dialog when trying to log in.
 				mLoginDialog.cancel();
-				UserProfile.setUname(((TextView)mLoginDialog.findViewById(R.id.login_username))
-						.getText().toString());
-//				setFrontPage(UserProfile.getUname(), 0);
-				UserProfile.setStatus(ON_LINE);
 				
-				new LoginTask().execute(new Void[3]);
-				// Show a progress bar and send account info to server.
-				mLogProgress = new ProgressDialog(FrontPage.this);
-				mLogProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				mLogProgress.setMessage("Logging in...");
-				mLogProgress.setCancelable(true);
-				mLogProgress.show();
+            	boolean nametext = !TextUtils.isEmpty(mUnameEdit.getText());
+            	boolean pwdtext = !TextUtils.isEmpty(mPwdEdit.getText());
+            	if (nametext && pwdtext) {
+					new LoginTask().execute(new Void[3]);
+					// Show a progress bar and send account info to server.
+					mLogProgress = new ProgressDialog(FrontPage.this);
+					mLogProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+					mLogProgress.setMessage("Logging in...");
+					mLogProgress.setCancelable(true);
+					mLogProgress.show();
+				}
+				else if (!nametext) {
+					Toast.makeText(FrontPage.this, "Please input user name", Toast.LENGTH_SHORT).show();
+					mLoginDialog.show();
+				}
+				else if (!pwdtext) {
+					Toast.makeText(FrontPage.this, "Please input password", Toast.LENGTH_SHORT).show();
+					mLoginDialog.show();
+				}
             }
         });
 
@@ -280,7 +286,8 @@ public class FrontPage extends Activity {
 //		        	   progresslog.setCancelable(true);
 //		        	   progresslog.show();
 		        	   
-		        	   UserProfile.setStatus(OFF_LINE);
+		        	   UserProfile.resetUserProfile(OFF_LINE, null);
+		        	   setFrontPage(null, 0);
 		           }
 		       })
 		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -292,16 +299,19 @@ public class FrontPage extends Activity {
 		mLogoutDialog = builder.create();
 	}
 	
-	protected ProgressDialog getLoginPro() {
-		return mLogProgress;
+	private void setFrontPage(String uname, int pic) {
+		mUname.setText((CharSequence)uname);
+        // TODO: set the front page's fractal fern image to indicate different status.
 	}
-
+	
+	//--------------------- Log Thread ----------------------//
 	private class LoginTask extends AsyncTask<Void, Void, Void> {
+		private boolean isSuccessful = false; 
 	    /** The system calls this to perform work in a worker thread and
 	      * delivers it the parameters given to AsyncTask.execute() */
 		@Override
 		protected Void doInBackground(Void... params) {
-			NetworkUtil.attemptLogin(mUnameEdit.getText().toString(),
+			isSuccessful = NetworkUtil.attemptLogin(mUnameEdit.getText().toString(),
 					mPwdEdit.getText().toString());
 			return null;
 		}
@@ -309,13 +319,17 @@ public class FrontPage extends Activity {
 	    /** The system calls this to perform work in the UI thread and delivers
 	      * the result from doInBackground() */
 	    protected void onPostExecute(Void result) {
-	    	getLoginPro().dismiss();
-	    	// if(succeeded)
-	    	setFrontPage(mUnameEdit.getText().toString(), 0);
-	    	Toast.makeText(FrontPage.this, "finished login!", Toast.LENGTH_SHORT).show();
+	    	String username = mUnameEdit.getText().toString();
+	    	mLogProgress.dismiss();
+	    	if (isSuccessful) {
+	    		UserProfile.resetUserProfile(ON_LINE, username);
+		    	setFrontPage(username, 0);
+		    	Toast.makeText(FrontPage.this, "Login succeeded!", Toast.LENGTH_SHORT).show();
+	    	}
+	    	else {
+	    		mLoginDialog.show();
+	    		Toast.makeText(FrontPage.this, "Login failed!", Toast.LENGTH_SHORT).show();
+	    	}
 	    }
-
-		
 	}
-	
 }

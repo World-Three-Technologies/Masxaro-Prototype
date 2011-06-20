@@ -40,39 +40,36 @@ import android.widget.Toast;
 
 import com.android.W3T.app.rmanager.*;
 
-
 public class ReceiptsView extends Activity {
-	private static ReceiptsManager sRM = new ReceiptsManager();
-	
 	private int mCurReceipt = 0;
-	private Handler mUpdateHandler = new Handler() {  
-	    public void handleMessage(Message msg) {
-	    	super.handleMessage(msg);
-	    	fillReceiptView(msg.getData().getInt("num"));
-	    }
-	};
-	private Runnable mPrevUpdate = new Runnable() {
+//	private Handler mUpdateHandler = new Handler() {  
+//	    public void handleMessage(Message msg) {
+//	    	super.handleMessage(msg);
+//	    	fillReceiptView(msg.getData().getInt("num"));
+//	    }
+//	};
+//	private Runnable mPrevUpdate = new Runnable() {
+////		@Override
+//		public void run() {
+//			int pos = getPrevReceipt(mCurReceipt);
+//			Bundle data = new Bundle();
+//			data.putInt("num", pos);
+//			Message msg = new Message();
+//			msg.setData(data);
+//			mUpdateHandler.sendMessage(msg);
+//		}
+//	};
+//	private Runnable mNextUpdate = new Runnable() {
 //		@Override
-		public void run() {
-			int pos = getPrevReceipt(mCurReceipt);
-			Bundle data = new Bundle();
-			data.putInt("num", pos);
-			Message msg = new Message();
-			msg.setData(data);
-			mUpdateHandler.sendMessage(msg);
-		}
-	};
-	private Runnable mNextUpdate = new Runnable() {
-		@Override
-		public void run() {
-			int pos = getNextReceipt(mCurReceipt);
-			Bundle data = new Bundle();
-			data.putInt("num", pos);
-			Message msg = new Message();
-			msg.setData(data);
-			mUpdateHandler.sendMessage(msg);
-		}
-	};
+//		public void run() {
+//			int pos = getNextReceipt(mCurReceipt);
+//			Bundle data = new Bundle();
+//			data.putInt("num", pos);
+//			Message msg = new Message();
+//			msg.setData(data);
+//			mUpdateHandler.sendMessage(msg);
+//		}
+//	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
