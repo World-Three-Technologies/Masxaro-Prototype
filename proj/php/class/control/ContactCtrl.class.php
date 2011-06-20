@@ -100,8 +100,28 @@ class ContactCtrl extends Ctrl{
 		return true;
 	}
 	
+	
+	/**
+	 * 
+	 * 
+	 * @param string $old
+	 * 
+	 * @param string $new
+	 */
 	public function modifyContactType($old, $new){
+		$sql = "
+			UPDATE
+				`contact_type`
+			SET
+				`contact_type`='$new'
+			WHERE
+				`contact_type`='$old'
+		";
 		
+		if($this->db->update($sql) <= 0){
+			return false;
+		}
+		return true;
 	}
 	
 	

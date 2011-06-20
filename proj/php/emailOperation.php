@@ -1,7 +1,6 @@
 <?php
-
 /*
- *  EmailCtrl.class.php -- email control, email receive & send 
+ *  emailOperation.php --  email receive & send 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -24,26 +23,14 @@
  * 
  */
 
-class EmailCtrl extends Ctrl{
-	
-	function __construct(){
-		parent::__construct();
-	}
-	
-	public function mail($to, $subject, $message, $addHeaders = ""){
-		$headers  = 'MIME-Version: 1.0' . "\r\n";
-		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-		
-		// Additional headers
-		//$headers .= 'To: Mary <mary@example.com>, Kelly <kelly@example.com>' . "\r\n";
-		$headers .= 'From: Masxaro <masxaro-notice@masxaro.com>' . "\r\n";
-//		$headers .= 'Cc: birthdayarchive@example.com' . "\r\n";
-//		$headers .= 'Bcc: birthdaycheck@example.com' . "\r\n";
-		$headers .= $addHeaders;
-		
-		return mail($to, $subject, $message, $headers);
-	}
-	
+include_once '../config.php';
+
+$email = new EmailCtrl();
+
+switch($_POST['op']){
+	case 'send':
+		$email->mail($_POST['to'], $_POST['subject'], $_POST['content']);
+		break;		
 }
 
 ?>

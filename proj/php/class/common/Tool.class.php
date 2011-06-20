@@ -165,6 +165,5 @@ class Tool{
     Header("HTTP/1.1 301 Redirect");
     Header("Location: $path");
   }
-    
 }
 ?>
