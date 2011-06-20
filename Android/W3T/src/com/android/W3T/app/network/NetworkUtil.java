@@ -1,15 +1,12 @@
 package com.android.W3T.app.network;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -24,23 +21,22 @@ import org.json.*;
 
 import com.android.W3T.app.user.UserProfile;
 
-import android.app.AlertDialog;
-
 public class NetworkUtil {
-	public final static String URL = "http://sweethomeforus.com/php/login.php";
+	public static final String BASE_URL = "http://sweethomeforus.com/php";
+	public static final String LOGIN_URL = BASE_URL + "/login.php";
 	
 	
-	public static void attemptLogin(String url) {   
+	public static void attemptLogin(String uname, String pwd) {   
         HttpClient client = new DefaultHttpClient();   
 
         HttpPost request;
         
         try {
-        	request = new HttpPost(new URI(URL));
+        	request = new HttpPost(new URI(LOGIN_URL));
             // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-            nameValuePairs.add(new BasicNameValuePair("acc", "new"));
-            nameValuePairs.add(new BasicNameValuePair("pwd", "123"));
+            nameValuePairs.add(new BasicNameValuePair("acc", uname));
+            nameValuePairs.add(new BasicNameValuePair("pwd", pwd));
             nameValuePairs.add(new BasicNameValuePair("type", "user"));
             request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 

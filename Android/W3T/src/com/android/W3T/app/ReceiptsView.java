@@ -52,7 +52,7 @@ public class ReceiptsView extends Activity {
 	    }
 	};
 	private Runnable mPrevUpdate = new Runnable() {
-		@Override
+//		@Override
 		public void run() {
 			int pos = getPrevReceipt(mCurReceipt);
 			Bundle data = new Bundle();

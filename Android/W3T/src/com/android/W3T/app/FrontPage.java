@@ -42,7 +42,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,12 +53,13 @@ import com.android.W3T.app.user.*;
 
 public class FrontPage extends Activity {
 	// Indicators for every dialog view.
-	public final static int DIALOG_LOGIN = 1;
-	public final static int DIALOG_LOGOUT = 2;
+	public static final int DIALOG_LOGIN = 1;
+	public static final int DIALOG_LOGOUT = 2;
 	
-	private final static boolean OFF_LINE = UserProfile.OFFLINE;
-	private final static boolean ON_LINE = UserProfile.ONLINE;
+	private static final boolean OFF_LINE = UserProfile.OFFLINE;
+	private static final boolean ON_LINE = UserProfile.ONLINE;
 	
+	private LinearLayout mFrontPage;
 	private TextView mUname;
 	private ImageView mFractalImg;
 	
@@ -70,7 +73,10 @@ public class FrontPage extends Activity {
 	// Dialogs will show in this activity
 	private Dialog mLoginDialog;
 	private AlertDialog mLogoutDialog;
-//	private ProgressDialog mLogProgress = new ProgressDialog(FrontPage.this);
+	private ProgressDialog mLogProgress;
+	
+	private EditText mUnameEdit;
+	private EditText mPwdEdit;
 	
 	private Button mSubmitBtn;
 	private Button mCancelBtn;	
@@ -81,8 +87,10 @@ public class FrontPage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.front_page);
         
-        mUname = (TextView)findViewById(R.id.Username);
-        mFractalImg = (ImageView)findViewById(R.id.FractalFern);
+        mFrontPage = (LinearLayout) findViewById(R.id.front_page);
+        mUname = (TextView) findViewById(R.id.Username);
+        mFractalImg = (ImageView) findViewById(R.id.FractalFern);
+        
 	}
 	
 	@Override
@@ -210,7 +218,7 @@ public class FrontPage extends Activity {
 		}
 		return super.onKeyUp(keyCode, event);
 	}
-	
+
 	private void setLoginDialog() {
 		// Login dialog is a custom dialog, we take care of every details of it.
 		mLoginDialog = new Dialog(FrontPage.this);
@@ -222,6 +230,9 @@ public class FrontPage extends Activity {
 		// front_page.xml, which has no such component, "submit_btn".
 		mSubmitBtn = (Button) mLoginDialog.findViewById(R.id.submit_btn);
 		mCancelBtn = (Button) mLoginDialog.findViewById(R.id.cancel_btn);
+		
+		mUnameEdit = (EditText) mLoginDialog.findViewById(R.id.login_username);
+        mPwdEdit = (EditText) mLoginDialog.findViewById(R.id.login_password);
 	}
 	
 	private void setLoginListener() {
@@ -232,16 +243,16 @@ public class FrontPage extends Activity {
 				mLoginDialog.cancel();
 				UserProfile.setUname(((TextView)mLoginDialog.findViewById(R.id.login_username))
 						.getText().toString());
-				setFrontPage(UserProfile.getUname(), 0);
+//				setFrontPage(UserProfile.getUname(), 0);
 				UserProfile.setStatus(ON_LINE);
 				
 				new LoginTask().execute(new Void[3]);
 				// Show a progress bar and send account info to server.
-//				ProgressDialog mLogProgress = new ProgressDialog(FrontPage.this);
-//				mLogProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//				mLogProgress.setMessage("Logging in...");
-//				mLogProgress.setCancelable(true);
-//				mLogProgress.show();
+				mLogProgress = new ProgressDialog(FrontPage.this);
+				mLogProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				mLogProgress.setMessage("Logging in...");
+				mLogProgress.setCancelable(true);
+				mLogProgress.show();
             }
         });
 
@@ -263,11 +274,12 @@ public class FrontPage extends Activity {
 		           public void onClick(DialogInterface dialog, int id) {
 		        	   dialog.cancel();
 		        	   // Show a progress bar and send log off signal to server.
-		        	   ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
-		        	   progresslog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		        	   progresslog.setMessage("Logging out...");
-		        	   progresslog.setCancelable(true);
-		        	   progresslog.show();
+//		        	   ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
+//		        	   progresslog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//		        	   progresslog.setMessage("Logging out...");
+//		        	   progresslog.setCancelable(true);
+//		        	   progresslog.show();
+		        	   
 		        	   UserProfile.setStatus(OFF_LINE);
 		           }
 		       })
@@ -280,21 +292,30 @@ public class FrontPage extends Activity {
 		mLogoutDialog = builder.create();
 	}
 	
+	protected ProgressDialog getLoginPro() {
+		return mLogProgress;
+	}
+
 	private class LoginTask extends AsyncTask<Void, Void, Void> {
 	    /** The system calls this to perform work in a worker thread and
 	      * delivers it the parameters given to AsyncTask.execute() */
 		@Override
 		protected Void doInBackground(Void... params) {
-			NetworkUtil.attemptLogin(null);
+			NetworkUtil.attemptLogin(mUnameEdit.getText().toString(),
+					mPwdEdit.getText().toString());
 			return null;
 		}
 	    
 	    /** The system calls this to perform work in the UI thread and delivers
 	      * the result from doInBackground() */
 	    protected void onPostExecute(Void result) {
+	    	getLoginPro().dismiss();
+	    	// if(succeeded)
+	    	setFrontPage(mUnameEdit.getText().toString(), 0);
 	    	Toast.makeText(FrontPage.this, "finished login!", Toast.LENGTH_SHORT).show();
 	    }
 
 		
 	}
+	
 }
