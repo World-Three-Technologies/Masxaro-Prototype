@@ -24,7 +24,7 @@
  *  
  */
 
-include_once dirname(__FILE__).'/../config.php';
+include_once '../config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -36,7 +36,6 @@ $ctrl = new ReceiptCtrl();
 
 switch($opcode){
 	case 'new_receipt':
-		//$code = "983094867189238-0929347";
 		//1-d array
 		$basicInfo = $_POST['receipt'];
 		echo $ctrl->insertReceipt($basicInfo, null);
@@ -49,26 +48,37 @@ switch($opcode){
 		break;
 		
 	case 'f_delete_receipt':
+		//fake delete one receipt
 		echo $ctrl->fakeDelete($_POST['receipt_id']);
 		break;
 		
 	case 'delete_receipt':
+		//delete one receipt
 		echo $ctrl->realDelete($_POST['receipt_id']);
 		break;
 		
 	case 'recover':
+		//recover fake deleted receipt
 		echo $ctrl->recoverDeleted($_POST['receipt_id']);
 		break;
 		
-	case 'user_get_all_receipt':
-		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
+	case 'user_get_all_receipt_basic':
+		//user get  all receipts' basic info
+		echo json_encode($ctrl->userGetAllReceiptBasic($_POST['acc']));
 		break;
 		
-	case 'user_get_all_receipt_item':
+	case 'user_get_receipt_item':
+		//user get items info of one certain receipt
 		echo json_encode($ctrl->userGetReceiptItems($_POST['receipt_id']));
 		break;
 		
+	case 'user_get_all_receipt':
+		//user get all receipt, with basic info and all items info
+		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
+		break;
+		
 	case 'user_get_receipt_detail':
+		//user get basic info of one certain receipt
 		echo json_encode($ctrl->getReceiptDetail($_POST['receipt_id']));
 		break;
 }

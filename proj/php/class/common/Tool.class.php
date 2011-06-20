@@ -37,10 +37,11 @@ class Tool{
 		$sql = '';
 		
 		$regxFunc = '(^.*\(\))';
-		$regxNumber = '(^[0-9]+)';
+		//$regxNumber = '(^[0-9]+$)';
 		
 		foreach ($info as $key => $value){
-			if(preg_match($regxFunc, $value) || preg_match($regxNumber, $value)){
+			//if(preg_match($regxFunc, $value) || preg_match($regxNumber, $value)){
+			if(preg_match($regxFunc, $value)){
 				$sql = $sql."`{$key}` = {$value},";
 			}
 			
@@ -68,7 +69,9 @@ class Tool{
 	 * else return false
 	 */
 	public static function securityChk($str){
-		return true;
+		$regex = "(<script>)";
+		return !preg_match($regex, $str); 
+		//return true;
 	}
 	
 	/**
@@ -162,6 +165,5 @@ class Tool{
     Header("HTTP/1.1 301 Redirect");
     Header("Location: $path");
   }
-    
 }
 ?>

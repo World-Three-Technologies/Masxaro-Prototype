@@ -1,6 +1,7 @@
 <?php
+
 /*
- *  userProfile.php -- get user profile 
+ *  ctrl.class.php -- super class of all control classes 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -24,30 +25,51 @@
  *  
  */
 
-include_once '../config.php';
-
-$opcode = $_POST['opcode'];
-
-$acc = $_POST['acc'];
-
-//$acc = 'new';
-
-$ctrl = new UserCtrl();
-
-switch(opcode){
-	case 'get_profile':
-		echo json_encode($ctrl->getUserProfile($acc));
-		break;
+abstract class Ctrl {
+	protected $db;
 	
-	case 'update_profile':
-		echo $ctrl->updateUserInfo($acc, $_POST['info']);
-		break;
+	function __construct(){
+		$this->db = new Database();
+	}
+	
+	/**
+	 * 
+	 * @param string $acc
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * check whether a certain account is available
+	 */
+	public function chkAccount($acc){
 		
-	default:
-		echo false;
-		break;
+		if(!Tool::securityChk($acc)){
+			return false;
+		}
+		
+		$sql = "
+			SELECT 
+				count(*) as count
+			FROM 
+				`user`, `store`
+			WHERE
+				`user_account`='$acc'
+			OR
+				`store_account`='$acc'
+		";
+		
+		if($this->db->select($sql) < 0){
+			return false;
+		}
+		
+		$result = $this->db->fetchObject();
+		
+		if($result[0]->count == 0){
+			return true;
+		}
+		
+		return false;
+	}
 }
-
-
 
 ?>

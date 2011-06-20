@@ -40,9 +40,7 @@ class UserCtrl extends Ctrl{
 	 */
 	public function insertUser($info){
 		
-		$info['pwd'] = md5($info['pwd']); 
-		
-		$info['register_time'] = date("Y-m-d H:i:s");
+		$info['pwd'] = md5($info['pwd']);
 		
 		$con = Tool::infoArray2SQL($info);
 		
@@ -51,11 +49,12 @@ class UserCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			INSERT INTO `user`
+			INSERT INTO 
+				`user`
 			SET
-			$con
+				$con
 		";
-				
+			
 		$result = $this->db->insert($sql);
 		
 		if($result < 0){
@@ -78,11 +77,40 @@ class UserCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `user`
+			UPDATE 
+				`user`
 			SET
-			`deleted`=true
+				`deleted`=true
 			WHERE
-			`user_account`='$acc';
+				`user_account`='$acc';
+		";
+		
+		if($this->db->update($sql) <= 0){
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * 
+	 * recover a fake deleted user
+	 * @param string $acc
+	 * @return boolean
+	 */
+	public function recoverDeletedUser($acc){
+		
+		if(!Tool::securityChk($acc)){
+			return false;
+		}
+		
+		$sql = "
+			UPDATE 
+				`user`
+			SET
+				`deleted`=false
+			WHERE
+				`user_account`='$acc';
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -106,9 +134,10 @@ class UserCtrl extends Ctrl{
 		
 		$sql = "
 			DELETE
-			FROM `user`
+			FROM 
+				`user`
 			WHERE
-			`user_account`='$acc';
+				`user_account`='$acc';
 		";
 		
 		if($this->db->delete($sql) <= 0){
@@ -121,48 +150,11 @@ class UserCtrl extends Ctrl{
 	
 	/**
 	 * 
-	 * @param string $acc
-	 * 
-	 * @return boolean
-	 * 
-	 * @desc
-	 * check whether a certain account is available
-	 */
-	public function chkAccount($acc){
-		
-		if(!Tool::securityChk($acc)){
-			return false;
-		}
-		
-		$sql = "
-			SELECT count(*)
-			FROM `user`, `store`
-			WHERE
-			`user_account`='$acc'
-			OR
-			`store_account`='$acc'
-		";
-		
-		if(!$this->db->select($sql)){
-			return false;
-		}
-		
-		$result = $this->db->fetchObject();
-		
-		if($result[0]->count == 0){
-			return true;
-		}
-		
-		return false;
-	}
-	
-	
-	/**
-	 * 
 	 * @param string $curAcc current account name
 	 * @param array() $info updated info, array('first_name'=>'John', 'age_range_id'=>2, ...)
 	 */
 	public function updateUserInfo($curAcc, $info){
+		
 		$info = Tool::infoArray2SQL($info);
 		
 		if(!Tool::securityChk($info)){
@@ -170,14 +162,15 @@ class UserCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `user`
+			UPDATE 
+				`user`
 			SET
-			$info
+				$info
 			WHERE
-			`user_account` = '$curAcc'
+				`user_account` = '$curAcc'
 		";
 		
-		if($this->$db->update($sql) <= 0){
+		if($this->db->update($sql) <= 0){
 			return false;
 		}
 		
@@ -207,12 +200,16 @@ class UserCtrl extends Ctrl{
 		$pwd = md5($pwd);
 		
 		$sql = "
-			SELECT *
-			FROM `user`
+			SELECT 
+				*
+			FROM 
+				`user`
 			WHERE
-			`user_account`='$acc'
+				`user_account`='$acc'
 			AND
-			`pwd`='$pwd'
+				`pwd`='$pwd'
+			AND 
+				`deleted`=false
 		";
 		
 		$this->db->select($sql);
@@ -236,15 +233,18 @@ class UserCtrl extends Ctrl{
 	 */
 	public function getUserProfile($acc){
 		$sql = "
-			SELECT *
-			FROM `user`
-			WHERE `user_account`='$acc'
+			SELECT 
+				*
+			FROM 
+				`user`
+			WHERE 
+				`user_account`='$acc'
 		";
 		
 		$this->db->select($sql);
-		$result = $this->db->fetchObject();
+		$result = $this->db->fetchAssoc();
 		
-		return $result;
+		return $result[0];
 	}
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 /*
- * Dbconfig.php -- DB configuration 
+ * ReceiptEntity.class.php -- Receipt entity 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,21 +21,22 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  Database configuration file
- *  configure database connection data
+ *  
  */
 
+class ReceiptEntity{
+//	public $basicInfo = array();
 
-return array(
-//	'host' => '46.51.255.119', 
-//    'user' => 'w3t',
-//	'pwd' => 'w3t',
-//	'dbName' => 'w3tdb'
-//	
-	'host' => 'localhost', 
-    'user' => 'root',
-	'pwd' => 'root',
-	'dbName' => 'w3tdb'
-);
-
+	public $receipt_id = NULL;
+	public $store_account = NULL;
+	public $store_name = NULL;
+	public $user_account = NULL;
+	public $receipt_time = NULL;
+	public $tax = 1;
+	public $total_cost = 0;
+	public $img = NULL;
+	public $deleted = 0;
+	
+	public $items = array();
+}
 ?>

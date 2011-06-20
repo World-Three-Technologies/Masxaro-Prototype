@@ -1,6 +1,6 @@
 <?php
 /*
- *  userProfile.php -- get user profile 
+ *  emailOperation.php --  email receive & send 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,33 +21,16 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  
  */
 
 include_once '../config.php';
 
-$opcode = $_POST['opcode'];
+$email = new EmailCtrl();
 
-$acc = $_POST['acc'];
-
-//$acc = 'new';
-
-$ctrl = new UserCtrl();
-
-switch(opcode){
-	case 'get_profile':
-		echo json_encode($ctrl->getUserProfile($acc));
-		break;
-	
-	case 'update_profile':
-		echo $ctrl->updateUserInfo($acc, $_POST['info']);
-		break;
-		
-	default:
-		echo false;
-		break;
+switch($_POST['op']){
+	case 'send':
+		$email->mail($_POST['to'], $_POST['subject'], $_POST['content']);
+		break;		
 }
-
-
 
 ?>

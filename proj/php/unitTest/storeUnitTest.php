@@ -1,7 +1,6 @@
 <?php
-
 /*
- *  ctrl.class.php -- super class of all control classes 
+ *  userUnitTest.php -- unit test for user control class  
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,16 +20,21 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
- * 
  *  
  */
 
-abstract class Ctrl {
-	protected $db;
-	
-	function __construct(){
-		$this->db = new Database();
-	}
-}
+include_once '../../config.php';
+
+$test = new StoreUnitTest();
+
+$test->chkAccount_Test('stest');
+
+$test->insertStore_Test();
+
+$test->findStore_Test('stest', '123');
+
+$test->updateStoreInfo_Test('stest');
+
+$test->deleteStore_Test('stest');
 
 ?>

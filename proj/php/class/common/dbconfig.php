@@ -1,6 +1,6 @@
 <?php
 /*
- * dbTest.php -- database test 
+ * Dbconfig.php -- DB configuration 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,12 +21,38 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  database test file
+ *  Database configuration file
+ *  configure database connection data
  */
 
-include_once '../config.php';
 
-$db = new Database();
-$sql = "insert into `age_range` values(null, '25-30')";
-echo $db->insert($sql);
+return array(
+	/**
+	 * AWS
+	 * MariaDB
+	 */
+	'host' => '46.51.255.119', 
+    'user' => 'w3t',
+	'pwd' => 'w3t',
+	'dbName' => 'w3tdb'
+	
+	/**
+	 * localhost
+	 */
+//	'host' => 'localhost', 
+//    'user' => 'root',
+//	'pwd' => 'root',
+//	'dbName' => 'w3tdb'
+	
+	/**
+	 * Godaddy
+	 * 
+	 * MySQL
+	 */
+//	'host' => 'w3tdb.db.7762973.hostedresource.com', 
+//    'user' => 'w3tdb',
+//	'pwd' => 'W3TAdmin',
+//	'dbName' => 'w3tdb'
+);
+
 ?>

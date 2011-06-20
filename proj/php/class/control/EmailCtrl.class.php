@@ -1,6 +1,7 @@
 <?php
+
 /*
- *  userProfile.php -- get user profile 
+ *  EmailCtrl.class.php -- email control, email receive & send 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,33 +22,28 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  
  */
 
-include_once '../config.php';
-
-$opcode = $_POST['opcode'];
-
-$acc = $_POST['acc'];
-
-//$acc = 'new';
-
-$ctrl = new UserCtrl();
-
-switch(opcode){
-	case 'get_profile':
-		echo json_encode($ctrl->getUserProfile($acc));
-		break;
+class EmailCtrl extends Ctrl{
 	
-	case 'update_profile':
-		echo $ctrl->updateUserInfo($acc, $_POST['info']);
-		break;
+	function __construct(){
+		parent::__construct();
+	}
+	
+	public function mail($to, $subject, $message, $addHeaders = ""){
+		$headers  = 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 		
-	default:
-		echo false;
-		break;
+		// Additional headers
+		//$headers .= 'To: Mary <mary@example.com>, Kelly <kelly@example.com>' . "\r\n";
+		$headers .= 'From: Masxaro <masxaro-notice@masxaro.com>' . "\r\n";
+//		$headers .= 'Cc: birthdayarchive@example.com' . "\r\n";
+//		$headers .= 'Bcc: birthdaycheck@example.com' . "\r\n";
+		$headers .= $addHeaders;
+		
+		return mail($to, $subject, $message, $headers);
+	}
+	
 }
-
-
 
 ?>
