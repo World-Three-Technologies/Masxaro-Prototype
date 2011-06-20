@@ -40,9 +40,7 @@ class UserCtrl extends Ctrl{
 	 */
 	public function insertUser($info){
 		
-		$info['pwd'] = md5($info['pwd']); 
-		
-		//$info['register_time'] = date("Y-m-d H:i:s");
+		$info['pwd'] = md5($info['pwd']);
 		
 		$con = Tool::infoArray2SQL($info);
 		
@@ -152,50 +150,11 @@ class UserCtrl extends Ctrl{
 	
 	/**
 	 * 
-	 * @param string $acc
-	 * 
-	 * @return boolean
-	 * 
-	 * @desc
-	 * check whether a certain account is available
-	 */
-	public function chkAccount($acc){
-		
-		if(!Tool::securityChk($acc)){
-			return false;
-		}
-		
-		$sql = "
-			SELECT 
-				count(*)
-			FROM 
-				`user`, `store`
-			WHERE
-				`user_account`='$acc'
-			OR
-				`store_account`='$acc'
-		";
-		
-		if($this->db->select($sql) < 0){
-			return false;
-		}
-		
-		$result = $this->db->fetchObject();
-		
-		if($result[0]->count == 0){
-			return true;
-		}
-		
-		return false;
-	}
-	
-	
-	/**
-	 * 
 	 * @param string $curAcc current account name
 	 * @param array() $info updated info, array('first_name'=>'John', 'age_range_id'=>2, ...)
 	 */
 	public function updateUserInfo($curAcc, $info){
+		
 		$info = Tool::infoArray2SQL($info);
 		
 		if(!Tool::securityChk($info)){
@@ -211,7 +170,7 @@ class UserCtrl extends Ctrl{
 				`user_account` = '$curAcc'
 		";
 		
-		if($this->$db->update($sql) <= 0){
+		if($this->db->update($sql) <= 0){
 			return false;
 		}
 		
@@ -283,9 +242,9 @@ class UserCtrl extends Ctrl{
 		";
 		
 		$this->db->select($sql);
-		$result = $this->db->fetchObject();
+		$result = $this->db->fetchAssoc();
 		
-		return $result;
+		return $result[0];
 	}
 }
 ?>

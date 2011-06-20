@@ -1,6 +1,6 @@
 <?php
 /*
- *  receiptUnitTest.php -- unit test for receipt control class  
+ *  ReceiptUnitTest.class.php -- unit test class for receipt control class  
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -23,11 +23,14 @@
  *  
  */
 
-include_once '../../config.php';
-
 class ReceiptUnitTest extends UnitTest{
 	
 	public $testId = 0;
+	
+	function __construct(){
+		parent::__construct();
+		$this->ctrl = new ReceiptCtrl();
+	}
 	
 	/**
 	 * 
@@ -61,9 +64,9 @@ class ReceiptUnitTest extends UnitTest{
 		
 		array_push($items, $item);
 						
-		$ctrl = new ReceiptCtrl();
+		
 						
-		$this->assertTrue(($this->testId = $ctrl->insertReceipt($basicInfo, $items)) > 0);
+		$this->assertTrue(($this->testId = $this->ctrl->insertReceipt($basicInfo, $items)) > 0);
 	}
 	
 	
@@ -79,9 +82,9 @@ class ReceiptUnitTest extends UnitTest{
 							"tax"=>0.1
 						);
 						
-		$ctrl = new ReceiptCtrl();
+		
 						
-		$this->assertTrue(($this->testId = $ctrl->insertReceipt($basicInfo, null)) > 0);
+		$this->assertTrue(($this->testId = $this->ctrl->insertReceipt($basicInfo, null)) > 0);
 	}
 	
 	/**
@@ -113,9 +116,9 @@ class ReceiptUnitTest extends UnitTest{
 		
 		array_push($items, $item);
 						
-		$ctrl = new ReceiptCtrl();
+		
 						
-		$this->assertTrue($ctrl->insertReceipt(null, $items));
+		$this->assertTrue($this->ctrl->insertReceipt(null, $items));
 	}
 	
 	/**
@@ -123,8 +126,8 @@ class ReceiptUnitTest extends UnitTest{
 	 * fake delete test
 	 */
 	function fakeDelete_Test($id){
-		$ctrl = new ReceiptCtrl();
-		$this->assertTrue($ctrl->fakeDelete($id));
+		
+		$this->assertTrue($this->ctrl->fakeDelete($id));
 	}
 	
 	/**
@@ -132,8 +135,8 @@ class ReceiptUnitTest extends UnitTest{
 	 * recover test
 	 */
 	function recoverDeleted_Test($id){
-		$ctrl = new ReceiptCtrl();
-		$this->assertTrue($ctrl->recoverDeleted($id));
+		
+		$this->assertTrue($this->ctrl->recoverDeleted($id));
 	}
 	
 	/**
@@ -141,24 +144,8 @@ class ReceiptUnitTest extends UnitTest{
 	 * real delete test
 	 */
 	function realDelete_Test($id){
-		$ctrl = new ReceiptCtrl();
-		$this->assertTrue($ctrl->realDelete($id));
+		
+		$this->assertTrue($this->ctrl->realDelete($id));
 	}
 }
-
-
-$test = new ReceiptUnitTest();
-
-$test->insertReceipt_Full_Test();
-
-$test->insertReceipt_Empty_Test();
-
-$test->insertReceipt_NewItem_Test($test->testId);
-
-$test->fakeDelete_Test($test->testId);
-
-$test->recoverDeleted_Test($test->testId);
-
-$test->realDelete_Test($test->testId);
-
 ?>

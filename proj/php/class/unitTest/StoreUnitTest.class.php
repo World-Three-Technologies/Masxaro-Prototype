@@ -1,6 +1,6 @@
 <?php
 /*
- *  unitTest.class.php -- temprary unit test class  
+ *  StoreUnitTest.class.php -- unit test class for store control class  
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -23,43 +23,41 @@
  *  
  */
 
-class UnitTest{
+class StoreUnitTest extends UnitTest{
 	
 	public function __construct(){
-		
+		parent::__construct();
+		$this->ctrl = new StoreCtrl();
 	}
 	
-	public function assertTrue($value){
-		$back = debug_backtrace();
-		$curCall = $back[1]['function']."(".get_called_class().")";
-		
-		$result = "";
-		
-		if(!$value){
-			$result = "FAILED: ";
-		}
-		else{
-			$result = "PASSED: ";
-		}
-		
-		echo $result.$curCall."</br>";
+
+	public function chkAccount_Test($acc){
+		$this->assertTrue($this->ctrl->chkAccount($acc));
 	}
 	
-	public function assertEquals($value, $target){
-		$back = debug_backtrace();
-		$curCall = $back[1]['function']."(".get_called_class().")";
+	public function insertStore_Test(){
+		$info = array(
+						'store_account'=>'stest',
+						'pwd'=>'123',
+						'store_name'=>'stest_store'
+					);
+		$this->assertTrue($this->ctrl->insertStore($info));
+	}
+	
+	public function deleteStore_Test($acc){
+		$this->assertTrue($this->ctrl->deleteStore($acc));
+	}
+	
+	public function updateStoreInfo_Test($acc){
+		$info = array(
+						'store_account'=>'stest',
+						'pwd'=>'123'
+					);
 		
-		$result = "";
-		
-		if($value != $target){
-			$result = "FAILED: ";
-		}
-		else{
-			$result = "PASSED: ";
-		}
-		
-		echo $result.$curCall."</br>";	
+		$this->assertTrue($this->ctrl->updateStoreInfo($acc, $info));
+	}
+	
+	public function findStore_Test($acc, $pwd){
+		$this->assertTrue($this->ctrl->findStore($acc, $pwd));
 	}
 }
-
-?>

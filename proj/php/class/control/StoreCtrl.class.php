@@ -114,7 +114,7 @@ class StoreCtrl extends Ctrl{
 	 * update store info
 	 * 
 	 */
-	public function updateStore($storeAcc, $info){
+	public function updateStoreInfo($storeAcc, $info){
 		$info = Tool::infoArray2SQL($info);
 		
 		if(!Tool::securityChk($info)){
@@ -133,6 +133,8 @@ class StoreCtrl extends Ctrl{
 		if($this->db->update($sql) <= 0){
 			return false;
 		}
+		
+		return true;
 	}
 	
 	/**
@@ -147,11 +149,6 @@ class StoreCtrl extends Ctrl{
 	 * delete a store
 	 */
 	public function deleteStore($storeAcc){
-		$info = Tool::infoArray2SQL($info);
-		
-		if(!Tool::securityChk($info)){
-			return false;
-		}
 		
 		$sql = "
 			DELETE

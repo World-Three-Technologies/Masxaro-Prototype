@@ -25,57 +25,6 @@
 
 include_once '../../config.php';
 
-class UserUnitTest extends UnitTest{
-	
-	public $ctrl;
-	
-	public function __construct(){
-		parent::__construct();
-		$this->ctrl = new UserCtrl();
-	}
-	
-	public function insertUser_Test(){
-		$info = array(
-						'user_account'=>'utest',
-						'pwd'=>'123'
-					);
-		$this->assertTrue($this->ctrl->insertUser($info));
-	}
-	
-	public function fakeDeleteUser_Test($acc){
-		$this->assertTrue($this->ctrl->fakeDeleteUser($acc));
-	}
-	
-	public function recoverDeletedUser_Test($acc){
-		$this->assertTrue($this->ctrl->recoverDeletedUser($acc));
-	}
-	
-	public function realDeleteUser_Test($acc){
-		$this->assertTrue($this->ctrl->realDeleteUser($acc));
-	}
-	
-	public function chkAccount_Test($acc){
-		$this->assertTrue($this->ctrl->chkAccount($acc));
-	}
-	
-	public function updateUserInfo_Test($acc){
-		$info = array(
-						'user_account'=>'utest',
-						'pwd'=>'123'
-					);
-		
-		$this->assertTrue($this->ctrl->updateUserInfo($acc, $info));
-	}
-	
-	public function findUser_Test(){
-		$this->assertTrue($this->ctrl->findUser('utest', '123'));
-	}
-	
-	public function getUserProfile_Test(){
-		
-	}
-	
-}
 
 $test = new UserUnitTest();
 
@@ -83,7 +32,11 @@ $test->chkAccount_Test('utest');
 
 $test->insertUser_Test();
 
-$test->findUser_Test();
+$test->findUser_Test('utest', '123');
+
+$test->getUserProfile_Test('utest');
+
+$test->updateUserInfo_Test('utest');
 
 $test->fakeDeleteUser_Test('utest');
 
