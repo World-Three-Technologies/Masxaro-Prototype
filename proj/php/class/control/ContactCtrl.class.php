@@ -40,25 +40,17 @@ class ContactCtrl extends Ctrl{
 	 * 
 	 * @desc
 	 * 
-	 * check whether the certain account is available, true: available, false: not available
+	 * check whether the certain contact is available, true: available, false: not available
 	 */
-	public function chkAccMail($acc, $value){
-		
-		if(!preg_match($this->regex, $value)){
-			return true;
-		}
+	public function chkContact($value){
 		
 		$sql = "
 			SELECT 
 				`value`
 			FROM 
-				`contact`, `user`, `store`
+				`contact`
 			WHERE
-				`value` regexp '$this->regex'
-			AND
-				`user_account`='$acc'
-			OR
-				`store_account`='$acc'
+				`value` = '$value'
 		";
 		
 		$this->db->select($sql);
@@ -171,7 +163,7 @@ class ContactCtrl extends Ctrl{
 		
 		for($i = 0; $i < $n; $i ++){
 			
-			if(!$this->chkAccMail($info[$i]['user_account'], $info[$i]['value'])){
+			if(!$this->chkContact($info[$i]['value'])){
 				return false;
 			}
 			
@@ -215,12 +207,20 @@ class ContactCtrl extends Ctrl{
 	 * 
 	 * @param string $value the value of the contact that needs to be deleted
 	 * 
+	 * @param boolean $admin
+	 * 
 	 * @return boolean
 	 * 
+	 * @desc
+	 * 
+	 * delete a certain contact, if $admin = true, then @masxaro mail box can be deleted
+	 * 
+	 *  if $admin = false, then @masxaro mail box cannot be deleted
+	 * 
 	 */
-	public function deleteContact($value){
+	public function deleteContact($value, $admin = false){
 		
-		if(preg_match($this->regex, $value)){
+		if(!$admin && preg_match($this->regex, $value)){
 			return false;
 		}
 		
@@ -252,9 +252,8 @@ class ContactCtrl extends Ctrl{
 	 * update contact
 	 */
 	public function updateContact($curValue, $newInfo){
-		$regex = "(.*@masxaro.com)";
 		
-		if(preg_match($regex, $newInfo['value'])){
+		if(preg_match($this->regex, $newInfo['value'])){
 			return false;
 		}
 		
@@ -308,7 +307,8 @@ class ContactCtrl extends Ctrl{
 		
 		$this->db->select($sql);
 		
-		return $this->db->fetchObject();
+		return $this->db->fetchAssoc();
 	}
+	
 }
 ?>
