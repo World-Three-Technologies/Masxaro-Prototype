@@ -28,6 +28,7 @@ package com.android.W3T.app.rmanager;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,25 +48,26 @@ public class Receipt {
 	public static final String PARAM_ITEM_PRICE = "item_price";
 	
 	
-	public static final String[][] sFakeReceiptsInfo = {
-		{"ID@1234", "06-01-2011", "Wendy's", "12.32USD"},
-		{"ID@1235", "06-02-2011", "Starbucks", "4.63USD"},
-		{"ID@1236", "06-02-2011", "J Street", "10.02USD"},
-		{"ID@1237", "06-03-2011", "Starbucks", "4.63USD"},
-		{"ID@1238", "06-03-2011", "Penn Grill", "8.76USD"},
-		{"ID@1239", "06-04-2011", "Starbucks", "7.56USD"},
-		{"ID@1234", "06-04-2011", "Wendy's", "6.22USD"}
-	};
+//	public static final String[][] sFakeReceiptsInfo = {
+//		{"ID@1234", "06-01-2011", "Wendy's", "12.32USD"},
+//		{"ID@1235", "06-02-2011", "Starbucks", "4.63USD"},
+//		{"ID@1236", "06-02-2011", "J Street", "10.02USD"},
+//		{"ID@1237", "06-03-2011", "Starbucks", "4.63USD"},
+//		{"ID@1238", "06-03-2011", "Penn Grill", "8.76USD"},
+//		{"ID@1239", "06-04-2011", "Starbucks", "7.56USD"},
+//		{"ID@1234", "06-04-2011", "Wendy's", "6.22USD"}
+//	};
 	
 	private String mReceiptId;
 	private	String mStoreName;
 	private String mTime;
 	private String mTax;
 	private String mTotal;
-	private ArrayList<ReceiptItem> mItems;
-	private int mNumItems;
-	private boolean mValid;
-	
+	private ArrayList<ReceiptItem> mItems;	// Items in this receipt
+	private int mNumItems;			// Number of items
+	private boolean mIsUpload;		// Whether this receipt has been synced with system.
+									// The receipt retrieved from database sets true.
+									// The receipt retrieved from nfc tag sets false
 	public Receipt() {
 		mReceiptId = new String("ID@0000");
 		mStoreName = new String("N/A");
@@ -74,21 +76,37 @@ public class Receipt {
 		mTax = new String("N/A");
 		mItems = new ArrayList<ReceiptItem>();
 		mNumItems = 0;
-		mValid = false;
+		mIsUpload = false;
+	}
+	
+	public Receipt(JSONObject str) {
+		try {
+			this.setId(str.get(PARAM_RECEIPT_ID).toString());
+			this.setTime(str.get(PARAM_RECEIPT_TIME).toString());
+			this.setStoreName(str.get(PARAM_RECEIPT_STORE_NAME).toString());
+			this.setTotal(str.get(PARAM_RECEIPT_TOTAL).toString());
+			this.setTax(str.get(PARAM_RECEIPT_TAX).toString());
+			mItems = new ArrayList<ReceiptItem>();
+			mNumItems = 0;
+			mIsUpload = false;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public String getEntry(int i) {
 		switch(i) {
 		case 0:
-			return getId();
+			return getStoreName();
 		case 1:
 			return getTime();
 		case 2:
-			return getStoreName();
+			return getId();
 		case 3:
-			return getTotal();
-		case 4:
 			return getTax();
+		case 4:
+			return getTotal();
 		}
 		return null;
 	}
@@ -97,67 +115,75 @@ public class Receipt {
 		return mItems.get(i);
 	}
 	
-	public void addItem(JSONObject item) {
-		ReceiptItem newItem = new ReceiptItem();
+	public void addItems(JSONArray items) {
+		mNumItems = items.length();
+		
 		try {
-			newItem.setItemId(Integer.valueOf((String) item.get(PARAM_ITEM_ID)));
-			newItem.setName(item.get(PARAM_ITEM_NAME).toString());
-			newItem.setQty(Integer.valueOf((String) item.get(PARAM_ITEM_QTY)));
-			newItem.setDiscount(Double.parseDouble(item.getString(PARAM_ITEM_DISCOUNT)));
-			newItem.setPrice(Double.parseDouble(item.getString(PARAM_ITEM_PRICE)));
+			for (int i=0;i<mNumItems;i++) {
+				JSONObject item = (JSONObject) items.get(i);
+				ReceiptItem newItem = new ReceiptItem();
+				newItem.setItemId(Integer.valueOf(item.getString(PARAM_ITEM_ID)));
+				newItem.setName(item.getString(PARAM_ITEM_NAME));
+				newItem.setQty(Integer.valueOf(item.getString(PARAM_ITEM_QTY)));
+				newItem.setDiscount(item.getString(PARAM_ITEM_DISCOUNT));
+				newItem.setPrice(Double.parseDouble(item.getString(PARAM_ITEM_PRICE)));
+				mItems.add(newItem);
+			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		mItems.add(newItem);
-		mNumItems++;
 	}
 	
-	public String getId() {
+	public int getNumItem() {
+		return mNumItems;
+	}
+	
+	private String getId() {
 		return mReceiptId;
 	}
 	
-	public String getStoreName() {
+	private String getStoreName() {
 		return mStoreName;
 	}
 	
-	public String getTime() {
+	private String getTime() {
 		return mTime;
 	}
 	
-	public String getTax() {
+	private String getTax() {
 		return mTax;
 	}
 	
-	public boolean getValid() {
-		return mValid;
+	private boolean getIsUpload() {
+		return mIsUpload;
 	}
 	
-	public String getTotal() {
+	private String getTotal() {
 		return mTotal;
 	}
 	
-	public void setId(String id) {
+	private void setId(String id) {
 		mReceiptId = id; 
 	}
 
-	public void setTime(String time) {
+	private void setTime(String time) {
 		mTime = time; 
 	}
 	
-	public void setStoreName(String sn) {
+	private void setStoreName(String sn) {
 		mStoreName = sn; 
 	}
 	
-	public void setTotal(String tt) {
+	private void setTotal(String tt) {
 		mTotal = tt; 
 	}
 	
-	public void setValid(boolean v) {
-		mValid = v;
+	private void setIsUpload(boolean v) {
+		mIsUpload = v;
 	}
 	
-	public void setTax(String t) {
+	private void setTax(String t) {
 		mTax = t;
 	}
 }

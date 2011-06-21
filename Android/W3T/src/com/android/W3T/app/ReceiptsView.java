@@ -26,8 +26,6 @@
 
 package com.android.W3T.app;
 
-import org.json.*;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +34,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,16 +50,32 @@ public class ReceiptsView extends Activity {
 	private Runnable mReceiptThread = new Runnable() {
 		@Override
 		public void run() {
-			String str = NetworkUtil.attemptGetReceipt(ReceiptsView.RECEIVE_ALL, "new");
-			if (str != null)
-				valueOfJSON(str);
+			// Download latest 7 receipts from database and upload non-uploaded receipts
+			// to the database.
+			String jsonstr = NetworkUtil.attemptGetReceipt(ReceiptsView.RECEIVE_ALL, "new");
+			if (jsonstr != null) {
+				// Set the IsUpload true
+				ReceiptsManager.add(jsonstr);
+			}
 		}
 	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.receipt_view);
+        noReceiptView();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (ReceiptsManager.getNumValid() != 0) {
+			setContentView(R.layout.receipt_view);
+			fillReceiptView(0);
+		}
+//		else {
+//			noReceiptView();
+//		}
 	}
 	
 	@Override
@@ -99,9 +115,11 @@ public class ReceiptsView extends Activity {
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_LEFT:
+			setContentView(R.layout.receipt_view);
 			fillReceiptView(getPrevReceipt(mCurReceipt));
 			break;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
+			setContentView(R.layout.receipt_view);
 			fillReceiptView(getNextReceipt(mCurReceipt));
 			break;
 		case KeyEvent.KEYCODE_BACK:
@@ -131,41 +149,35 @@ public class ReceiptsView extends Activity {
 	}
 	
 	private void fillReceiptView(int num) {
-		for (int i = 0;i < ReceiptsManager.NUM_RECEIPT_ENTRY;i++) {
-			((TextView)findViewById(ReceiptsManager.ReceiptViewElements[i]))
-				.setText(ReceiptsManager.getReceipts().get(num).getEntry(i));
+		if (ReceiptsManager.getNumValid() != 0) {
+			fillBasicInfo(num);
+			fillItemsRows(num);
+			
+		}
+		else {
+			noReceiptView();
 		}
 	}
 	
-	private void valueOfJSON(String str) {
-		/*
-		 * [
-		 * {"basicInfo":
-		 * {"receipt_id":"1","receipt_time":"2011-06-15 09:08:42","tax":"0.1","total_cost":"14","store_name":"McDonalds(NYU)"},
-		 * "items":
-		 * [{"item_id":"10","item_name":"fries-mid","item_qty":"2","item_discount":"1","item_price":"2.25"},...]},
-		 * 
-		 * {"basicInfo...", "items"...}
-		 * ]
-		 */
-		try {
-			JSONArray receiptsArray = new JSONArray(str);
-			int numReceipt = receiptsArray.length();
-			
-			JSONObject basicInfo[] = new JSONObject[numReceipt];
-			JSONArray items[] = new JSONArray[numReceipt];
-			for (int i=0;i < numReceipt;i++) {
-				JSONObject tmp = (JSONObject) receiptsArray.get(i);
-				basicInfo[i] = tmp.getJSONObject("basicInfo");
-				items[i] = tmp.getJSONArray("items");
-				System.out.println(basicInfo[i].toString());
-				System.out.println(items[i].toString());
-			}
-			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	private void fillBasicInfo(int num) {
+		// Set all basicInfo entries: store name, id, time, tax, total .
+		for (int i = 0;i < ReceiptsManager.NUM_RECEIPT_ENTRY;i++) {
+			((TextView)findViewById(ReceiptsManager.ReceiptViewElements[i]))
+				.setText(ReceiptsManager.getReceipt(num).getEntry(i));
 		}
-
+	}
+	
+	private void fillItemsRows(int num) {
+		// Set all item rows in the Items Table: id, name, qty, price. (no discount for now)
+		int numItems = ReceiptsManager.getReceipt(num).getNumItem();
+		TableLayout t = (TableLayout) findViewById(R.id.items_table);
+		for (int i=0;i<numItems;i++) {
+			TableRow row1 = new TableRow(this); 
+		}
+		
+	}
+	
+	private void noReceiptView() {
+		setContentView(R.layout.empty_receipt_view);
 	}
 }

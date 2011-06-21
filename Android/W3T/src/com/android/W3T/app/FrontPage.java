@@ -91,7 +91,6 @@ public class FrontPage extends Activity {
         mFrontPage = (LinearLayout) findViewById(R.id.front_page);
         mUname = (TextView) findViewById(R.id.Username);
         mFractalImg = (ImageView) findViewById(R.id.FractalFern);
-        
 	}
 	
 	@Override
