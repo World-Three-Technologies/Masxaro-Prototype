@@ -131,9 +131,9 @@ public class ReceiptsView extends Activity {
 	}
 	
 	private void fillReceiptView(int num) {
-		for (int i = 0;i < ReceiptsManager.NUM_RECEIPT_ITEM;i++) {
+		for (int i = 0;i < ReceiptsManager.NUM_RECEIPT_ENTRY;i++) {
 			((TextView)findViewById(ReceiptsManager.ReceiptViewElements[i]))
-				.setText(ReceiptsManager.getReceipts().get(num).getItem(i));
+				.setText(ReceiptsManager.getReceipts().get(num).getEntry(i));
 		}
 	}
 	

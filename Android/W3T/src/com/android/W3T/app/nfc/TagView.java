@@ -62,7 +62,7 @@ public class TagView extends Activity {
 			public void onClick(View v) {
 				Receipt r = new Receipt();
 				r.setId(((TextView)findViewById(R.id.tag_id_txt)).getText().toString());
-				r.setDate(((TextView)findViewById(R.id.tag_date_txt)).getText().toString());
+				r.setTime(((TextView)findViewById(R.id.tag_date_txt)).getText().toString());
 				r.setTotal(((TextView)findViewById(R.id.tag_total_cost_txt)).getText().toString());
 				r.setStoreName(((TextView)findViewById(R.id.tag_store_name_txt)).getText().toString());
 				r.setValid(true);

@@ -33,7 +33,8 @@ import com.android.W3T.app.R;
 
 public class ReceiptsManager {
 	public final static int NUM_RECEIPT = 7;
-	public final static int NUM_RECEIPT_ITEM = 4;
+	public final static int NUM_RECEIPT_ENTRY = 5;
+	public final static int NUM_ITEM_ENTRY = 5;
 	
 	public final static int[] ReceiptViewElements = {
 		R.id.id_txt, R.id.date_txt, R.id.store_name_txt, R.id.total_cost_txt
@@ -56,7 +57,7 @@ public class ReceiptsManager {
 	private static void addFakeReceipts() {
 		for (int i=0;i<3;i++) { 
 			FakeReceipt.get(i).setId(Receipt.sFakeReceiptsInfo[i][0]);
-			FakeReceipt.get(i).setDate(Receipt.sFakeReceiptsInfo[i][1]);
+			FakeReceipt.get(i).setTime(Receipt.sFakeReceiptsInfo[i][1]);
 			FakeReceipt.get(i).setStoreName(Receipt.sFakeReceiptsInfo[i][2]);
 			FakeReceipt.get(i).setTotal(Receipt.sFakeReceiptsInfo[i][3]);
 			FakeReceipt.get(i).setValid(true);
@@ -77,8 +78,8 @@ public class ReceiptsManager {
 	public static void addNewReceipt(Receipt r) {
 		FakeReceipt.add(sNumValidReceipt, r);
 		sNumValidReceipt++;
-//		System.out.println("Any un-delivered receipt?");
+//	TODO:	System.out.println("Any un-delivered receipt?");
 //		
-//		System.out.println("Add a new receipt");
+//	TODO:	System.out.println("Add a new receipt");
 	}
 }
