@@ -251,13 +251,15 @@ public class FrontPage extends Activity {
 					mLogProgress.setCancelable(true);
 					mLogProgress.show();
 				}
-				else if (!nametext) {
-					Toast.makeText(FrontPage.this, "Please input user name", Toast.LENGTH_SHORT).show();
-					mLoginDialog.show();
-				}
-				else if (!pwdtext) {
-					Toast.makeText(FrontPage.this, "Please input password", Toast.LENGTH_SHORT).show();
-					mLoginDialog.show();
+				else {
+				    if (!nametext) {
+						Toast.makeText(FrontPage.this, "Please input user name", Toast.LENGTH_SHORT).show();
+						mLoginDialog.show();
+				    }
+				    if (!pwdtext) {
+						Toast.makeText(FrontPage.this, "Please input password", Toast.LENGTH_SHORT).show();
+						mLoginDialog.show();
+				    }
 				}
             }
         });
@@ -307,8 +309,6 @@ public class FrontPage extends Activity {
 	//--------------------- Log Thread ----------------------//
 	private class LoginTask extends AsyncTask<Void, Void, Void> {
 		private boolean isSuccessful = false; 
-	    /** The system calls this to perform work in a worker thread and
-	      * delivers it the parameters given to AsyncTask.execute() */
 		@Override
 		protected Void doInBackground(Void... params) {
 			isSuccessful = NetworkUtil.attemptLogin(mUnameEdit.getText().toString(),
@@ -316,8 +316,6 @@ public class FrontPage extends Activity {
 			return null;
 		}
 	    
-	    /** The system calls this to perform work in the UI thread and delivers
-	      * the result from doInBackground() */
 	    protected void onPostExecute(Void result) {
 	    	String username = mUnameEdit.getText().toString();
 	    	mLogProgress.dismiss();
@@ -332,4 +330,5 @@ public class FrontPage extends Activity {
 	    	}
 	    }
 	}
+
 }

@@ -26,11 +26,12 @@
 
 package com.android.W3T.app;
 
+import org.json.*;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,38 +39,22 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
 
 public class ReceiptsView extends Activity {
+	public static final String RECEIVE_ALL = "user_get_all_receipt";
+	
 	private int mCurReceipt = 0;
-//	private Handler mUpdateHandler = new Handler() {  
-//	    public void handleMessage(Message msg) {
-//	    	super.handleMessage(msg);
-//	    	fillReceiptView(msg.getData().getInt("num"));
-//	    }
-//	};
-//	private Runnable mPrevUpdate = new Runnable() {
-////		@Override
-//		public void run() {
-//			int pos = getPrevReceipt(mCurReceipt);
-//			Bundle data = new Bundle();
-//			data.putInt("num", pos);
-//			Message msg = new Message();
-//			msg.setData(data);
-//			mUpdateHandler.sendMessage(msg);
-//		}
-//	};
-//	private Runnable mNextUpdate = new Runnable() {
-//		@Override
-//		public void run() {
-//			int pos = getNextReceipt(mCurReceipt);
-//			Bundle data = new Bundle();
-//			data.putInt("num", pos);
-//			Message msg = new Message();
-//			msg.setData(data);
-//			mUpdateHandler.sendMessage(msg);
-//		}
-//	};
+	private Handler mUpdateHandler = new Handler();
+	private Runnable mReceiptThread = new Runnable() {
+		@Override
+		public void run() {
+			String str = NetworkUtil.attemptGetReceipt(ReceiptsView.RECEIVE_ALL, "new");
+			if (str != null)
+				valueOfJSON(str);
+		}
+	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +80,7 @@ public class ReceiptsView extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.refresh_opt:
+			mUpdateHandler.post(mReceiptThread);
 			Toast.makeText(this, "Refresh the receipt list!", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.sw_receipt_opt:
@@ -113,11 +99,9 @@ public class ReceiptsView extends Activity {
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_LEFT:
-//			new Thread(mPrevUpdate).start();
 			fillReceiptView(getPrevReceipt(mCurReceipt));
 			break;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
-//			new Thread(mNextUpdate).start();
 			fillReceiptView(getNextReceipt(mCurReceipt));
 			break;
 		case KeyEvent.KEYCODE_BACK:
@@ -138,14 +122,11 @@ public class ReceiptsView extends Activity {
 	
 	private int getPrevReceipt(int num) {
 		mCurReceipt = (num+ReceiptsManager.getNumValid()-1)%ReceiptsManager.getNumValid();
-//		System.out.println(ReceiptsManager.getNumValid());
-//		System.out.println(mCurReceipt);
 		return (num+ReceiptsManager.getNumValid()-1)%ReceiptsManager.getNumValid();
 	}
 	
 	private int getNextReceipt(int num) {
 		mCurReceipt = (num+1)%ReceiptsManager.getNumValid();
-//		System.out.println(mCurReceipt);
 		return (num+1)%ReceiptsManager.getNumValid();
 	}
 	
@@ -154,5 +135,37 @@ public class ReceiptsView extends Activity {
 			((TextView)findViewById(ReceiptsManager.ReceiptViewElements[i]))
 				.setText(ReceiptsManager.getReceipts().get(num).getItem(i));
 		}
+	}
+	
+	private void valueOfJSON(String str) {
+		/*
+		 * [
+		 * {"basicInfo":
+		 * {"receipt_id":"1","receipt_time":"2011-06-15 09:08:42","tax":"0.1","total_cost":"14","store_name":"McDonalds(NYU)"},
+		 * "items":
+		 * [{"item_id":"10","item_name":"fries-mid","item_qty":"2","item_discount":"1","item_price":"2.25"},...]},
+		 * 
+		 * {"basicInfo...", "items"...}
+		 * ]
+		 */
+		try {
+			JSONArray receiptsArray = new JSONArray(str);
+			int numReceipt = receiptsArray.length();
+			
+			JSONObject basicInfo[] = new JSONObject[numReceipt];
+			JSONArray items[] = new JSONArray[numReceipt];
+			for (int i=0;i < numReceipt;i++) {
+				JSONObject tmp = (JSONObject) receiptsArray.get(i);
+				basicInfo[i] = tmp.getJSONObject("basicInfo");
+				items[i] = tmp.getJSONArray("items");
+				System.out.println(basicInfo[i].toString());
+				System.out.println(items[i].toString());
+			}
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }

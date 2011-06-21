@@ -45,16 +45,21 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.*;
 
+import com.android.W3T.app.ReceiptsView;
 import com.android.W3T.app.user.UserProfile;
 
 public class NetworkUtil {
 	public static final String BASE_URL = "http://sweethomeforus.com/php";
 	public static final String LOGIN_URL = BASE_URL + "/login.php";
-	public static final String DELIVER_URL = null;
-	public static final String RECEIVE_URL = null;
+	public static final String RECEIPT_OP_URL = BASE_URL + "/receiptOperation.php";
+	
+	public static final String METHOD_RECEIVE_ALL = ReceiptsView.RECEIVE_ALL; 
+	
+	private static HttpClient mClient = new DefaultHttpClient();
 	
 	public static boolean attemptLogin(String uname, String pwd) {   
-        HttpClient client = new DefaultHttpClient();   
+		// Here we may want to check the network status.
+		checkNetwork();
 
         HttpPost request;
         
@@ -68,7 +73,7 @@ public class NetworkUtil {
             request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             // Execute HTTP Post Request
-            HttpResponse response = client.execute(request);
+            HttpResponse response = mClient.execute(request);
             
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             	String s = EntityUtils.toString(response.getEntity());
@@ -96,4 +101,41 @@ public class NetworkUtil {
 		return false;
     }
 
+	
+	// return null means something wrong.
+	public static String attemptGetReceipt(String method, String uname) {
+		// Here we may want to check the network status.
+		checkNetwork();
+		if (method.equals(METHOD_RECEIVE_ALL)) {
+			
+			HttpPost request;
+	        
+	        try {
+	        	request = new HttpPost(new URI(RECEIPT_OP_URL));
+	            // Add your data
+	            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+	            nameValuePairs.add(new BasicNameValuePair("opcode", "user_get_all_receipt"));
+	            nameValuePairs.add(new BasicNameValuePair("acc", uname));
+	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+	            // Execute HTTP Post Request
+	            HttpResponse response = mClient.execute(request);
+	            
+	            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {	            	
+	            	return EntityUtils.toString(response.getEntity());
+	            }
+	            return null;
+	        }
+	        catch (Exception e) {
+	        	
+	        }
+			
+		}
+		
+		return null;
+	}
+	
+	private static boolean checkNetwork() {
+		return true;
+	}
 }
