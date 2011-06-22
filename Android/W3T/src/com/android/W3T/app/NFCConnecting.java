@@ -75,11 +75,12 @@ public class NfcConnecting extends Activity {
 //        mAdapter.enableForegroundDispatch(new TagView(), mPendingIntent, mFilters, null);
 //    }
 //	
-//	@Override
-//    public void onPause() {
-//        super.onPause();
+	@Override
+    public void onPause() {
+        super.onPause();
 //        mAdapter.disableForegroundDispatch(this);
-//    }
+        finish();
+    }
 	
 	@Override
 	// Deal with any key press event

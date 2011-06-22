@@ -25,6 +25,8 @@
 
 package com.android.W3T.app.nfc;
 
+import com.android.W3T.app.FrontPage;
+import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
 import com.android.W3T.app.ReceiptsView;
 import com.android.W3T.app.rmanager.*;
@@ -57,8 +59,10 @@ public class TagView extends Activity {
         mRejectBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				final Intent nfc_intent = new Intent(TagView.this, NfcConnecting.class);
+				nfc_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+				startActivity(nfc_intent);
 				finish();
-			
 			}
         });
         mConfirmBtn = (Button)findViewById(R.id.receipt_confirm_btn);
