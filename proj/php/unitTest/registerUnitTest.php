@@ -1,7 +1,6 @@
 <?php
-
 /*
- *  EmailCtrl.class.php -- email control, email receive & send 
+ *  registerUnitTest.php -- unit test for register  
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,25 +20,15 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
- * 
+ *  
  */
 
-class EmailCtrl extends Ctrl{
-	
-	function __construct(){
-		parent::__construct();
-	}
-	
-	public function mail($to, $subject, $message, $addHeaders = ""){
-		$headers  = 'MIME-Version: 1.0' . "\r\n";
-		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-		// Additional headers
-		$headers .= 'From: Masxaro <masxaro-notice@masxaro.com>' . "\r\n";
-		$headers .= $addHeaders;
-		
-		return mail($to, $subject, $message, $headers);
-	}
-	
-}
+include_once '../../config.php';
+
+$path = "http://localhost/w3t/proj/php/register.php?";
+
+$path .= "userAccount=testNew&firstName=lala&pwd=123&email=yangcongknight@gmail.com&type=user";
+
+Tool::redirect($path);
 
 ?>

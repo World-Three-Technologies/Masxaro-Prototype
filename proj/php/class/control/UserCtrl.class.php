@@ -38,7 +38,7 @@ class UserCtrl extends Ctrl{
 	 * 
 	 * @return boolean
 	 */
-	public function insertUser($info){
+	public function insert($info){
 		
 		$info['pwd'] = md5($info['pwd']);
 		

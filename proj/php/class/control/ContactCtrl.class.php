@@ -33,37 +33,6 @@ class ContactCtrl extends Ctrl{
 	
 	/**
 	 * 
-	 * 
-	 * @param string $acc store or user account
-	 * 
-	 * @return boolean
-	 * 
-	 * @desc
-	 * 
-	 * check whether the certain contact is available, true: available, false: not available
-	 */
-	public function chkContact($value){
-		
-		$sql = "
-			SELECT 
-				`value`
-			FROM 
-				`contact`
-			WHERE
-				`value` = '$value'
-		";
-		
-		$this->db->select($sql);
-		
-		if($this->db->numRows() > 0){
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * 
 	 * @param string $type
 	 * 
 	 * @return boolean
@@ -163,7 +132,13 @@ class ContactCtrl extends Ctrl{
 		
 		for($i = 0; $i < $n; $i ++){
 			
-			if(!$this->chkContact($info[$i]['value'])){
+			$acc = isset($info[$i]['user_account']) ? $info[$i]['user_account'] : $info[$i]['store_account'];
+			
+			$masxaroMailChkPreg = "(^$acc)";
+			
+			//only one masxaro mail box is allowed, $acc@masxaro.com
+			if(preg_match($this->regex, $info[$i]['value']) 
+			   && !preg_match($masxaroMailChkPreg, $info[$i]['value'])){
 				return false;
 			}
 			
@@ -237,6 +212,34 @@ class ContactCtrl extends Ctrl{
 		else{
 			return true;
 		}
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * 
+	 * delete contacts of a certain account(user/store)
+	 */
+	public function deleteAccContact($acc){
+		$sql = "
+			DELETE
+			FROM
+				`contact`
+			WHERE
+				`user_account`='$acc'
+			OR
+				`store_account`='$acc'
+		";
+		
+		if($this->db->delete($sql) <= 0){
+			return false;
+		}
+		return true;
 	}
 	
 	/**

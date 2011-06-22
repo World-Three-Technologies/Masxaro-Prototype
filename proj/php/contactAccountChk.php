@@ -1,6 +1,6 @@
 <?php
 /*
- *  emailOperation.php --  email receive & send 
+ *  contactAccountChk.php -- check account and contact information for user/store registration 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -25,12 +25,22 @@
 
 include_once '../config.php';
 
-$email = new EmailCtrl();
+$acc = $_POST['acc'];
 
-switch($_POST['op']){
-	case 'send':
-		$email->mail($_POST['to'], $_POST['subject'], $_POST['content']);
-		break;		
+$contact = $_POST['contact'];
+
+$ctrl = new Ctrl();
+
+$result = true;
+
+if(isset($acc) && !$ctrl->chkAccount($acc)){
+	$result = false;
 }
+
+if(isset($contact) && !$ctrl->chkContact($contact)){
+	$result = false;
+}
+
+echo $result;
 
 ?>

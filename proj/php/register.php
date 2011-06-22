@@ -20,117 +20,139 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
+ *  
+ *  post type indicating whether user or store register
+ *  
+ *  code is from verification email. if code is set, then verify the registration.
  * 
  */
 
 include_once '../config.php';
 
-$registerType = $_POST['type']; //user / store
+$registerType = $_REQUEST['type']; //user / store
 
-//$registerType = 'user';
+$code = $_REQUEST['code'];
 
-switch($registerType){
-	case 'user':
-		
-		$param = array(
-					'user_account'=>$_POST['userAccount'], 
-					'first_name'=>$_POST['firstName'],
-					'age_range_id'=>$_POST['ageRangeId'],
-					'ethnicity'=>$_POST['ethnicity'],
-					'pwd'=>$_POST['pwd'],
-					'opt_in'=>$_POST['optIn']
-		);
+$personEmail = "";
 
-//		$param = array(
-//					'user_account'=>'newww', 
-//					'first_name'=>'W3tTest',
-//					'age_range_id'=>'null',
-//					'ethnicity'=>null,
-//					'pwd'=>'123',
-//					'opt_in'=>'null'
-//		);
-		
-		$ctrl = new UserCtrl();
-		
-		if(!$ctrl->chkAccount($param['user_account'])){
-			echo false;
-			die();
-		}
-		
-		if($ctrl->insertUser($param)){
-			$email = $param['user_account'].'@masxaro.com';
-			
-			$info = array();
-			
-			array_push($info, array(
-								'user_account'=>$param['user_account'],
-								'contact_type'=>'email',
-								'value'=>$email)
-			);
-			
-			$ctrlCon = new ContactCtrl();
-			
-			if(!$ctrlCon->insertContact($info)){
-				//rollback
-				$ctrl->realDeleteUser($param['user_account']);
-				echo false;
-			}
-			else{
-				echo true;
-			}
-		}
-		
-		else{
-			echo false;
-		}
-		
-		break;
-	
-	case 'store':
-		
-		$param = array( 
-					'store_name'=>$_POST['storeName'],
-					'parent_store_account'=>$_POST['parentStoreAcc'],
-					'store_type'=>$_POST['storeType'],
-					'pwd'=>$_POST['pwd']
-		);
-		
-//		$param = array( 
-//					'store_account'=>'Mc_NYU',
-//					'store_name'=>'McDonalds(NYU)',
-//					'parent_store_account'=>null,
-//					'store_type'=>'normal',
-//					'pwd'=>'123'
-//		);
-		
-		$ctrl = new StoreCtrl();
-		
-		
-		
-		if($ctrl->insertStore($param)){
-			$email = $param['store_account'].'@masxaro.com';
-			
-			$info = array();
-			
-			array_push($info, array(
-								'store_account'=>$param['store_account'],
-								'contact_type'=>'email',
-								'value'=>$email)
-			);
-			
-			$ctrlCon = new ContactCtrl();
-			
-			if(!$ctrlCon->insertContact($info)){
-				//rollback
-				$ctrl->deleteStore($param['store_account']);
-				echo false;
-			}
-			else{
-				echo true;
-			}
-		}
-		
-		break;
+$mailSub = "Please verify your registration on Masxaro.com";
+
+$url = "http://".$_SERVER ['HTTP_HOST'].$_SERVER['PHP_SELF'];
+
+$ctrl = null;
+
+$accType = "";
+
+if(isset($code)){
+	$info = Tool::decodeVerifyCode($code);
+	$ctrl = new UserCtrl();
+	echo $ctrl->updateUserInfo($info[0], array('verified'=>true));
+	die();
 }
 
+switch($registerType){
+	
+	case 'user':
+		$param = array(
+					'user_account'=>$_REQUEST['userAccount'], 
+					'first_name'=>$_REQUEST['firstName'],
+					'age_range_id'=>$_REQUEST['ageRangeId'],
+					'ethnicity'=>$_REQUEST['ethnicity'],
+					'pwd'=>$_REQUEST['pwd'],
+					'opt_in'=>$_REQUEST['optIn']
+		);
+		
+		$accType = 'user_account';
+		$ctrl = new UserCtrl();
+		break;
+		
+		
+	case 'store':
+		$param = array( 
+					'store_account'=>$_REQUEST['storeAccount'],
+					'store_name'=>$_REQUEST['storeName'],
+					'parent_store_account'=>$_REQUEST['parentStoreAcc'],
+					'store_type'=>$_REQUEST['storeType'],
+					'pwd'=>$_REQUEST['pwd']
+		);
+		
+		$acc = 'store_account';
+		$ctrl = new StoreCtrl();
+		break;
+		
+	default:
+		echo false;
+		die();
+		
+}
+
+$personEmail = $_REQUEST['email'];
+
+if($ctrl->insert($param)){
+
+	$contacts = array();
+	
+	//masxaro email
+	$email = $param[$accType].'@masxaro.com';
+	array_push($contacts, array(
+						$accType=>$param[$accType],
+						'contact_type'=>'email',
+						'value'=>$email)
+	);
+				
+	//personal email
+	$email = $personEmail;
+	array_push($contacts, array(
+						$accType=>$param[$accType],
+			'contact_type'=>'email',
+			'value'=>$email)
+	);
+	
+	$ctrlCon = new ContactCtrl();
+	
+	if(!$ctrlCon->insertContact($contacts)){
+		//rollback
+		$ctrlCon->deleteAccContact($param[$accType]);
+		switch($registerType){
+			case 'user':
+				$ctrl->realDeleteUser($param[$accType]);
+				break;
+			case 'store':
+				$ctrl->delete($param[$accType]);
+		}
+		echo false;
+	}
+	else{
+		echo true;
+	}
+	
+	$codeParam = array(
+		$param[$accType],
+		$personEmail
+	); 
+	
+	$code = Tool::verifyCodeGen($codeParam);
+	
+	$code = $url."?code=$code";
+	
+	$email = new EmailCtrl();
+	
+	$mailContent = "
+				<html>
+				<head>
+				  <title>Masxaro registration verification</title>\n
+				</head>
+				<body>
+				  <p>Please click following link to verify your registration!</p>
+				  $code
+				</body>
+				</html>
+	";
+	
+	$email->mail($personEmail, $mailSub, $mailContent);
+}
+
+else{
+	echo false;
+}
 ?>

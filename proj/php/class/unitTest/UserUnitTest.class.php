@@ -84,4 +84,11 @@ class UserUnitTest extends UnitTest{
 		$this->assertEquals($value, $info);
 	}
 	
+	public function tmpRegister_Test(){
+		$info = array(
+						'user_account'=>'utest',
+						'pwd'=>md5('123')
+					);
+	}
+	
 }

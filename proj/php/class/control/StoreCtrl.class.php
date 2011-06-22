@@ -37,7 +37,7 @@ class StoreCtrl extends Ctrl{
 	 * @desc
 	 * insert a new store
 	 */
-	public function insertStore($info){
+	public function insert($info){
 		
 		$info['pwd'] = md5($info['pwd']);
 		
@@ -76,7 +76,7 @@ class StoreCtrl extends Ctrl{
 	 * find store
 	 * 
 	 */
-	public function findStore($acc, $pwd){
+	public function find($acc, $pwd){
 		if(!Tool::securityChk($acc)){
 			return false;
 		}
@@ -114,7 +114,7 @@ class StoreCtrl extends Ctrl{
 	 * update store info
 	 * 
 	 */
-	public function updateStoreInfo($storeAcc, $info){
+	public function update($storeAcc, $info){
 		$info = Tool::infoArray2SQL($info);
 		
 		if(!Tool::securityChk($info)){
@@ -148,7 +148,7 @@ class StoreCtrl extends Ctrl{
 	 * 
 	 * delete a store
 	 */
-	public function deleteStore($storeAcc){
+	public function delete($storeAcc){
 		
 		$sql = "
 			DELETE
