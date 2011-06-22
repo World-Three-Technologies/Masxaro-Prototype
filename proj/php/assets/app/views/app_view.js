@@ -26,9 +26,12 @@ window.AppView = Backbone.View.extend({
     this.setEnd();
     _.each(this.model.models.slice(0,this.end),this.renderReceipt);
     this.updateStatus();
+
+    this.$("#ajax-loader").hide();
     if(this.end >= this.model.length ){
       this.$(".more").hide();
     }
+    return this;
   },
 
   renderMore:function(){

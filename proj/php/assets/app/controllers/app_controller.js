@@ -1,14 +1,15 @@
 var AppController = Backbone.Controller.extend({
 
   initialize: function(){
-    var user = new User({
+    var user = this.user = new User({
       account:readCookie("user_acc"),
       flash:"You have 3 new receipts."
     });
 
-    var receipts = new Receipts();
+    var receipts = this.receipts = new Receipts();
     receipts.account = user.get("account");
     window.appView = new AppView({model:receipts });
+    window.userView = new UserView({model:user});
   },
 
   routes: {
@@ -16,7 +17,7 @@ var AppController = Backbone.Controller.extend({
   },
 
   index: function(){
-    appView.model.fetch();
+    this.receipts.fetch();
   }
 
 });

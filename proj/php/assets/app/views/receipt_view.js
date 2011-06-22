@@ -9,9 +9,9 @@ var ReceiptView = Backbone.View.extend({
   fullTemplate:_.template($('#receipt-full-template').html() || "<div/>"),
 
   initialize:function(){
-    _.bindAll(this,'render','showReceipt','showReceiptZoom');
+    _.bindAll(this,'render','showReceipt','getItemText');
 
-    this.model.bind("change",this.render);
+    this.model.bind('change',this.render);
   },
 
   events:{
@@ -22,20 +22,9 @@ var ReceiptView = Backbone.View.extend({
     var view = $(this.el);
     view.html(this.template(this.model.toJSON()));
 
-    var text = _.reduce(this.model.get("items"),function(memo,item){
-      return memo + item.item_name + " x" + item.item_qty+" ,";
-    },"");
-
+    var text = this.getItemText(this.model.get("items"));
     view.find(".items").html(text);
-    window.lastOpen = this;
-    if(this.model.get("image")===true){
-      this.bindFancybox({content:"<img src='assets/img/fake_receipt.jpg'>"});
-    }
     return this;
-  },
-
-  bindFancybox:function(model){
-    $(this.el).fancybox(model);
   },
 
   showReceipt:function(){
@@ -52,7 +41,9 @@ var ReceiptView = Backbone.View.extend({
     }
   },
 
-  showReceiptZoom:function(){
-      
+  getItemText:function(items){
+    return _.reduce(items,function(memo,item){
+      return memo + item.item_name + ",";
+    },"").slice(0,-1);
   }
 });

@@ -1,9 +1,14 @@
 var UserView = Backbone.View.extend({
 
-  el:$("#user"),
-
   initialize:function(){
-     $("#username").text(this.model.get("account")); 
-     this.$("#user-flash").text(this.model.get("flash")); 
+    _.bindAll(this,"render");
+    this.el = $("#user");
+    this.render();
+  },
+
+  render:function(){
+    $("#username").text(this.model.get("account")); 
+    this.$("#user-flash").text(this.model.get("flash")); 
+    return this;
   }
 });
