@@ -33,43 +33,6 @@ class ContactCtrl extends Ctrl{
 	
 	/**
 	 * 
-	 * 
-	 * @param string $acc store or user account
-	 * 
-	 * @return boolean
-	 * 
-	 * @desc
-	 * 
-	 * check whether the certain account is available, true: available, false: not available
-	 */
-	public function chkAccMail($acc, $value){
-		
-		if(!preg_match($this->regex, $value)){
-			return true;
-		}
-		
-		$sql = "
-			SELECT `value`
-			FROM `contact`, `user`, `store`
-			WHERE
-			`value` regexp '$this->regex'
-			AND
-			`user_account`='$acc'
-			OR
-			`store_account`='$acc'
-		";
-		
-		$this->db->select($sql);
-		
-		if($this->db->numRows() > 0){
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * 
 	 * @param string $type
 	 * 
 	 * @return boolean
@@ -84,9 +47,11 @@ class ContactCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			INSERT INTO `contact_type`
+			INSERT 
+			INTO 
+				`contact_type`
 			SET
-			`contact_type`='$type'
+				`contact_type`='$type'
 		";
 		
 		if($this->db->insert($sql) < 0){
@@ -96,8 +61,28 @@ class ContactCtrl extends Ctrl{
 		return true;
 	}
 	
+	
+	/**
+	 * 
+	 * 
+	 * @param string $old
+	 * 
+	 * @param string $new
+	 */
 	public function modifyContactType($old, $new){
+		$sql = "
+			UPDATE
+				`contact_type`
+			SET
+				`contact_type`='$new'
+			WHERE
+				`contact_type`='$old'
+		";
 		
+		if($this->db->update($sql) <= 0){
+			return false;
+		}
+		return true;
 	}
 	
 	
@@ -114,9 +99,10 @@ class ContactCtrl extends Ctrl{
 	public function deleteContactType($type){
 		$sql = "
 			DELETE
-			FROM `contact_type`
+			FROM 
+				`contact_type`
 			WHERE
-			`contact_type`='$type'
+				`contact_type`='$type'
 		";
 		
 		if($this->db->delete($sql) <= 0){
@@ -144,11 +130,15 @@ class ContactCtrl extends Ctrl{
 		
 		$inserted = array(); //record inserted contact value within current process
 		
-		//$regex = "(.*@masxaro.com)";
-		
 		for($i = 0; $i < $n; $i ++){
 			
-			if(!$this->chkAccMail($info[$i]['user_account'], $info[$i]['value'])){
+			$acc = isset($info[$i]['user_account']) ? $info[$i]['user_account'] : $info[$i]['store_account'];
+			
+			$masxaroMailChkPreg = "(^$acc)";
+			
+			//only one masxaro mail box is allowed, $acc@masxaro.com
+			if(preg_match($this->regex, $info[$i]['value']) 
+			   && !preg_match($masxaroMailChkPreg, $info[$i]['value'])){
 				return false;
 			}
 			
@@ -164,9 +154,11 @@ class ContactCtrl extends Ctrl{
 			}
 			
 			$sql = "
-				INSERT INTO `contact`
+				INSERT 
+				INTO 
+					`contact`
 				SET
-				$cur
+					$cur
 			";
 			
 			if($this->db->insert($sql) < 0){
@@ -190,19 +182,28 @@ class ContactCtrl extends Ctrl{
 	 * 
 	 * @param string $value the value of the contact that needs to be deleted
 	 * 
+	 * @param boolean $admin
+	 * 
 	 * @return boolean
 	 * 
+	 * @desc
+	 * 
+	 * delete a certain contact, if $admin = true, then @masxaro mail box can be deleted
+	 * 
+	 *  if $admin = false, then @masxaro mail box cannot be deleted
+	 * 
 	 */
-	public function deleteContact($value){
+	public function deleteContact($value, $admin = false){
 		
-		if(preg_match($this->regex, $value)){
+		if(!$admin && preg_match($this->regex, $value)){
 			return false;
 		}
 		
 		$sql = "DELETE
-				FROM `contact`
+				FROM 
+					`contact`
 				WHERE
-				`value`='$value'		
+					`value`='$value'		
 		";
 		
 		if($this->db->delete($sql) <= 0){
@@ -211,6 +212,34 @@ class ContactCtrl extends Ctrl{
 		else{
 			return true;
 		}
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * 
+	 * delete contacts of a certain account(user/store)
+	 */
+	public function deleteAccContact($acc){
+		$sql = "
+			DELETE
+			FROM
+				`contact`
+			WHERE
+				`user_account`='$acc'
+			OR
+				`store_account`='$acc'
+		";
+		
+		if($this->db->delete($sql) <= 0){
+			return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -226,9 +255,8 @@ class ContactCtrl extends Ctrl{
 	 * update contact
 	 */
 	public function updateContact($curValue, $newInfo){
-		$regex = "(.*@masxaro.com)";
 		
-		if(preg_match($regex, $newInfo['value'])){
+		if(preg_match($this->regex, $newInfo['value'])){
 			return false;
 		}
 		
@@ -239,11 +267,12 @@ class ContactCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `contact`
+			UPDATE 
+				`contact`
 			SET
-			$newInfo
+				$newInfo
 			WHERE
-			`value`='$curValue'
+				`value`='$curValue'
 		";
 			
 		if($this->db->update($sql) <= 0){
@@ -271,15 +300,18 @@ class ContactCtrl extends Ctrl{
 		$who .= '_account';
 		
 		$sql = "
-			SELECT *
-			FROM `contact`
+			SELECT 
+				*
+			FROM 
+				`contact`
 			WHERE
-			`$who`='$acc'
+				`$who`='$acc'
 		";
 		
 		$this->db->select($sql);
 		
-		return $this->db->fetchObject();
+		return $this->db->fetchAssoc();
 	}
+	
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 /*
- *  userProfile.php -- get user profile 
+ * ReceiptEntity.class.php -- Receipt entity 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -24,30 +24,19 @@
  *  
  */
 
-include_once '../config.php';
+class ReceiptEntity{
+//	public $basicInfo = array();
 
-$opcode = $_POST['opcode'];
-
-$acc = $_POST['acc'];
-
-//$acc = 'new';
-
-$ctrl = new UserCtrl();
-
-switch(opcode){
-	case 'get_profile':
-		echo json_encode($ctrl->getUserProfile($acc));
-		break;
+	public $receipt_id = NULL;
+	public $store_account = NULL;
+	public $store_name = NULL;
+	public $user_account = NULL;
+	public $receipt_time = NULL;
+	public $tax = 1;
+	public $total_cost = 0;
+	public $img = NULL;
+	public $deleted = 0;
 	
-	case 'update_profile':
-		echo $ctrl->updateUserInfo($acc, $_POST['info']);
-		break;
-		
-	default:
-		echo false;
-		break;
+	public $items = array();
 }
-
-
-
 ?>

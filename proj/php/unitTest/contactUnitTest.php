@@ -1,6 +1,6 @@
 <?php
 /*
- * Dbconfig.php -- DB configuration 
+ *  contactUnitTest.php -- unit test for contact control class  
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -20,22 +20,21 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
- * 
- *  Database configuration file
- *  configure database connection data
+ *  
  */
 
+include_once '../../config.php';
 
-return array(
-//	'host' => '46.51.255.119', 
-//    'user' => 'w3t',
-//	'pwd' => 'w3t',
-//	'dbName' => 'w3tdb'
-//	
-	'host' => 'localhost', 
-    'user' => 'root',
-	'pwd' => 'root',
-	'dbName' => 'w3tdb'
-);
+$test = new ContactUnitTest();
+
+$test->insertContact_Test('contact_test');
+
+$test->chkContact_Test('contact_test@masxaro.com', false);
+
+$test->chkContact_Test('default@gmail.com', true);
+
+$test->deleteContact_User_Test();
+
+$test->deleteContact_Admin_Test('contact_test@masxaro.com');
 
 ?>
