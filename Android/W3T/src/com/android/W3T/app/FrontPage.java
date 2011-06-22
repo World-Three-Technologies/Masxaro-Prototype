@@ -33,8 +33,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,6 +53,7 @@ import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.user.*;
 
 public class FrontPage extends Activity {
+	public static final String TAG = "FrontPageActivity";
 	// Indicators for every dialog view.
 	public static final int DIALOG_LOGIN = 1;
 	public static final int DIALOG_LOGOUT = 2;
@@ -85,9 +86,11 @@ public class FrontPage extends Activity {
 	@Override
 	// Create the activity
 	public void onCreate(Bundle savedInstanceState) {
+		Log.i(TAG, "onCreate(" + savedInstanceState + ")");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.front_page);
         
+        Log.i(TAG, "Get FrontPage elements");
         mFrontPage = (LinearLayout) findViewById(R.id.front_page);
         mUname = (TextView) findViewById(R.id.Username);
         mFractalImg = (ImageView) findViewById(R.id.FractalFern);
@@ -96,6 +99,7 @@ public class FrontPage extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		Log.i(TAG, "onResume" + "Set FrontPage elements");
 		setFrontPage(UserProfile.getUsername(), 0);
 	}
 		
@@ -103,6 +107,7 @@ public class FrontPage extends Activity {
 	@Override
 	public Dialog onCreateDialog(int id) {
 		super.onCreateDialog(id);
+		Log.i(TAG, "onCreateDialog(" + id + ")");
 		// Choose a certain dialog to create.
 		switch(id) {
 		case DIALOG_LOGIN:
@@ -120,6 +125,7 @@ public class FrontPage extends Activity {
 	@Override
 	// Thinking of using context menu to display the menu bar next time.
 	public boolean onCreateOptionsMenu(Menu menu) {
+		Log.i(TAG, "onCreateOptionMenu(" + menu + ")");
         // Hold on to this
         mMenu = menu;
         
@@ -133,6 +139,7 @@ public class FrontPage extends Activity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
+		Log.i(TAG, "onPrepareOptionMenu(" + menu + ")");
 		super.onPrepareOptionsMenu(menu);
 		if (UserProfile.getStatus() == OFF_LINE) {
 			mMenu.setGroupVisible(R.id.group_login, true);
@@ -149,31 +156,40 @@ public class FrontPage extends Activity {
 	@Override
 	// All Toast messages are implemented later.
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.i(TAG, "onOptionItemSelected(" + item + ")");
 		switch (item.getItemId()) {
 		case R.id.view_receipt_opt:
 			// Start the receipt view activity
+			Log.i(TAG, "View receipt option selected");
+			Log.i(TAG, "Set a new intent: ReceiptsView");
 			final Intent receipt_view_intent = new Intent(FrontPage.this, ReceiptsView.class);
 			receipt_view_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(receipt_view_intent);
 			break;
 		case R.id.search_opt:
-			Toast.makeText(this, "Start Search receipts activity!", Toast.LENGTH_SHORT).show();
+			Log.i(TAG, "Search receipt option selected");
+			
 			return true;
 		case R.id.view_coupon_opt:
-			Toast.makeText(this, "Start view coupon activity!", Toast.LENGTH_SHORT).show();
+			Log.i(TAG, "View coupon option selected");
+			
 			return true;
 		case R.id.conf_opt:
-			Toast.makeText(this, "Start configuration activity!", Toast.LENGTH_SHORT).show();
+			Log.i(TAG, "Configuration option selected");
+			
 			return false;
 		case R.id.login_opt:
+			Log.i(TAG, "Login option selected");
 			// Pop up the login or the logout dialog
 			showDialog(DIALOG_LOGIN);
 			return true;
 		case R.id.logout_opt:
+			Log.i(TAG, "Logout option selected");
 			// Pop up the login or the logout dialog
 			showDialog(DIALOG_LOGOUT);
 			return true;
 		}
+		Log.i(TAG, "No option selected");
 		return false;
 		
 	}
@@ -182,6 +198,7 @@ public class FrontPage extends Activity {
 	// To prevent a mistaken touch, users are required to touch the screen for a little while.
 	// Validate the touch screen event.
 	public boolean onTouchEvent(MotionEvent event) {
+		Log.i(TAG, "onTouchEvent(" + event +")");
 		int action = event.getAction();
 		long duration = 0;
 		if (action == MotionEvent.ACTION_UP) {
@@ -189,10 +206,10 @@ public class FrontPage extends Activity {
 			duration = mUptime - mDowntime;
 			if (duration >= 100 && UserProfile.getStatus() == ON_LINE) {
 				// A valid touch screen event.
+				Log.i(TAG, "Set a new intent: NfcConnecting");
 				final Intent nfc_intent = new Intent(FrontPage.this, NfcConnecting.class);
 				nfc_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 				startActivity(nfc_intent);
-//				System.out.println("Going to call menu bar activity.");
 			}
 		}
 		else if(action == MotionEvent.ACTION_DOWN)
@@ -204,6 +221,7 @@ public class FrontPage extends Activity {
 	@Override
 	// Deal with any key press event
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
+		Log.i(TAG, "onKeyUp(" + event + ")");
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_CENTER:
 			openOptionsMenu();
@@ -304,7 +322,7 @@ public class FrontPage extends Activity {
 		mUname.setText((CharSequence)uname);
         // TODO: set the front page's fractal fern image to indicate different status.
 	}
-	
+		
 	//--------------------- Log Thread ----------------------//
 	private class LoginTask extends AsyncTask<Void, Void, Void> {
 		private boolean isSuccessful = false; 

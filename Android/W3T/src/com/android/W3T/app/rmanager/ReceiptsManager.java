@@ -34,18 +34,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.android.W3T.app.R;
 
 public class ReceiptsManager {
+	public static final String TAG = "ReceiptManager";
 	public static final int NUM_RECEIPT = 7;
 	public static final int NUM_RECEIPT_ENTRY = 5;
-	public static final int NUM_ITEM_ENTRY = 5;
+	public static final int NUM_ITEM_ENTRY = 4;
 	
-	public static final String PARAM_RECEIPT_LABEL = "basicInfo";
+//	public static final String PARAM_RECEIPT_LABEL = "basicInfo";
 	public static final String PARAM_ITEM_LABEL = "items";
 	
 	public final static int[] ReceiptViewElements = {
-		R.id.store_name_txt, R.id.time_txt, R.id.id_txt, R.id.tag_tax_txt ,R.id.total_cost_txt
+		R.id.store_name_txt, R.id.time_txt, R.id.id_txt, R.id.tax_txt ,R.id.total_cost_txt
 	};
 	
 	// This array stores all receipts in mobile app.
@@ -53,6 +56,9 @@ public class ReceiptsManager {
 	private static int sNumValidReceipt = 0;
 	
 	public static void initReceiptsManager() {
+		if (Log.isLoggable(TAG, Log.VERBOSE)) {
+            Log.v(TAG, "initialize receitp manager");
+        }
 		for(int i=0;i<NUM_RECEIPT;i++) {
 			Receipt.add(i, new Receipt());
 		}
@@ -77,19 +83,23 @@ public class ReceiptsManager {
 		 * 
 		 * {"basicInfo...", "items"...}
 		 * ]
+		 * [{"store_account":null,"receipt_id":"101","user_account":null,"receipt_time":"2011-06-21 20:28:41","tax":"0.1","items":[],"total_cost":"10","img":null,"deleted":0,"store_name":"McD"},
+		 * {"store_account":null,"receipt_id":"100","user_account":null,"receipt_time":"2011-06-20 03:58:52","tax":"1","items":[{"item_price":"5","item_name":"hamburger","item_id":"1001","item_qty":"1"},{"item_price":"5","item_name":"french fries","item_id":"1002","item_qty":"1"}],"total_cost":"10","img":null,"deleted":0,"store_name":"Starbucks"}]
 		 */
 		try {
 			JSONArray receiptsArray = new JSONArray(str);
 			int numReceipt = receiptsArray.length();
 			
-			JSONObject basicInfo[] = new JSONObject[numReceipt];
+			JSONObject receiptsInfo[] = new JSONObject[numReceipt];
 			JSONArray items[] = new JSONArray[numReceipt];
+			if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                Log.v(TAG, "start adding receipts");
+            }
 			// After every loop, a receipt has been created and added into ReceiptsManager.
 			for (int i=0;i < numReceipt;i++) {
-				JSONObject tmp = (JSONObject) receiptsArray.get(i);
-				basicInfo[i] = tmp.getJSONObject(PARAM_RECEIPT_LABEL);
-				items[i] = tmp.getJSONArray(PARAM_ITEM_LABEL);
-				Receipt r = new Receipt(basicInfo[i]);
+				receiptsInfo[i] = (JSONObject) receiptsArray.get(i);
+				items[i] = receiptsInfo[i].getJSONArray(PARAM_ITEM_LABEL);
+				Receipt r = new Receipt(receiptsInfo[i]);
 				r.addItems(items[i]);
 				addNewReceipt(r);
 			}
@@ -102,6 +112,9 @@ public class ReceiptsManager {
 	
 	// Add a new receipt into ReceiptManager
 	private static void addNewReceipt(Receipt r) {
+		if (Log.isLoggable(TAG, Log.VERBOSE)) {
+            Log.v(TAG, "add a new receipt into Receipt pool");
+        }
 		Receipt.add(sNumValidReceipt, r);
 		sNumValidReceipt++;
 //	TODO:	System.out.println("Any un-delivered receipt?");	

@@ -4,14 +4,14 @@ public class ReceiptItem {
 	private int mItemId;
 	private String mName;
 	private int mQty;
-	private String mDiscount;
+//	private String mDiscount;
 	private double mPrice;
 	
 	public ReceiptItem() {
 		mItemId = 0;
 		mName = null;
 		mQty = 0;
-		mDiscount = null;
+//		mDiscount = null;
 		mPrice = 0.0;
 	}
 	
@@ -24,9 +24,9 @@ public class ReceiptItem {
 	public int getQty() {
 		return mQty;
 	}
-	public String getDiscount() {
-		return mDiscount;
-	}
+//	public String getDiscount() {
+//		return mDiscount;
+//	}
 	public double getPrice() {
 		return mPrice;
 	}
@@ -40,9 +40,9 @@ public class ReceiptItem {
 	public void setQty(int q) {
 		mQty = q;
 	}
-	public void setDiscount(String d) {
-		mDiscount = d;
-	}
+//	public void setDiscount(String d) {
+//		mDiscount = d;
+//	}
 	public void setPrice(double p) {
 		mPrice = p;
 	}

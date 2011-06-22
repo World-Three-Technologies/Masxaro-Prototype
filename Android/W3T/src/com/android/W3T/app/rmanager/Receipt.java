@@ -39,12 +39,15 @@ public class Receipt {
 	public static final String PARAM_RECEIPT_TAX = "tax";
 	public static final String PARAM_RECEIPT_TOTAL = "total_cost";
 	public static final String PARAM_RECEIPT_STORE_NAME = "store_name";
+//	public static final String PARAM_RECEIPT_STORE_ACC = "store_account";
+//	public static final String PARAM_RECEIPT_USER_ACC = "user_account";
+	public static final String PARAM_RECEIPT_IMAGE = "img";
+	public static final String PARAM_RECEIPT_DELETE = "delete";
 	
 	// JSON names of Item entries.
 	public static final String PARAM_ITEM_ID = "item_id";
 	public static final String PARAM_ITEM_NAME = "item_name";
 	public static final String PARAM_ITEM_QTY = "item_qty";
-	public static final String PARAM_ITEM_DISCOUNT = "item_discount";
 	public static final String PARAM_ITEM_PRICE = "item_price";
 	
 	
@@ -63,6 +66,8 @@ public class Receipt {
 	private String mTime;
 	private String mTax;
 	private String mTotal;
+	private String img;
+	private String delete;
 	private ArrayList<ReceiptItem> mItems;	// Items in this receipt
 	private int mNumItems;			// Number of items
 	private boolean mIsUpload;		// Whether this receipt has been synced with system.
@@ -74,6 +79,8 @@ public class Receipt {
 		mTime = new String("N/A");
 		mTotal = new String("N/A");
 		mTax = new String("N/A");
+		img = new String("N/A");
+		delete = new String();
 		mItems = new ArrayList<ReceiptItem>();
 		mNumItems = 0;
 		mIsUpload = false;
@@ -81,11 +88,11 @@ public class Receipt {
 	
 	public Receipt(JSONObject str) {
 		try {
-			this.setId(str.get(PARAM_RECEIPT_ID).toString());
-			this.setTime(str.get(PARAM_RECEIPT_TIME).toString());
-			this.setStoreName(str.get(PARAM_RECEIPT_STORE_NAME).toString());
-			this.setTotal(str.get(PARAM_RECEIPT_TOTAL).toString());
-			this.setTax(str.get(PARAM_RECEIPT_TAX).toString());
+			mReceiptId = str.get(PARAM_RECEIPT_ID).toString();
+			mTime = str.get(PARAM_RECEIPT_TIME).toString();
+			mStoreName = str.get(PARAM_RECEIPT_STORE_NAME).toString();
+			mTotal = str.get(PARAM_RECEIPT_TOTAL).toString();
+			mTax = str.get(PARAM_RECEIPT_TAX).toString();
 			mItems = new ArrayList<ReceiptItem>();
 			mNumItems = 0;
 			mIsUpload = false;
@@ -96,19 +103,28 @@ public class Receipt {
 	}
 	
 	public String getEntry(int i) {
+		String result = new String();  
 		switch(i) {
 		case 0:
-			return getStoreName();
+			result = getStoreName();
+			break;
 		case 1:
-			return getTime();
+			result = getTime();
+			break;
 		case 2:
-			return getId();
+			result = getId();
+			break;
 		case 3:
-			return getTax();
+			result = getTax();
+			break;
 		case 4:
-			return getTotal();
+			result = getTotal();
+			break;
+		default:
+			result = null;
+			break;
 		}
-		return null;
+		return result;
 	}
 	
 	public ReceiptItem getItem(int i) {
@@ -125,7 +141,6 @@ public class Receipt {
 				newItem.setItemId(Integer.valueOf(item.getString(PARAM_ITEM_ID)));
 				newItem.setName(item.getString(PARAM_ITEM_NAME));
 				newItem.setQty(Integer.valueOf(item.getString(PARAM_ITEM_QTY)));
-				newItem.setDiscount(item.getString(PARAM_ITEM_DISCOUNT));
 				newItem.setPrice(Double.parseDouble(item.getString(PARAM_ITEM_PRICE)));
 				mItems.add(newItem);
 			}
@@ -155,9 +170,9 @@ public class Receipt {
 		return mTax;
 	}
 	
-	private boolean getIsUpload() {
-		return mIsUpload;
-	}
+//	private boolean getIsUpload() {
+//		return mIsUpload;
+//	}
 	
 	private String getTotal() {
 		return mTotal;
@@ -179,9 +194,9 @@ public class Receipt {
 		mTotal = tt; 
 	}
 	
-	private void setIsUpload(boolean v) {
-		mIsUpload = v;
-	}
+//	private void setIsUpload(boolean v) {
+//		mIsUpload = v;
+//	}
 	
 	private void setTax(String t) {
 		mTax = t;
