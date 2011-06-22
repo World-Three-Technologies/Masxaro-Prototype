@@ -1,34 +1,14 @@
 describe("receipt view",function(){
 
   beforeEach(function(){
-    this.fixtures = {
-      model:{
-        "receipt_id":1,
-        "store_name":"Mac store",
-        "total_cost":100,
-        "receipt_time":"2011-6-17 09-45-32",
-        "tax": 0.875,
-        "items":[
-          {
-            "item_name":"mac",
-            "item_qty": 1,
-            "item_price": 50.00
-          },{
-            "item_name":"mac",
-            "item_qty": 1,
-            "item_price": 50.00
-          }
-        ] 
-      },
-      template:"<td>$<%= total_cost %></td>"+ 
+    var template = "<td>$<%= total_cost %></td>"+ 
     "<td class='items'></td>" +
     "<td><%= store_name %></td>" +
-    "<td><%= receipt_time %></td>",
+    "<td><%= receipt_time %></td>";
 
-    }
-    setFixtures(this.fixtures.template);
+    setFixtures(template);
 
-    this.model = new Receipt(this.fixtures.model);
+    this.model = new Receipt(fixtures.receipt);
     this.view = new ReceiptView({model:this.model});
 
   });
@@ -54,14 +34,14 @@ describe("receipt view",function(){
 
     this.view.render();
 
-    expect(this.view.$("td").first().text()).toEqual("$100");
+    expect(this.view.$("td").first().text()).toEqual("$208");
   
   });
 
   it("can show digest item description",function(){
-    var itemText = this.view.getItemText(this.fixtures.model.items);
+    var itemText = this.view.getItemText(fixtures.receipt.items);
 
-    expect(itemText).toEqual("mac,mac");
+    expect(itemText).toEqual("harry_potter,harry_potter II");
 
   });
 
@@ -69,7 +49,7 @@ describe("receipt view",function(){
     this.view.render();
     $(this.view.el).click();
 
-    expect(this.view.$(".store").text()).toEqual("at "+ this.fixtures.model.store_name);
+    expect(this.view.$(".store").text()).toEqual("at "+ fixtures.receipt.store_name);
   });
 
   it("can hide other opened receipt after clicked",function(){
