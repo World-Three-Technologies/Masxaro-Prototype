@@ -1,4 +1,5 @@
 var controller = new AppController();
+
 describe("AppController",function(){
 
   it("should initialize user account and model from cookie",function(){
@@ -29,14 +30,14 @@ describe("AppController",function(){
     it("should match index and fetch receipts",function(){
       
       var index = sinon.spy();
-      this.controller.bind("route:index",index);
+      controller.bind("route:index",index);
 
       window.location.hash = "";
       Backbone.history.start();
 
       expect(index.called).toBeTruthy();
 
-      this.controller.unbind("route:index");
+      controller.unbind("route:index");
     });
 
   });

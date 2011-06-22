@@ -2,35 +2,13 @@ describe("receipt model",function(){
   
   beforeEach(function(){
     
-    this.receipt = new Receipt({
-      "receipt_id":1,
-      "total_cost":208.00,
-      "receipt_time":"2011-06-24 16:13:28",
-      "tax": "0.0875",
-      "store_name":"McDonalds(NYU)",
-      "items":[
-        {
-          "item_id":3,
-          "item_name":"harry_potter",
-          "item_qty":1,
-          "item_discount":1,
-          "item_price":"19.99"
-        },
-        {
-          "item_id":4,
-          "item_name":"harry_potter II",
-          "item_qty":1,
-          "item_discount":1,
-          "item_price":"19.99"
-        }
-      ]
-    });
+    this.receipt = new Receipt(fixtures.receipt);
   });
   
   describe("should have attributes",function(){
   
     it("should contain id, cost, store_name ,tax and time",function(){
-      expect(this.receipt.get("receipt_id")).toEqual(1);
+      expect(this.receipt.get("receipt_id")).toEqual(fixtures.receipt.receipt_id);
       expect(this.receipt.get("total_cost")).toEqual(208.00);
       expect(this.receipt.get("receipt_time")).toEqual("2011-06-24 16:13:28");
       expect(this.receipt.get("store_name")).toEqual("McDonalds(NYU)");

@@ -2,17 +2,7 @@ describe("receipts model", function(){
 
   beforeEach(function(){
 
-    this.fixture = [{
-        "receipt_id":2, 
-        "store_name":"Mac Store",
-        "receipt_time":"2011-6-17 09:12:32"
-      }, {
-        "receipt_id":3, 
-        "store_name":"Mac Store",
-        "receipt_time":"2011-6-17 09:12:32"
-      }];
-
-    this.receipts = new Receipts(this.fixture);
+    this.receipts = new Receipts(fixtures.receipts);
     this.receipts.account = "test";
 
   });
@@ -75,7 +65,7 @@ describe("receipts model", function(){
 
       this.requests[0].respond(200, 
         { "Content-Type": "application/json"},
-        JSON.stringify(this.fixture)
+        JSON.stringify(fixtures.receipts)
       );
 
       expect(this.receipts.size()).toEqual(2);
