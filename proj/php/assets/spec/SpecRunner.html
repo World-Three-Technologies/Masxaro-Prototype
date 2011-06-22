@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Jasmine Test Runner</title>
+  <link rel="stylesheet" type="text/css" href="lib/jasmine-1.0.2/jasmine.css">
+  <!-- fixtures -->
+  <script type="text/tamplate" id="receipt-row-template">
+    <td>$<%= total_cost %></td>
+    <td class="items"></td>
+    <td><%= store_name %></td>
+    <td><%= receipt_time %></td>
+  </script>
+
+  <script type="text/template" id="receipt-full-template">
+    <td colspan='4' width="100%">
+      <div class="receipt clearfix">
+        <div class="total-cost">$<%= total_cost %></div>
+        <div class="receipt-row clearfix">
+          <div class="items"></div> 
+          <div class="store">at <%= store_name%></div>
+        </div>
+        <div class="receipt-row clearfix">
+          <div class="date"><%= receipt_time %></div>
+        </div>
+        <div class="toolbar invisible">
+          show full receipt, add tags
+        </div>
+      </div>
+    </td>
+  </script>
+  <!-- end of fixtures-->
+
+  <script src="lib/jasmine-1.0.2/jasmine.js"></script>
+  <script src="lib/jasmine-1.0.2/jasmine-html.js"></script>
+  <script src="lib/jasmine-jquery-1.2.0.js"></script>
+  <script src="lib/sinon-1.1.1.js"></script>
+  <script src="../js/vendor/underscore.js"></script>
+  <script src="../js/vendor/jquery.js"></script>
+  <script src="../js/vendor/plugins.js"></script>
+  <script src="../js/vendor/backbone.js"></script>
+  <script src="../js/vendor/json2.js"></script>
+
+  <!-- include source files here... -->
+  <script src="fixtures.js"></script>
+  <script src="../js/util.js"></script>
+  <script src="../js/app.js"></script>
+
+  <!-- include spec files here... -->
+  <script src="models/user_spec.js"></script>
+  <script src="models/receipt_spec.js"></script>
+  <script src="models/receipts_spec.js"></script>
+  <script src="views/user_view_spec.js"></script>
+  <script src="views/receipt_view_spec.js"></script>
+  <script src="views/app_view_spec.js"></script>
+  <script src="controllers/app_controller_spec.js"></script>
+
+</head>
+<body>
+
+<script type="text/javascript">
+  jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+  jasmine.getEnv().execute();
+</script>
+
+</body>
+</html>
