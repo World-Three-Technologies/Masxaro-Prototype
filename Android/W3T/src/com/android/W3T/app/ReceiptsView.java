@@ -27,6 +27,7 @@
 package com.android.W3T.app;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,15 +49,20 @@ public class ReceiptsView extends Activity {
 	
 	public static final String RECEIVE_ALL = "user_get_all_receipt";
 	
+	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
+	
 //	public static final int EMPTY_VIEW_LAYOUT = R.id.empty_receipt_view;
 //	public static final int RECEITP_VIEW_LAYOUT = R.id.receipt_view;
 	
 	private int mCurReceipt = 0;
+	private ProgressDialog mRefreshProgress;
 	private Handler mUpdateHandler = new Handler();
 	private Runnable mReceiptThread = new Runnable() {
 		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
+			// TODO: upload the receipt with FROM_NFC flag
 			// Download latest 7 receipts from database and upload non-uploaded receipts
 			// to the database.
 			String jsonstr = NetworkUtil.attemptGetReceipt(ReceiptsView.RECEIVE_ALL, "new");
@@ -65,11 +71,11 @@ public class ReceiptsView extends Activity {
 				Log.i(TAG, "add new receipts");
 				System.out.println(jsonstr);
 				// Set the IsUpload true
-				ReceiptsManager.add(jsonstr);
+				ReceiptsManager.add(jsonstr, FROM_DB);
 				Log.i(TAG, "finished new receipts");
 				Log.i(TAG, "update receipt view");
 				fillReceiptView(0);
-				
+				mRefreshProgress.dismiss();
 			}
 		}
 	};
@@ -83,8 +89,10 @@ public class ReceiptsView extends Activity {
 	
 	@Override
 	public void onResume() {
+		Log.i(TAG, "onResume()");
 		super.onResume();
 		if (ReceiptsManager.getNumValid() != 0) {
+			Log.i(TAG, "Receipts exist");
 			setContentView(R.layout.receipt_view);
 			fillReceiptView(0);
 		}
@@ -113,6 +121,12 @@ public class ReceiptsView extends Activity {
 		switch (item.getItemId()) {
 		case R.id.refresh_opt:
 			Log.i(TAG, "handler post a new thread");
+			// Show a progress bar and send account info to server.
+			mRefreshProgress = new ProgressDialog(ReceiptsView.this);
+			mRefreshProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mRefreshProgress.setMessage("Refreshing...");
+			mRefreshProgress.setCancelable(true);
+			mRefreshProgress.show();
 			mUpdateHandler.post(mReceiptThread);
 			return true;
 		case R.id.sw_receipt_opt:

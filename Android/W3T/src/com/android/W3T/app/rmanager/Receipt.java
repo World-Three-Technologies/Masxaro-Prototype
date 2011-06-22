@@ -50,6 +50,8 @@ public class Receipt {
 	public static final String PARAM_ITEM_QTY = "item_qty";
 	public static final String PARAM_ITEM_PRICE = "item_price";
 	
+	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
 //	public static final String[][] sFakeReceiptsInfo = {
 //		{"ID@1234", "06-01-2011", "Wendy's", "12.32USD"},
@@ -70,7 +72,7 @@ public class Receipt {
 	private String delete;
 	private ArrayList<ReceiptItem> mItems;	// Items in this receipt
 	private int mNumItems;			// Number of items
-	private boolean mIsUpload;		// Whether this receipt has been synced with system.
+	private boolean mWhere;			// Whether this receipt has been synced with system.
 									// The receipt retrieved from database sets true.
 									// The receipt retrieved from nfc tag sets false
 	public Receipt() {
@@ -83,10 +85,10 @@ public class Receipt {
 		delete = new String();
 		mItems = new ArrayList<ReceiptItem>();
 		mNumItems = 0;
-		mIsUpload = false;
+		mWhere = false;
 	}
 	
-	public Receipt(JSONObject str) {
+	public Receipt(JSONObject str, boolean w) {
 		try {
 			mReceiptId = str.get(PARAM_RECEIPT_ID).toString();
 			mTime = str.get(PARAM_RECEIPT_TIME).toString();
@@ -95,7 +97,7 @@ public class Receipt {
 			mTax = str.get(PARAM_RECEIPT_TAX).toString();
 			mItems = new ArrayList<ReceiptItem>();
 			mNumItems = 0;
-			mIsUpload = false;
+			mWhere = w;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -170,35 +172,35 @@ public class Receipt {
 		return mTax;
 	}
 	
-//	private boolean getIsUpload() {
-//		return mIsUpload;
+//	private boolean getWhere() {
+//		return mWhere;
 //	}
 	
 	private String getTotal() {
 		return mTotal;
 	}
 	
-	private void setId(String id) {
-		mReceiptId = id; 
-	}
-
-	private void setTime(String time) {
-		mTime = time; 
-	}
-	
-	private void setStoreName(String sn) {
-		mStoreName = sn; 
-	}
-	
-	private void setTotal(String tt) {
-		mTotal = tt; 
-	}
-	
-//	private void setIsUpload(boolean v) {
-//		mIsUpload = v;
+//	private void setId(String id) {
+//		mReceiptId = id; 
+//	}
+//
+//	private void setTime(String time) {
+//		mTime = time; 
+//	}
+//	
+//	private void setStoreName(String sn) {
+//		mStoreName = sn; 
+//	}
+//	
+//	private void setTotal(String tt) {
+//		mTotal = tt; 
+//	}
+//	
+//	private void setWhere(boolean w) {
+//		mWhere = w;
 //	}
 	
-	private void setTax(String t) {
-		mTax = t;
-	}
+//	private void setTax(String t) {
+//		mTax = t;
+//	}
 }

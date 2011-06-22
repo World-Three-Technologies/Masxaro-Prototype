@@ -334,6 +334,7 @@ public class FrontPage extends Activity {
 		}
 	    
 	    protected void onPostExecute(Void result) {
+	    	super.onPostExecute(result);
 	    	String username = mUnameEdit.getText().toString();
 	    	mLogProgress.dismiss();
 	    	if (isSuccessful) {

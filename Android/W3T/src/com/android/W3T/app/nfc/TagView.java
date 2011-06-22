@@ -41,6 +41,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TagView extends Activity {
+	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
+	
+	private Receipt mReceipt;
+	
 	private Button mRejectBtn;
 	private Button mConfirmBtn;
 	@Override
@@ -60,17 +65,15 @@ public class TagView extends Activity {
         mConfirmBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Receipt r = new Receipt();
-//				r.setId(((TextView)findViewById(R.id.tag_id_txt)).getText().toString());
-//				r.setTime(((TextView)findViewById(R.id.tag_date_txt)).getText().toString());
-//				r.setTotal(((TextView)findViewById(R.id.tag_total_cost_txt)).getText().toString());
-//				r.setStoreName(((TextView)findViewById(R.id.tag_store_name_txt)).getText().toString());
-//				r.setValid(true);
-//				ReceiptsManager.addNewReceipt(r);
+				String jsonstr = 
+					new String("[{\"store_account\":null,\"receipt_id\":\"102\",\"user_account\":null,\"receipt_time\":\"2011-06-22 15:43:12\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"hamburger\",\"item_id\":\"1010\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"img\":null,\"deleted\":0,\"store_name\":\"Starbucks\"}]");
+	            ReceiptsManager.add(jsonstr, FROM_NFC);  
 				setBackIntent();
 				finish();
 			}
         });
+        // -------------- fake tag receive ---------------- //
+              
 	}
 	
 	@Override

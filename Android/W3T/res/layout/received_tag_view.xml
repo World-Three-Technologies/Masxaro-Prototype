@@ -37,7 +37,7 @@
 	>
 	    <!-- Store Name -->
 	    <TextView android:id="@+id/tag_store_name_txt"
-            android:text="Store Name"
+            android:text="Starbucks"
             android:layout_width="fill_parent" android:layout_height="wrap_content"
             android:paddingTop="5sp"
             android:gravity="center"
@@ -58,7 +58,7 @@
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:gravity="left"
 		/>
-		<TextView android:text="100"
+		<TextView android:text="102"
 			android:id="@+id/tag_id_txt"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:gravity="left"
@@ -85,7 +85,7 @@
 		    
 		    <!-- First item in the receipt -->
 		    <TableRow>
-		        <TextView android:text="1001"
+		        <TextView android:text="1010"
 		            android:layout_width="fill_parent" android:layout_height="match_parent"
 		        />
 		        <TextView android:text="1"

@@ -53,7 +53,7 @@ public class NetworkUtil {
 	public static final String LOGIN_URL = BASE_URL + "/login.php";
 	public static final String RECEIPT_OP_URL = BASE_URL + "/receiptOperation.php";
 	
-	public static final String METHOD_RECEIVE_ALL = ReceiptsView.RECEIVE_ALL; 
+	private static final String METHOD_RECEIVE_ALL = ReceiptsView.RECEIVE_ALL; 
 	
 	private static HttpClient mClient = new DefaultHttpClient();
 	
