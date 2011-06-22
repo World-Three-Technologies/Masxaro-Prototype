@@ -35,10 +35,6 @@ $code = $_REQUEST['code'];
 
 $personEmail = "";
 
-$mailSub = "Please verify your registration on Masxaro.com";
-
-$url = "http://".$_SERVER ['HTTP_HOST'].$_SERVER['PHP_SELF'];
-
 $ctrl = null;
 
 $accType = "";
@@ -132,8 +128,11 @@ if($ctrl->insert($param)){
 		$personEmail
 	); 
 	
-	$code = Tool::verifyCodeGen($codeParam);
+	$mailSub = "Please verify your registration on Masxaro.com";
+
+	$url = "http://".$_SERVER ['HTTP_HOST'].$_SERVER['PHP_SELF'];
 	
+	$code = Tool::verifyCodeGen($codeParam);
 	$code = $url."?code=$code";
 	
 	$email = new EmailCtrl();
