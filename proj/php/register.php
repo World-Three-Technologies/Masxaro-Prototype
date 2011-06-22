@@ -121,6 +121,7 @@ if($ctrl->insert($param)){
 				$ctrl->delete($param[$accType]);
 		}
 		echo false;
+		die();
 	}
 	else{
 		echo true;
