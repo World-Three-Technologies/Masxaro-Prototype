@@ -30,6 +30,8 @@ $opcode = $_POST['opcode'];
 
 $ctrl = new ReceiptCtrl();
 
+Tool::setJSON();
+
 switch($opcode){
 	case 'new_receipt':
 		//1-d array
@@ -60,25 +62,21 @@ switch($opcode){
 		
 	case 'user_get_all_receipt_basic':
 		//user get  all receipts' basic info
-    Tool::setJSON();
 		echo json_encode($ctrl->userGetAllReceiptBasic($_POST['acc']));
 		break;
 		
 	case 'user_get_receipt_item':
 		//user get items info of one certain receipt
-    Tool::setJSON();
 		echo json_encode($ctrl->userGetReceiptItems($_POST['receipt_id']));
 		break;
 		
 	case 'user_get_all_receipt':
 		//user get all receipt, with basic info and all items info
-    Tool::setJSON();
 		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
 		break;
 		
 	case 'user_get_receipt_detail':
 		//user get basic info of one certain receipt
-    Tool::setJSON();
 		echo json_encode($ctrl->getReceiptDetail($_POST['receipt_id']));
 		break;
 }
