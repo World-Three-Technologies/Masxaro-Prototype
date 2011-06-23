@@ -1,6 +1,6 @@
 <?php
 /*
- *  userProfile.php -- get user profile 
+ *  contactAccountChk.php -- check account and contact information for user/store registration 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,33 +21,26 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  
  */
 
 include_once '../config.php';
 
-$opcode = $_POST['opcode'];
-
 $acc = $_POST['acc'];
 
-//$acc = 'new';
+$contact = $_POST['contact'];
 
-$ctrl = new UserCtrl();
+$ctrl = new Ctrl();
 
-switch(opcode){
-	case 'get_profile':
-		echo json_encode($ctrl->getUserProfile($acc));
-		break;
-	
-	case 'update_profile':
-		echo $ctrl->updateUserInfo($acc, $_POST['info']);
-		break;
-		
-	default:
-		echo false;
-		break;
+$result = true;
+
+if(isset($acc) && !$ctrl->chkAccount($acc)){
+	$result = false;
 }
 
+if(isset($contact) && !$ctrl->chkContact($contact)){
+	$result = false;
+}
 
+echo $result;
 
 ?>

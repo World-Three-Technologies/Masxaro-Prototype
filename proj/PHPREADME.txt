@@ -30,6 +30,7 @@ In order to configure the PHP project, please follow these steps:
    Windows: ../www/
    
 2. Create new folder w3t
+sudo mkdir w3t
 
 3. Copy php/ and config.php to your web ROOT_PATH/
 

@@ -37,7 +37,7 @@ class StoreCtrl extends Ctrl{
 	 * @desc
 	 * insert a new store
 	 */
-	public function insertStore($info){
+	public function insert($info){
 		
 		$info['pwd'] = md5($info['pwd']);
 		
@@ -49,9 +49,10 @@ class StoreCtrl extends Ctrl{
 		
 		$sql = "
 			INSERT
-			INTO `store`
+			INTO 
+				`store`
 			SET
-			$info
+				$info
 		";
 			
 		if($this->db->insert($sql) < 0){
@@ -75,7 +76,7 @@ class StoreCtrl extends Ctrl{
 	 * find store
 	 * 
 	 */
-	public function findStore($acc, $pwd){
+	public function find($acc, $pwd){
 		if(!Tool::securityChk($acc)){
 			return false;
 		}
@@ -83,12 +84,14 @@ class StoreCtrl extends Ctrl{
 		$pwd = md5($pwd);
 		
 		$sql = "
-			SELECT *
-			FROM `store`
+			SELECT 
+				*
+			FROM 
+				`store`
 			WHERE
-			`store_account`='$acc'
+				`store_account`='$acc'
 			AND
-			`pwd`='$pwd'
+				`pwd`='$pwd'
 		";
 		
 		$this->db->select($sql);
@@ -111,7 +114,7 @@ class StoreCtrl extends Ctrl{
 	 * update store info
 	 * 
 	 */
-	public function updateStore($storeAcc, $info){
+	public function update($storeAcc, $info){
 		$info = Tool::infoArray2SQL($info);
 		
 		if(!Tool::securityChk($info)){
@@ -119,16 +122,19 @@ class StoreCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `store`
+			UPDATE 
+				`store`
 			SET
-			$info
+				$info
 			WHERE
-			`store_account`='$storeAcc'
+				`store_account`='$storeAcc'
 		";
 			
 		if($this->db->update($sql) <= 0){
 			return false;
 		}
+		
+		return true;
 	}
 	
 	/**
@@ -142,18 +148,14 @@ class StoreCtrl extends Ctrl{
 	 * 
 	 * delete a store
 	 */
-	public function deleteStore($storeAcc){
-		$info = Tool::infoArray2SQL($info);
-		
-		if(!Tool::securityChk($info)){
-			return false;
-		}
+	public function delete($storeAcc){
 		
 		$sql = "
 			DELETE
-			FROM `store`
+			FROM 
+				`store`
 			WHERE
-			`store_account`='$storeAcc'
+				`store_account`='$storeAcc'
 		";
 		
 		if($this->db->delete($sql) <= 0){

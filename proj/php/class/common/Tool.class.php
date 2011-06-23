@@ -37,14 +37,16 @@ class Tool{
 		$sql = '';
 		
 		$regxFunc = '(^.*\(\))';
-		$regxNumber = '(^[0-9]+)';
+		//$regxNumber = '(^[0-9]+$)';
 		
 		foreach ($info as $key => $value){
-			if(preg_match($regxFunc, $value) || preg_match($regxNumber, $value)){
+			
+			//if(preg_match($regxFunc, $value) || preg_match($regxNumber, $value)){
+			if(preg_match($regxFunc, $value)){
 				$sql = $sql."`{$key}` = {$value},";
 			}
 			
-			else if(empty($value) || $value == 'null' || $value == 'NULL'){
+			else if(!isset($value) || strcasecmp($value, 'null') == 0){
 				$sql = $sql."`{$key}` = NULL,";
 				continue;
 			}
@@ -52,7 +54,7 @@ class Tool{
 				$sql = $sql."`{$key}` = '$value',";
 			}
 		}
-		$sql = substr($sql, 0, -1);		
+		$sql = substr($sql, 0, -1);	
 		return $sql;
 	}
 	
@@ -68,7 +70,9 @@ class Tool{
 	 * else return false
 	 */
 	public static function securityChk($str){
-		return true;
+		$regex = "(<script>)";
+		return !preg_match($regex, $str); 
+		//return true;
 	}
 	
 	/**
@@ -152,6 +156,43 @@ class Tool{
 	public static function imgToBlob($path){
 		return addslashes(fread(fopen($path,"r"),filesize($path)));
 	}
+	
+	/**
+	 * 
+	 * error handler
+	 */
+	public static function errorHandle(){
+		
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param array() $info
+	 * 
+	 * @return  generated code
+	 * 
+	 * @desc
+	 * 
+	 * registration verification code generation
+	 */
+	public static function verifyCodeGen($info){
+		return base64_encode(base64_encode(implode("&&", $info)));
+	}
+	
+	/**
+	 *
+	 * @param string $code
+	 * 
+	 * @desc decode verification code
+	 * 
+	 * @return array()
+	 */
+	public static function decodeVerifyCode($code){
+		$code = base64_decode(base64_decode($code));
+		
+		return explode("&&", $code);
+	}
 
   /**
    * @param string $path redirect path
@@ -162,6 +203,5 @@ class Tool{
     Header("HTTP/1.1 301 Redirect");
     Header("Location: $path");
   }
-    
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 /*
- *  userProfile.php -- get user profile 
+ *  userUnitTest.php -- unit test for user control class  
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -20,34 +20,28 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
- * 
  *  
  */
 
-include_once '../config.php';
-
-$opcode = $_POST['opcode'];
-
-$acc = $_POST['acc'];
-
-//$acc = 'new';
-
-$ctrl = new UserCtrl();
-
-switch(opcode){
-	case 'get_profile':
-		echo json_encode($ctrl->getUserProfile($acc));
-		break;
-	
-	case 'update_profile':
-		echo $ctrl->updateUserInfo($acc, $_POST['info']);
-		break;
-		
-	default:
-		echo false;
-		break;
-}
+include_once '../../config.php';
 
 
+$test = new UserUnitTest();
+
+$test->chkAccount_Test('utest');
+
+$test->insertUser_Test();
+
+$test->findUser_Test('utest', '123');
+
+$test->getUserProfile_Test('utest');
+
+$test->updateUserInfo_Test('utest');
+
+$test->fakeDeleteUser_Test('utest');
+
+$test->recoverDeletedUser_Test('utest');
+
+$test->realDeleteUser_Test('utest');
 
 ?>
