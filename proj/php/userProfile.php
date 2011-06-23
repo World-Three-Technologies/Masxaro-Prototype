@@ -30,8 +30,6 @@ $opcode = $_POST['opcode'];
 
 $acc = $_POST['acc'];
 
-//$acc = 'new';
-
 $ctrl = new UserCtrl();
 
 switch(opcode){
@@ -47,7 +45,6 @@ switch(opcode){
 		echo false;
 		break;
 }
-
 
 
 ?>

@@ -87,24 +87,18 @@ class Tool{
 	 * authenticate user/store log in status
 	 */
 	public static function authenticate($acc){
-		if(!isset($_COOKIE['user_acc']) && !isset($_COOKIE['store_acc'])){
-			return false;
+
+    if(empty($acc) || strlen($acc) == 0){
+      return false;
+    }
+
+		if(isset($_COOKIE['user_acc']) && $_COOKIE['user_acc'] == $acc){
+				return true;
 		}
-		
-		else if(isset($_COOKIE['user_acc'])){
-			if(!empty($acc) && strlen($acc) > 0 && $_COOKIE['user_acc'] != $acc){
-				return false;
-			}
-			return true;
+		else if(isset($_COOKIE['store_acc']) && $_COOKIE['store_acc'] == $acc){
+				return true;
 		}
-		
-		else if(isset($_COOKIE['store_acc'])){
-			if(!empty($acc) && strlen($acc) > 0  && $_COOKIE['store_acc'] == $acc){
-				return false;
-			}
-			return true;
-		}
-		
+
 		return false;
 	}
 	
@@ -202,6 +196,17 @@ class Tool{
   public static function redirect($path){
     Header("HTTP/1.1 301 Redirect");
     Header("Location: $path");
+  }
+
+  public static function redirectToPortal(){
+    Tool::redirect("/php/index.html");
+  }
+
+  /**
+   * set mime header to application/json 
+   */
+  public static function setJSON(){
+    header("Content-Type: application/json");
   }
 }
 ?>

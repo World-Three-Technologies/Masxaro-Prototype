@@ -42,11 +42,10 @@ $type = $_POST['type']; // string, 'user' or 'store'
 switch($type){
 	case 'user':
 		$ctrl = new UserCtrl();
-		if(!$ctrl->findUser($acc, $pwd)){
-			echo false;
-			die();
-		}
-		break;
+		if($ctrl->findUser($acc, $pwd)){
+      Tool::redirectToPortal();
+    }
+    break;
 		
 	case 'store':
 		$ctrl = new StoreCtrl();
@@ -62,9 +61,9 @@ switch($type){
 		break;
 }
 
-if(($result = Tool::login($acc, $pwd, $type)) == true){
-	  echo $result;
-	  //Tool::redirect("/php/index.html");
+if($result = Tool::login($acc, $pwd, $type)){
+  echo $result;
+  return;
 } 
 
 

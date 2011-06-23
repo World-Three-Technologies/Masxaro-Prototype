@@ -41,7 +41,7 @@ describe("receipts model", function(){
     });
 
     it("should set the url to receiptOperation.php",function(){
-      expect(this.receipts.url).toEqual("/receiptOperation.php");
+      expect(this.receipts.url).toEqual("receiptOperation.php");
     });
 
     it("should have the user account",function(){

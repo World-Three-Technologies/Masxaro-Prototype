@@ -2,7 +2,7 @@ var Receipt = Backbone.Model;
 var Receipts = Backbone.Collection.extend({
   model: Receipt,
 
-  url: '/receiptOperation.php',
+  url: 'receiptOperation.php',
 
   initialize:function(){
     _.bindAll(this,"sync");
