@@ -23,11 +23,7 @@
  */
 include_once '../config.php';
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-  $acc = $_POST['acc'];
-}else{
-  $acc = $_GET['acc'];
-}
+$acc = $_REQUEST['acc'];
 
 //$acc = 'test';//for test
 
