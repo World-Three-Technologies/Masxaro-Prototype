@@ -40,9 +40,12 @@ $ctrl = null;
 $accType = "";
 
 if(isset($code)){
-	$info = Tool::decodeVerifyCode($code);
 	$ctrl = new UserCtrl();
-	echo $ctrl->updateUserInfo($info[0], array('verified'=>true));
+	$ctrlS = new StoreCtrl();
+	
+	$info = $ctrl->decodeVerifyCode($code);
+	$result = $ctrl->updateUserInfo($info[0], array('verified'=>true)) == true ? 
+			  true : $ctrlS->update($info[0], array('verified'=>true));
 	die();
 }
 
