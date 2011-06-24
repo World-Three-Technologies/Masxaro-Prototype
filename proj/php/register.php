@@ -65,7 +65,6 @@ switch($registerType){
 		$ctrl = new UserCtrl();
 		break;
 		
-		
 	case 'store':
 		$param = array( 
 					'store_account'=>$_REQUEST['storeAccount'],
@@ -75,14 +74,12 @@ switch($registerType){
 					'pwd'=>$_REQUEST['pwd']
 		);
 		
-		$acc = 'store_account';
+		$accType = 'store_account';
 		$ctrl = new StoreCtrl();
 		break;
 		
 	default:
-		echo false;
-		die();
-		
+		die("incorrect register information");
 }
 
 $personEmail = $_REQUEST['email'];
@@ -119,11 +116,7 @@ if($ctrl->insert($param)){
 			case 'store':
 				$ctrl->delete($param[$accType]);
 		}
-		echo false;
-		die();
-	}
-	else{
-		echo true;
+		die("insert contacts information failed");
 	}
 	
 	$codeParam = array(
@@ -153,9 +146,9 @@ if($ctrl->insert($param)){
 	";
 	
 	$email->mail($personEmail, $mailSub, $mailContent);
-}
 
-else{
-	echo false;
+  echo "Register Success, please check your mailbox for authenticate\n";
+} else{
+  die("Register failed, please check your register information");
 }
 ?>

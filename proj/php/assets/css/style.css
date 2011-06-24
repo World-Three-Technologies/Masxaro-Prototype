@@ -35,7 +35,7 @@ input, select { vertical-align: middle; }
 
 body { font:13px/1.231 sans-serif; *font-size:small; }
 select, input, textarea, button { font:99% sans-serif; }
-pre, code, kbd, samp { font-family: monospace, sans-serif; }
+pre, code, kbd, samp { font-family: Helvatica,Arial,monospace, sans-serif; }
 
 html { overflow-y: scroll; }
 a:hover, a:active { outline: none; }
@@ -216,11 +216,8 @@ aside{
 
 .receipt .total-cost{
   text-align:left;
-  height:30px;
-  width:200px;
   font-size:26px;
   padding: 3px;
-  background-color:#BFB;
 }
 
 .receipt .toolbar{
@@ -234,8 +231,7 @@ aside{
   border-collapse: collapse;
 }
 
-#receipts-table td,#receipts-table th{
-  text-align: center;
+#receipts-table tr{
   padding: 7px;
   border-top: 1px #EBE solid;
   border-bottom: 1px #EBE solid;
@@ -244,11 +240,6 @@ aside{
 #receipts-table td.items{
   text-align: left;
 }
-
-#receipts-table th.amount{ width:15%;}
-#receipts-table th.items{ width:45%;}
-#receipts-table th.date{ width:20%;}
-#receipts-table th.store{ width:20%;}
 
 #receipts-table tr.row:hover{
   cursor:pointer;

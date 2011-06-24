@@ -100,6 +100,7 @@ var ReceiptView = Backbone.View.extend({
 
     var text = this.getItemText(this.model.get("items"));
     view.find(".items").html(text);
+    view.find(".date").html(new Date(this.model.get("receipt_time")).format());
     return this;
   },
 
@@ -109,10 +110,15 @@ var ReceiptView = Backbone.View.extend({
     }
     if(this.model.get("image") !== true){
       $(this.el).html(this.fullTemplate(this.model.toJSON()));
+
+      $(this.el).find(".date").html(new Date(this.model.get("receipt_time")).format());
+      console.log(this.model.get("receipt_time"));
+
       var items = $(this.el).find('.items');
       _.each(this.model.get("items"),function(model){
-        items.append("<div>"+model.item_name +"     - $" +model.item_price + " x " + model.item_qty+"</div>");
+        items.append("<div>"+model.item_name +"   x   - $" +model.item_price + " x " + model.item_qty+"</div>");
       });
+
       window.lastOpen = this;
     }
   },
