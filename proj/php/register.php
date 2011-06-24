@@ -46,7 +46,7 @@ if(isset($code)){
 	$info = $ctrl->decodeVerifyCode($code);
 	$result = $ctrl->updateUserInfo($info[0], array('verified'=>true)) == true ? 
 			  true : $ctrlS->update($info[0], array('verified'=>true));
-	die();
+	return;
 }
 
 switch($registerType){
@@ -119,8 +119,7 @@ if($ctrl->insert($param)){
 			case 'store':
 				$ctrl->delete($param[$accType]);
 		}
-		echo false;
-		die();
+		die("insert contacts information failed");
 	}
 	else{
 		echo true;
@@ -152,10 +151,12 @@ if($ctrl->insert($param)){
 				</html>
 	";
 	
-	$email->mail($personEmail, $mailSub, $mailContent);
+	if($email->mail($personEmail, $mailSub, $mailContent)){
+		echo "Register Success, please check your mailbox for authenticate\n";
+	}
 }
 
 else{
-	echo false;
+	die("Register failed, please check your register information");
 }
 ?>
