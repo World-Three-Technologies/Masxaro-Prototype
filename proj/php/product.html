@@ -43,19 +43,24 @@
     <div id="main" role="main">
       <div class="clearfix">
         <div id="register">
-          <form>
+          <form action="register.php" method="POST">
             <table>
               <tr>
-                <td><label for="username" title="Username">Username</label></td>
-                <td><input type="text"></input></td>
+                <td><label for="userAccount" title="Username">Username</label></td>
+                <td><input type="text" name="userAccount"></input></td>
               </tr>
               <tr>
-                <td><label for="password" title="password">Password</label></td>
-                <td><input type="password"></input></td>
+                <td><label for="firstName" title="firstName">First Name</label></td>
+                <td><input type="text" name="firstName"></input></td>
+              </tr>
+              <tr>
+                <td><label for="pwd" title="password">Password</label></td>
+                <td><input type="password" name="pwd"></input></td>
               </tr>
               <tr>
                 <td><label for="email" title="email">Email</label></td>
-                <td><input type="text"></input></td>
+                <td><input type="text" name="email"></input></td>
+                <input type="hidden" name="type" value="user"></input>
               </tr>
               <tr><td></td><td><button>Register</button></td></tr>
             </table>

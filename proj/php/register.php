@@ -65,7 +65,6 @@ switch($registerType){
 		$ctrl = new UserCtrl();
 		break;
 		
-		
 	case 'store':
 		$param = array( 
 					'store_account'=>$_REQUEST['storeAccount'],
@@ -75,14 +74,12 @@ switch($registerType){
 					'pwd'=>$_REQUEST['pwd']
 		);
 		
-		$acc = 'store_account';
+		$accType = 'store_account';
 		$ctrl = new StoreCtrl();
 		break;
 		
 	default:
-		echo false;
-		die();
-		
+		die("incorrect register information");
 }
 
 $personEmail = $_REQUEST['email'];
@@ -120,9 +117,6 @@ if($ctrl->insert($param)){
 				$ctrl->delete($param[$accType]);
 		}
 		die("insert contacts information failed");
-	}
-	else{
-		echo true;
 	}
 	
 	$codeParam = array(
