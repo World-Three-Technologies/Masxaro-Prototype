@@ -172,9 +172,9 @@ public class Receipt {
 		return mTax;
 	}
 	
-//	private boolean getWhere() {
-//		return mWhere;
-//	}
+	public boolean getWhere() {
+		return mWhere;
+	}
 	
 	private String getTotal() {
 		return mTotal;

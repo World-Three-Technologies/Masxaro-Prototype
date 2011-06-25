@@ -29,6 +29,7 @@ package com.android.W3T.app;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -43,6 +44,7 @@ import android.widget.Toast;
 
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
+import com.android.W3T.app.user.UserProfile;
 
 public class ReceiptsView extends Activity {
 	public static final String TAG = "ReceiptsViewActivity";
@@ -55,6 +57,7 @@ public class ReceiptsView extends Activity {
 //	public static final int EMPTY_VIEW_LAYOUT = R.id.empty_receipt_view;
 //	public static final int RECEITP_VIEW_LAYOUT = R.id.receipt_view;
 	
+	private Menu mMenu;
 	private int mCurReceipt = 0;
 	private ProgressDialog mRefreshProgress;
 	private Handler mUpdateHandler = new Handler();
@@ -91,6 +94,7 @@ public class ReceiptsView extends Activity {
 	public void onResume() {
 		Log.i(TAG, "onResume()");
 		super.onResume();
+//		this.openOptionsMenu();
 		if (ReceiptsManager.getNumValid() != 0) {
 			Log.i(TAG, "Receipts exist");
 			setContentView(R.layout.receipt_view);

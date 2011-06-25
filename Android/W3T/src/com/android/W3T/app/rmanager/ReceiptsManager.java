@@ -56,7 +56,7 @@ public class ReceiptsManager {
 	};
 	
 	// This array stores all receipts in mobile app.
-	private static ArrayList<Receipt> Receipt = new ArrayList<Receipt>();
+	private static ArrayList<Receipt> Receipts = new ArrayList<Receipt>();
 	private static int sNumValidReceipt = 0;
 	
 	public static void initReceiptsManager() {
@@ -64,7 +64,7 @@ public class ReceiptsManager {
             Log.v(TAG, "initialize receitp manager");
         }
 		for(int i=0;i<NUM_RECEIPT;i++) {
-			Receipt.add(i, new Receipt());
+			Receipts.add(i, new Receipt());
 		}
 		sNumValidReceipt = 0;
 	}	
@@ -74,7 +74,19 @@ public class ReceiptsManager {
 	}
 	
 	public static Receipt getReceipt(int index) {
-		return Receipt.get(index);
+		return Receipts.get(index);
+	}
+	
+	public static ArrayList<Receipt> getUnSentReceipts() {
+		int cnt = getNumValid();
+		ArrayList<Receipt> result = new ArrayList<Receipt>();
+		for (int i=0;i<cnt;i++) {
+			Receipt r = getReceipt(i);
+			if (r.getWhere() == FROM_NFC) {
+				result.add(r);
+			}
+		}
+		return result;
 	}
 	
 	public static void add(String str, boolean where) {
@@ -101,8 +113,7 @@ public class ReceiptsManager {
 			}
 			if (Log.isLoggable(TAG, Log.VERBOSE)) {
 	            Log.v(TAG, "adding receipts is done");
-	        }
-			
+	        }			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -114,7 +125,7 @@ public class ReceiptsManager {
 		if (Log.isLoggable(TAG, Log.VERBOSE)) {
             Log.v(TAG, "add a new receipt into Receipt pool");
         }
-		Receipt.add(sNumValidReceipt, r);
+		Receipts.add(sNumValidReceipt, r);
 		sNumValidReceipt++;
 //	TODO:	System.out.println("Any un-delivered receipt?");	
 //	TODO:	System.out.println("Add a new receipt");
