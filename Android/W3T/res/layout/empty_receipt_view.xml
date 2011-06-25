@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
 /*
- * front_page.xml - The layout XML file of the front page  
+ * empty_recepit_view.xml - The layout of empty receipt view 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -24,21 +24,10 @@
  *
  */
  -->
-<LinearLayout
-  	xmlns:android="http://schemas.android.com/apk/res/android"
-  	android:layout_width="match_parent"
-  	android:layout_height="match_parent"
-  	android:orientation="vertical"
-  	android:id="@+id/front_page"
->
-    <!-- This label shows the username who has logged in. -->
-    <TextView android:text="@string/fp_not_login" android:id="@+id/Username" 
-      	android:layout_width="fill_parent" android:layout_height="wrap_content"
-      	android:gravity="center" android:textSize="20dip"
-    />
-    <!-- This part displays the Fractal Fern image as main part of the front page -->
-    <ImageView android:id="@+id/FractalFern" 
-      	android:layout_width="fill_parent" android:layout_height="fill_parent"
-      	android:src="@drawable/fracfern" android:layout_gravity="center_vertical"
-    />
-</LinearLayout>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/empty_receipt_view"
+  android:layout_width="match_parent" android:layout_height="match_parent"
+  android:gravity="center_vertical|center_horizontal"
+  android:text="@string/empty_receipt"
+/>
+

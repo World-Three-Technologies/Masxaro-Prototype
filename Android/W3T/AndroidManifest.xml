@@ -34,7 +34,7 @@
 		
 		<!-- This is the NFC communication activity which indicates the NFC link
 			is connecting after the cell phone is put close to a vendor machine. -->
-		<activity android:name="NFCConnecting"
+		<activity android:name="NfcConnecting"
 			android:theme="@android:style/Theme.NoTitleBar"
 		>
 			<intent-filter>
@@ -48,7 +48,7 @@
 			android:theme="@android:style/Theme.NoTitleBar"
 		>
 			<intent-filter>
-				<action android:name="android.nfc.action.NDEF_DISCOVERED" />
+				<action android:name="android.nfc.action.TAG_DISCOVERED" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
