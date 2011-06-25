@@ -25,15 +25,20 @@
 
 package com.android.W3T.app.nfc;
 
+import java.util.ArrayList;
+
 import com.android.W3T.app.FrontPage;
 import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
 import com.android.W3T.app.ReceiptsView;
+import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
+import com.android.W3T.app.user.UserProfile;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -46,7 +51,7 @@ public class TagView extends Activity {
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
-	private Receipt mReceipt;
+//	private Receipt mReceipt;
 	
 	private Button mRejectBtn;
 	private Button mConfirmBtn;
@@ -71,7 +76,15 @@ public class TagView extends Activity {
 			public void onClick(View v) {
 				String jsonstr = 
 					new String("[{\"store_account\":null,\"receipt_id\":\"102\",\"user_account\":null,\"receipt_time\":\"2011-06-22 15:43:12\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"hamburger\",\"item_id\":\"1010\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"img\":null,\"deleted\":0,\"store_name\":\"Starbucks\"}]");
-	            ReceiptsManager.add(jsonstr, FROM_NFC);  
+	            ReceiptsManager.add(jsonstr, FROM_NFC);
+	            // TODO: Temporarily put here
+	            ArrayList<Receipt> receipts = ReceiptsManager.getUnSentReceipts();
+	            int num = receipts.size();
+	            for (int i=0;i<num;i++) {
+	            	NetworkUtil.attemptSendReceipt(UserProfile.getUsername(), receipts.get(i));
+	            }
+	            
+	            
 				setBackIntent();
 				finish();
 			}
@@ -82,6 +95,7 @@ public class TagView extends Activity {
 	
 	@Override
     public void onNewIntent(Intent intent) {
+		Toast.makeText(this, "TagView onNewIntent", Toast.LENGTH_SHORT).show();
         setIntent(intent);
         String action = intent.getAction();
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {

@@ -33,6 +33,7 @@ import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.widget.Toast;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -49,38 +50,48 @@ public class NfcConnecting extends Activity {
         // Just showing a message in the center of the screen
 		setContentView(R.layout.nfc_connecting);
 		
-//		mAdapter = NfcAdapter.getDefaultAdapter(this);
-//
-//        // Create a generic PendingIntent that will be deliver to this activity. The NFC stack
-//        // will fill in the intent with the details of the discovered tag before delivering to
-//        // this activity. @from sample code
-//        mPendingIntent = PendingIntent.getActivity(this, 0,
-//                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-//
-//        // Setup an intent filter for all MIME based dispatches
-//        IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-//        try {
-//            ndef.addDataType("*/*");
-//        } catch (MalformedMimeTypeException e) {
-//            throw new RuntimeException("fail", e);
-//        }
-//        mFilters = new IntentFilter[] {
-//                ndef,
-//        };
+		mAdapter = NfcAdapter.getDefaultAdapter(this);
+
+        // Create a generic PendingIntent that will be deliver to this activity. The NFC stack
+        // will fill in the intent with the details of the discovered tag before delivering to
+        // this activity. @from sample code
+        mPendingIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        mPendingIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, TagView.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        // Setup an intent filter for all MIME based dispatches
+        IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        try {
+            ndef.addDataType("*/*");
+        } catch (MalformedMimeTypeException e) {
+            throw new RuntimeException("fail", e);
+        }
+        mFilters = new IntentFilter[] {
+                ndef,
+        };
     }
 	
-//	@Override
-//    public void onResume() {
-//        super.onResume();
+	@Override
+    public void onResume() {
+        super.onResume();
 //        mAdapter.enableForegroundDispatch(new TagView(), mPendingIntent, mFilters, null);
-//    }
-//	
+        // Set filters as null. According to reference, that will make the system receive a 
+        // TAG_DISCOVERED for all tags.
+        mAdapter.enableForegroundDispatch(new TagView(), mPendingIntent, null, null);
+    }
+	
 	@Override
     public void onPause() {
         super.onPause();
-//        mAdapter.disableForegroundDispatch(this);
+        mAdapter.disableForegroundDispatch(this);
         finish();
     }
+	
+	@Override
+	public void onNewIntent(Intent intent) {
+		// This is called to check where the PendingIntent is going.
+		Toast.makeText(this, "NfcConnecting onNewIntent", Toast.LENGTH_SHORT).show();
+	}
 	
 	@Override
 	// Deal with any key press event
