@@ -51,15 +51,15 @@ public class NfcConnecting extends Activity {
 		setContentView(R.layout.nfc_connecting);
 		
 //		mAdapter = NfcAdapter.getDefaultAdapter(this);
-//
-//        // Create a generic PendingIntent that will be deliver to this activity. The NFC stack
-//        // will fill in the intent with the details of the discovered tag before delivering to
-//        // this activity. @from sample code
+
+        // Create a generic PendingIntent that will be deliver to this activity. The NFC stack
+        // will fill in the intent with the details of the discovered tag before delivering to
+        // this activity. @from sample code
 //        mPendingIntent = PendingIntent.getActivity(this, 0,
 //                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 //        mPendingIntent = PendingIntent.getActivity(this, 0,
 //                new Intent(this, TagView.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-//        // Setup an intent filter for all MIME based dispatches
+        // Setup an intent filter for all MIME based dispatches
 //        IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
 //        try {
 //            ndef.addDataType("*/*");
@@ -77,6 +77,7 @@ public class NfcConnecting extends Activity {
 //        mAdapter.enableForegroundDispatch(new TagView(), mPendingIntent, mFilters, null);
         // Set filters as null. According to reference, that will make the system receive a 
         // TAG_DISCOVERED for all tags.
+        
 //        mAdapter.enableForegroundDispatch(new TagView(), mPendingIntent, null, null);
     }
 	
@@ -84,7 +85,7 @@ public class NfcConnecting extends Activity {
     public void onPause() {
         super.onPause();
 //        mAdapter.disableForegroundDispatch(this);
-//        finish();
+        finish();
     }
 	
 	@Override
