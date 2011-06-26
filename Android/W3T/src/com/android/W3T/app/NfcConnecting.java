@@ -77,6 +77,7 @@ public class NfcConnecting extends Activity {
 //        mAdapter.enableForegroundDispatch(new TagView(), mPendingIntent, mFilters, null);
         // Set filters as null. According to reference, that will make the system receive a 
         // TAG_DISCOVERED for all tags.
+        
         mAdapter.enableForegroundDispatch(new TagView(), mPendingIntent, null, null);
     }
 	

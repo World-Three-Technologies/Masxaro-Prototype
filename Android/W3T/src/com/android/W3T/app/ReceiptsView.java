@@ -27,58 +27,82 @@
 package com.android.W3T.app;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
-
+import com.android.W3T.app.user.UserProfile;
 
 public class ReceiptsView extends Activity {
-	private static ReceiptManager mRM = new ReceiptManager();
+	public static final String TAG = "ReceiptsViewActivity";
 	
+	public static final String RECEIVE_ALL = "user_get_all_receipt";
+	
+	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
+	
+//	public static final int EMPTY_VIEW_LAYOUT = R.id.empty_receipt_view;
+//	public static final int RECEITP_VIEW_LAYOUT = R.id.receipt_view;
+	
+	private Menu mMenu;
 	private int mCurReceipt = 0;
-	private Handler mUpdateHandler = new Handler() {  
-	    public void handleMessage(Message msg) {
-	    	super.handleMessage(msg);
-	    	fillReceiptView(msg.getData().getInt("num"));
-	    }
-	};
-	private Runnable mPrevUpdate = new Runnable() {
+	private ProgressDialog mRefreshProgress;
+	private Handler mUpdateHandler = new Handler();
+	private Runnable mReceiptThread = new Runnable() {
 		@Override
 		public void run() {
-			int pos = getPrevReceipt(mCurReceipt);
-			Bundle data = new Bundle();
-			data.putInt("num", pos);
-			Message msg = new Message();
-			msg.setData(data);
-			mUpdateHandler.sendMessage(msg);
-		}
-	};
-	private Runnable mNextUpdate = new Runnable() {
-		@Override
-		public void run() {
-			int pos = getNextReceipt(mCurReceipt);
-			Bundle data = new Bundle();
-			data.putInt("num", pos);
-			Message msg = new Message();
-			msg.setData(data);
-			mUpdateHandler.sendMessage(msg);
+			Log.i(TAG, "retrieve receipts from database");
+			// TODO: upload the receipt with FROM_NFC flag
+			// Download latest 7 receipts from database and upload non-uploaded receipts
+			// to the database.
+			String jsonstr = NetworkUtil.attemptGetReceipt(ReceiptsView.RECEIVE_ALL, "new");
+			if (jsonstr != null) {
+				setContentView(R.layout.receipt_view);
+				Log.i(TAG, "add new receipts");
+				System.out.println(jsonstr);
+				// Set the IsUpload true
+				ReceiptsManager.add(jsonstr, FROM_DB);
+				Log.i(TAG, "finished new receipts");
+				Log.i(TAG, "update receipt view");
+				fillReceiptView(0);
+				mRefreshProgress.dismiss();
+			}
 		}
 	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.i(TAG, "onCreate(" + savedInstanceState +")");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.receipt_view);
-//        mReceiptView = (LinearLayout)findViewById(R.id.receipt_view);
+        noReceiptView();
+	}
+	
+	@Override
+	public void onResume() {
+		Log.i(TAG, "onResume()");
+		super.onResume();
+//		this.openOptionsMenu();
+		if (ReceiptsManager.getNumValid() != 0) {
+			Log.i(TAG, "Receipts exist");
+			setContentView(R.layout.receipt_view);
+			fillReceiptView(0);
+		}
+//		else {
+//			noReceiptView();
+//		}
 	}
 	
 	@Override
@@ -97,18 +121,23 @@ public class ReceiptsView extends Activity {
 	@Override
 	// All Toast messages are implemented later.
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.i(TAG, "onOptionsItemSelected(" + item + ")");
 		switch (item.getItemId()) {
 		case R.id.refresh_opt:
-			Toast.makeText(this, "Refresh the receipt list!", Toast.LENGTH_SHORT).show();
+			Log.i(TAG, "handler post a new thread");
+			// Show a progress bar and send account info to server.
+			mRefreshProgress = new ProgressDialog(ReceiptsView.this);
+			mRefreshProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mRefreshProgress.setMessage("Refreshing...");
+			mRefreshProgress.setCancelable(true);
+			mRefreshProgress.show();
+			mUpdateHandler.post(mReceiptThread);
 			return true;
 		case R.id.sw_receipt_opt:
 			Toast.makeText(this, "Switch to anther receipt view!", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.b_to_fp_opt:
-			// Back to Front Page activity
-			Intent front_page_intent = new Intent(ReceiptsView.this, FrontPage.class);
-			startActivity(front_page_intent);
-			finish();
+			setBackIntent();
 			break;
 		default:
 			return false;
@@ -120,12 +149,15 @@ public class ReceiptsView extends Activity {
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_LEFT:
-			new Thread(mPrevUpdate).start();
-//			fillReceiptView(getPrevReceipt(mCurReceipt));
+			setContentView(R.layout.receipt_view);
+			fillReceiptView(getPrevReceipt(mCurReceipt));
 			break;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			new Thread(mNextUpdate).start();
-//			fillReceiptView(getNextReceipt(mCurReceipt));
+			setContentView(R.layout.receipt_view);
+			fillReceiptView(getNextReceipt(mCurReceipt));
+			break;
+		case KeyEvent.KEYCODE_BACK:
+			setBackIntent();
 			break;
 		default:
 			break;
@@ -133,24 +165,71 @@ public class ReceiptsView extends Activity {
 		return super.onKeyUp(keyCode, event);
 	}
 	
+	private void setBackIntent() {
+		// Back to Front Page activity
+		Intent front_page_intent = new Intent(ReceiptsView.this, FrontPage.class);
+		front_page_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		startActivity(front_page_intent);
+	}
+	
 	private int getPrevReceipt(int num) {
-		mCurReceipt = (num+ReceiptManager.getNumValid()-1)%ReceiptManager.getNumValid();
-		System.out.println(ReceiptManager.getNumValid());
-		System.out.println(mCurReceipt);
-		return (num+ReceiptManager.getNumValid()-1)%ReceiptManager.getNumValid();
+		mCurReceipt = (num+ReceiptsManager.getNumValid()-1)%ReceiptsManager.getNumValid();
+		return (num+ReceiptsManager.getNumValid()-1)%ReceiptsManager.getNumValid();
 	}
 	
 	private int getNextReceipt(int num) {
-		mCurReceipt = (num+1)%ReceiptManager.getNumValid();
-		System.out.println(ReceiptManager.getNumValid());
-		System.out.println(mCurReceipt);
-		return (num+1)%ReceiptManager.getNumValid();
+		mCurReceipt = (num+1)%ReceiptsManager.getNumValid();
+		return (num+1)%ReceiptsManager.getNumValid();
 	}
 	
 	private void fillReceiptView(int num) {
-		for (int i = 0;i < ReceiptManager.NUM_RECEIPT_ITEM;i++) {
-			((TextView)findViewById(ReceiptManager.ReceiptViewElements[i]))
-				.setText(ReceiptManager.getReceipts().get(num).getItem(i));
+		if (ReceiptsManager.getNumValid() != 0) {
+			fillBasicInfo(num);
+			fillItemsRows(num);
 		}
+		else {
+			noReceiptView();
+		}
+	}
+	
+	private void fillBasicInfo(int num) {
+		// Set all basicInfo entries: store name, id, time, tax, total .
+		for (int i = 0;i < ReceiptsManager.NUM_RECEIPT_ENTRY;i++) {
+			Receipt r = ReceiptsManager.getReceipt(num);
+			((TextView) findViewById(ReceiptsManager.ReceiptViewElements[i]))
+				.setText(r.getEntry(i));
+		}
+	}
+	
+	private void fillItemsRows(int num) {
+		// Set all item rows in the Items Table: id, name, qty, price. (no discount for now)
+		int numItems = ReceiptsManager.getReceipt(num).getNumItem();
+		int pos = 1;
+		TableLayout t = (TableLayout) findViewById(R.id.items_table);
+		for (int i=0;i<numItems;i++) {
+			TableRow row1 = new TableRow(this);
+			TextView itemId = new TextView(this);
+			TextView itemQty = new TextView(this);
+			TextView itemPrice = new TextView(this);
+			itemId.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getItemId()));
+			itemQty.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getQty()));
+			itemPrice.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getPrice()));
+			row1.addView(itemId);
+			row1.addView(itemQty);
+			row1.addView(itemPrice);
+			TableRow row2 = new TableRow(this);
+			TextView itemName = new TextView(this);
+			itemName.setText(ReceiptsManager.getReceipt(num).getItem(i).getName());
+			itemName.setPadding(10, 0, 0, 0);
+			row2.addView(itemName);
+			t.addView(row1, pos++);
+			t.addView(row2, pos++);
+		}
+		
+	}
+	
+	private void noReceiptView() {
+		Log.i(TAG, "Create a empty view");
+		setContentView(R.layout.empty_receipt_view);
 	}
 }

@@ -26,82 +26,181 @@
 
 package com.android.W3T.app.rmanager;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Receipt {
-	public final static String[][] FakeReceiptsInfo = {
-		{"ID@1234", "06-01-2011", "Wendy's", "12.32USD"},
-		{"ID@1235", "06-02-2011", "Starbucks", "4.63USD"},
-		{"ID@1236", "06-02-2011", "J Street", "10.02USD"},
-		{"ID@1237", "06-03-2011", "Starbucks", "4.63USD"},
-		{"ID@1238", "06-03-2011", "Penn Grill", "8.76USD"},
-		{"ID@1239", "06-04-2011", "Starbucks", "7.56USD"},
-		{"ID@1234", "06-04-2011", "Wendy's", "6.22USD"}
-	};
+	// JSON names of Receipt entries
+	public static final String PARAM_RECEIPT_ID = "receipt_id";
+	public static final String PARAM_RECEIPT_TIME = "receipt_time";
+	public static final String PARAM_RECEIPT_TAX = "tax";
+	public static final String PARAM_RECEIPT_TOTAL = "total_cost";
+	public static final String PARAM_RECEIPT_STORE_NAME = "store_name";
+//	public static final String PARAM_RECEIPT_STORE_ACC = "store_account";
+//	public static final String PARAM_RECEIPT_USER_ACC = "user_account";
+	public static final String PARAM_RECEIPT_IMAGE = "img";
+	public static final String PARAM_RECEIPT_DELETE = "delete";
 	
-	private String mId;
+	// JSON names of Item entries.
+	public static final String PARAM_ITEM_ID = "item_id";
+	public static final String PARAM_ITEM_NAME = "item_name";
+	public static final String PARAM_ITEM_QTY = "item_qty";
+	public static final String PARAM_ITEM_PRICE = "item_price";
+	
+	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
+	
+//	public static final String[][] sFakeReceiptsInfo = {
+//		{"ID@1234", "06-01-2011", "Wendy's", "12.32USD"},
+//		{"ID@1235", "06-02-2011", "Starbucks", "4.63USD"},
+//		{"ID@1236", "06-02-2011", "J Street", "10.02USD"},
+//		{"ID@1237", "06-03-2011", "Starbucks", "4.63USD"},
+//		{"ID@1238", "06-03-2011", "Penn Grill", "8.76USD"},
+//		{"ID@1239", "06-04-2011", "Starbucks", "7.56USD"},
+//		{"ID@1234", "06-04-2011", "Wendy's", "6.22USD"}
+//	};
+	
+	private String mReceiptId;
 	private	String mStoreName;
-	private String mDate;
+	private String mTime;
+	private String mTax;
 	private String mTotal;
-	private boolean mValid;
-	
+	private String img;
+	private String delete;
+	private ArrayList<ReceiptItem> mItems;	// Items in this receipt
+	private int mNumItems;			// Number of items
+	private boolean mWhere;			// Whether this receipt has been synced with system.
+									// The receipt retrieved from database sets true.
+									// The receipt retrieved from nfc tag sets false
 	public Receipt() {
-		mId = new String("ID@0000");
+		mReceiptId = new String("ID@0000");
 		mStoreName = new String("N/A");
-		mDate = new String("N/A");
+		mTime = new String("N/A");
 		mTotal = new String("N/A");
-		mValid = false;
+		mTax = new String("N/A");
+		img = new String("N/A");
+		delete = new String();
+		mItems = new ArrayList<ReceiptItem>();
+		mNumItems = 0;
+		mWhere = false;
 	}
 	
-	public String getItem(int i) {
+	public Receipt(JSONObject str, boolean w) {
+		try {
+			mReceiptId = str.get(PARAM_RECEIPT_ID).toString();
+			mTime = str.get(PARAM_RECEIPT_TIME).toString();
+			mStoreName = str.get(PARAM_RECEIPT_STORE_NAME).toString();
+			mTotal = str.get(PARAM_RECEIPT_TOTAL).toString();
+			mTax = str.get(PARAM_RECEIPT_TAX).toString();
+			mItems = new ArrayList<ReceiptItem>();
+			mNumItems = 0;
+			mWhere = w;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public String getEntry(int i) {
+		String result = new String();  
 		switch(i) {
 		case 0:
-			return getId();
+			result = getStoreName();
+			break;
 		case 1:
-			return getDate();
+			result = getTime();
+			break;
 		case 2:
-			return getStoreName();
+			result = getId();
+			break;
 		case 3:
-			return getTotal();
+			result = getTax();
+			break;
+		case 4:
+			result = getTotal();
+			break;
+		default:
+			result = null;
+			break;
 		}
-		return null;
+		return result;
 	}
 	
-	public String getId() {
-		return mId;
+	public ReceiptItem getItem(int i) {
+		return mItems.get(i);
 	}
 	
-	public String getStoreName() {
+	public void addItems(JSONArray items) {
+		mNumItems = items.length();
+		
+		try {
+			for (int i=0;i<mNumItems;i++) {
+				JSONObject item = (JSONObject) items.get(i);
+				ReceiptItem newItem = new ReceiptItem();
+				newItem.setItemId(Integer.valueOf(item.getString(PARAM_ITEM_ID)));
+				newItem.setName(item.getString(PARAM_ITEM_NAME));
+				newItem.setQty(Integer.valueOf(item.getString(PARAM_ITEM_QTY)));
+				newItem.setPrice(Double.parseDouble(item.getString(PARAM_ITEM_PRICE)));
+				mItems.add(newItem);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public int getNumItem() {
+		return mNumItems;
+	}
+	
+	private String getId() {
+		return mReceiptId;
+	}
+	
+	private String getStoreName() {
 		return mStoreName;
 	}
 	
-	public String getDate() {
-		return mDate;
+	private String getTime() {
+		return mTime;
 	}
 	
-	public boolean getValid() {
-		return mValid;
+	private String getTax() {
+		return mTax;
 	}
 	
-	public String getTotal() {
+	public boolean getWhere() {
+		return mWhere;
+	}
+	
+	private String getTotal() {
 		return mTotal;
 	}
 	
-	public void setId(String id) {
-		mId = id; 
-	}
-
-	public void setDate(String date) {
-		mDate = date; 
-	}
+//	private void setId(String id) {
+//		mReceiptId = id; 
+//	}
+//
+//	private void setTime(String time) {
+//		mTime = time; 
+//	}
+//	
+//	private void setStoreName(String sn) {
+//		mStoreName = sn; 
+//	}
+//	
+//	private void setTotal(String tt) {
+//		mTotal = tt; 
+//	}
+//	
+//	private void setWhere(boolean w) {
+//		mWhere = w;
+//	}
 	
-	public void setStoreName(String sn) {
-		mStoreName = sn; 
-	}
-	
-	public void setTotal(String tt) {
-		mTotal = tt; 
-	}
-	
-	public void setValid(boolean v) {
-		mValid = v;
-	}
+//	private void setTax(String t) {
+//		mTax = t;
+//	}
 }

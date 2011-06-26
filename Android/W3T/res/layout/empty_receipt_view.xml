@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
 /*
- * arrays.xml - All String array const used in app  
+ * empty_recepit_view.xml - The layout of empty receipt view 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -24,10 +24,10 @@
  *
  */
  -->
-<resources>
-    <string-array name="sort_types">
-        <item>ID</item>
-        <item>Date</item>
-        <item>Store name</item>
-    </string-array>
-</resources>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/empty_receipt_view"
+  android:layout_width="match_parent" android:layout_height="match_parent"
+  android:gravity="center_vertical|center_horizontal"
+  android:text="@string/empty_receipt"
+/>
+

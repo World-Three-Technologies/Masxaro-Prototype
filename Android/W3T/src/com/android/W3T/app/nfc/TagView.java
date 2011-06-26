@@ -78,13 +78,12 @@ public class TagView extends Activity {
 					new String("[{\"store_account\":null,\"receipt_id\":\"102\",\"user_account\":null,\"receipt_time\":\"2011-06-22 15:43:12\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"hamburger\",\"item_id\":\"1010\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"img\":null,\"deleted\":0,\"store_name\":\"Starbucks\"}]");
 	            ReceiptsManager.add(jsonstr, FROM_NFC);
 	            // TODO: Temporarily put here
-	            ArrayList<Receipt> receipts = ReceiptsManager.getUnSentReceipts();
-	            int num = receipts.size();
-	            for (int i=0;i<num;i++) {
-	            	NetworkUtil.attemptSendReceipt(UserProfile.getUsername(), receipts.get(i));
-	            }
-	            
-	            
+//	            ArrayList<Receipt> receipts = ReceiptsManager.getUnSentReceipts();
+//	            int num = receipts.size();
+//	            for (int i=0;i<num;i++) {
+//	            	NetworkUtil.attemptSendReceipt(UserProfile.getUsername(), receipts.get(i));
+//	            }
+	                    
 				setBackIntent();
 				finish();
 			}
