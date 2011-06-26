@@ -50,7 +50,6 @@ public class NfcConnecting extends Activity {
         // Just showing a message in the center of the screen
 		setContentView(R.layout.nfc_connecting);
 		
-<<<<<<< HEAD
 //		mAdapter = NfcAdapter.getDefaultAdapter(this);
 
         // Create a generic PendingIntent that will be deliver to this activity. The NFC stack
@@ -70,27 +69,6 @@ public class NfcConnecting extends Activity {
 //        mFilters = new IntentFilter[] {
 //                ndef,
 //        };
-=======
-		mAdapter = NfcAdapter.getDefaultAdapter(this);
-
-        // Create a generic PendingIntent that will be deliver to this activity. The NFC stack
-        // will fill in the intent with the details of the discovered tag before delivering to
-        // this activity. @from sample code
-        mPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        mPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, TagView.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        // Setup an intent filter for all MIME based dispatches
-        IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        try {
-            ndef.addDataType("*/*");
-        } catch (MalformedMimeTypeException e) {
-            throw new RuntimeException("fail", e);
-        }
-        mFilters = new IntentFilter[] {
-                ndef,
-        };
->>>>>>> nfc-test
     }
 	
 	@Override
@@ -99,35 +77,15 @@ public class NfcConnecting extends Activity {
 //        mAdapter.enableForegroundDispatch(new TagView(), mPendingIntent, mFilters, null);
         // Set filters as null. According to reference, that will make the system receive a 
         // TAG_DISCOVERED for all tags.
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
         
->>>>>>> Android-Prototype
 //        mAdapter.enableForegroundDispatch(new TagView(), mPendingIntent, null, null);
-=======
-=======
-        
->>>>>>> nfc-test
-        mAdapter.enableForegroundDispatch(new TagView(), mPendingIntent, null, null);
->>>>>>> nfc-test
     }
 	
 	@Override
     public void onPause() {
         super.onPause();
-<<<<<<< HEAD
 //        mAdapter.disableForegroundDispatch(this);
-<<<<<<< HEAD
-//        finish();
-=======
-        mAdapter.disableForegroundDispatch(this);
         finish();
->>>>>>> nfc-test
-=======
-        finish();
->>>>>>> Android-Prototype
     }
 	
 	@Override
