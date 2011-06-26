@@ -79,12 +79,16 @@ public class TagView extends Activity {
 	            ReceiptsManager.add(jsonstr, FROM_NFC);
 	            // TODO: Temporarily put here
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> nfc-test
 //	            ArrayList<Receipt> receipts = ReceiptsManager.getUnSentReceipts();
 //	            int num = receipts.size();
 //	            for (int i=0;i<num;i++) {
 //	            	NetworkUtil.attemptSendReceipt(UserProfile.getUsername(), receipts.get(i));
 //	            }
 	                    
+<<<<<<< HEAD
 =======
 	            ArrayList<Receipt> receipts = ReceiptsManager.getUnSentReceipts();
 	            int num = receipts.size();
@@ -93,6 +97,8 @@ public class TagView extends Activity {
 	            }
 	            
 	            
+>>>>>>> nfc-test
+=======
 >>>>>>> nfc-test
 				setBackIntent();
 				finish();

@@ -205,9 +205,13 @@ public class FrontPage extends Activity {
 			mUptime = event.getEventTime();
 			duration = mUptime - mDowntime;
 <<<<<<< HEAD
+<<<<<<< HEAD
 			if (duration >= 100 && UserProfile.getStatus() == ON_LINE) {
 =======
 			if (duration >= 100 && log_status == ONLINE) {
+>>>>>>> nfc-test
+=======
+			if (duration >= 100 && UserProfile.getStatus() == ON_LINE) {
 >>>>>>> nfc-test
 				// A valid touch screen event.
 				Log.i(TAG, "Set a new intent: NfcConnecting");
