@@ -27,7 +27,6 @@ package com.android.W3T.app.nfc;
 
 import java.util.ArrayList;
 
-import com.android.W3T.app.FrontPage;
 import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
 import com.android.W3T.app.ReceiptsView;
@@ -38,13 +37,11 @@ import com.android.W3T.app.user.UserProfile;
 import android.app.Activity;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class TagView extends Activity {

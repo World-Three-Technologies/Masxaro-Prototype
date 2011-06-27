@@ -26,6 +26,7 @@
 
 package com.android.W3T.app;
 
+import android.R.color;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -33,10 +34,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -209,23 +213,36 @@ public class ReceiptsView extends Activity {
 		for (int i=0;i<numItems;i++) {
 			TableRow row1 = new TableRow(this);
 			TextView itemId = new TextView(this);
-			TextView itemQty = new TextView(this);
-			TextView itemPrice = new TextView(this);
 			itemId.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getItemId()));
-			itemQty.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getQty()));
-			itemPrice.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getPrice()));
+			itemId.setTextColor(getResources().getColor(R.color.black));
+			itemId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			itemId.setPadding(10, 0, 0, 0);
 			row1.addView(itemId);
-			row1.addView(itemQty);
-			row1.addView(itemPrice);
+			
 			TableRow row2 = new TableRow(this);
 			TextView itemName = new TextView(this);
+			TextView itemQty = new TextView(this);
+			TextView itemPrice = new TextView(this);
 			itemName.setText(ReceiptsManager.getReceipt(num).getItem(i).getName());
-			itemName.setPadding(10, 0, 0, 0);
+			itemName.setTextColor(getResources().getColor(R.color.black));
+			itemName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			itemQty.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getQty()));
+			itemQty.setTextColor(getResources().getColor(R.color.black));
+			itemQty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			itemQty.setGravity(Gravity.RIGHT);
+			itemQty.setPadding(0, 0, 10, 0);
+			itemPrice.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getPrice()));
+			itemPrice.setTextColor(getResources().getColor(R.color.black));
+			itemPrice.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			itemPrice.setGravity(Gravity.RIGHT);
+			itemPrice.setPadding(0, 0, 10, 0);
 			row2.addView(itemName);
-			t.addView(row1, pos++);
+			row2.addView(itemQty);
+			row2.addView(itemPrice);
+			
 			t.addView(row2, pos++);
+			t.addView(row1, pos++);
 		}
-		
 	}
 	
 	private void noReceiptView() {
