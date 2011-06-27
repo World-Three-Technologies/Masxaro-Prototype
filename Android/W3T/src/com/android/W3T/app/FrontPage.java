@@ -50,6 +50,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.W3T.app.network.NetworkUtil;
+import com.android.W3T.app.rmanager.ReceiptsManager;
 import com.android.W3T.app.user.*;
 
 public class FrontPage extends Activity {
@@ -94,6 +95,7 @@ public class FrontPage extends Activity {
         mFrontPage = (LinearLayout) findViewById(R.id.front_page);
         mUname = (TextView) findViewById(R.id.Username);
         mFractalImg = (ImageView) findViewById(R.id.FractalFern);
+        mLogProgress = new ProgressDialog(FrontPage.this);
 	}
 	
 	@Override
@@ -262,7 +264,6 @@ public class FrontPage extends Activity {
             	if (nametext && pwdtext) {
 					new LoginTask().execute(new Void[3]);
 					// Show a progress bar and send account info to server.
-					mLogProgress = new ProgressDialog(FrontPage.this);
 					mLogProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 					mLogProgress.setMessage("Logging in...");
 					mLogProgress.setCancelable(true);
@@ -298,15 +299,14 @@ public class FrontPage extends Activity {
 		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		        	   dialog.cancel();
+		        	   new LoginTask().execute(new Void[3]);
 		        	   // Show a progress bar and send log off signal to server.
-//		        	   ProgressDialog progresslog = new ProgressDialog(FrontPage.this);
-//		        	   progresslog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//		        	   progresslog.setMessage("Logging out...");
-//		        	   progresslog.setCancelable(true);
-//		        	   progresslog.show();
-		        	   
-		        	   UserProfile.resetUserProfile(OFF_LINE, null);
-		        	   setFrontPage(null, 0);
+		        	   mLogProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		        	   mLogProgress.setMessage("Logging out...");
+		        	   mLogProgress.setCancelable(true);
+		        	   mLogProgress.show();
+//		        	   UserProfile.resetUserProfile(OFF_LINE, null);
+//		        	   setFrontPage(null, 0);
 		           }
 		       })
 		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -328,8 +328,14 @@ public class FrontPage extends Activity {
 		private boolean isSuccessful = false; 
 		@Override
 		protected Void doInBackground(Void... params) {
-			isSuccessful = NetworkUtil.attemptLogin(mUnameEdit.getText().toString(),
-					mPwdEdit.getText().toString());
+			if (UserProfile.getStatus() == OFF_LINE) {
+				isSuccessful = NetworkUtil.attemptLogin(mUnameEdit.getText().toString(),
+						mPwdEdit.getText().toString(), DIALOG_LOGIN);
+			}
+			else if (UserProfile.getStatus() == ON_LINE) {
+				isSuccessful = NetworkUtil.attemptLogin(UserProfile.getUsername(),
+						null, DIALOG_LOGOUT);
+			}
 			return null;
 		}
 	    
@@ -337,14 +343,33 @@ public class FrontPage extends Activity {
 	    	super.onPostExecute(result);
 	    	String username = mUnameEdit.getText().toString();
 	    	mLogProgress.dismiss();
-	    	if (isSuccessful) {
-	    		UserProfile.resetUserProfile(ON_LINE, username);
-		    	setFrontPage(username, 0);
-		    	Toast.makeText(FrontPage.this, "Login succeeded!", Toast.LENGTH_SHORT).show();
+	    	if (UserProfile.getStatus() == OFF_LINE) {
+		    	if (isSuccessful) {
+		    		UserProfile.resetUserProfile(ON_LINE, username);
+			    	setFrontPage(username, 0);
+			    	Toast.makeText(FrontPage.this, "Login succeeded!", Toast.LENGTH_SHORT).show();
+		    	}
+		    	else {
+		    		mLoginDialog.show();
+		    		Toast.makeText(FrontPage.this, "Login failed!", Toast.LENGTH_SHORT).show();
+		    	}
 	    	}
-	    	else {
-	    		mLoginDialog.show();
-	    		Toast.makeText(FrontPage.this, "Login failed!", Toast.LENGTH_SHORT).show();
+	    	else if (UserProfile.getStatus() == ON_LINE) {
+	    		if (isSuccessful) {
+	    			// TODO: clear all user data
+	    			Log.i(TAG, "reset user profile");
+		    		UserProfile.resetUserProfile(OFF_LINE, null);
+		    		Log.i(TAG, "reset front page");
+			    	setFrontPage("Not Login", 0);
+			    	Log.i(TAG, "reset receipt manager");
+			    	ReceiptsManager.clearReceiptPool();
+			    	Log.i(TAG, "log out succeeded");
+			    	Toast.makeText(FrontPage.this, "Logout succeeded!", Toast.LENGTH_SHORT).show();
+		    	}
+		    	else {
+		    		mLogoutDialog.show();
+		    		Toast.makeText(FrontPage.this, "Logout failed!", Toast.LENGTH_SHORT).show();
+		    	}
 	    	}
 	    }
 	}

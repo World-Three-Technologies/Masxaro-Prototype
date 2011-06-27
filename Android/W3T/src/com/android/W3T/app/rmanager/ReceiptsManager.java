@@ -89,6 +89,11 @@ public class ReceiptsManager {
 		return result;
 	}
 	
+	public static void clearReceiptPool() {
+		Receipts.clear();
+		initReceiptsManager();
+	}
+	
 	public static void add(String str, boolean where) {
 		/* Receipt JSON structure: 
 		 * [{"store_account":null,"receipt_id":"101","user_account":null,"receipt_time":"2011-06-21 20:28:41","tax":"0.1","items":[],"total_cost":"10","img":null,"deleted":0,"store_name":"McD"},
@@ -130,4 +135,5 @@ public class ReceiptsManager {
 //	TODO:	System.out.println("Any un-delivered receipt?");	
 //	TODO:	System.out.println("Add a new receipt");
 	}
+	
 }
