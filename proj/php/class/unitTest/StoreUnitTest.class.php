@@ -41,11 +41,11 @@ class StoreUnitTest extends UnitTest{
 						'pwd'=>'123',
 						'store_name'=>'stest_store'
 					);
-		$this->assertTrue($this->ctrl->insertStore($info));
+		$this->assertTrue($this->ctrl->insert($info));
 	}
 	
 	public function deleteStore_Test($acc){
-		$this->assertTrue($this->ctrl->deleteStore($acc));
+		$this->assertTrue($this->ctrl->delete($acc));
 	}
 	
 	public function updateStoreInfo_Test($acc){
@@ -54,10 +54,10 @@ class StoreUnitTest extends UnitTest{
 						'pwd'=>'123'
 					);
 		
-		$this->assertTrue($this->ctrl->updateStoreInfo($acc, $info));
+		$this->assertTrue($this->ctrl->update($acc, $info));
 	}
 	
 	public function findStore_Test($acc, $pwd){
-		$this->assertTrue($this->ctrl->findStore($acc, $pwd));
+		$this->assertTrue($this->ctrl->find($acc, $pwd));
 	}
 }

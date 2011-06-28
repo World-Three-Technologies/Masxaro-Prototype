@@ -25,7 +25,6 @@
  */
 
 class ReceiptEntity{
-//	public $basicInfo = array();
 
 	public $receipt_id = NULL;
 	public $store_account = NULL;

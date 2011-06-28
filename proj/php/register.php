@@ -43,7 +43,7 @@ if(isset($code)){
 	$ctrl = new UserCtrl();
 	$ctrlS = new StoreCtrl();
 	
-	$info = $ctrl->decodeVerifyCode($code);
+	$info = Ctrl::decodeVerifyCode($code);
 	$result = $ctrl->updateUserInfo($info[0], array('verified'=>true)) == true ? 
 			  true : $ctrlS->update($info[0], array('verified'=>true));
 	return;
@@ -134,7 +134,7 @@ if($ctrl->insert($param)){
 
 	$url = "http://".$_SERVER ['HTTP_HOST'].$_SERVER['PHP_SELF'];
 	
-	$code = Tool::verifyCodeGen($codeParam);
+	$code = Ctrl::verifyCodeGen($codeParam);
 	$code = $url."?code=$code";
 	
 	$email = new EmailCtrl();

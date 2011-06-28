@@ -26,7 +26,13 @@
 
 include_once '../config.php';
 
-$opcode = $_POST['opcode'];
+$post = null;
+
+if(isset($_POST['params'])){
+	$post = json_decode($_POST['params']);
+}
+
+$opcode = isset($post) ? $post['opcode'] : $_POST['opcode'];
 
 $ctrl = new ReceiptCtrl();
 
@@ -35,49 +41,53 @@ Tool::setJSON();
 switch($opcode){
 	case 'new_receipt':
 		//1-d array
-		$basicInfo = $_POST['receipt'];
+		$basicInfo = isset($post) ? $post['receipt'] : $_POST['receipt'];
 		echo $ctrl->insertReceipt($basicInfo, null);
 		break;
 	
 	case 'new_item':
 		//2-d array
-		$items = $_POST['items'];
+		$items = isset($post) ? $post['items'] : $_POST['items'];
 		echo $ctrl->insertReceipt(null, $items);
 		break;
 		
 	case 'f_delete_receipt':
 		//fake delete one receipt
-		echo $ctrl->fakeDelete($_POST['receipt_id']);
+		echo $ctrl->fakeDelete(isset($post) ? $post['receipt_id'] : $_POST['receipt_id']);
 		break;
 		
 	case 'delete_receipt':
 		//delete one receipt
-		echo $ctrl->realDelete($_POST['receipt_id']);
+		echo $ctrl->realDelete(isset($post) ? $post['receipt_id'] : $_POST['receipt_id']);
 		break;
 		
 	case 'recover':
 		//recover fake deleted receipt
-		echo $ctrl->recoverDeleted($_POST['receipt_id']);
+		echo $ctrl->recoverDeleted(isset($post) ? $post['receipt_id'] : $_POST['receipt_id']);
 		break;
 		
 	case 'user_get_all_receipt_basic':
 		//user get  all receipts' basic info
-		echo json_encode($ctrl->userGetAllReceiptBasic($_POST['acc']));
+		echo json_encode($ctrl->userGetAllReceiptBasic(isset($post) ? $post['acc'] : $_POST['acc']));
 		break;
 		
 	case 'user_get_receipt_item':
 		//user get items info of one certain receipt
-		echo json_encode($ctrl->userGetReceiptItems($_POST['receipt_id']));
+		echo json_encode($ctrl->userGetReceiptItems(isset($post) ? $post['receipt_id'] : $_POST['receipt_id']));
 		break;
 		
 	case 'user_get_all_receipt':
 		//user get all receipt, with basic info and all items info
-		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
+		echo json_encode($ctrl->userGetAllReceipt(isset($post) ? $post['acc'] : $_POST['acc']));
 		break;
 		
 	case 'user_get_receipt_detail':
 		//user get basic info of one certain receipt
-		echo json_encode($ctrl->getReceiptDetail($_POST['receipt_id']));
+		echo json_encode($ctrl->getReceiptDetail(isset($post) ? $post['receipt_id'] : $_POST['receipt_id']));
+		break;
+		
+	default:
+		echo 'wrong parameters';
 		break;
 }
 

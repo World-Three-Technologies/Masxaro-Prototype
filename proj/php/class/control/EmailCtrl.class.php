@@ -30,6 +30,22 @@ class EmailCtrl extends Ctrl{
 		parent::__construct();
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param string $to
+	 * 
+	 * @param string $subject
+	 * 
+	 * @param string $message
+	 * 
+	 * @param string $addHeaders
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * send email
+	 */
 	public function mail($to, $subject, $message, $addHeaders = ""){
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
 		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
@@ -38,6 +54,17 @@ class EmailCtrl extends Ctrl{
 		$headers .= $addHeaders;
 		
 		return mail($to, $subject, $message, $headers);
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $acc
+	 * 
+	 * @return 
+	 */
+	public function grabEmail($acc){
+		
 	}
 	
 }

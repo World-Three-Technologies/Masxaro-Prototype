@@ -26,5 +26,93 @@
 
 class AddressCtrl extends Ctrl{
 	
+	/**
+	 * 
+	 * @param array() $info
+	 * 
+	 * @return false / inserted id
+	 */
+	public function insertAddress($info){
+		$info = Tool::infoArray2SQL($info);
+		
+		if(!Tool::securityChk($info)){
+			return false;
+		}
+		
+		$sql = "
+			INSERT
+			INTO
+				`address`
+			SET
+				$info	
+		";
+		
+		$inserted = $this->db->insert($sql);
+		
+		if($inserted < 0){
+			return false;
+		}
+		return $inserted;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param array() $info condition array
+	 * 
+	 * @return boolean
+	 */
+	public function deleteAddress($info){
+		$info = Tool::infoArray2SQL($info);
+		
+		$sql = "
+			DELETE
+			FROM
+				`address`
+			WHERE
+				$info
+		";
+				
+		if($this->db->delete($sql)){
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param array() $info
+	 */
+	public function updateAddress($info){
+		
+		$acc = "";
+		$accType = "_account";
+		if(isset($info['user_account'])){
+			$acc = $info['user_account'];
+			$accType = 'user'.$accType;
+		}
+		else{
+			$acc = $info['store_account'];
+			$accType = 'store'.$accType;
+		}
+		
+		$info = Tool::infoArray2SQL($info);
+		
+		$sql = "
+			UPDATE
+				`address`
+			SET
+				$info
+			WHERE
+				`$accType`='$acc'
+		";
+		
+		if($this->db->update($sql) <= 0){
+			return false;
+		}
+		return true;
+	}
+	
 }
 ?>
