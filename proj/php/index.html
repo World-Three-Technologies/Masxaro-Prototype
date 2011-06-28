@@ -67,14 +67,6 @@
             </ul>
           </nav>
           <table id="receipts-table">
-            <thead>
-              <tr>
-                <th class="amount">Amount</th>
-                <th class="items">Items</th>
-                <th class="store">Store</th>
-                <th class="date">Date</th>
-              </tr>
-            </thead>
             <td id="ajax-loader" colspan="4"><img src="assets/img/ajax-loader.gif"/></td>
           </table>
           <div class="receipts-stat">
@@ -93,28 +85,27 @@
   </div> <!-- eo #container -->
 
   <script type="text/tamplate" id="receipt-row-template">
-    <td>$<%= total_cost %></td>
-    <td class="items"></td>
-    <td><%= store_name %></td>
-    <td><%= receipt_time %></td>
+    <div>
+      <div class="date"></div>
+      <div class="items"></div>
+      <div><%= store_name %></div>
+      $<%= total_cost %>
+      </div>
+    </div>
   </script>
 
   <script type="text/template" id="receipt-full-template">
-    <td colspan='4' width="100%">
-      <div class="receipt clearfix">
-        <div class="total-cost">$<%= total_cost %></div>
-        <div class="receipt-row clearfix">
+      <div class="receipt">
+        <div class="date"></div>
+        <div class="receipt-row">
           <div class="items"></div> 
           <div class="store">at <%= store_name%></div>
         </div>
-        <div class="receipt-row clearfix">
-          <div class="date"><%= receipt_time %></div>
-        </div>
+        <div class="total-cost">$<%= total_cost %></div>
         <div class="toolbar invisible">
-          show full receipt, add tags
+          show receipt, edit, delete, add tags
         </div>
       </div>
-    </td>
   </script>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
