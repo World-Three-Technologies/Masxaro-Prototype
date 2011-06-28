@@ -22,8 +22,9 @@
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  */
 include_once '../config.php';
+include_once 'header.php';
 
-$acc = $_REQUEST['acc'];
+$acc = isset($jsonPost) ? $jsonPost['acc'] : $_REQUEST['acc'];
 
 //$acc = 'test';//for test
 

@@ -25,10 +25,11 @@
  *  user/store login
  */
 include_once '../config.php';
+include_once 'header.php';
 
-$acc = $_POST['acc'];
-$pwd = $_POST['pwd'];
-$type = $_POST['type']; // string, 'user' or 'store'
+$acc = isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc'];
+$pwd = isset($jsonPost) ? $jsonPost['pwd'] : $_POST['pwd'];
+$type = isset($jsonPost) ? $jsonPost['type'] : $_POST['type']; // string, 'user' or 'store'
 
 //for test
 //$acc = 'new';
@@ -42,29 +43,25 @@ $type = $_POST['type']; // string, 'user' or 'store'
 switch($type){
 	case 'user':
 		$ctrl = new UserCtrl();
-		if($ctrl->findUser($acc, $pwd)){
-      Tool::redirectToPortal();
-    }
+		if(!$ctrl->findUser($acc, $pwd)){
+      		echo false;
+      		die('wrong account or password');
+    	}
     break;
 		
 	case 'store':
 		$ctrl = new StoreCtrl();
 		if(!$ctrl->findStore($acc, $pwd)){
 			echo false;
-			die();
+			die('wrong account or password');
 		}
 		break;
 		
 	default:
-		echo 'wrong login';
-		return;
+		echo 'wrong login!';
 		break;
 }
 
-if($result = Tool::login($acc, $pwd, $type)){
-  echo $result;
-  return;
-} 
-
+echo $result = Tool::login($acc, $pwd, $type);
 
 ?>

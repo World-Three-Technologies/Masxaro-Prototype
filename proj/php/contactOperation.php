@@ -24,30 +24,27 @@
  */
 
 include_once '../config.php';
+include_once 'header.php';
 
-$acc = $_POST['acc'];
+$acc = isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc'];
 
 if(!Tool::authenticate($acc)){
 	echo "error: need login";
 	die();
 }
 
-$opcode = $_POST['opcode'];
-
-//var_dump($opcode);
-//die();
-
+$opcode = isset($jsonPost) ? $jsonPost['opcode'] : $_POST['opcode'];
 
 $ctrl = new ContactCtrl();
 
 switch($opcode){
 	case 'new_contacts':
-		$contacts = $_POST['contacts'];
+		$contacts = isset($jsonPost) ? $jsonPost['contacts'] : $_POST['contacts'];
 		echo $ctrl->insertContact($contacts);
 		break;
 		
 	case 'delete_contacts':
-		$values = $_POST['values'];
+		$values = isset($jsonPost) ? $jsonPost['values'] : $_POST['values'];
 		$n = count($values);
 		$result = true;
 		for($i = 0; $i < $n; $i ++){
@@ -57,7 +54,9 @@ switch($opcode){
 		break;
 		 
 	case 'get_contacts':
-		echo json_encode($ctrl->getContacts($_POST['acc'], $_POST['who']));
+		$acc = isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc'];
+		$who = isset($jsonPost) ? $jsonPost['who'] : $_POST['who'];
+		echo json_encode($ctrl->getContacts($acc, $who));
 		break;
 		
 	default:

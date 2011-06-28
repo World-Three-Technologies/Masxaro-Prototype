@@ -25,8 +25,9 @@
  */
 
 include_once '../config.php';
+include_once 'header.php';
 
-$acc = $_POST['acc'];
+$acc = isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc'];
 
 echo Tool::authenticate($acc);
 

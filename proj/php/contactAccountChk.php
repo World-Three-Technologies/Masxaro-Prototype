@@ -24,10 +24,11 @@
  */
 
 include_once '../config.php';
+include_once 'header.php';
 
-$acc = $_POST['acc'];
+$acc = isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc'];
 
-$contact = $_POST['contact'];
+$contact = isset($jsonPost) ? $jsonPost['contact'] : $_POST['contact'];
 
 $ctrl = new Ctrl();
 

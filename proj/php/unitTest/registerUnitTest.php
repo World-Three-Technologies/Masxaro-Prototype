@@ -29,6 +29,10 @@ $path = "http://localhost/w3t/proj/php/register.php?";
 
 $path .= "userAccount=testNew&firstName=lala&pwd=123&email=yangcongknight@gmail.com&type=user";
 
+$ch = curl_init($path);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POST, 1);
+
 Tool::redirect($path);
 
 ?>

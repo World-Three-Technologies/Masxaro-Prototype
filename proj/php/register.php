@@ -28,16 +28,15 @@
  */
 
 include_once '../config.php';
-
-$registerType = $_REQUEST['type']; //user / store
-
-$code = $_REQUEST['code'];
+include_once 'header.php';
 
 $personEmail = "";
-
 $ctrl = null;
-
 $accType = "";
+
+$registerType = isset($jsonPost) ? $jsonPost['type'] : $_REQUEST['type']; //user / store
+
+$code = isset($jsonPost) ? $jsonPost['code'] : $_REQUEST['code'];
 
 if(isset($code)){
 	$ctrl = new UserCtrl();
@@ -53,12 +52,12 @@ switch($registerType){
 	
 	case 'user':
 		$param = array(
-					'user_account'=>$_REQUEST['userAccount'], 
-					'first_name'=>$_REQUEST['firstName'],
-					'age_range_id'=>$_REQUEST['ageRangeId'],
-					'ethnicity'=>$_REQUEST['ethnicity'],
-					'pwd'=>$_REQUEST['pwd'],
-					'opt_in'=>$_REQUEST['optIn']
+					'user_account'=>isset($jsonPost) ? $jsonPost['userAccount'] : $_REQUEST['userAccount'], 
+					'first_name'=>isset($jsonPost) ? $jsonPost['firstName'] : $_REQUEST['firstName'],
+					'age_range_id'=>isset($jsonPost) ? $jsonPost['ageRangeId'] : $_REQUEST['ageRangeId'],
+					'ethnicity'=>isset($jsonPost) ? $jsonPost['ethnicity'] : $_REQUEST['ethnicity'],
+					'pwd'=>isset($jsonPost) ? $jsonPost['pwd'] : $_REQUEST['pwd'],
+					'opt_in'=>isset($jsonPost) ? $jsonPost['optIn'] : $_REQUEST['optIn']
 		);
 		
 		$accType = 'user_account';
@@ -67,11 +66,11 @@ switch($registerType){
 		
 	case 'store':
 		$param = array( 
-					'store_account'=>$_REQUEST['storeAccount'],
-					'store_name'=>$_REQUEST['storeName'],
-					'parent_store_account'=>$_REQUEST['parentStoreAcc'],
-					'store_type'=>$_REQUEST['storeType'],
-					'pwd'=>$_REQUEST['pwd']
+					'store_account'=>isset($jsonPost) ? $jsonPost['userAccount'] : $_REQUEST['storeAccount'],
+					'store_name'=>isset($jsonPost) ? $jsonPost['storeName'] : $_REQUEST['storeName'],
+					'parent_store_account'=>isset($jsonPost) ? $jsonPost['parentStoreAcc'] : $_REQUEST['parentStoreAcc'],
+					'store_type'=>isset($jsonPost) ? $jsonPost['storeType'] : $_REQUEST['storeType'],
+					'pwd'=>isset($jsonPost) ? $jsonPost['pwd'] : $_REQUEST['pwd']
 		);
 		
 		$accType = 'store_account';
@@ -91,17 +90,19 @@ if($ctrl->insert($param)){
 	//masxaro email
 	$email = $param[$accType].'@masxaro.com';
 	array_push($contacts, array(
-						$accType=>$param[$accType],
-						'contact_type'=>'email',
-						'value'=>$email)
+							$accType=>$param[$accType],
+							'contact_type'=>'email',
+							'value'=>$email
+						)
 	);
 				
 	//personal email
 	$email = $personEmail;
 	array_push($contacts, array(
-						$accType=>$param[$accType],
-			'contact_type'=>'email',
-			'value'=>$email)
+							$accType=>$param[$accType],
+							'contact_type'=>'email',
+							'value'=>$email
+						)
 	);
 	
 	$ctrlCon = new ContactCtrl();
@@ -126,7 +127,7 @@ if($ctrl->insert($param)){
 	
 	$mailSub = "Please verify your registration on Masxaro.com";
 
-	$url = "http://".$_SERVER ['HTTP_HOST'].$_SERVER['PHP_SELF'];
+	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 	
 	$code = Ctrl::verifyCodeGen($codeParam);
 	$code = $url."?code=$code";
