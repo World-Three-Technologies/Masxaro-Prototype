@@ -26,11 +26,9 @@
 
 package com.android.W3T.app;
 
-import android.R.color;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -40,7 +38,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -48,7 +45,6 @@ import android.widget.Toast;
 
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
-import com.android.W3T.app.user.UserProfile;
 
 public class ReceiptsView extends Activity {
 	public static final String TAG = "ReceiptsViewActivity";
@@ -58,10 +54,6 @@ public class ReceiptsView extends Activity {
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
-//	public static final int EMPTY_VIEW_LAYOUT = R.id.empty_receipt_view;
-//	public static final int RECEITP_VIEW_LAYOUT = R.id.receipt_view;
-	
-	private Menu mMenu;
 	private int mCurReceipt = 0;
 	private ProgressDialog mRefreshProgress;
 	private Handler mUpdateHandler = new Handler();

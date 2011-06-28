@@ -242,6 +242,7 @@ public class FrontPage extends Activity {
 			mLoginDialog.setContentView(R.layout.login_dialog);
 			mLoginDialog.setTitle("Log In:");
 			
+			
 			// IMPORTENT: Get button by id from login_dialog.xml, not from 
 			// front_page.xml, which has no such component, "submit_btn".
 			mSubmitBtn = (Button) mLoginDialog.findViewById(R.id.submit_btn);
@@ -346,7 +347,7 @@ public class FrontPage extends Activity {
 	    	if (UserProfile.getStatus() == OFF_LINE) {
 		    	if (isSuccessful) {
 		    		UserProfile.resetUserProfile(ON_LINE, username);
-			    	setFrontPage(username, 0);
+			    	setFrontPage(username+getResources().getString(R.string.masxaro_email), 0);
 			    	Toast.makeText(FrontPage.this, "Login succeeded!", Toast.LENGTH_SHORT).show();
 		    	}
 		    	else {

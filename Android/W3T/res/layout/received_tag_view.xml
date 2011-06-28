@@ -30,7 +30,7 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical"
 	android:weightSum="2"
->
+> <!-- got to change the style according to different number of items -->
 	<LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:orientation="vertical"
 		android:layout_margin="5dip"
@@ -191,6 +191,98 @@
                         android:paddingLeft="10dip"
                     />
                 </TableRow>
+                <TableRow>
+                    <TextView android:text="Beef burger" 
+                       android:layout_width="fill_parent" android:layout_height="match_parent"
+                       android:textSize="15sp" android:textColor="@color/black"
+                    />
+                    <TextView android:text="1"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_gravity="right" android:paddingRight="10dip"
+                        android:textSize="15sp" android:textColor="@color/black" 
+                    />
+                    <TextView android:text="9.10"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_gravity="right" android:paddingRight="10dip"
+                        android:textSize="15sp" android:textColor="@color/black"
+                    />
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="1010"
+                        android:layout_width="fill_parent" android:layout_height="match_parent"
+                        android:textSize="15sp" android:textColor="@color/black"
+                        android:paddingLeft="10dip"
+                    />
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="Beef burger" 
+                       android:layout_width="fill_parent" android:layout_height="match_parent"
+                       android:textSize="15sp" android:textColor="@color/black"
+                    />
+                    <TextView android:text="1"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_gravity="right" android:paddingRight="10dip"
+                        android:textSize="15sp" android:textColor="@color/black" 
+                    />
+                    <TextView android:text="9.10"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_gravity="right" android:paddingRight="10dip"
+                        android:textSize="15sp" android:textColor="@color/black"
+                    />
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="1010"
+                        android:layout_width="fill_parent" android:layout_height="match_parent"
+                        android:textSize="15sp" android:textColor="@color/black"
+                        android:paddingLeft="10dip"
+                    />
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="Beef burger" 
+                       android:layout_width="fill_parent" android:layout_height="match_parent"
+                       android:textSize="15sp" android:textColor="@color/black"
+                    />
+                    <TextView android:text="1"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_gravity="right" android:paddingRight="10dip"
+                        android:textSize="15sp" android:textColor="@color/black" 
+                    />
+                    <TextView android:text="9.10"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_gravity="right" android:paddingRight="10dip"
+                        android:textSize="15sp" android:textColor="@color/black"
+                    />
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="1010"
+                        android:layout_width="fill_parent" android:layout_height="match_parent"
+                        android:textSize="15sp" android:textColor="@color/black"
+                        android:paddingLeft="10dip"
+                    />
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="Beef burger" 
+                       android:layout_width="fill_parent" android:layout_height="match_parent"
+                       android:textSize="15sp" android:textColor="@color/black"
+                    />
+                    <TextView android:text="1"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_gravity="right" android:paddingRight="10dip"
+                        android:textSize="15sp" android:textColor="@color/black" 
+                    />
+                    <TextView android:text="9.10"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_gravity="right" android:paddingRight="10dip"
+                        android:textSize="15sp" android:textColor="@color/black"
+                    />
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="1010"
+                        android:layout_width="fill_parent" android:layout_height="match_parent"
+                        android:textSize="15sp" android:textColor="@color/black"
+                        android:paddingLeft="10dip"
+                    />
+                </TableRow>
 	            <TableRow>
 	                <TextView android:text="Beef burger" 
 	                   android:layout_width="fill_parent" android:layout_height="match_parent"
@@ -214,75 +306,7 @@
 	                    android:paddingLeft="10dip"
 	                />
 	            </TableRow>
-	            <TableRow>
-	                <TextView android:text="Beef burger" 
-	                   android:layout_width="fill_parent" android:layout_height="match_parent"
-	                   android:textSize="15sp" android:textColor="@color/black"
-	                />
-	                <TextView android:text="1"
-	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-	                    android:layout_gravity="right" android:paddingRight="10dip"
-	                    android:textSize="15sp" android:textColor="@color/black" 
-	                />
-	                <TextView android:text="9.10"
-	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-	                    android:layout_gravity="right" android:paddingRight="10dip"
-	                    android:textSize="15sp" android:textColor="@color/black"
-	                />
-	            </TableRow>
-	            <TableRow>
-	                <TextView android:text="1010"
-	                    android:layout_width="fill_parent" android:layout_height="match_parent"
-	                    android:textSize="15sp" android:textColor="@color/black"
-	                    android:paddingLeft="10dip"
-	                />
-	            </TableRow>
-	            <TableRow>
-	                <TextView android:text="Beef burger" 
-	                   android:layout_width="fill_parent" android:layout_height="match_parent"
-	                   android:textSize="15sp" android:textColor="@color/black"
-	                />
-	                <TextView android:text="1"
-	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-	                    android:layout_gravity="right" android:paddingRight="10dip"
-	                    android:textSize="15sp" android:textColor="@color/black" 
-	                />
-	                <TextView android:text="9.10"
-	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-	                    android:layout_gravity="right" android:paddingRight="10dip"
-	                    android:textSize="15sp" android:textColor="@color/black"
-	                />
-	            </TableRow>
-	            <TableRow>
-	                <TextView android:text="1010"
-	                    android:layout_width="fill_parent" android:layout_height="match_parent"
-	                    android:textSize="15sp" android:textColor="@color/black"
-	                    android:paddingLeft="10dip"
-	                />
-	            </TableRow>
-			    <TableRow>
-	                <TextView android:text="Beef burger" 
-	                   android:layout_width="fill_parent" android:layout_height="match_parent"
-	                   android:textSize="15sp" android:textColor="@color/black"
-	                />
-	                <TextView android:text="1"
-	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-	                    android:layout_gravity="right" android:paddingRight="10dip"
-	                    android:textSize="15sp" android:textColor="@color/black" 
-	                />
-	                <TextView android:text="9.10"
-	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-	                    android:layout_gravity="right" android:paddingRight="10dip"
-	                    android:textSize="15sp" android:textColor="@color/black"
-	                />
-	            </TableRow>
-	            <TableRow>
-	                <TextView android:text="1010"
-	                    android:layout_width="fill_parent" android:layout_height="match_parent"
-	                    android:textSize="15sp" android:textColor="@color/black"
-	                    android:paddingLeft="10dip"
-	                />
-	            </TableRow>
+	            
 	       </TableLayout>
        </ScrollView> 
 	   <TableLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
