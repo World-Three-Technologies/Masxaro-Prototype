@@ -1,199 +1,186 @@
-
-
-/**
- * Primary styles
- *
- * Author: Jimmy@masxaro.com
+/*
+ * page params
  */
+/*
+ * mixins
+ */
+h1 {
+  font-size: 32px; }
 
-//General styles
-h1 { font-size: 32px;}
-h2 { font-size: 28px;}
-h3 { font-size: 24px;}
+h2 {
+  font-size: 28px; }
 
-header{
-  background-color: rgb(94,206,116);
-  width:100%;
-  height:40px;
-  display:block;
-  text-align:center;
-  position:relative;
-}
+h3 {
+  font-size: 24px; }
 
-#header-bar{
-  margin: 0 auto;
-  max-width:1000px; 
-}
+header {
+  background-color: #5ece74;
+  width: 100%;
+  height: 40px;
+  display: block;
+  text-align: center;
+  position: relative; }
+  header #header-bar {
+    margin: 0 auto;
+    max-width: 1000px; }
+  header #header-bar-inner {
+    left: 0px; }
+  header #header-logo {
+    color: #FFF;
+    float: left;
+    margin: 2px;
+    padding: 1px; }
+  header #header-nav {
+    margin-left: 500px;
+    float: left; }
+  header #header-nav-list li {
+    float: left;
+    margin: 5px 0;
+    padding: 8px 15px;
+    list-style: none; }
+  header #header-user {
+    margin: 5px 10px;
+    padding: 8px 5px;
+    float: right;
+    right: 0; }
+  header #header-user #login label {
+    padding: 5px; }
 
-#header-bar-inner{
-  left:0px;
-}
-
-#header-logo{
-  color: #FFF;
-  float:left;
-  margin: 2px;
-  padding: 1px;
-}
-
-#header-nav{
-  margin-left:500px;
-  float:left;
-}
-
-#header-nav-list li{
-  float:left;
-  margin: 5px 0;
-  padding: 8px 15px;
-  list-style:none;
-}
-
-#header-user{
-  margin:5px 10px;
-  padding: 8px 5px;
-  float:right;
-  right:0;
-}
-
-#header-user #login label{
-  padding:5px;
-}
-
-#main{
-  max-width:1000px;
+#main {
+  max-width: 960px;
   margin: 0px auto;
-  text-align:center;
-}
+  text-align: center; }
+  #main #content {
+    margin: 10px;
+    padding: 5px;
+    text-align: left;
+    float: left;
+    width: 760px; }
+  #main #feature div {
+    float: left;
+    width: 28%;
+    margin: 10px;
+    padding: 10px; }
+  #main aside {
+    margin: 10px 0;
+    float: right;
+    width: 160px; }
 
-#content{
-  margin: 10px;
-  padding: 5px;
-  text-align:left;
-  float:left;
-  width:700px;
-}
-
-aside{
-  margin: 10px 0;
-  float:right;
-  width:270px;
-}
-
-#user{
-  width:100%;
-  border: 2px solid #FEF;
+#user {
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
-  box-shadow: 3px 3px 3px #AAA;
-  -webkit-box-shadow: 3px 3px 3px #AAA;
-  -moz-box-shadow: 3px 3px 3px #AAA;
-}
+  box-shadow: 3px 3px 3px #aaaaaa;
+  -webkit-box-shadow: 3px 3px 3px #aaaaaa;
+  -moz-box-shadow: 3px 3px 3px #aaaaaa;
+  width: 100%;
+  border: 2px solid #FEF; }
+  #user #user-flash {
+    margin: 5px 10px;
+    padding: 15px 5px; }
+  #user #user-inner div {
+    float: left;
+    padding: 5px; }
 
-#user-flash{
-  margin: 5px 10px;
-  padding: 15px 5px;
-}
+#main-tabs {
+  margin: 5px 0; }
+  #main-tabs .tabs {
+    background-color: #BFB; }
+    #main-tabs .tabs li {
+      padding: 10px;
+      float: left; }
 
-#user-inner div{
-  float:left;
-  padding:5px;
-}
+#search-bar {
+  margin: 5px;
+  padding: 5px; }
+  #search-bar button {
+    background-image: url(../img/search_button.png);
+    background-position: 0 0;
+    background-color: #fff;
+    width: 22px;
+    height: 19px;
+    border: 0;
+    padding: 0;
+    margin: 0; }
 
-#main-tabs{
-  margin:5px 0;
-}
-
-#main-tabs .tabs li{
-  padding: 10px;
-  float:left;
-}
-
-#main-tabs .tabs{
-  background-color:#BFB;
-}
-
-#search-bar{
-  margin:5px;
-  padding:5px;
-}
-
-#search-bar button{
-  background-image:url(../img/search_button.png);
-  background-position:0 0;
-  background-color:#fff;
-  width:22px;
-  height:19px;
-  border:0;
-  padding:0;
-  margin:0;
-}
-
-.receipt{
-  padding:3px;
-  width:100%;
-}
-
-.receipt .receipt-row{
-  text-align:left;
-  margin:1px 5px;
-}
-
-.receipt .total-cost{
-  text-align:left;
-  font-size:26px;
+.receipt {
   padding: 3px;
-}
+  width: 100%; }
+  .receipt .items {
+    float: left;
+    font-size: 18px;
+    font-weight: bold; }
+    .receipt .items div {
+      border: 1px solid green;
+      border-radius: 3px;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px; }
+  .receipt .total-cost {
+    text-align: left;
+    font-size: 26px;
+    padding: 3px; }
+  .receipt .toolbar {
+    display: none;
+    float: right;
+    right: 0px;
+    bottom: 0px; }
 
-.receipt .toolbar{
-  float:right
-  right:0px;
-  bottom:0px;
-}
+#receipts-table {
+  width: 100%;
+  border-collapse: collapse; }
+  #receipts-table tr.row {
+    padding: 7px;
+    border-top: 1px #EBE solid;
+    border-bottom: 1px #EBE solid; }
+    #receipts-table tr.row:hover {
+      cursor: pointer;
+      background-color: #EBE; }
+      #receipts-table tr.row:hover .toolbar {
+        display: block; }
+    #receipts-table tr.row .date {
+      float: left;
+      width: 40px;
+      border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border: 1px solid #AAA;
+      margin: 3px 5px;
+      padding: 3px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center; }
+    #receipts-table tr.row .total-cost {
+      width: 60px;
+      float: right;
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+      padding: 5px;
+      margin: 5px; }
+    #receipts-table tr.row .content {
+      width: 600px;
+      float: left; }
+      #receipts-table tr.row .content .items {
+        font-size: 18px;
+        padding: 3px 5px;
+        font-weight: bold; }
+      #receipts-table tr.row .content .store {
+        font-size: 16px;
+        padding: 5px;
+        color: green; }
+  #receipts-table td.items {
+    text-align: left; }
 
-#receipts-table{
-  width:100%;
-  border-collapse: collapse;
-}
-
-#receipts-table tr{
-  padding: 7px;
-  border-top: 1px #EBE solid;
-  border-bottom: 1px #EBE solid;
-}
-
-#receipts-table td.items{
-  text-align: left;
-}
-
-#receipts-table tr.row:hover{
-  cursor:pointer;
-  background-color: #EBE;
-}
-
-#main #register{
-  margin:10px;
-  margin-top:100px;
-  padding:5px;
-  float:left;
-  width:400px;
-}
-
-#main #register td{
-  padding:5px;
-}
-
-#main #product-description{
-  float:left;
-  margin:10px;
-  margin-top:100px;
-  padding:5px;
-}
-
-#main #feature div{
-  float:left;
-  width:28%;
-  margin:10px;
-  padding:10px;
-}
-
+#main #register {
+  margin: 10px;
+  margin-top: 100px;
+  padding: 5px;
+  float: left;
+  width: 400px; }
+  #main #register td {
+    padding: 5px; }
+#main #product-description {
+  float: left;
+  margin: 10px;
+  margin-top: 100px;
+  padding: 5px; }

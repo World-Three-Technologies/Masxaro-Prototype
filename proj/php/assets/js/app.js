@@ -1,4 +1,20 @@
-var Receipt = Backbone.Model;
+var Receipt = Backbone.Model.extend({
+  sync:function(method,model,success,error){
+    var data;
+    if(method == "read"){
+      data = {
+        opcode : "user_get_receipt_detail",
+        receipt_id: model.get("receipt_id")
+      }
+    }else if(method == "delete"){
+      data = {
+        opcode : "f_delete_receipt",
+        receipt_id: model.get("receipt_id")
+      }
+    }
+    $.post(this.url,data,success).error(error);
+  }
+});
 var Receipts = Backbone.Collection.extend({
   model: Receipt,
 
@@ -9,11 +25,14 @@ var Receipts = Backbone.Collection.extend({
   },
 
   sync:function(method,model,success,error){
-    $.post(this.url,{
-      opcode : "user_get_all_receipt",
-      acc: this.account
-    },success)
-      .error(error);
+    var data;
+    if(method == "read"){
+      data = {
+        opcode : "user_get_all_receipt",
+        acc: this.account
+      }
+    }
+    $.post(this.url,data,success).error(error);
   }
 });
 var User = Backbone.Model;
@@ -109,6 +128,7 @@ var ReceiptView = Backbone.View.extend({
       window.lastOpen.render();
     }
     if(this.model.get("image") !== true){
+
       $(this.el).html(this.fullTemplate(this.model.toJSON()));
 
       $(this.el).find(".date").html(new Date(this.model.get("receipt_time")).format());
@@ -125,7 +145,7 @@ var ReceiptView = Backbone.View.extend({
 
   getItemText:function(items){
     return _.reduce(items,function(memo,item){
-      return memo + item.item_name + ",";
+      return memo + item.item_name + ", ";
     },"").slice(0,-1);
   }
 });

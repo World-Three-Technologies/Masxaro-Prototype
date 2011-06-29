@@ -33,6 +33,7 @@ var ReceiptView = Backbone.View.extend({
       window.lastOpen.render();
     }
     if(this.model.get("image") !== true){
+
       $(this.el).html(this.fullTemplate(this.model.toJSON()));
 
       $(this.el).find(".date").html(new Date(this.model.get("receipt_time")).format());
@@ -49,7 +50,7 @@ var ReceiptView = Backbone.View.extend({
 
   getItemText:function(items){
     return _.reduce(items,function(memo,item){
-      return memo + item.item_name + ",";
+      return memo + item.item_name + ", ";
     },"").slice(0,-1);
   }
 });

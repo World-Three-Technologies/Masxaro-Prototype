@@ -18,8 +18,6 @@
   <link rel="stylesheet" href="assets/css/base.css?v=2">
   <link rel="stylesheet" href="assets/css/style.css?v=2">
   <script src="assets/js/vendor/modernizr-1.7.min.js"></script>
-
-
 </head>
 
 <body>
@@ -88,22 +86,21 @@
   <script type="text/tamplate" id="receipt-row-template">
     <div>
       <div class="date"></div>
-      <div class="items"></div>
-      <div><%= store_name %></div>
-      $<%= total_cost %>
+      <div class="content">
+        <div class="items"></div>
+        <div class="store">at <%= store_name %></div>
       </div>
+      <div class="total-cost">$<%= total_cost %></div>
     </div>
   </script>
 
   <script type="text/template" id="receipt-full-template">
       <div class="receipt">
         <div class="date"></div>
-        <div class="receipt-row">
-          <div class="items"></div> 
-          <div class="store">at <%= store_name%></div>
-        </div>
+        <div class="items"></div> 
+        <div class="store">at <%= store_name%></div>
         <div class="total-cost">$<%= total_cost %></div>
-        <div class="toolbar invisible">
+        <div class="toolbar">
           show receipt, edit, delete, add tags
         </div>
       </div>
