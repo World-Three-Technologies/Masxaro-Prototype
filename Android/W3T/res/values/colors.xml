@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
 /*
- * arrays.xml - All String array const used in app  
+ * colors.xml - The resource XML file of the colors  
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -24,10 +24,7 @@
  *
  */
  -->
+ 
 <resources>
-    <string-array name="sort_types">
-        <item>ID</item>
-        <item>Date</item>
-        <item>Store name</item>
-    </string-array>
+    <drawable name="screen_background_black">#770000ff</drawable>
 </resources>

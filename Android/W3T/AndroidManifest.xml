@@ -4,6 +4,7 @@
       android:versionCode="1"
       android:versionName="1.0">
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.INTERNET" /> 
     
     <uses-sdk android:minSdkVersion="10" />
     
@@ -19,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-		
+
 		<!-- This activity is intended to show the app tabs after successfully passed
 			username-password check or when the app is running. -->
 		<activity android:name=".ReceiptsView"
@@ -34,7 +35,7 @@
 		
 		<!-- This is the NFC communication activity which indicates the NFC link
 			is connecting after the cell phone is put close to a vendor machine. -->
-		<activity android:name="NFCConnecting"
+		<activity android:name="NfcConnecting"
 			android:theme="@android:style/Theme.NoTitleBar"
 		>
 			<intent-filter>
@@ -48,7 +49,7 @@
 			android:theme="@android:style/Theme.NoTitleBar"
 		>
 			<intent-filter>
-				<action android:name="android.nfc.action.NDEF_DISCOVERED" />
+				<action android:name="android.nfc.action.TAG_DISCOVERED" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
