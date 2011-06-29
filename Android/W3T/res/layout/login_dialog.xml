@@ -42,8 +42,8 @@
 			/>
 			<EditText android:id="@+id/login_username"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
-				android:inputType="text"
-				android:singleLine="true"
+				android:inputType="text" android:singleLine="true"
+				android:hint="account" android:gravity="right"
 			/>
 		    <TextView android:text="@string/masxaro_email"
 			    android:layout_height="wrap_content" android:layout_width="fill_parent"

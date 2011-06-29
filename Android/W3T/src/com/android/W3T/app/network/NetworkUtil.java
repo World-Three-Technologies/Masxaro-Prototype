@@ -26,10 +26,15 @@
 
 package com.android.W3T.app.network;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -154,14 +159,10 @@ public class NetworkUtil {
 		return null;
 	}
 	
-	public static boolean attemptSendReceipt(String uname, Receipt r) {
+	public static int attemptSendReceipt(String uname, Receipt r) {
 		// Here we may want to check the network status.
 		checkNetwork();
-
-        HttpPost request;
-        
         try {
-        	request = new HttpPost(new URI(RECEIPT_OP_URL));
             // Add your data
         	JSONObject basicInfo = new JSONObject();
         	basicInfo.put("store_account", "Starbucks");
@@ -171,51 +172,23 @@ public class NetworkUtil {
         	JSONObject receipt = new JSONObject();
         	receipt.put("receipt", basicInfo);
         	receipt.put("opcode", "new_receipt");
-        	System.out.println(receipt.toString());
-        	StringEntity se = new StringEntity(receipt.toString());
-//        	se.getContent();
+        	JSONObject jsonstr = new JSONObject();
+        	jsonstr.put("json", receipt);
         	
-//        	se.setContentType("application/json");
-        	request.setEntity(se);
-//        	BasicNameValuePair basicInfo[] = new BasicNameValuePair(uname, uname);
-//            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-//            nameValuePairs.add(new BasicNameValuePair("acc", uname));
-//            nameValuePairs.add(new BasicNameValuePair("opcode", "user_get_all_receipt"));
-//            HashMap<String, String> basicInfo = new HashMap<String, String>();
-//            nameValuePairs.add(new BasicNameValuePair("store_account", "Starbucks"));
-//            nameValuePairs.add(new BasicNameValuePair("user_account", "new"));
-//            nameValuePairs.add(new BasicNameValuePair("receipt_id", "110"));
-//            nameValuePairs.add(new BasicNameValuePair("tax", "0.1"));
-//        	UrlEncodedFormEntity basicInfo = new UrlEncodedFormEntity(nameValuePairs);
-        	
-//        	List<NameValuePair> receipt = new ArrayList<NameValuePair>();
-//        	receipt.add(new BasicNameValuePair("opcode", "new_receipt"));
-//        	receipt.add(new BasicNameValuePair("receipt", null));
-//        	request.setEntity(new UrlEncodedFormEntity(receipt));
+        	URL url = new URL(RECEIPT_OP_URL);
+        	URLConnection connection = url.openConnection();
+        	connection.setDoOutput(true);
 
-            // Execute HTTP Post Request
-            HttpResponse response = mClient.execute(request);
-            
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            	String s = EntityUtils.toString(response.getEntity());
-            	System.out.println("return "+s);
-//            	if (s.equals("1")) {
-//            		return true;
-//            	}
-//            	else {
-//            		return false;
-//            	}
-            }
-            return false;
-        } catch (URISyntaxException e) {   
-            e.printStackTrace();   
-         
-        } catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+        	OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+        	// Must put "json=" here for server to decoding the data
+        	String data = "json="+jsonstr.toString();
+        	out.write(data);
+        	out.flush();
+        	out.close();
+
+        	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+        	System.out.println(in.readLine());
+        	return Integer.valueOf(in.readLine());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -223,7 +196,7 @@ public class NetworkUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		return false;
+		return 0;
 	}
 	
 	private static boolean checkNetwork() {

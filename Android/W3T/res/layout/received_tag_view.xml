@@ -24,18 +24,18 @@
  *
  */
  -->
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/tag_received_view"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical"
 	android:weightSum="2"
-> <!-- got to change the style according to different number of items -->
+>
+    <!-- got to change the style according to different number of items -->
 	<LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:orientation="vertical"
 		android:layout_margin="5dip"
         android:background="@color/white"
-        android:layout_weight="0.25"
+        android:layout_weight="0.2"
         android:weightSum="2.0"
 	>
 		<LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
@@ -74,7 +74,7 @@
 		<ScrollView android:layout_width="wrap_content" android:layout_height="fill_parent"
 		    android:scrollbars="none"
 		    android:layout_marginLeft="10dip"
-		    android:layout_weight="0.4"
+            android:layout_weight="0.4"
         >
 			<TableLayout android:id="@+id/tag_items_table" 
 			    android:layout_width="fill_parent" android:layout_height="fill_parent"
@@ -98,221 +98,92 @@
 		            />
 			    </TableRow>
 			    
-			    <!-- First item in the receipt -->
+			    <!-- Six items displaying in this part at most-->
 			    <TableRow>
-                    <TextView android:text="Beef burger" 
-                       android:layout_width="fill_parent" android:layout_height="match_parent"
-                       android:textSize="15sp" android:textColor="@color/black"
-                    />
-                    <TextView android:text="1"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black" 
-                    />
-                    <TextView android:text="9.10"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black"
-                    />
+                    <TextView android:text="Beef burger" style="@style/receipt_item_id"/>
+                    <TextView android:text="1" style="@style/receipt_item_price_qty"/>
+                    <TextView android:text="9.10" style="@style/receipt_item_price_qty"/>
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="1010"
-                        android:layout_width="fill_parent" android:layout_height="match_parent"
-                        android:textSize="15sp" android:textColor="@color/black"
+                    <TextView android:text="1010" style="@style/receipt_item_id"
                         android:paddingLeft="10dip"
                     />
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="Beef burger" 
-                       android:layout_width="fill_parent" android:layout_height="match_parent"
-                       android:textSize="15sp" android:textColor="@color/black"
-                    />
-                    <TextView android:text="1"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black" 
-                    />
-                    <TextView android:text="9.10"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black"
-                    />
+                    <TextView android:text="Beef burger" style="@style/receipt_item_id"/>
+                    <TextView android:text="1" style="@style/receipt_item_price_qty"/>
+                    <TextView android:text="9.10" style="@style/receipt_item_price_qty"/>
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="1010"
-                        android:layout_width="fill_parent" android:layout_height="match_parent"
-                        android:textSize="15sp" android:textColor="@color/black"
+                    <TextView android:text="1010" style="@style/receipt_item_id"
                         android:paddingLeft="10dip"
                     />
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="Beef burger" 
-                       android:layout_width="fill_parent" android:layout_height="match_parent"
-                       android:textSize="15sp" android:textColor="@color/black"
-                    />
-                    <TextView android:text="1"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black" 
-                    />
-                    <TextView android:text="9.10"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black"
-                    />
+                    <TextView android:text="Beef burger" style="@style/receipt_item_id"/>
+                    <TextView android:text="1" style="@style/receipt_item_price_qty"/>
+                    <TextView android:text="9.10" style="@style/receipt_item_price_qty"/>
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="1010"
-                        android:layout_width="fill_parent" android:layout_height="match_parent"
-                        android:textSize="15sp" android:textColor="@color/black"
+                    <TextView android:text="1010" style="@style/receipt_item_id"
                         android:paddingLeft="10dip"
                     />
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="Beef burger" 
-                       android:layout_width="fill_parent" android:layout_height="match_parent"
-                       android:textSize="15sp" android:textColor="@color/black"
-                    />
-                    <TextView android:text="1"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black" 
-                    />
-                    <TextView android:text="9.10"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black"
-                    />
+                    <TextView android:text="Beef burger" style="@style/receipt_item_id"/>
+                    <TextView android:text="1" style="@style/receipt_item_price_qty"/>
+                    <TextView android:text="9.10" style="@style/receipt_item_price_qty"/>
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="1010"
-                        android:layout_width="fill_parent" android:layout_height="match_parent"
-                        android:textSize="15sp" android:textColor="@color/black"
+                    <TextView android:text="1010" style="@style/receipt_item_id"
                         android:paddingLeft="10dip"
                     />
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="Beef burger" 
-                       android:layout_width="fill_parent" android:layout_height="match_parent"
-                       android:textSize="15sp" android:textColor="@color/black"
-                    />
-                    <TextView android:text="1"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black" 
-                    />
-                    <TextView android:text="9.10"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black"
-                    />
+                    <TextView android:text="Beef burger" style="@style/receipt_item_id"/>
+                    <TextView android:text="1" style="@style/receipt_item_price_qty"/>
+                    <TextView android:text="9.10" style="@style/receipt_item_price_qty"/>
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="1010"
-                        android:layout_width="fill_parent" android:layout_height="match_parent"
-                        android:textSize="15sp" android:textColor="@color/black"
+                    <TextView android:text="1010" style="@style/receipt_item_id"
                         android:paddingLeft="10dip"
                     />
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="Beef burger" 
-                       android:layout_width="fill_parent" android:layout_height="match_parent"
-                       android:textSize="15sp" android:textColor="@color/black"
-                    />
-                    <TextView android:text="1"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black" 
-                    />
-                    <TextView android:text="9.10"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black"
-                    />
+                    <TextView android:text="Beef burger" style="@style/receipt_item_id"/>
+                    <TextView android:text="1" style="@style/receipt_item_price_qty"/>
+                    <TextView android:text="9.10" style="@style/receipt_item_price_qty"/>
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="1010"
-                        android:layout_width="fill_parent" android:layout_height="match_parent"
-                        android:textSize="15sp" android:textColor="@color/black"
+                    <TextView android:text="1010" style="@style/receipt_item_id"
                         android:paddingLeft="10dip"
                     />
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="Beef burger" 
-                       android:layout_width="fill_parent" android:layout_height="match_parent"
-                       android:textSize="15sp" android:textColor="@color/black"
-                    />
-                    <TextView android:text="1"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black" 
-                    />
-                    <TextView android:text="9.10"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black"
-                    />
+                    <TextView android:text="Beef burger" style="@style/receipt_item_id"/>
+                    <TextView android:text="1" style="@style/receipt_item_price_qty"/>
+                    <TextView android:text="9.10" style="@style/receipt_item_price_qty"/>
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="1010"
-                        android:layout_width="fill_parent" android:layout_height="match_parent"
-                        android:textSize="15sp" android:textColor="@color/black"
+                    <TextView android:text="1010" style="@style/receipt_item_id"
                         android:paddingLeft="10dip"
                     />
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="Beef burger" 
-                       android:layout_width="fill_parent" android:layout_height="match_parent"
-                       android:textSize="15sp" android:textColor="@color/black"
-                    />
-                    <TextView android:text="1"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black" 
-                    />
-                    <TextView android:text="9.10"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:layout_gravity="right" android:paddingRight="10dip"
-                        android:textSize="15sp" android:textColor="@color/black"
-                    />
+                    <TextView android:text="Beef burger" style="@style/receipt_item_id"/>
+                    <TextView android:text="1" style="@style/receipt_item_price_qty"/>
+                    <TextView android:text="9.10" style="@style/receipt_item_price_qty"/>
                 </TableRow>
                 <TableRow>
-                    <TextView android:text="1010"
-                        android:layout_width="fill_parent" android:layout_height="match_parent"
-                        android:textSize="15sp" android:textColor="@color/black"
+                    <TextView android:text="1010" style="@style/receipt_item_id"
                         android:paddingLeft="10dip"
                     />
                 </TableRow>
-	            <TableRow>
-	                <TextView android:text="Beef burger" 
-	                   android:layout_width="fill_parent" android:layout_height="match_parent"
-	                   android:textSize="15sp" android:textColor="@color/black"
-	                />
-	                <TextView android:text="1"
-	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-	                    android:layout_gravity="right" android:paddingRight="10dip"
-	                    android:textSize="15sp" android:textColor="@color/black" 
-	                />
-	                <TextView android:text="9.10"
-	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-	                    android:layout_gravity="right" android:paddingRight="10dip"
-	                    android:textSize="15sp" android:textColor="@color/black"
-	                />
-	            </TableRow>
-	            <TableRow>
-	                <TextView android:text="1010"
-	                    android:layout_width="fill_parent" android:layout_height="match_parent"
-	                    android:textSize="15sp" android:textColor="@color/black"
-	                    android:paddingLeft="10dip"
-	                />
-	            </TableRow>
-	            
 	       </TableLayout>
        </ScrollView> 
 	   <TableLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
             android:stretchColumns="0"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
+            android:paddingTop="10dip" android:paddingBottom="10dip"
             android:layout_weight="0.85"
         > 
 		    <!-- Tax -->
@@ -349,8 +220,8 @@
 	</LinearLayout>
 	
 	<LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
-		android:orientation="horizontal"
-		android:layout_weight="1.75"
+		android:orientation="horizontal" android:gravity="bottom"
+		android:layout_weight="1.8"
 	>
 		<Button android:id="@+id/receipt_confirm_btn"
 			android:text="@string/receipt_confirm_btn"

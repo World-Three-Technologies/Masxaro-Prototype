@@ -102,7 +102,12 @@ public class FrontPage extends Activity {
 	public void onResume() {
 		super.onResume();
 		Log.i(TAG, "onResume" + "Set FrontPage elements");
-		setFrontPage(UserProfile.getUsername(), 0);
+		if (UserProfile.getStatus() == ON_LINE) {
+			setFrontPage(UserProfile.getUsername()+getResources().getString(R.string.masxaro_email), 0);
+		}
+		else {
+			setFrontPage("Not Login", 0);
+		}
 	}
 		
 	// Create the dialogs: 1.Login dialog; 2.Logout dialog
@@ -347,7 +352,7 @@ public class FrontPage extends Activity {
 	    	if (UserProfile.getStatus() == OFF_LINE) {
 		    	if (isSuccessful) {
 		    		UserProfile.resetUserProfile(ON_LINE, username);
-			    	setFrontPage(username+getResources().getString(R.string.masxaro_email), 0);
+			    	setFrontPage(UserProfile.getUsername()+getResources().getString(R.string.masxaro_email), 0);
 			    	Toast.makeText(FrontPage.this, "Login succeeded!", Toast.LENGTH_SHORT).show();
 		    	}
 		    	else {
