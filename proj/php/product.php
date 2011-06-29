@@ -14,10 +14,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
-  <link rel="stylesheet" href="assets/css/base.css?v=2">
-  <link rel="stylesheet" href="assets/css/style.css?v=2">
-  <script src="assets/js/vendor/modernizr-1.7.min.js"></script>
+  
+  <?php include_once "layout/header.php" ?>
 
 </head>
 
@@ -77,16 +75,8 @@
         <div><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, per paulo tritani mentitum an, justo maiorum constituam ius ut, mel ei solum iudico quaestio. Solet nonumy mea ne, suas vidit vim ad. Duo nostrud atomorum suavitate an. Ea sea eius omnium periculis, mea essent impetus epicuri ei.</p></div>
       </div>
     </div>
-    <footer>
-    </footer>
   </div> <!-- eo #container -->
-
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
-  <script>window.jQuery || document.write("<script src='assets/js/vendor/jquery-1.6.1.min.js'>\x3C/script>")</script>
-  <script src="assets/js/vendor/json2.js"></script>
-  <script src="assets/js/vendor/underscore-min.js"></script>
-  <script src="assets/js/vendor/backbone-min.js"></script>
-  <script src="assets/js/vendor/backbone-localstorage.js"></script>
+  <?php include_once "layout/footer.php" ?>
 
 </body>
 </html>
