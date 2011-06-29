@@ -73,9 +73,9 @@ public class ReceiptsView extends Activity {
 				ReceiptsManager.add(jsonstr, FROM_DB);
 				Log.i(TAG, "finished new receipts");
 				Log.i(TAG, "update receipt view");
-				fillReceiptView(0);
 				mRefreshProgress.dismiss();
 			}
+			
 		}
 	};
 	
@@ -90,15 +90,11 @@ public class ReceiptsView extends Activity {
 	public void onResume() {
 		Log.i(TAG, "onResume()");
 		super.onResume();
-//		this.openOptionsMenu();
 		if (ReceiptsManager.getNumValid() != 0) {
 			Log.i(TAG, "Receipts exist");
 			setContentView(R.layout.receipt_view);
 			fillReceiptView(0);
 		}
-//		else {
-//			noReceiptView();
-//		}
 	}
 	
 	@Override
@@ -130,6 +126,11 @@ public class ReceiptsView extends Activity {
 			mUpdateHandler.post(mReceiptThread);
 			return true;
 		case R.id.sw_receipt_opt:
+			if (ReceiptsManager.getNumValid() != 0) {
+				final Intent receipt_list_intent = new Intent(ReceiptsView.this, ReceiptsListSelector.class);
+				receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				startActivity(receipt_list_intent);
+			}
 			Toast.makeText(this, "Switch to anther receipt view!", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.b_to_fp_opt:

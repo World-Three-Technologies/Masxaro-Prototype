@@ -168,10 +168,17 @@ public class FrontPage extends Activity {
 		case R.id.view_receipt_opt:
 			// Start the receipt view activity
 			Log.i(TAG, "View receipt option selected");
-			Log.i(TAG, "Set a new intent: ReceiptsView");
-			final Intent receipt_view_intent = new Intent(FrontPage.this, ReceiptsView.class);
-			receipt_view_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			startActivity(receipt_view_intent);
+			Log.i(TAG, "Set a new intent: ReceiptsListSelector");
+			if (ReceiptsManager.getNumValid() != 0) {
+				final Intent receipt_list_intent = new Intent(FrontPage.this, ReceiptsListSelector.class);
+				receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				startActivity(receipt_list_intent);
+			}
+			else {
+				final Intent receipt_view_intent = new Intent(FrontPage.this, ReceiptsView.class);
+				receipt_view_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+				startActivity(receipt_view_intent);
+			}
 			break;
 		case R.id.search_opt:
 			Log.i(TAG, "Search receipt option selected");

@@ -130,10 +130,18 @@ public class ReceiptsManager {
 		if (Log.isLoggable(TAG, Log.VERBOSE)) {
             Log.v(TAG, "add a new receipt into Receipt pool");
         }
+//		TODO: check whether the receipt is already in the pool.
 		Receipts.add(sNumValidReceipt, r);
 		sNumValidReceipt++;
-//	TODO:	System.out.println("Any un-delivered receipt?");	
-//	TODO:	System.out.println("Add a new receipt");
+//		TODO: System.out.println("Any un-delivered receipt?");	
+
+	}
+	
+	// Called when there is a need to add items to a receipt, r.
+	private static boolean addItems(Receipt r) {
+		
+		
+		return false;
 	}
 	
 }

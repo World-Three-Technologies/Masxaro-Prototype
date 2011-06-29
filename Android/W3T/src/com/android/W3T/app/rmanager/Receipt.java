@@ -33,6 +33,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Receipt {
+	
+	public static final int ENTRY_STORE_NAME = 0;
+	public static final int ENTRY_TIME = 1;
+	public static final int ENTRY_ID = 2;
+	
 	// JSON names of Receipt entries
 	public static final String PARAM_RECEIPT_ID = "receipt_id";
 	public static final String PARAM_RECEIPT_TIME = "receipt_time";
@@ -53,16 +58,6 @@ public class Receipt {
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
-//	public static final String[][] sFakeReceiptsInfo = {
-//		{"ID@1234", "06-01-2011", "Wendy's", "12.32USD"},
-//		{"ID@1235", "06-02-2011", "Starbucks", "4.63USD"},
-//		{"ID@1236", "06-02-2011", "J Street", "10.02USD"},
-//		{"ID@1237", "06-03-2011", "Starbucks", "4.63USD"},
-//		{"ID@1238", "06-03-2011", "Penn Grill", "8.76USD"},
-//		{"ID@1239", "06-04-2011", "Starbucks", "7.56USD"},
-//		{"ID@1234", "06-04-2011", "Wendy's", "6.22USD"}
-//	};
-	
 	private String mReceiptId;
 	private	String mStoreName;
 	private String mTime;
@@ -72,6 +67,7 @@ public class Receipt {
 	private String delete;
 	private ArrayList<ReceiptItem> mItems;	// Items in this receipt
 	private int mNumItems;			// Number of items
+	
 	private boolean mWhere;			// Whether this receipt has been synced with system.
 									// The receipt retrieved from database sets true.
 									// The receipt retrieved from nfc tag sets false
@@ -107,13 +103,13 @@ public class Receipt {
 	public String getEntry(int i) {
 		String result = new String();  
 		switch(i) {
-		case 0:
+		case ENTRY_STORE_NAME:
 			result = getStoreName();
 			break;
-		case 1:
+		case ENTRY_TIME:
 			result = getTime();
 			break;
-		case 2:
+		case ENTRY_ID:
 			result = getId();
 			break;
 		case 3:

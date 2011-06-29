@@ -159,7 +159,7 @@ public class NetworkUtil {
 		return null;
 	}
 	
-	public static int attemptSendReceipt(String uname, Receipt r) {
+	public static Integer attemptSendReceipt(String uname, Receipt r) {
 		// Here we may want to check the network status.
 		checkNetwork();
         try {
@@ -188,7 +188,8 @@ public class NetworkUtil {
 
         	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
         	System.out.println(in.readLine());
-        	return Integer.valueOf(in.readLine());
+        	//
+        	return 1;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
