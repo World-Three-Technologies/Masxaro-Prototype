@@ -88,7 +88,6 @@ header{
 
   #content{
     margin: 10px;
-    padding: 5px;
     text-align:left;
     float:left;
     @include grid(19);
@@ -102,43 +101,18 @@ header{
   }
 
   nav{
-    margin: 10px 0px;
-    float:left;
-    @include grid(4);
-  }
-}
-
-#user{
-  @include round(10px);
-  @include shadow(3px,3px,3px,#AAA);
-  width:100%;
-  border: 2px solid #FEF;
-
-  #user-flash{
-    margin: 5px 10px;
-    padding: 15px 5px;
-  }
-
-  #user-inner div{
-    float:left;
-    padding:5px;
-  }
-}
-
-#main-tabs{
-  margin:5px 0;
-  .tabs{
-    background-color:#BFB;
-    li{
-      padding: 10px;
-      float:left;
-    }
   }
 }
 
 #search-bar{
-  margin:5px;
-  padding:5px;
+  margin:0 5px;
+  padding:0 5px;
+  input{
+    font-size:18px;
+    @include round(5px);
+    width:250px;
+    height:22px;
+  }
   button{
     background-image:url(../img/search_button.png);
     background-position:0 0;
@@ -178,6 +152,8 @@ header{
 
 #receipts-table{
   width:100%;
+  margin:2px;
+  padding:5px;
   border-collapse: collapse;
   tr.row{
     padding: 7px;
@@ -269,10 +245,33 @@ footer{
 }
 
 #action-bar{
-  @include grid(2);
+  @include grid(4);
+  padding:15px 0;
   float:left;
-  height:400px;
-  border:1px green solid;
-  
+  height:1000px;
+  border-right:1px green solid;
+  .active{
+    background-color:rgb(94,206,176);
+    &:hover{
+      background-color:rgb(94,206,176);
+    };
+  }
+  li{
+    margin:0;
+    padding:0;
+    font-size:16px;
+    height:30px;
+    line-height:20px;
+    &:hover{
+      background-color:#CCC;
+    }
+    a{
+      padding:3px;
+      display:block;
+      width:100%;
+      height:100%;
+      text-decoration:none;
+    }
+  }
 }
 

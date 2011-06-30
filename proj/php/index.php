@@ -16,18 +16,22 @@
   <div id="container">
     <div id="main" role="main">
       <nav id="action-bar">
-        <ul>
-          <li><a href="#index">Recent [15]</a></li>
-          <li><a href="#index">Food and Restrauant</a></li>
-          <li><a href="#index">Payment</a></li>
-          <li><a href="#index">Add catagory</a></li>
-        </ul>
+        <div id="action-bar-inner">
+          <h4>catagory</h4>
+          <ul>
+            <li class="active"><a href="#index">Recent [15]</a></li>
+            <li><a href="#index">Grocery</a></li>
+            <li><a href="#index">Payment</a></li>
+            <li><a href="#index">Overview</a></li>
+          </ul>
+          <h4>tags</h4>
+        <div>
       </nav>
       <div id="content">
         <div id="receipts">
           <div id="search-bar">
             <form action="" method="GET">
-              <input type="text" placeholder="search" width="40px"/>
+              <input type="text" placeholder="search"/>
               <button type="submit" title="search"></button>
             </form>
           </div>
