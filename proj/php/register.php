@@ -34,30 +34,32 @@ $personEmail = "";
 $ctrl = null;
 $accType = "";
 
-$registerType = isset($jsonPost) ? $jsonPost['type'] : $_REQUEST['type']; //user / store
+$registerType = $post['type']; //user / store
+$code = $post['code'];
 
-$code = isset($jsonPost) ? $jsonPost['code'] : $_REQUEST['code'];
-
+// registration code verify
 if(isset($code)){
 	$ctrl = new UserCtrl();
 	$ctrlS = new StoreCtrl();
 	
-	$info = Ctrl::decodeVerifyCode($code);
+	$info = Tool::decodeVerifyCode($code);
 	$result = $ctrl->updateUserInfo($info[0], array('verified'=>true)) == true ? 
 			  true : $ctrlS->update($info[0], array('verified'=>true));
-	return;
+	
+	echo $result;
+	die();
 }
 
+//normal register
 switch($registerType){
-	
 	case 'user':
 		$param = array(
-					'user_account'=>isset($jsonPost) ? $jsonPost['userAccount'] : $_REQUEST['userAccount'], 
-					'first_name'=>isset($jsonPost) ? $jsonPost['firstName'] : $_REQUEST['firstName'],
-					'age_range_id'=>isset($jsonPost) ? $jsonPost['ageRangeId'] : $_REQUEST['ageRangeId'],
-					'ethnicity'=>isset($jsonPost) ? $jsonPost['ethnicity'] : $_REQUEST['ethnicity'],
-					'pwd'=>isset($jsonPost) ? $jsonPost['pwd'] : $_REQUEST['pwd'],
-					'opt_in'=>isset($jsonPost) ? $jsonPost['optIn'] : $_REQUEST['optIn']
+					'user_account'=>$post['userAccount'], 
+					'first_name'=>$post['firstName'],
+					'age_range_id'=>$post['ageRangeId'],
+					'ethnicity'=>$post['ethnicity'],
+					'pwd'=>$post['pwd'],
+					'opt_in'=>$post['optIn']
 		);
 		
 		$accType = 'user_account';
@@ -66,11 +68,11 @@ switch($registerType){
 		
 	case 'store':
 		$param = array( 
-					'store_account'=>isset($jsonPost) ? $jsonPost['userAccount'] : $_REQUEST['storeAccount'],
-					'store_name'=>isset($jsonPost) ? $jsonPost['storeName'] : $_REQUEST['storeName'],
-					'parent_store_account'=>isset($jsonPost) ? $jsonPost['parentStoreAcc'] : $_REQUEST['parentStoreAcc'],
-					'store_type'=>isset($jsonPost) ? $jsonPost['storeType'] : $_REQUEST['storeType'],
-					'pwd'=>isset($jsonPost) ? $jsonPost['pwd'] : $_REQUEST['pwd']
+					'store_account'=>$post['storeAccount'],
+					'store_name'=>$post['storeName'],
+					'parent_store_account'=>$post['parentStoreAcc'],
+					'store_type'=>$post['storeType'],
+					'pwd'=>$post['pwd']
 		);
 		
 		$accType = 'store_account';
@@ -81,7 +83,8 @@ switch($registerType){
 		die("incorrect register information");
 }
 
-$personEmail = $_REQUEST['email'];
+
+$personEmail = $post['email'];
 
 if($ctrl->insert($param)){
 
@@ -129,7 +132,7 @@ if($ctrl->insert($param)){
 
 	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 	
-	$code = Ctrl::verifyCodeGen($codeParam);
+	$code = Tool::verifyCodeGen($codeParam);
 	$code = $url."?code=$code";
 	
 	$email = new EmailCtrl();

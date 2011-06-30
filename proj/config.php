@@ -35,6 +35,7 @@ ini_set('include_path',
 			.ROOT_PATH.'/php/class/control/:'
 			.ROOT_PATH.'/php/class/entity/:'
 			.ROOT_PATH.'/php/class/unitTest/:'
+			.ROOT_PATH.'/php/header.php:'
         );
 	
 define ( "IS_DEBUG", true );

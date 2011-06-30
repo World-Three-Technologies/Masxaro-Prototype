@@ -24,12 +24,15 @@
 include_once '../config.php';
 include_once 'header.php';
 
-$acc = isset($jsonPost) ? $jsonPost['acc'] : $_REQUEST['acc'];
+$acc = $post['acc'];
 
 //$acc = 'test';//for test
 
-Tool::logoff($acc);
+ob_start();
 
+Tool::logoff($acc);
 Tool::redirect("/php/product.html");
+
+ob_end_flush();
 
 ?>

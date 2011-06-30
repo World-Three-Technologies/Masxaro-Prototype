@@ -27,9 +27,9 @@
 include_once '../config.php';
 include_once 'header.php';
 
-$opcode = isset($jsonPost) ? $jsonPost['opcode'] : $_POST['opcode'];
+$opcode = $post['opcode'];
 
-$acc = isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc'];
+$acc = $post['acc'];
 
 $ctrl = new UserCtrl();
 
@@ -39,7 +39,7 @@ switch(opcode){
 		break;
 	
 	case 'update_profile':
-		echo $ctrl->updateUserInfo($acc, isset($jsonPost) ? $jsonPost['info'] : $_POST['info']);
+		echo $ctrl->updateUserInfo($acc, $post['info']);
 		break;
 		
 	default:

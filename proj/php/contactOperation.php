@@ -26,25 +26,25 @@
 include_once '../config.php';
 include_once 'header.php';
 
-$acc = isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc'];
+$acc = $post['acc'];
 
 if(!Tool::authenticate($acc)){
 	echo "error: need login";
 	die();
 }
 
-$opcode = isset($jsonPost) ? $jsonPost['opcode'] : $_POST['opcode'];
+$opcode = $post['opcode'];
 
 $ctrl = new ContactCtrl();
 
 switch($opcode){
 	case 'new_contacts':
-		$contacts = isset($jsonPost) ? $jsonPost['contacts'] : $_POST['contacts'];
+		$contacts = $post['contacts'];
 		echo $ctrl->insertContact($contacts);
 		break;
 		
 	case 'delete_contacts':
-		$values = isset($jsonPost) ? $jsonPost['values'] : $_POST['values'];
+		$values = $post['values'];
 		$n = count($values);
 		$result = true;
 		for($i = 0; $i < $n; $i ++){
@@ -54,8 +54,8 @@ switch($opcode){
 		break;
 		 
 	case 'get_contacts':
-		$acc = isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc'];
-		$who = isset($jsonPost) ? $jsonPost['who'] : $_POST['who'];
+		$acc = $post['acc'];
+		$who = $post['who'];
 		echo json_encode($ctrl->getContacts($acc, $who));
 		break;
 		

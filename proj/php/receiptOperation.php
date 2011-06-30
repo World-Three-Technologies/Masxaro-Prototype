@@ -27,7 +27,35 @@
 include_once '../config.php';
 include_once 'header.php';
 
-$opcode = isset($jsonPost) ? $jsonPost['opcode'] : $_POST['opcode'];
+$con = array(
+		'AND'=>array(
+					'AND'=>array(
+								'='=>array(
+											'field'=>'user_account',
+											'value'=>'new'
+										),
+								'<'=>array(
+											'field'=>'receipt_time',
+											'value'=>'2012-02-02'
+										),
+								'>'=>array(
+											'value0'=>2,
+											'value1'=>1
+										)
+							),
+					'value'=>true,
+					'='=>array(
+								'formula0'=>'64*2',
+								'formula1'=>'32*4'
+							)
+				)
+);
+
+echo json_encode($con);
+echo Tool::condArray2SQL($con);
+die();
+
+$opcode = $post['opcode'];
 
 $ctrl = new ReceiptCtrl();
 
@@ -36,49 +64,59 @@ Tool::setJSON();
 switch($opcode){
 	case 'new_receipt':
 		//1-d array
-		$basicInfo = isset($jsonPost) ? $jsonPost['receipt'] : $_POST['receipt'];
+		$basicInfo = $post['receipt'];
 		echo $ctrl->insertReceipt($basicInfo, null);
 		break;
 	
 	case 'new_item':
 		//2-d array
-		$items = isset($jsonPost) ? $jsonPost['items'] : $_POST['items'];
+		$items = $post['items'];
 		echo $ctrl->insertReceipt(null, $items);
 		break;
 		
 	case 'f_delete_receipt':
 		//fake delete one receipt
-		echo $ctrl->fakeDelete(isset($jsonPost) ? $jsonPost['receipt_id'] : $_POST['receipt_id']);
+		echo $ctrl->fakeDelete($post['receipt_id']);
 		break;
 		
 	case 'delete_receipt':
 		//delete one receipt
-		echo $ctrl->realDelete(isset($jsonPost) ? $jsonPost['receipt_id'] : $_POST['receipt_id']);
+		echo $ctrl->realDelete($post['receipt_id']);
 		break;
 		
 	case 'recover':
 		//recover fake deleted receipt
-		echo $ctrl->recoverDeleted(isset($jsonPost) ? $jsonPost['receipt_id'] : $_POST['receipt_id']);
+		echo $ctrl->recoverDeleted($post['receipt_id']);
 		break;
 		
 	case 'user_get_all_receipt_basic':
 		//user get  all receipts' basic info
-		echo json_encode($ctrl->userGetAllReceiptBasic(isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc']));
+		echo json_encode($ctrl->userGetAllReceiptBasic($post['acc']));
 		break;
 		
 	case 'user_get_receipt_item':
 		//user get items info of one certain receipt
-		echo json_encode($ctrl->userGetReceiptItems(isset($jsonPost) ? $jsonPost['receipt_id'] : $_POST['receipt_id']));
+		echo json_encode($ctrl->userGetReceiptItems($post['receipt_id']));
 		break;
 		
 	case 'user_get_all_receipt':
 		//user get all receipt, with basic info and all items info
-		echo json_encode($ctrl->userGetAllReceipt(isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc']));
+		$con = array(
+						'='=>array(
+									'field'=>'user_account',
+									'value'=>$post['acc']
+								  )
+					);
+		echo json_encode($ctrl->searchReceipt($con));
 		break;
 		
 	case 'user_get_receipt_detail':
 		//user get basic info of one certain receipt
-		echo json_encode($ctrl->getReceiptDetail(isset($jsonPost) ? $jsonPost['receipt_id'] : $_POST['receipt_id']));
+		echo json_encode($ctrl->getReceiptDetail($post['receipt_id']));
+		break;
+	
+	case 'search':
+		echo json_encode($ctrl->searchReceipt($post['con']));
 		break;
 		
 	default:

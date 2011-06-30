@@ -26,9 +26,9 @@
 include_once '../config.php';
 include_once 'header.php';
 
-$acc = isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc'];
+$acc = $post['acc'];
 
-$contact = isset($jsonPost) ? $jsonPost['contact'] : $_POST['contact'];
+$contact = $post['contact'];
 
 $ctrl = new Ctrl();
 

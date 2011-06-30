@@ -30,6 +30,65 @@ class ReceiptCtrl extends Ctrl{
 		parent::__construct();
 	}
 	
+	
+	/**
+	 * 
+	 * @param array() $receipts 
+	 * 	associate array, 
+	 *  the result set selected by joining `receipt` & `receipt_item` with certain conditions
+	 * 
+	 * @return array() $result
+	 *  object array, each receipt is an object including basic info and items.
+	 *  
+	 * @desc
+	 *  accept the result set (assoc array) from joining `receipt`&`receipt_item`,
+	 *  encapsulate basic info & items of a certain receipt into an object,
+	 *  organize all receipt objects into an indexed array, return.
+	 */
+	private function buildReceiptObj($receipts){
+		$result = array();
+		
+		if(count($receipts) > 0){
+			$curId = 0;
+			$curRec = null;
+			$curItems = null;
+			$itemRegex = "(^item)";
+			
+			foreach($receipts as $cur){
+				
+				$curItems = array();
+				
+				if($cur['receipt_id'] != $curId){
+					$curRec = new ReceiptEntity();
+					
+				} 
+				
+				foreach($cur as $key=>$value){
+					
+					if(!preg_match($itemRegex, $key)){
+						$curRec->$key = $value;
+					}
+					else if(!empty($value)){
+						$curItems["$key"] = $value;
+					}
+				}
+				
+				if(!empty($curItems)){
+					array_push($curRec->items, $curItems);
+				}
+				
+				if($cur['receipt_id'] != $curId){
+					if(!empty($curRec)){
+						array_push($result, $curRec);
+					}
+					$curId = $cur['receipt_id'];
+				}
+			}
+		}
+		
+		return $result;
+	}
+	
 	/**
 	 * 
 	 * @example
@@ -111,6 +170,8 @@ class ReceiptCtrl extends Ctrl{
 					`receipt`
 				WHERE
 					`receipt_id`=$receiptId
+				AND 
+					`deleted`=false
 			";
 			$this->db->select($sql);
 			
@@ -169,6 +230,8 @@ class ReceiptCtrl extends Ctrl{
 					`total_cost`=$totalCost
 				WHERE
 					`receipt_id`='$receiptId'
+				AND 
+					`deleted`=false
 			";
 			
 			if($this->db->update($sql) <= 0){
@@ -207,6 +270,8 @@ class ReceiptCtrl extends Ctrl{
 				$info
 			WHERE
 				`receipt_id`=$receiptId
+			AND 
+				`deleted`=false
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -284,6 +349,8 @@ class ReceiptCtrl extends Ctrl{
 				`deleted` = true
 			WHERE
 				`receipt_id` = $receiptId
+			AND 
+				`deleted`=false
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -323,6 +390,8 @@ class ReceiptCtrl extends Ctrl{
 				`deleted` = false
 			WHERE
 				`receipt_id` = '$receiptId'
+			AND 
+				`deleted`=true
 		";
 		if($this->db->update($sql) <= 0){
 			return false;
@@ -354,6 +423,8 @@ class ReceiptCtrl extends Ctrl{
 				r.`store_account`=s.`store_account`
 			AND
 				r.`user_account`='$userAcc'
+			AND 
+				`deleted`=false
 			ORDER BY
 				r.`receipt_time`
 			DESC;
@@ -387,7 +458,7 @@ class ReceiptCtrl extends Ctrl{
 			WHERE
 				`receipt_id`=$receiptId
 			AND
-				`deleted`=0
+				`deleted`=false
 		";
 		
 		$this->db->select($sql);
@@ -431,55 +502,67 @@ class ReceiptCtrl extends Ctrl{
 				r.`store_account`=s.`store_account`
 			WHERE
 				r.`user_account`='$userAcc'
+			AND 
+				r.`deleted`=false
+			AND
+				ri.`deleted`=false
 			ORDER BY
 				r.`receipt_time`
 			DESC
 		";
 		
 		$this->db->select($sql);
-		$tmp = $this->db->fetchAssoc();
+		$receipts = $this->db->fetchAssoc();
 		
-		$result = array();
+		return $this->buildReceiptObj($receipts);
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param array() $con multi-dimension array of searching conditions
+	 * 
+	 * @return array(obj,...) each ReceiptEntity obj conclude 2 arrays, basicInfo & items (array(array(),..))
+	 * 
+	 * @desc
+	 * search for receipts based no certain conditions
+	 */
+	public function searchReceipt($con){
+		$con = Tool::condArray2SQL($con);
 		
-		if(count($tmp) > 0){
-			$curId = 0;
-			$curRec = null;
-			$curItems = null;
-			$itemRegex = "(^item)";
-			
-			foreach($tmp as $cur){
-				
-				$curItems = array();
-				
-				if($cur['receipt_id'] != $curId){
-					$curRec = new ReceiptEntity();
-					
-				} 
-				
-				foreach($cur as $key=>$value){
-					
-					if(!preg_match($itemRegex, $key)){
-						$curRec->$key = $value;
-					}
-					else if(!empty($value)){
-						$curItems["$key"] = $value;
-					}
-				}
-				
-				if(!empty($curItems)){
-					array_push($curRec->items, $curItems);
-				}
-				
-				if($cur['receipt_id'] != $curId){
-					if(!empty($curRec)){
-						array_push($result, $curRec);
-					}
-					$curId = $cur['receipt_id'];
-				}
-			}
+		if(!Tool::securityChk($con)){
+			return false;
 		}
 		
-		return $result;
+		$sql = "
+			SELECT 
+				r.`receipt_id`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`,ri.`item_id`,
+        		ri.`item_name`, ri.`item_qty`, ri.`item_discount`, ri.`item_price`
+			FROM 
+				`receipt` as r 
+			LEFT JOIN
+				`receipt_item` as ri
+			ON
+				r.`receipt_id`=ri.`receipt_id`
+			LEFT JOIN
+				`store` as s
+			ON
+				r.`store_account`=s.`store_account`
+			WHERE
+				$con
+			AND 
+				r.`deleted`=false
+			AND
+				ri.`deleted`=false
+			ORDER BY
+				r.`receipt_time`
+			DESC
+		";
+				
+		$this->db->select($sql);
+		$receipts = $this->db->fetchAssoc();
+		
+		return $this->buildReceiptObj($receipts);
 	}
 	
 	/**
@@ -504,6 +587,8 @@ class ReceiptCtrl extends Ctrl{
 				r.`store_account`=s.`store_account`
 			AND
 				`receipt_id`=$receiptId
+			AND 
+				`deleted`=false
 		";
 		
 		$this->db->select($sql);

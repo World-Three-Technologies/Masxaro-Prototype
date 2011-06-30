@@ -27,24 +27,16 @@
 include_once '../config.php';
 include_once 'header.php';
 
-$acc = isset($jsonPost) ? $jsonPost['acc'] : $_POST['acc'];
-$pwd = isset($jsonPost) ? $jsonPost['pwd'] : $_POST['pwd'];
-$type = isset($jsonPost) ? $jsonPost['type'] : $_POST['type']; // string, 'user' or 'store'
+$acc = $post['acc'];
+$pwd = $post['pwd'];
+$type = $post['type']; // string, 'user' or 'store'
 
-//for test
-//$acc = 'new';
-//$pwd = '123';
-//$type = 'user';
-
-//$acc = 'Mc_NYU';
-//$pwd = '123';
-//$type = 'store';
+ob_start();
 
 switch($type){
 	case 'user':
 		$ctrl = new UserCtrl();
 		if(!$ctrl->findUser($acc, $pwd)){
-      		echo false;
       		die('wrong account or password');
     	}
     break;
@@ -52,16 +44,14 @@ switch($type){
 	case 'store':
 		$ctrl = new StoreCtrl();
 		if(!$ctrl->findStore($acc, $pwd)){
-			echo false;
 			die('wrong account or password');
 		}
 		break;
 		
 	default:
-		echo 'wrong login!';
-		break;
+		die('wrong parameters');
 }
 
-echo $result = Tool::login($acc, $pwd, $type);
-
+echo Tool::login($acc, $pwd, $type);
+ob_end_flush();
 ?>

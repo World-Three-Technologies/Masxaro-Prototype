@@ -60,6 +60,39 @@ class Tool{
 	
 	/**
 	 * 
+	 * 
+	 * @param array() $con multi-dimension array of SQL condition
+	 * 
+	 * @param string $curOperator for the use of recursion algorithm, don't need to set at the first call
+	 * 
+	 * @return string $condition
+	 * 
+	 * @desc
+	 * transfer sql condition array into string sql statement  
+	 */
+	public static function condArray2SQL($con, $curOperator = ''){
+		
+		if(!is_array($con)){
+			if(preg_match("(^field)", $curOperator) || preg_match("(^formula)", $curOperator)){
+				return $con;
+			}
+			else if(preg_match("(^value)", $curOperator)){
+				return is_bool($con) ? $con : "'".$con."'";
+			}
+			else{
+				die('wrong parameter');
+			}
+		}
+		
+		$buffer = array();
+		foreach($con as $operator=>$operand){
+			array_push($buffer, Tool::condArray2SQL($operand, $operator));
+		}
+		return '('.implode(" $curOperator ", $buffer).')';
+	}
+	
+	/**
+	 * 
 	 * @param string $str
 	 * 
 	 * @return boolean
@@ -87,10 +120,9 @@ class Tool{
 	 * authenticate user/store log in status
 	 */
 	public static function authenticate($acc){
-
-    if(empty($acc) || strlen($acc) == 0){
-      return false;
-    }
+	    if(empty($acc) || strlen($acc) == 0){
+	      return false;
+	    }
 
 		if(isset($_COOKIE['user_acc']) && $_COOKIE['user_acc'] == $acc){
 				return true;
@@ -119,10 +151,10 @@ class Tool{
 	public static function login($acc, $pwd, $type){
 		switch($type){
 			case 'user':
-				return setcookie('user_acc', $acc, time() + 20 * 60 * 60); //1 day
+				return setcookie('user_acc', $acc, time() + 24 * 60 * 60, "/"); //1 day
 				break;
 			case 'store':
-				return setcookie('store_acc', $acc, time() + 20 * 60 * 60); //1 day
+				return setcookie('store_acc', $acc, time() + 24 * 60 * 60, "/"); //1 day
 				break;
 		}
 	}
@@ -137,8 +169,8 @@ class Tool{
 	 * user / store log off
 	 */
 	public static function logoff($acc){
-		setcookie('user_acc', '');
-		setcookie('store_acc', '');
+		setcookie('user_acc', '', time() - 1, "/");
+		setcookie('store_acc', '', time() - 1, "/");
 	}
 	
 	/**
@@ -179,5 +211,34 @@ class Tool{
   public static function setJSON(){
     header("Content-Type: application/json");
   }
+  
+	/**
+	 * 
+	 * 
+	 * @param array() $info
+	 * 
+	 * @return  generated code
+	 * 
+	 * @desc
+	 * 
+	 * registration verification code generation
+	 */
+	public static function verifyCodeGen($info){
+		return base64_encode(base64_encode(implode("&&", $info)));
+	}
+	
+	/**
+	 *
+	 * @param string $code
+	 * 
+	 * @desc decode verification code
+	 * 
+	 * @return array()
+	 */
+	public static function decodeVerifyCode($code){
+		$code = base64_decode(base64_decode($code));
+		
+		return explode("&&", $code);
+	}
 }
 ?>

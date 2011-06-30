@@ -101,35 +101,6 @@ abstract class Ctrl {
 		
 		return true;
 	}
-	
-	/**
-	 * 
-	 * 
-	 * @param array() $info
-	 * 
-	 * @return  generated code
-	 * 
-	 * @desc
-	 * 
-	 * registration verification code generation
-	 */
-	public static function verifyCodeGen($info){
-		return base64_encode(base64_encode(implode("&&", $info)));
-	}
-	
-	/**
-	 *
-	 * @param string $code
-	 * 
-	 * @desc decode verification code
-	 * 
-	 * @return array()
-	 */
-	public static function decodeVerifyCode($code){
-		$code = base64_decode(base64_decode($code));
-		
-		return explode("&&", $code);
-	}
 }
 
 ?>
