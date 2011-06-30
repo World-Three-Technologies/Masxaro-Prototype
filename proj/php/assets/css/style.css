@@ -107,7 +107,6 @@ header {
   padding: 3px;
   width: 100%; }
   .receipt .items {
-    float: left;
     font-size: 18px;
     font-weight: bold; }
     .receipt .items div {
@@ -188,3 +187,11 @@ header {
 footer {
   margin: 0 auto;
   text-align: center; }
+
+.item {
+  font-size: 16px;
+  margin: 3px;
+  padding-left: 60px; }
+
+.total_cost {
+  float: left; }

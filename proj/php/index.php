@@ -52,9 +52,12 @@
       </aside>
     </div>
   </div> <!-- eo #container -->
-  <?php include_once "layout/footer.php" ?>
-  <?php include_once "layout/template.php" ?>
-  <?php include_once "layout/scripts.php" ?>
+
+  <?php 
+    include_once "layout/footer.php";
+    include_once "layout/template.php"; 
+    include_once "layout/scripts.php";
+  ?>
 
 </body>
 </html>

@@ -37,11 +37,9 @@ var ReceiptView = Backbone.View.extend({
       $(this.el).html(this.fullTemplate(this.model.toJSON()));
 
       $(this.el).find(".date").html(new Date(this.model.get("receipt_time")).format());
-      console.log(this.model.get("receipt_time"));
-
-      var items = $(this.el).find('.items');
+      var items = $(this.el).find(".items");
       _.each(this.model.get("items"),function(model){
-        items.append("<div>"+model.item_name +"   x   - $" +model.item_price + " x " + model.item_qty+"</div>");
+        items.append("<div class='item'>"+model.item_name +"   x   - $" +model.item_price + " x " + model.item_qty+"</div>");
       });
 
       window.lastOpen = this;
