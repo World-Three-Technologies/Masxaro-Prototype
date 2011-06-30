@@ -61,9 +61,9 @@ header {
     width: 28%;
     margin: 10px;
     padding: 10px; }
-  #main aside {
-    margin: 10px 0;
-    float: right;
+  #main nav {
+    margin: 10px 0px;
+    float: left;
     width: 160px; }
 
 #user {
@@ -195,3 +195,9 @@ footer {
 
 .total_cost {
   float: left; }
+
+#action-bar {
+  width: 80px;
+  float: left;
+  height: 400px;
+  border: 1px green solid; }

@@ -15,13 +15,15 @@
   <?php include_once "layout/header-bar.php" ?>
   <div id="container">
     <div id="main" role="main">
+      <nav id="action-bar">
+        <ul>
+          <li><a href="#index">Recent [15]</a></li>
+          <li><a href="#index">Food and Restrauant</a></li>
+          <li><a href="#index">Payment</a></li>
+          <li><a href="#index">Add catagory</a></li>
+        </ul>
+      </nav>
       <div id="content">
-        <div id="user" class="clearfix">
-          <div id="user-inner">
-            <div><img src="assets/img/avator.png"></img></div>
-            <div id="user-flash">Hello User!</div>
-          </div>
-        </div>
         <div id="receipts">
           <div id="search-bar">
             <form action="" method="GET">
@@ -29,14 +31,6 @@
               <button type="submit" title="search"></button>
             </form>
           </div>
-          <nav id="main-tabs">
-            <ul class="tabs clearfix">
-              <li>Recent [15]</li>
-              <li>Catagory V</li>
-              <li>Overview </li>
-              <li style="float:right;">Sort by: Date</li>
-            </ul>
-          </nav>
           <table id="receipts-table">
             <td id="ajax-loader" colspan="4"><img src="assets/img/ajax-loader.gif"/></td>
           </table>
@@ -46,10 +40,6 @@
           </div>
         </div>
       </div>
-      <aside id="sidebar">
-        <div style="margin:10px;width:100%;height:300px;border:1px solid rgb(94,206,116)"></div>
-        <div style="margin:10px;width:100%;height:300px;border:1px solid rgb(94,206,116)"></div>
-      </aside>
     </div>
   </div> <!-- eo #container -->
 

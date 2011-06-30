@@ -101,9 +101,9 @@ header{
     padding:10px;
   }
 
-  aside{
-    margin: 10px 0;
-    float:right;
+  nav{
+    margin: 10px 0px;
+    float:left;
     @include grid(4);
   }
 }
@@ -265,6 +265,14 @@ footer{
 }
 .total_cost{
   float:left;
+  
+}
+
+#action-bar{
+  @include grid(2);
+  float:left;
+  height:400px;
+  border:1px green solid;
   
 }
 

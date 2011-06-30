@@ -13,7 +13,8 @@ var AppController = Backbone.Controller.extend({
   },
 
   routes: {
-    "" : "index"        
+    "" : "index",
+    "index" : "index"        
   },
 
   index: function(){
