@@ -69,7 +69,7 @@ class StoreCtrl extends Ctrl{
 	 * 
 	 * @param string $pwd
 	 * 
-	 * @return boolean
+	 * @return int 1: found, verified, 0: not found, -1: found, unverified
 	 * 
 	 * @desc
 	 * 
@@ -98,14 +98,14 @@ class StoreCtrl extends Ctrl{
 		$result = $this->db->fetchAssoc();
 		if($this->db->numRows() == 1){
 			if($result[0]['verified'] == true){
-				return true;
+				return 1;
 			}
 			else{
-				return 'not verified';
+				return -1;
 			}
 		}
 		
-		return false;
+		return 0;
 	}
 	
 	/**
