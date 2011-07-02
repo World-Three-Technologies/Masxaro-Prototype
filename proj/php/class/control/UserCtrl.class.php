@@ -213,8 +213,14 @@ class UserCtrl extends Ctrl{
 		";
 		
 		$this->db->select($sql);
+		$result = $this->db->fetchAssoc();
 		if($this->db->numRows() == 1){
-			return true;
+			if($result[0]['verified'] == true){
+				return true;
+			}
+			else{
+				return 'not verified';
+			}
 		}
 		
 		return false;

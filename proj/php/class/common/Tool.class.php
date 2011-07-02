@@ -152,7 +152,6 @@ class Tool{
 		switch($type){
 			case 'user':
 				return setcookie('user_acc', $acc, time() + 24 * 60 * 60, "/"); //1 day
-				die();
 				break;
 			case 'store':
 				return setcookie('store_acc', $acc, time() + 24 * 60 * 60, "/"); //1 day

@@ -47,7 +47,13 @@ switch($type){
 		die('wrong parameters');
 }
 
-if(!$ctrl->find($acc, $pwd)){
+$result = $ctrl->find($acc, $pwd);
+
+if(!is_bool($result)){
+	die($result);
+}
+
+if(!$result){
 	die('wrong account or password');
 }
 
