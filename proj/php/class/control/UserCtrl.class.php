@@ -153,7 +153,7 @@ class UserCtrl extends Ctrl{
 	 * @param string $curAcc current account name
 	 * @param array() $info updated info, array('first_name'=>'John', 'age_range_id'=>2, ...)
 	 */
-	public function updateUserInfo($curAcc, $info){
+	public function update($curAcc, $info){
 		
 		$info = Tool::infoArray2SQL($info);
 		

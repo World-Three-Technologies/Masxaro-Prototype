@@ -33,22 +33,9 @@ include_once 'header.php';
 $personEmail = "";
 $ctrl = null;
 $accType = "";
+$verifyPage = "verifyRegister.php";
 
 $registerType = $post['type']; //user / store
-$code = $post['code'];
-
-// registration code verify
-if(isset($code)){
-	$ctrl = new UserCtrl();
-	$ctrlS = new StoreCtrl();
-	
-	$info = Tool::decodeVerifyCode($code);
-	$result = $ctrl->updateUserInfo($info[0], array('verified'=>true)) == true ? 
-			  true : $ctrlS->update($info[0], array('verified'=>true));
-	
-	echo $result;
-	die();
-}
 
 //normal register
 switch($registerType){
@@ -131,6 +118,8 @@ if($ctrl->insert($param)){
 	$mailSub = "Please verify your registration on Masxaro.com";
 
 	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+	
+	$url = substr($url, 0, strripos($url, "/") + 1).'verifyRegister.php';
 	
 	$code = Tool::verifyCodeGen($codeParam);
 	$code = $url."?code=$code";

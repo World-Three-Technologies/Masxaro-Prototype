@@ -1,6 +1,6 @@
 <?php
 /*
- *  userProfile.php -- get user profile 
+ *  verifyRegister.php -- verify registration based on code 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -20,33 +20,26 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
- * 
  *  
+ * 
  */
 
 include_once '../config.php';
-include_once 'header.php';
 
-$opcode = $post['opcode'];
+$code = $_GET['code'];
 
-$ctrl = new UserCtrl();
-
-switch(opcode){
-	case 'get_profile':
-		echo json_encode($ctrl->getUserProfile($post['acc']));
-		break;
-	
-	case 'update_profile':
-		echo $ctrl->update($post['acc'], $post['info']);
-		break;
-	
-	case 'authenticate':
-		echo $ctrl->find($post['acc'], $post['pwd']);
-		
-	default:
-		die('wrong parameters');
-		break;
+// registration code verification
+if(!isset($code)){
+	die('code is necessary');
 }
 
+$ctrl = new UserCtrl();
+$ctrlS = new StoreCtrl();
+
+$info = Tool::decodeVerifyCode($code);
+$result = $ctrl->update($info[0], array('verified'=>true)) 
+		  || $ctrlS->update($info[0], array('verified'=>true));
+	
+echo $result;
 
 ?>
