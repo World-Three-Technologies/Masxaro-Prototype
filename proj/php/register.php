@@ -111,21 +111,19 @@ if($ctrl->insert($param)){
 	}
 	
 	$codeParam = array(
+		$registerType,
 		$param[$accType],
+		$param['pwd'],
 		$personEmail
 	); 
+	$code = Tool::verifyCodeGen($codeParam);
 	
 	$mailSub = "Please verify your registration on Masxaro.com";
-
 	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
-	
 	$url = substr($url, 0, strripos($url, "/") + 1).'verifyRegister.php';
-	
-	$code = Tool::verifyCodeGen($codeParam);
 	$code = $url."?code=$code";
 	
 	$email = new EmailCtrl();
-	
 	$mailContent = "
 				<html>
 				<head>

@@ -33,13 +33,38 @@ if(!isset($code)){
 	die('code is necessary');
 }
 
-$ctrl = new UserCtrl();
-$ctrlS = new StoreCtrl();
+$ctrl = null;
 
 $info = Tool::decodeVerifyCode($code);
-$result = $ctrl->update($info[0], array('verified'=>true)) 
-		  || $ctrlS->update($info[0], array('verified'=>true));
-	
-echo $result;
+
+$acc = $info[1];
+$pwd = $info[2];
+
+switch($info[0]){
+	case 'user':
+		$ctrl = new UserCtrl();
+		break;
+		
+	case 'user':
+		$ctrl = new StoreCtrl();
+		break;
+		
+	default:
+		die('wrong code');
+}
+
+$tmp = $ctrl->find($acc, $pwd);
+
+if($tmp == 0){
+	die('wrong verification');
+}
+
+if($tmp < 0){
+	echo $ctrl->update($acc, array('verified'=>true));
+}
+
+else{
+	die('already verified');
+}
 
 ?>
