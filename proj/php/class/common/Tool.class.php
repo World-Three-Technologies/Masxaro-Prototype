@@ -148,10 +148,11 @@ class Tool{
 	 * 
 	 * user / store login cookie set
 	 */
-	public static function login($acc, $pwd, $type){
+	public static function login($acc, $type){
 		switch($type){
 			case 'user':
 				return setcookie('user_acc', $acc, time() + 24 * 60 * 60, "/"); //1 day
+				die();
 				break;
 			case 'store':
 				return setcookie('store_acc', $acc, time() + 24 * 60 * 60, "/"); //1 day

@@ -1,4 +1,8 @@
 <?php
+
+var_dump($_COOKIE);
+die();
+
 $acc = 'new';
 if(empty($acc) || strlen($acc) == 0){
 	      echo false;

@@ -33,25 +33,24 @@ $type = $post['type']; // string, 'user' or 'store'
 
 ob_start();
 
+$ctrl = null;
 switch($type){
 	case 'user':
 		$ctrl = new UserCtrl();
-		if(!$ctrl->findUser($acc, $pwd)){
-      		die('wrong account or password');
-    	}
     break;
 		
 	case 'store':
 		$ctrl = new StoreCtrl();
-		if(!$ctrl->findStore($acc, $pwd)){
-			die('wrong account or password');
-		}
 		break;
 		
 	default:
 		die('wrong parameters');
 }
 
-echo Tool::login($acc, $pwd, $type);
+if(!$ctrl->find($acc, $pwd)){
+	die('wrong account or password');
+}
+
+echo Tool::login($acc, $type);
 ob_end_flush();
 ?>

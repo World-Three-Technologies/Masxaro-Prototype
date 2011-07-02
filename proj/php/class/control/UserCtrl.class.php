@@ -192,7 +192,7 @@ class UserCtrl extends Ctrl{
 	 * find user 
 	 * 
 	 */
-	public function findUser($acc, $pwd){
+	public function find($acc, $pwd){
 		if(!Tool::securityChk($acc)){
 			return false;
 		}

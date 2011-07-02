@@ -9,7 +9,7 @@ if(isset($_POST['json'])){
 	$post = $post['json'];
 }
 else{
-	$post = $_REQUEST;
+	$post = $_POST;
 }
 
 ?>

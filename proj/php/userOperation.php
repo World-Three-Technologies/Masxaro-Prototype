@@ -29,21 +29,22 @@ include_once 'header.php';
 
 $opcode = $post['opcode'];
 
-$acc = $post['acc'];
-
 $ctrl = new UserCtrl();
 
 switch(opcode){
 	case 'get_profile':
-		echo json_encode($ctrl->getUserProfile($acc));
+		echo json_encode($ctrl->getUserProfile($post['acc']));
 		break;
 	
 	case 'update_profile':
-		echo $ctrl->updateUserInfo($acc, $post['info']);
+		echo $ctrl->updateUserInfo($post['acc'], $post['info']);
 		break;
+	
+	case 'authenticate':
+		echo $ctrl->find($post['acc'], $post['pwd']);
 		
 	default:
-		echo false;
+		die('wrong parameters');
 		break;
 }
 

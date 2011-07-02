@@ -26,13 +26,9 @@ include_once 'header.php';
 
 $acc = $post['acc'];
 
-//$acc = 'test';//for test
-
 ob_start();
-
 Tool::logoff($acc);
-Tool::redirect("/php/product.html");
-
+//Tool::redirect("/php/product.html");
 ob_end_flush();
 
 ?>
