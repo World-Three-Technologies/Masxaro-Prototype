@@ -88,7 +88,7 @@ switch($opcode){
 		break;
 	
 	case 'search':
-		echo json_encode($ctrl->searchReceipt(json_decode($post['con'])));
+		echo json_encode($ctrl->searchReceipt($post['con']));
 		break;
 		
 	default:
