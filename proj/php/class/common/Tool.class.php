@@ -119,15 +119,12 @@ class Tool{
 	 * 
 	 * authenticate user/store log in status
 	 */
-	public static function authenticate($acc){
-	    if(empty($acc) || strlen($acc) == 0){
-	      return false;
-	    }
+	public static function authenticate($acc = ''){
 
-		if(isset($_COOKIE['user_acc']) && $_COOKIE['user_acc'] == $acc){
+		if(isset($_COOKIE['user_acc']) && $acc == '' ? true : $_COOKIE['user_acc'] == $acc){
 				return true;
 		}
-		else if(isset($_COOKIE['store_acc']) && $_COOKIE['store_acc'] == $acc){
+		else if(isset($_COOKIE['store_acc']) && $acc == '' ? true :  $_COOKIE['store_acc'] == $acc){
 				return true;
 		}
 
