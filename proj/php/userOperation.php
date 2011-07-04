@@ -40,8 +40,9 @@ switch(opcode){
 		echo $ctrl->update($post['acc'], $post['info']);
 		break;
 	
-	case 'authenticate':
+	case 'verify':
 		echo $ctrl->find($post['acc'], $post['pwd']);
+		break;
 		
 	default:
 		die('wrong parameters');
