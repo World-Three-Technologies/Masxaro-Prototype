@@ -1,6 +1,6 @@
 <?php
 /*
- *  userProfile.php -- get user profile 
+ *  userOperation.php -- user operations 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.

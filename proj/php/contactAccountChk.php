@@ -32,14 +32,14 @@ $contact = $post['contact'];
 
 $ctrl = new Ctrl();
 
-$result = true;
+$result = 1;
 
 if(isset($acc) && !$ctrl->chkAccount($acc)){
-	$result = false;
+	$result = 0;
 }
 
 if(isset($contact) && !$ctrl->chkContact($contact)){
-	$result = false;
+	$result = -1;
 }
 
 echo $result;
