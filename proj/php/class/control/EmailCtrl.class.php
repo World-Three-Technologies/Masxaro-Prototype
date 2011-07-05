@@ -93,6 +93,8 @@ class EmailCtrl extends Ctrl{
 	 * 
 	 * @param string $familyName
 	 * 
+	 * @return boolean
+	 * 
 	 * @desc
 	 * create a masxaro email account for a new user.
 	 */
@@ -117,6 +119,8 @@ class EmailCtrl extends Ctrl{
 	 * 
 	 * @param string $username
 	 * 
+	 * @return boolean
+	 * 
 	 * @desc
 	 * suspend an account
 	 */
@@ -134,12 +138,33 @@ class EmailCtrl extends Ctrl{
 	 * 
 	 * @param string $username
 	 * 
+	 * @return boolean
+	 * 
 	 * @desc
 	 * delete an account
 	 */
 	public function deleteAcc($username){
 		try{
 			$this->service->deleteUser($username);
+		}catch(Exception $e){
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $username
+	 * 
+	 * @return boolean
+	 * 
+	 * @desc
+	 * restore a suspended account
+	 */
+	public function restoreAcc($username){
+		try{
+			$this->service->restoreUser($username);
 		}catch(Exception $e){
 			return false;
 		}

@@ -55,12 +55,15 @@ switch($info[0]){
 
 $tmp = $ctrl->find($acc, $pwd);
 
-if($tmp == 0){
-	die('wrong verification');
+if($tmp < 0){
+	$emailCtrl = new EmailCtrl();
+	echo $emailCtrl->createUserAcc($acc, Tool::getPassword($acc)) 
+		? $ctrl->update($acc, array('verified'=>true)) : 'verification failed.';
+	die();
 }
 
-if($tmp < 0){
-	echo $ctrl->update($acc, array('verified'=>true));
+if($tmp == 0){
+	die('wrong verification');
 }
 
 else{

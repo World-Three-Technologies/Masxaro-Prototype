@@ -78,7 +78,7 @@ if($ctrl->insert($param)){
 	$contacts = array();
 	
 	//masxaro email
-	$email = $param[$accType].'@masxaro.com';
+	$email = "$param[$accType]@".DOMAIN;
 	array_push($contacts, array(
 							$accType=>$param[$accType],
 							'contact_type'=>'email',

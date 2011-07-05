@@ -236,5 +236,19 @@ class Tool{
 		
 		return explode("&&", $code);
 	}
+	
+	/**
+	 * 
+	 * @param string $acc user account
+	 * 
+	 * @return string pwd user password for masxaro mailbox
+	 * 
+	 * @desc
+	 * retrieve the password of masxaro mailbox according to user account
+	 */
+	public static function getPassword($acc){
+		$buf = md5(md5($acc));
+		return substr($buf, strlen($buf) % MIN_ACC_LEN);
+	}
 }
 ?>

@@ -43,7 +43,25 @@ switch(opcode){
 	case 'verify':
 		echo $ctrl->find($post['acc'], $post['pwd']);
 		break;
+
+	case 'fake_delete':
+		$acc = $post['acc'];
+		$emailCtrl = new EmailCtrl();
+		echo $emailCtrl->suspendAcc($acc) ? $ctrl->fakeDeleteUser($acc) : false;
+		break;
 		
+	case 'recover':
+		$acc = $post['acc'];
+		$emailCtrl = new EmailCtrl();
+		echo $emailCtrl->restoreAcc($acc) ? $ctrl->recoverDeletedUser($acc) : false;
+		break;
+	
+	case 'real_delete':
+		$acc = $post['acc'];
+		$emailCtrl = new EmailCtrl();
+		echo $emailCtrl->deleteAcc($acc) ? $ctrl->realDeleteUser($acc) : false;
+		break;
+	
 	default:
 		die('wrong parameters');
 		break;
