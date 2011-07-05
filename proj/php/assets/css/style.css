@@ -13,9 +13,13 @@ h2 {
 h3 {
   font-size: 24px; }
 
+#container {
+  overflow-x: hidden; }
+
 header {
   background-color: #5ece74;
   width: 100%;
+  min-width: 960px;
   height: 40px;
   display: block;
   text-align: center;
@@ -47,9 +51,19 @@ header {
     padding: 5px; }
 
 #main {
-  max-width: 960px;
+  width: 960px;
   margin: 0px auto;
   text-align: center; }
+  #main #main-tab {
+    text-align: center;
+    text-size: 22px;
+    width: 100%;
+    margin: 10px; }
+    #main #main-tab div {
+      width: 80px;
+      float: left;
+      padding: 5px 0;
+      margin: 5px 0; }
   #main #content {
     margin: 10px;
     text-align: left;
@@ -80,6 +94,9 @@ header {
     border: 0;
     padding: 0;
     margin: 0; }
+  #search-bar div {
+    float: left;
+    padding: 5px; }
 
 .receipt {
   padding: 3px;
@@ -180,7 +197,7 @@ footer {
   width: 160px;
   padding: 15px 0;
   float: left;
-  height: 1000px;
+  min-height: 800px;
   border-right: 1px green solid; }
   #action-bar .active {
     background-color: #5eceb0; }

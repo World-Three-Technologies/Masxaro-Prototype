@@ -1,7 +1,6 @@
 /*
  * page params
  */
-
 $page-width : 960px;
 $grid : 24;
 $grid-width : $page-width / $grid;
@@ -39,9 +38,14 @@ h1 { font-size: 32px;}
 h2 { font-size: 28px;}
 h3 { font-size: 24px;}
 
+#container{
+  overflow-x:hidden;
+}
+
 header{
   background-color: rgb(94,206,116);
   width:100%;
+  min-width:960px;
   height:40px;
   display:block;
   text-align:center;
@@ -82,9 +86,23 @@ header{
 }
 
 #main{
-  max-width: $page-width;
+  width: $page-width;
   margin: 0px auto;
   text-align:center;
+
+  #main-tab{
+    text-align:center;
+    text-size:22px;
+    width:100%;
+    margin:10px;
+    div{
+      @include grid(2);
+      float:left;
+      padding:5px 0;
+      margin:5px 0;
+
+    }
+  }
 
   #content{
     margin: 10px;
@@ -122,6 +140,10 @@ header{
     border:0;
     padding:0;
     margin:0;
+  }
+  div{
+    float:left;
+    padding:5px;
   }
 }
 
@@ -248,7 +270,7 @@ footer{
   @include grid(4);
   padding:15px 0;
   float:left;
-  height:1000px;
+  min-height:800px;
   border-right:1px green solid;
   .active{
     background-color:rgb(94,206,176);

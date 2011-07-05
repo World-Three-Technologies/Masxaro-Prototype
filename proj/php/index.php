@@ -28,11 +28,22 @@
         <div>
       </nav>
       <div id="content">
+        <nav id="main-tab" class="clearfix">
+          <div class="tab">Receipt</div>
+          <div class="tab">Overview</div>
+          <div class="tab">Analysis</div>
+        </nav>
         <div id="receipts">
           <div id="search-bar">
             <form action="" method="GET">
-              <input type="text" placeholder="search"/>
-              <button type="submit" title="search"></button>
+              <div>
+                <input type="text" placeholder="search"/>
+              </div>
+              <div>
+                <button type="submit" title="search"></button>
+              </div>
+              <div>Show Receipts</div>
+              <div>Show Items</div>
             </form>
           </div>
           <table id="receipts-table">
