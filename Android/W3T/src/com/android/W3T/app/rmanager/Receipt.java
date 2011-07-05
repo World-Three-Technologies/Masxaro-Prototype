@@ -55,16 +55,16 @@ public class Receipt {
 	public static final String PARAM_ITEM_QTY = "item_qty";
 	public static final String PARAM_ITEM_PRICE = "item_price";
 	
-	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
-	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
+//	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+//	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
 	private String mReceiptId;
 	private	String mStoreName;
 	private String mTime;
 	private String mTax;
 	private String mTotal;
-	private String img;
-	private String delete;
+//	private String img;
+//	private String delete;
 	private ArrayList<ReceiptItem> mItems;	// Items in this receipt
 	private int mNumItems;			// Number of items
 	
@@ -77,8 +77,8 @@ public class Receipt {
 		mTime = new String("N/A");
 		mTotal = new String("N/A");
 		mTax = new String("N/A");
-		img = new String("N/A");
-		delete = new String();
+//		img = new String("N/A");
+//		delete = new String();
 		mItems = new ArrayList<ReceiptItem>();
 		mNumItems = 0;
 		mWhere = false;
@@ -129,6 +129,7 @@ public class Receipt {
 		return mItems.get(i);
 	}
 	
+	// Called when there is a need to add items to a receipt, r.
 	public void addItems(JSONArray items) {
 		mNumItems = items.length();
 		

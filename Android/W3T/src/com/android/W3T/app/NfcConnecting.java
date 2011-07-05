@@ -40,9 +40,9 @@ import android.nfc.NfcAdapter;
 import com.android.W3T.app.nfc.*;
 
 public class NfcConnecting extends Activity {
-	private NfcAdapter mAdapter;
-    private PendingIntent mPendingIntent;
-    private IntentFilter[] mFilters;
+//	private NfcAdapter mAdapter;
+//    private PendingIntent mPendingIntent;
+//    private IntentFilter[] mFilters;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

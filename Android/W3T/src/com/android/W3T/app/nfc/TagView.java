@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
+import com.android.W3T.app.ReceiptsListSelector;
 import com.android.W3T.app.ReceiptsView;
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
@@ -45,7 +46,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class TagView extends Activity {
-	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+//	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
 //	private Receipt mReceipt;
@@ -80,13 +81,11 @@ public class TagView extends Activity {
 	            for (int i=0;i<num;i++) {
 	            	NetworkUtil.attemptSendReceipt(UserProfile.getUsername(), receipts.get(i));
 	            }
-	                    
 				setBackIntent();
 				finish();
 			}
         });
         // -------------- fake tag receive ---------------- //
-              
 	}
 	
 	@Override
@@ -112,8 +111,8 @@ public class TagView extends Activity {
     }
 	
 	private void setBackIntent() {
-		Intent tag_intent = new Intent(TagView.this, ReceiptsView.class);
-		tag_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		startActivity(tag_intent);
+		Intent receipt_list_intent = new Intent(TagView.this, ReceiptsListSelector.class);
+		receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+		startActivity(receipt_list_intent);
 	}
 }

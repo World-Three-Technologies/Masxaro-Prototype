@@ -38,6 +38,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -66,16 +67,14 @@ public class ReceiptsView extends Activity {
 			// to the database.
 			String jsonstr = NetworkUtil.attemptGetReceipt(ReceiptsView.RECEIVE_ALL, "new");
 			if (jsonstr != null) {
-				setContentView(R.layout.receipt_view);
 				Log.i(TAG, "add new receipts");
-				System.out.println(jsonstr);
 				// Set the IsUpload true
 				ReceiptsManager.add(jsonstr, FROM_DB);
 				Log.i(TAG, "finished new receipts");
 				Log.i(TAG, "update receipt view");
 				mRefreshProgress.dismiss();
+				setBackIntent();
 			}
-			
 		}
 	};
 	
@@ -127,9 +126,7 @@ public class ReceiptsView extends Activity {
 			return true;
 		case R.id.sw_receipt_opt:
 			if (ReceiptsManager.getNumValid() != 0) {
-				final Intent receipt_list_intent = new Intent(ReceiptsView.this, ReceiptsListSelector.class);
-				receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-				startActivity(receipt_list_intent);
+				setBackIntent();
 			}
 			Toast.makeText(this, "Switch to anther receipt view!", Toast.LENGTH_SHORT).show();
 			return true;
@@ -162,13 +159,6 @@ public class ReceiptsView extends Activity {
 		return super.onKeyUp(keyCode, event);
 	}
 	
-	private void setBackIntent() {
-		// Back to Front Page activity
-		Intent front_page_intent = new Intent(ReceiptsView.this, FrontPage.class);
-		front_page_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		startActivity(front_page_intent);
-	}
-	
 	private int getPrevReceipt(int num) {
 		mCurReceipt = (num+ReceiptsManager.getNumValid()-1)%ReceiptsManager.getNumValid();
 		return (num+ReceiptsManager.getNumValid()-1)%ReceiptsManager.getNumValid();
@@ -195,6 +185,12 @@ public class ReceiptsView extends Activity {
 			Receipt r = ReceiptsManager.getReceipt(num);
 			((TextView) findViewById(ReceiptsManager.ReceiptViewElements[i]))
 				.setText(r.getEntry(i));
+			if (r.getWhere() == FROM_DB) {
+				((ImageView) findViewById(R.id.receipt_sycn_flag)).setImageResource(R.drawable.sync);
+			}
+			else if (r.getWhere() == FROM_NFC) {
+				((ImageView) findViewById(R.id.receipt_sycn_flag)).setImageResource(R.drawable.unsync);
+			}
 		}
 	}
 	
@@ -236,6 +232,13 @@ public class ReceiptsView extends Activity {
 			t.addView(row2, pos++);
 			t.addView(row1, pos++);
 		}
+	}
+	
+	private void setBackIntent() {
+		// Back to Receipt list activity
+		Intent receipt_list_intent = new Intent(ReceiptsView.this, ReceiptsListSelector.class);
+		receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+		startActivity(receipt_list_intent);
 	}
 	
 	private void noReceiptView() {

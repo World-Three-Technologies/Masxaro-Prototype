@@ -36,7 +36,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -46,13 +45,10 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.*;
-
-import android.content.Entity;
 
 import com.android.W3T.app.FrontPage;
 import com.android.W3T.app.ReceiptsView;
@@ -159,16 +155,16 @@ public class NetworkUtil {
 		return null;
 	}
 	
-	public static Integer attemptSendReceipt(String uname, Receipt r) {
+	public static void attemptSendReceipt(String uname, Receipt r) {
 		// Here we may want to check the network status.
 		checkNetwork();
         try {
             // Add your data
         	JSONObject basicInfo = new JSONObject();
-        	basicInfo.put("store_account", "Starbucks");
-        	basicInfo.put("tax", 0.1);
-        	basicInfo.put("receipt_time", "now()");
-        	basicInfo.put("user_account","new");
+        	basicInfo.put("store_account", r.getEntry(0));	// store name
+        	basicInfo.put("tax", r.getEntry(3));			// tax
+        	basicInfo.put("receipt_time", "now()");			// receipt time
+        	basicInfo.put("user_account", UserProfile.getUsername());
         	JSONObject receipt = new JSONObject();
         	receipt.put("receipt", basicInfo);
         	receipt.put("opcode", "new_receipt");
@@ -188,8 +184,6 @@ public class NetworkUtil {
 
         	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
         	System.out.println(in.readLine());
-        	//
-        	return 1;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -197,7 +191,6 @@ public class NetworkUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		return 0;
 	}
 	
 	private static boolean checkNetwork() {

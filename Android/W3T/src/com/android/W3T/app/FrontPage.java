@@ -44,8 +44,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,9 +60,9 @@ public class FrontPage extends Activity {
 	private static final boolean OFF_LINE = UserProfile.OFFLINE;
 	private static final boolean ON_LINE = UserProfile.ONLINE;
 	
-	private LinearLayout mFrontPage;
+//	private LinearLayout mFrontPage;
 	private TextView mUname;
-	private ImageView mFractalImg;
+//	private ImageView mFractalImg;
 	
 	// Screen touch event holding time
 	private long mUptime;
@@ -92,9 +90,9 @@ public class FrontPage extends Activity {
         setContentView(R.layout.front_page);
         
         Log.i(TAG, "Get FrontPage elements");
-        mFrontPage = (LinearLayout) findViewById(R.id.front_page);
+//        mFrontPage = (LinearLayout) findViewById(R.id.front_page);
         mUname = (TextView) findViewById(R.id.Username);
-        mFractalImg = (ImageView) findViewById(R.id.FractalFern);
+//        mFractalImg = (ImageView) findViewById(R.id.FractalFern);
         mLogProgress = new ProgressDialog(FrontPage.this);
 	}
 	
@@ -359,6 +357,7 @@ public class FrontPage extends Activity {
 	    	if (UserProfile.getStatus() == OFF_LINE) {
 		    	if (isSuccessful) {
 		    		UserProfile.resetUserProfile(ON_LINE, username);
+		    		ReceiptsManager.initReceiptsManager();
 			    	setFrontPage(UserProfile.getUsername()+getResources().getString(R.string.masxaro_email), 0);
 			    	Toast.makeText(FrontPage.this, "Login succeeded!", Toast.LENGTH_SHORT).show();
 		    	}

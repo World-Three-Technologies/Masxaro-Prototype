@@ -25,23 +25,26 @@
  */
  -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:layout_width="fill_parent" android:layout_height="40dip"
+    android:layout_marginTop="7dip" android:layout_marginBottom="7dip"
 >
     <ImageView android:id="@+id/list_receipt_sync_flag"
-	    android:layout_width="wrap_content" android:layout_height="wrap_content"   
-	    android:layout_alignParentRight="true" 
+	    android:layout_width="30dip" android:layout_height="wrap_content"   
+	    android:layout_alignParentLeft="true" 
     />
 
-    <TextView android:text="Receipt" android:textSize="20sp"
+    <TextView android:textSize="17sp" android:textColor="@color/purple"
         android:id="@+id/list_receipt_title"
-        android:layout_height="wrap_content" android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/list_receipt_sync_flag"
+        android:layout_width="wrap_content" android:layout_height="fill_parent"
+        android:gravity="center"
     />
     
-    <TextView android:text="time" android:textSize="15sp"
+    <TextView android:textSize="15sp"
         android:id="@+id/list_receipt_time"
-        android:layout_below="@id/list_receipt_title"
-        android:layout_height="wrap_content" android:layout_width="wrap_content"
-        android:paddingLeft="10dip"
+        android:layout_alignParentRight="true"
+        android:layout_width="150dip" android:layout_height="fill_parent"
+        android:gravity="center"
     />
 
 </RelativeLayout>
