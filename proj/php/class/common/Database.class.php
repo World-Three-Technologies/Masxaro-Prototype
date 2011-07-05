@@ -53,11 +53,10 @@ class Database
    * 		 or connect database as defined user
    */
   public function Database($user='', $pwd=''){
-  	$database = require('dbconfig.php');
-  	$this->db = $database['dbName'];
-  	$this->mHost = $database['host'];
-  	$this->mUser = $database['user'];
-  	$this->mPwd = $database['pwd'];
+  	$this->db = DB_DBNAME;
+  	$this->mHost = DB_HOST;
+  	$this->mUser = DB_USER;
+  	$this->mPwd = DB_PWD;
   	if(strlen($user) > 0 && strlen($pwd) > 0){
 	  	$this->mUser = $user;
 	  	$this->mPwd = $pwd;

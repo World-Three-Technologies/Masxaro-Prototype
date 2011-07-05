@@ -23,11 +23,26 @@
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
  */
+require_once '../library/Zend/Loader.php';
+Zend_Loader::loadClass('Zend_Gdata_ClientLogin');
+Zend_Loader::loadClass('Zend_Gdata_Gapps');
 
 class EmailCtrl extends Ctrl{
+	private $client;
+	private $service;
 	
 	function __construct(){
 		parent::__construct();
+		try{
+			$this->client = Zend_Gdata_ClientLogin::getHttpClient(
+																DOMADMIN_EMAIL, 
+																DOMADMIN_PWD, 
+																Zend_Gdata_Gapps::AUTH_SERVICE_NAME
+															);
+			$this->service = new Zend_Gdata_Gapps($client, DOMAIN);
+		}catch(Exception $e){
+			die('Zend error');
+		}
 	}
 	
 	/**
@@ -65,6 +80,70 @@ class EmailCtrl extends Ctrl{
 	 */
 	public function grabEmail($acc){
 		
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param strint $username
+	 * 
+	 * @param string $password
+	 * 
+	 * @param string $givenName
+	 * 
+	 * @param string $familyName
+	 * 
+	 * @desc
+	 * create a masxaro email account for a new user.
+	 */
+	public function createUserAcc($username, $password, $givenName = '', $familyName = ''){
+		try{
+			$this->service->createUser(
+									$username, 
+									$givenName, 
+									$familyName, 
+									$password, 
+									$passwordHashFunction=null, 
+									$quota=null
+								);
+		}catch(Exception $e){
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param string $username
+	 * 
+	 * @desc
+	 * suspend an account
+	 */
+	public function suspendAcc($username){
+		try{
+			$this->service->suspendUser($username);
+		}catch(Exception $e){
+			return false;
+		}
+		return true;
+	}
+	
+/**
+	 * 
+	 * 
+	 * @param string $username
+	 * 
+	 * @desc
+	 * delete an account
+	 */
+	public function deleteAcc($username){
+		try{
+			$this->service->deleteUser($username);
+		}catch(Exception $e){
+			return false;
+		}
+		return true;
 	}
 	
 }
