@@ -29,14 +29,11 @@
 	android:id="@+id/receipt_view"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:weightSum="2"
 >
-
     <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:layout_margin="5dip"
+        android:layout_margin="5dip" android:layout_weight="0.3"
         android:background="@color/white"
-        android:layout_weight="0.2"
         android:weightSum="2.0"
     >
         <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
@@ -79,10 +76,11 @@
                 android:textColor="@color/black"
 	        />
         </LinearLayout>
-        <ScrollView android:layout_width="wrap_content" android:layout_height="fill_parent"
+        <!-- 35dip height per item, 5 items maximum for the emulator 
+           It starts from 55 dip. -->
+        <ScrollView android:layout_width="wrap_content" android:layout_height="230dip"
             android:scrollbars="none"
-            android:layout_marginLeft="10dip"
-            android:layout_weight="0.4"
+            android:layout_marginLeft="10dip" android:layout_weight="0.4"
         >
 	        <TableLayout android:id="@+id/items_table" 
 	            android:layout_width="fill_parent" android:layout_height="fill_parent"
@@ -107,30 +105,20 @@
 	            </TableRow>
             
             <!-- First item in the receipt 
-            <TableRow>
-                <TextView android:text="1001"
-                    android:layout_width="fill_parent" android:layout_height="match_parent"
-                />
-                <TextView android:text="1"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:paddingRight="10sp"
-                />
-                <TextView android:text="9.10"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:paddingRight="10sp"
-                />
-            </TableRow>
-            <TableRow>
-                <TextView android:text="Beef burger" 
-                   android:layout_width="fill_parent" android:layout_height="match_parent"
-                   android:paddingLeft="10sp"
-                />
-            </TableRow>
+                <TableRow>
+                    <TextView android:text="Beef burger" style="@style/receipt_item_id"/>
+                    <TextView android:text="1" style="@style/receipt_item_price_qty"/>
+                    <TextView android:text="9.10" style="@style/receipt_item_price_qty"/>
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="1010" style="@style/receipt_item_id"
+                        android:paddingLeft="10dip"
+                    />
+                </TableRow>
                     -->
             </TableLayout>
         </ScrollView>
+        
         <TableLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
             android:stretchColumns="0"
             android:paddingTop="10dip" android:paddingBottom="10dip"
@@ -166,8 +154,19 @@
                     android:textColor="@color/black"
                 />
             </TableRow>
-        
         </TableLayout>
+    </LinearLayout>
+	
+	<LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:gravity="bottom" android:layout_weight="1.7"
+    >
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:background="@drawable/refresh_btn"
+        />
+        
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:background="@drawable/backlist_btn"
+        />
     </LinearLayout>
 	
 </LinearLayout>

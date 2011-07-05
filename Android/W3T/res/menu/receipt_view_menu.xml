@@ -31,13 +31,13 @@
 		android:icon="@drawable/refresh"
 	/>
 		    
-	<item android:title="Switch Image View"
+	<!-- <item android:title="Switch Image View"
 	   	android:id="@+id/sw_receipt_opt"
 	   	android:icon="@drawable/image_view"
-	/>
+	/>  -->
 
-	<item android:title="Back to Front page"
-	   	android:id="@+id/b_to_fp_opt"
+	<item android:title="Back to List"
+	   	android:id="@+id/b_to_ls_opt"
 	   	android:icon="@drawable/back"
 	/>
 

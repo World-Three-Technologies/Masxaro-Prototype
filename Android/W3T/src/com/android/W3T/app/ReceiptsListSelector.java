@@ -145,8 +145,6 @@ public class ReceiptsListSelector extends Activity {
 		        return super.getView(position, convertView, parent);
 			}
 			return super.getView(position, convertView, parent);
-			
-	        
 	    }
 	}
 }

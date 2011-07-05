@@ -124,14 +124,16 @@ public class ReceiptsView extends Activity {
 			mRefreshProgress.show();
 			mUpdateHandler.post(mReceiptThread);
 			return true;
-		case R.id.sw_receipt_opt:
+//		case R.id.sw_receipt_opt:
+//			if (ReceiptsManager.getNumValid() != 0) {
+//				setBackIntent();
+//			}
+//			Toast.makeText(this, "Switch to anther receipt view!", Toast.LENGTH_SHORT).show();
+//			return true;
+		case R.id.b_to_ls_opt:
 			if (ReceiptsManager.getNumValid() != 0) {
 				setBackIntent();
 			}
-			Toast.makeText(this, "Switch to anther receipt view!", Toast.LENGTH_SHORT).show();
-			return true;
-		case R.id.b_to_fp_opt:
-			setBackIntent();
 			break;
 		default:
 			return false;

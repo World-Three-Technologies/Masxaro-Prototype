@@ -37,6 +37,17 @@
     
     <ListView android:layout_width="fill_parent" android:layout_height="wrap_content"
         android:id="@+id/receipt_selector"
-    />  
-
+    />
+    
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:gravity="bottom"
+    >
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:background="@drawable/refresh_btn"
+        />
+        
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:background="@drawable/backlist_btn"
+        />
+    </LinearLayout>
 </LinearLayout>
