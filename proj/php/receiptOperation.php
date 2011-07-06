@@ -90,6 +90,23 @@ switch($opcode){
 	case 'search':
 		echo json_encode($ctrl->searchReceipt($post['con']));
 		break;
+	
+	case 'key_search':
+		$key = isset($post['key']) ? $post['key'] : '';
+		$con = array(
+				'OR'=>array(
+					'like:0'=>array(
+						'field'=>'item_name',
+						'value'=>"%$key%"
+					),
+					'like:1'=>array(
+						'field'=>'store_name',
+						'value'=>"%$key%"
+					),
+				)
+		);
+		echo json_encode($ctrl->searchReceipt($con));
+		break;
 		
 	default:
 		echo 'wrong parameters';

@@ -529,6 +529,8 @@ class ReceiptCtrl extends Ctrl{
 	 */
 	public function searchReceipt($con){
 		$con = Tool::condArray2SQL($con);
+		echo $con;
+		die();
 		
 		if(!Tool::securityChk($con)){
 			return false;

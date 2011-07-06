@@ -86,6 +86,8 @@ class Tool{
 		
 		$buffer = array();
 		foreach($con as $operator=>$operand){
+			$tmp = explode(CON_DELIMITER, $operator);
+			$operator = $tmp[0];
 			array_push($buffer, Tool::condArray2SQL($operand, $operator));
 		}
 		return '('.implode(" $curOperator ", $buffer).')';

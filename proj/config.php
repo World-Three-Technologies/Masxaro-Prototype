@@ -36,6 +36,7 @@ ini_set('include_path',
 			.ROOT_PATH.'/php/class/entity/:'
 			.ROOT_PATH.'/php/class/unitTest/:'
 			.ROOT_PATH.'/php/header.php:'
+			.ROOT_PATH.'/php/class/library/Zend/:'
         );
 	
 define ( "IS_DEBUG", true );
@@ -63,5 +64,33 @@ session_start();
 define("PAGE_SIZE", "20");
 
 date_default_timezone_set("UTC");
+
+/*
+ * general config
+ */
+define('MIN_ACC_LEN', 6);
+define('CON_DELIMITER', ':');//delimiter to for operator and operator tag in query conditions
+
+/*
+ * db config
+ */
+//AWS db
+define('DB_HOST', '46.51.255.119');
+define('DB_USER', 'w3t');
+define('DB_PWD', 'w3t');
+define('DB_DBNAME', 'w3tdb');
+
+//Godaddy db
+//define('DB_HOST', 'w3tdb.db.7762973.hostedresource.com');
+//define('DB_USER', 'w3tdb');
+//define('DB_PWD', 'W3TAdmin');
+//define('DB_DBNAME', 'w3tdb');
+
+/*
+ * email config
+ */
+define('DOMADMIN_EMAIL', 'btw@masxaro.com');
+define('DOMADMIN_PWD', '123');
+define('DOMAIN', 'masxaro.com');
 
 ?>
