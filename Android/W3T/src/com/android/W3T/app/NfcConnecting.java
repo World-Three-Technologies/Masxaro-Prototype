@@ -101,7 +101,6 @@ public class NfcConnecting extends Activity {
 		case KeyEvent.KEYCODE_DPAD_CENTER:
 			final Intent tag_intent = new Intent(NfcConnecting.this, TagView.class);
 			startActivity(tag_intent);
-			System.out.println("Get a fake tag.");
 			break;
 		default:
 			break;

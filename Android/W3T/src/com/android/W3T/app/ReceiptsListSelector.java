@@ -31,23 +31,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.Receipt;
 import com.android.W3T.app.rmanager.ReceiptsManager;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ReceiptsListSelector extends Activity {
+public class ReceiptsListSelector extends Activity implements OnClickListener {
 	public static final String TAG = "ReceiptListView";
 	
 	public static final String SYNC_IMG = "entry_sync";
@@ -61,11 +66,41 @@ public class ReceiptsListSelector extends Activity {
 	private static final int ENTRY_TIME = Receipt.ENTRY_TIME;
 	
 	private ListView mList;
+	private Button mRefreshBtn;
+	private Button mBackFrontBtn;
+	
+	private ProgressDialog mRefreshProgress;
+	private Handler mUpdateHandler = new Handler();
+	private Runnable mReceiptThread = new Runnable() {
+		@Override
+		public void run() {
+			Log.i(TAG, "retrieve receipts from database");
+			// TODO: upload the receipt with FROM_NFC flag
+			// Download latest 7 receipts from database and upload non-uploaded receipts
+			// to the database.
+			String jsonstr = NetworkUtil.attemptGetReceipt(ReceiptsView.RECEIVE_ALL, "new");
+			if (jsonstr != null) {
+				Log.i(TAG, "add new receipts");
+				// Set the IsUpload true
+				ReceiptsManager.add(jsonstr, FROM_DB);
+				Log.i(TAG, "finished new receipts");
+				Log.i(TAG, "update receipt view");
+				mRefreshProgress.dismiss();
+				Intent receipt_list_intent = new Intent(ReceiptsListSelector.this, ReceiptsListSelector.class);
+				receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				startActivity(receipt_list_intent);
+			}
+		}
+	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt_selector);
+        mRefreshBtn = (Button) findViewById(R.id.refresh_btn);
+		mRefreshBtn.setOnClickListener(this);
+		mBackFrontBtn = (Button) findViewById(R.id.b_to_fr_btn);
+		mBackFrontBtn.setOnClickListener(this);
     }
 	
 	@Override
@@ -122,10 +157,30 @@ public class ReceiptsListSelector extends Activity {
 					long arg3) {
   				// TODO: Display the arg2th receipt in the receipt pool.
   				final Intent receipt_view_intent = new Intent(ReceiptsListSelector.this, ReceiptsView.class);
-  				receipt_view_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+  				receipt_view_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
   				startActivity(receipt_view_intent);
 			}  
         });
+	}
+	
+	@Override
+	public void onClick(View v) {
+		if (v == mRefreshBtn) {
+			Log.i(TAG, "handler post a new thread");
+			// Show a progress bar and send account info to server.
+			mRefreshProgress = new ProgressDialog(ReceiptsListSelector.this);
+			mRefreshProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mRefreshProgress.setMessage("Refreshing...");
+			mRefreshProgress.setCancelable(true);
+			mRefreshProgress.show();
+			mUpdateHandler.post(mReceiptThread);
+		}
+		else if (v == mBackFrontBtn) {
+			// Back to Front Page when there is no reciept
+			Intent front_page_intent = new Intent(ReceiptsListSelector.this, FrontPage.class);
+			front_page_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(front_page_intent);
+		}
 	}
 	
 	// Set the category line's feature.

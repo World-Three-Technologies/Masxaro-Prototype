@@ -252,7 +252,6 @@ public class FrontPage extends Activity {
 			mLoginDialog.setContentView(R.layout.login_dialog);
 			mLoginDialog.setTitle("Log In:");
 			
-			
 			// IMPORTENT: Get button by id from login_dialog.xml, not from 
 			// front_page.xml, which has no such component, "submit_btn".
 			mSubmitBtn = (Button) mLoginDialog.findViewById(R.id.submit_btn);

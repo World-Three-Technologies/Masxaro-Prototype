@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
 import com.android.W3T.app.ReceiptsListSelector;
-import com.android.W3T.app.ReceiptsView;
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
 import com.android.W3T.app.user.UserProfile;

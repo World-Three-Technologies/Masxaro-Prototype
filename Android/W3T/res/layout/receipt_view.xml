@@ -162,10 +162,12 @@
     >
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:background="@drawable/refresh_btn"
+            android:id="@id/refresh_btn"
         />
         
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:background="@drawable/backlist_btn"
+            android:id="@+id/b_to_ls_btn"
         />
     </LinearLayout>
 	

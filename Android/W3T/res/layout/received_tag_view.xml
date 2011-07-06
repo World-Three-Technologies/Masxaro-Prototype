@@ -201,29 +201,14 @@
         android:orientation="horizontal" android:layout_alignParentBottom="true"
     >
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/refresh_btn"
+            android:background="@drawable/accept_btn"
+            android:id="@+id/receipt_confirm_btn"
         />
         
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/backlist_btn"
+            android:background="@drawable/reject_btn"
+            android:id="@+id/receipt_reject_btn"
         />
     </LinearLayout>
     
-    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:orientation="horizontal" android:layout_alignParentBottom="true"
-        android:visibility="gone"
-    >
-        <Button android:id="@+id/receipt_confirm_btn"
-            android:text="@string/receipt_confirm_btn"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-        />
-        
-        <Button android:id="@+id/receipt_reject_btn"
-            android:text="@string/receipt_reject_btn"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-        />
-    </LinearLayout>
-	
 </RelativeLayout>

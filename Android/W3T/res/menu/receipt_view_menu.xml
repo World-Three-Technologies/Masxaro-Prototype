@@ -26,9 +26,9 @@
  -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:title="Refresh"
-	   	android:id="@+id/refresh_opt"
+	<item android:id="@+id/refresh_opt"
 		android:icon="@drawable/refresh"
+		android:title="Refresh"
 	/>
 		    
 	<!-- <item android:title="Switch Image View"
@@ -36,9 +36,9 @@
 	   	android:icon="@drawable/image_view"
 	/>  -->
 
-	<item android:title="Back to List"
-	   	android:id="@+id/b_to_ls_opt"
+	<item android:id="@+id/b_to_ls_opt"
 	   	android:icon="@drawable/back"
+	   	android:title="Back to Front Page"
 	/>
 
 </menu>
