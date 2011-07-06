@@ -39,6 +39,7 @@ import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -85,6 +86,21 @@ public class TagView extends Activity {
 			}
         });
         // -------------- fake tag receive ---------------- //
+	}
+	
+	@Override
+	// Deal with any key press event
+	public boolean onKeyUp (int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			final Intent tag_intent = new Intent(TagView.this, NfcConnecting.class);
+			tag_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(tag_intent);
+			break;
+		default:
+			break;
+		}
+		return super.onKeyUp(keyCode, event);
 	}
 	
 	@Override

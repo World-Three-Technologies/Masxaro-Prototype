@@ -37,7 +37,6 @@
 	/>  -->
 
 	<item android:id="@+id/b_to_ls_opt"
-	   	android:icon="@drawable/back"
 	   	android:title="Back to Front Page"
 	/>
 

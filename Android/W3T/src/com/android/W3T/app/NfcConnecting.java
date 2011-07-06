@@ -100,6 +100,8 @@ public class NfcConnecting extends Activity {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_CENTER:
 			final Intent tag_intent = new Intent(NfcConnecting.this, TagView.class);
+			// Every tag view activity should be called only once.
+			tag_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(tag_intent);
 			break;
 		default:
