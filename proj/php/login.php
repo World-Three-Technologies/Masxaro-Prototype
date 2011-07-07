@@ -31,6 +31,10 @@ $acc = $post['acc'];
 $pwd = $post['pwd'];
 $type = $post['type']; // string, 'user' or 'store'
 
+$acc = 'testNew';
+$pwd = '123';
+$type = 'user';
+
 ob_start();
 
 $ctrl = null;
@@ -49,11 +53,11 @@ switch($type){
 
 $result = $ctrl->find($acc, $pwd);
 
-if(!is_bool($result)){
-	die($result);
+if($result < 0){
+	die('not verified or illegal login information');
 }
 
-if(!$result){
+if($result == 0){
 	die('wrong account or password');
 }
 

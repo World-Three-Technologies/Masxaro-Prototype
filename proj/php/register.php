@@ -96,6 +96,7 @@ if($ctrl->insert($param)){
 	);
 	
 	$ctrlCon = new ContactCtrl();
+	$email = new EmailCtrl();
 	
 	if(!$ctrlCon->insertContact($contacts)){
 		//rollback
@@ -122,8 +123,7 @@ if($ctrl->insert($param)){
 	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 	$url = substr($url, 0, strripos($url, "/") + 1).'verifyRegister.php';
 	$code = $url."?code=$code";
-	
-	$email = new EmailCtrl();
+
 	$mailContent = "
 				<html>
 				<head>
