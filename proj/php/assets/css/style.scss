@@ -5,7 +5,6 @@ $page-width : 960px;
 $grid : 24;
 $grid-width : $page-width / $grid;
 
-
 /*
  * mixins
  */
@@ -117,9 +116,6 @@ header{
     margin:10px;
     padding:10px;
   }
-
-  nav{
-  }
 }
 
 #search-bar{
@@ -169,7 +165,10 @@ header{
     right:0px;
     bottom:0px;
   }
+}
 
+.receipt-item{
+  
 }
 
 #receipts-table{
@@ -251,7 +250,6 @@ header{
 }
 
 footer{
-
   margin:0 auto;
   text-align:center;
 }
@@ -263,7 +261,6 @@ footer{
 }
 .total_cost{
   float:left;
-  
 }
 
 #action-bar{
@@ -272,11 +269,8 @@ footer{
   float:left;
   min-height:800px;
   border-right:1px green solid;
-  .active{
+  .active, &:hover{
     background-color:rgb(94,206,176);
-    &:hover{
-      background-color:rgb(94,206,176);
-    };
   }
   li{
     margin:0;

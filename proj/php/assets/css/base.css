@@ -34,7 +34,7 @@ hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin:
 input, select { vertical-align: middle; }
 
 body { font:13px/1.231 sans-serif; *font-size:small; 
-font-family: Helvatica,Arial,sans-serif;
+font-family: "Helvatica Neue",Arial,sans-serif;
 }
 
 select, input, textarea, button { font:99% sans-serif; }

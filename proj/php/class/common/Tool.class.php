@@ -173,6 +173,10 @@ class Tool{
     Tool::redirect("/php/index.php");
   }
 
+  public static function redirectToProduct(){
+    Tool::redirect("/php/product.php");
+  }
+
   /**
    * set mime header to application/json 
    */

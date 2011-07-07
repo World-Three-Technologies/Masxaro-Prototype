@@ -29,6 +29,6 @@ $acc = $_REQUEST['acc'];
 
 Tool::logoff($acc);
 
-Tool::redirect("/php/product.html");
+Tool::redirectToProduct();
 
 ?>

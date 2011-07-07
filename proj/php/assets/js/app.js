@@ -1,3 +1,21 @@
+/*
+  Copyright 2011 World Three Technologies, Inc. 
+  All Rights Reserved.
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
 var Contact = Backbone.Model.extend({
 
 });
@@ -100,16 +118,13 @@ window.AppView = Backbone.View.extend({
 var ReceiptView = Backbone.View.extend({
 
   tagName:"tr",
-
   className:"row",
-  
   template:_.template($('#receipt-row-template').html() || "<div/>"),
-
   fullTemplate:_.template($('#receipt-full-template').html() || "<div/>"),
+  itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
 
   initialize:function(){
     _.bindAll(this,'render','showReceipt','getItemText');
-
     this.model.bind('change',this.render);
   },
 
@@ -128,27 +143,27 @@ var ReceiptView = Backbone.View.extend({
   },
 
   showReceipt:function(){
+
     if(window.lastOpen){
       window.lastOpen.render();
     }
-    if(this.model.get("image") !== true){
 
-      $(this.el).html(this.fullTemplate(this.model.toJSON()));
+    $(this.el).html(this.fullTemplate(this.model.toJSON()));
+    $(this.el).find(".date").html(new Date(this.model.get("receipt_time")).format());
+    var items = $(this.el).find(".items"),
+        self = this;
 
-      $(this.el).find(".date").html(new Date(this.model.get("receipt_time")).format());
-      var items = $(this.el).find(".items");
-      _.each(this.model.get("items"),function(model){
-        items.append("<div class='item'>"+model.item_name +"   x   - $" +model.item_price + " x " + model.item_qty+"</div>");
-      });
+    _.each(this.model.get("items"),function(model){
+      items.append(self.itemTemplate(model));
+    });
 
-      window.lastOpen = this;
-    }
+    window.lastOpen = this;
   },
 
   getItemText:function(items){
     return _.reduce(items,function(memo,item){
       return memo + item.item_name + ", ";
-    },"").slice(0,-1);
+    },"").slice(0,-2);
   }
 });
 var UserView = Backbone.View.extend({
