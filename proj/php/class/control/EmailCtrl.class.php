@@ -39,7 +39,7 @@ class EmailCtrl extends Ctrl{
 																DOMADMIN_PWD, 
 																Zend_Gdata_Gapps::AUTH_SERVICE_NAME
 															);
-			$this->service = new Zend_Gdata_Gapps($client, DOMAIN);
+			$this->service = new Zend_Gdata_Gapps($this->client, DOMAIN);
 		}catch(Exception $e){
 			die('Zend error');
 		}

@@ -52,14 +52,16 @@ switch(opcode){
 		
 	case 'recover':
 		$acc = $post['acc'];
-		$emailCtrl = new EmailCtrl();
-		echo $emailCtrl->restoreAcc($acc) ? $ctrl->recoverDeletedUser($acc) : false;
+//		$emailCtrl = new EmailCtrl();
+//		echo $emailCtrl->restoreAcc($acc) ? $ctrl->recoverDeletedUser($acc) : false;
+		$ctrl->recoverDeletedUser($acc);
 		break;
 	
 	case 'real_delete':
 		$acc = $post['acc'];
-		$emailCtrl = new EmailCtrl();
-		echo $emailCtrl->deleteAcc($acc) ? $ctrl->realDeleteUser($acc) : false;
+//		$emailCtrl = new EmailCtrl();
+//		echo $emailCtrl->deleteAcc($acc) ? $ctrl->realDeleteUser($acc) : false;
+		$ctrl->realDeleteUser($acc);
 		break;
 	
 	default:
