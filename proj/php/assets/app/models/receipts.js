@@ -8,10 +8,13 @@ var Receipts = Backbone.Collection.extend({
   },
 
   sync:function(method,model,success,error){
-    $.post(this.url,{
-      opcode : "user_get_all_receipt",
-      acc: this.account
-    },success)
-      .error(error);
+    var data;
+    if(method == "read"){
+      data = {
+        opcode : "user_get_all_receipt",
+        acc: this.account
+      }
+    }
+    $.post(this.url,data,success).error(error);
   }
 });

@@ -28,7 +28,7 @@ $acc = $post['acc'];
 
 ob_start();
 Tool::logoff($acc);
-//Tool::redirect("/php/product.html");
+Tool::redirectToProduct();
 ob_end_flush();
 
 ?>

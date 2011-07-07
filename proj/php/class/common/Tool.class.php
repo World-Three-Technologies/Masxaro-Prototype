@@ -200,7 +200,11 @@ class Tool{
   }
 
   public static function redirectToPortal(){
-    Tool::redirect("/php/index.html");
+    Tool::redirect("/php/index.php");
+  }
+
+  public static function redirectToProduct(){
+    Tool::redirect("/php/product.php");
   }
 
   /**

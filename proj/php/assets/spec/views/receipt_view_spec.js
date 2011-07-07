@@ -41,7 +41,7 @@ describe("receipt view",function(){
   it("can show digest item description",function(){
     var itemText = this.view.getItemText(fixtures.receipt.items);
 
-    expect(itemText).toEqual("harry_potter,harry_potter II");
+    expect(itemText).toEqual("harry_potter, harry_potter II");
 
   });
 
