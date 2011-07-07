@@ -48,17 +48,17 @@ switch($opcode){
 		
 	case 'f_delete_receipt':
 		//fake delete one receipt
-		echo $ctrl->fakeDelete($post['receipt_id']);
+		echo $ctrl->fakeDelete($post['id']);
 		break;
 		
 	case 'delete_receipt':
 		//delete one receipt
-		echo $ctrl->realDelete($post['receipt_id']);
+		echo $ctrl->realDelete($post['id']);
 		break;
 		
 	case 'recover':
 		//recover fake deleted receipt
-		echo $ctrl->recoverDeleted($post['receipt_id']);
+		echo $ctrl->recoverDeleted($post['id']);
 		break;
 		
 	case 'user_get_all_receipt_basic':
@@ -68,7 +68,7 @@ switch($opcode){
 		
 	case 'user_get_receipt_item':
 		//user get items info of one certain receipt
-		echo json_encode($ctrl->userGetReceiptItems($post['receipt_id']));
+		echo json_encode($ctrl->userGetReceiptItems($post['id']));
 		break;
 		
 	case 'user_get_all_receipt':
@@ -84,7 +84,7 @@ switch($opcode){
 		
 	case 'user_get_receipt_detail':
 		//user get basic info of one certain receipt
-		echo json_encode($ctrl->getReceiptDetail($post['receipt_id']));
+		echo json_encode($ctrl->getReceiptDetail($post['id']));
 		break;
 	
 	case 'search':
@@ -105,7 +105,7 @@ switch($opcode){
 					),
 				)
 		);
-		echo json_encode($ctrl->searchReceipt($con));
+		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
 		break;
 		
 	default:

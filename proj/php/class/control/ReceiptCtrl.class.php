@@ -58,7 +58,7 @@ class ReceiptCtrl extends Ctrl{
 				
 				$curItems = array();
 				
-				if($cur['receipt_id'] != $curId){
+				if($cur['id'] != $curId){
 					$curRec = new ReceiptEntity();
 					
 				} 
@@ -77,11 +77,11 @@ class ReceiptCtrl extends Ctrl{
 					array_push($curRec->items, $curItems);
 				}
 				
-				if($cur['receipt_id'] != $curId){
+				if($cur['id'] != $curId){
 					if(!empty($curRec)){
 						array_push($result, $curRec);
 					}
-					$curId = $cur['receipt_id'];
+					$curId = $cur['id'];
 				}
 			}
 		}
@@ -112,7 +112,7 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * 2. insert new items for an existed receipt
 	 * 
-	 * (Need to set up the receipt_id for each item, $basicInfo is null).
+	 * (Need to set up the id for each item, $basicInfo is null).
 	 * 
 	 * 3. insert a new receipt without any items
 	 * 
@@ -160,7 +160,7 @@ class ReceiptCtrl extends Ctrl{
 		if(!$itemsNull){
 			
 			if($receiptId == null || strlen($receiptId) == 0 || $receiptId == 0){
-				$receiptId = $items['receipt_id']; // if current receipt id is not set, items[0] should be the receipt id.
+				$receiptId = $items['id']; // if current receipt id is not set, items[0] should be the receipt id.
 			}
 		
 			$sql = "
@@ -169,7 +169,7 @@ class ReceiptCtrl extends Ctrl{
 				FROM 	
 					`receipt`
 				WHERE
-					`receipt_id`=$receiptId
+					`id`=$receiptId
 				AND 
 					`deleted`=false
 			";
@@ -199,7 +199,7 @@ class ReceiptCtrl extends Ctrl{
 				$curCost =  $items[$i]['item_price'] * $items[$i]['item_qty'] * $items[$i]['item_discount'];
 				$totalCost += $curCost;
 				
-				$items[$i]['receipt_id'] = $receiptId;	
+				$items[$i]['id'] = $receiptId;	
 				
 				$info = Tool::infoArray2SQL($items[$i]);
 				
@@ -229,7 +229,7 @@ class ReceiptCtrl extends Ctrl{
 				SET
 					`total_cost`=$totalCost
 				WHERE
-					`receipt_id`='$receiptId'
+					`id`='$receiptId'
 				AND 
 					`deleted`=false
 			";
@@ -269,7 +269,7 @@ class ReceiptCtrl extends Ctrl{
 			SET
 				$info
 			WHERE
-				`receipt_id`=$receiptId
+				`id`=$receiptId
 			AND 
 				`deleted`=false
 		";
@@ -298,7 +298,7 @@ class ReceiptCtrl extends Ctrl{
 			FROM 
 				`receipt_item`
 			WHERE
-				`receipt_id` = $receiptId
+				`id` = $receiptId
 		";
 		$delItem = $this->db->delete($sql);
 		
@@ -307,7 +307,7 @@ class ReceiptCtrl extends Ctrl{
 			FROM 
 				`receipt`
 			WHERE
-				`receipt_id` = $receiptId
+				`id` = $receiptId
 		";
 		
 		if($this->db->delete($sql) <= 0 || $delItem <= 0){
@@ -335,7 +335,7 @@ class ReceiptCtrl extends Ctrl{
 			SET
 				`deleted` = true
 			WHERE
-				`receipt_id` = $receiptId
+				`id` = $receiptId
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -348,7 +348,7 @@ class ReceiptCtrl extends Ctrl{
 			SET
 				`deleted` = true
 			WHERE
-				`receipt_id` = $receiptId
+				`id` = $receiptId
 			AND 
 				`deleted`=false
 		";
@@ -377,7 +377,7 @@ class ReceiptCtrl extends Ctrl{
 			SET
 				`deleted` = false
 			WHERE
-				`receipt_id` = '$receiptId'
+				`id` = '$receiptId'
 		";
 		if($this->db->update($sql) <= 0){
 			return false;
@@ -389,7 +389,7 @@ class ReceiptCtrl extends Ctrl{
 			SET
 				`deleted` = false
 			WHERE
-				`receipt_id` = '$receiptId'
+				`id` = '$receiptId'
 			AND 
 				`deleted`=true
 		";
@@ -414,7 +414,7 @@ class ReceiptCtrl extends Ctrl{
 
 		$sql = "
 			SELECT 
-				r.`receipt_id`,r.`user_account`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`
+				r.`id`,r.`user_account`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`
 			FROM 
 				`receipt` as r
 			JOIN 
@@ -456,7 +456,7 @@ class ReceiptCtrl extends Ctrl{
 			FROM 
 				`receipt_item`
 			WHERE
-				`receipt_id`=$receiptId
+				`id`=$receiptId
 			AND
 				`deleted`=false
 		";
@@ -488,14 +488,14 @@ class ReceiptCtrl extends Ctrl{
 	public function userGetAllReceipt($userAcc){
 		$sql = "
 			SELECT 
-				r.`receipt_id`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`,ri.`item_id`,
+				r.`id`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`,ri.`item_id`,
         		ri.`item_name`, ri.`item_qty`, ri.`item_discount`, ri.`item_price`
 			FROM 
 				`receipt` as r 
 			LEFT JOIN
 				`receipt_item` as ri
 			ON
-				r.`receipt_id`=ri.`receipt_id`
+				r.`id`=ri.`id`
 			LEFT JOIN
 				`store` as s
 			ON
@@ -527,10 +527,10 @@ class ReceiptCtrl extends Ctrl{
 	 * @desc
 	 * search for receipts based no certain conditions
 	 */
-	public function searchReceipt($con){
+	public function searchReceipt($con, $acc = null){
 		$con = Tool::condArray2SQL($con);
-		echo $con;
-		die();
+		
+		$acc = isset($acc) ? "(^$acc%)" : "(.*)";
 		
 		if(!Tool::securityChk($con)){
 			return false;
@@ -538,20 +538,22 @@ class ReceiptCtrl extends Ctrl{
 		
 		$sql = "
 			SELECT 
-				r.`receipt_id`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`,ri.`item_id`,
+				r.`id`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`,ri.`item_id`,
         		ri.`item_name`, ri.`item_qty`, ri.`item_discount`, ri.`item_price`
 			FROM 
 				`receipt` as r 
 			LEFT JOIN
 				`receipt_item` as ri
 			ON
-				r.`receipt_id`=ri.`receipt_id`
+				r.`id`=ri.`id`
 			LEFT JOIN
 				`store` as s
 			ON
 				r.`store_account`=s.`store_account`
 			WHERE
 				$con
+			AND
+				r.`user_account` regexp '$acc'
 			AND 
 				r.`deleted`=false
 			AND
@@ -580,7 +582,7 @@ class ReceiptCtrl extends Ctrl{
 	public function getReceiptDetail($receiptId){
 		$sql = "
 			SELECT 
-				r.`receipt_id`,r.`user_account`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`
+				r.`id`,r.`user_account`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`
 			FROM 
 				`receipt` as r 
 			JOIN
@@ -588,7 +590,7 @@ class ReceiptCtrl extends Ctrl{
 			ON
 				r.`store_account`=s.`store_account`
 			AND
-				`receipt_id`=$receiptId
+				`id`=$receiptId
 			AND 
 				`deleted`=false
 		";
