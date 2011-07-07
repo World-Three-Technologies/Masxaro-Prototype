@@ -199,7 +199,7 @@ footer {
   float: left;
   min-height: 800px;
   border-right: 1px green solid; }
-  #action-bar .active, #action-bar:hover {
+  #action-bar .active {
     background-color: #5eceb0; }
   #action-bar li {
     margin: 0;

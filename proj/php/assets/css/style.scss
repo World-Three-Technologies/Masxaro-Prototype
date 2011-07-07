@@ -269,7 +269,7 @@ footer{
   float:left;
   min-height:800px;
   border-right:1px green solid;
-  .active, &:hover{
+  .active{
     background-color:rgb(94,206,176);
   }
   li{

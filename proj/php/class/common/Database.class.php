@@ -166,7 +166,7 @@ class Database
    */
   public function fetchAssoc(){  
     $all = array();
-    while (($tmp[] = mysql_fetch_assoc($ehis->result)) == true) {$all = $tmp;}
+    while (($tmp[] = mysql_fetch_assoc($this->result)) == true) {$all = $tmp;}
     return $all;  
   }      
       

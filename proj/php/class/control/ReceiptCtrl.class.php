@@ -513,7 +513,6 @@ class ReceiptCtrl extends Ctrl{
 		
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
-		
 		return $this->buildReceiptObj($receipts);
 	}
 	

@@ -18,7 +18,12 @@ var AppController = Backbone.Controller.extend({
   },
 
   index: function(){
-    this.receipts.fetch();
+    var options = {
+      error: function(){
+        $("#ajax-loader").html("<h3>error in model request</h3>");
+      }
+    }
+    this.receipts.fetch(options);
   }
 
 });
