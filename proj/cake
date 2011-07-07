@@ -2,6 +2,8 @@
 <?php 
   require "config.php";
 
+  $path = dirname(__FILE__);
+
   $task = $argv[1];
 
   if($task=="test"){
@@ -9,6 +11,7 @@
   } else if($task =="seed"){
     seed();
   } else if($task =="deploy"){
+    concatJavascripts();
     system("cp -rf ./ /Library/WebServer/Documents/");
   } else if($task =="build"){
     concatJavascripts();
@@ -31,7 +34,8 @@
 
   function concatJavascripts(){
 
-    system("cat php/assets/app/models/*.js > php/assets/js/app.js");
+    system("cat LICENSE > php/assets/js/app.js");
+    system("cat php/assets/app/models/*.js >> php/assets/js/app.js");
     system("cat php/assets/app/views/*.js >> php/assets/js/app.js");
     system("cat php/assets/app/controllers/*.js >> php/assets/js/app.js");
     system("cat php/assets/app/app.js >> php/assets/js/app.js");

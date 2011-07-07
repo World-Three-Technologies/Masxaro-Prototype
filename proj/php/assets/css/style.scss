@@ -1,0 +1,293 @@
+/*
+ * page params
+ */
+$page-width : 960px;
+$grid : 24;
+$grid-width : $page-width / $grid;
+
+/*
+ * mixins
+ */
+
+@mixin round($radius){
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+}
+
+@mixin shadow($left,$right,$down,$color){
+  box-shadow: $left $right $down $color;
+  -webkit-box-shadow: $left $right $down $color;
+  -moz-box-shadow: $left $right $down $color;
+}
+
+@mixin grid($grid-number){
+  width: $grid-width * $grid-number;
+}
+
+@mixin transition{
+  -webkit-transition:all 1s ease-in-out;
+  -moz-transition:all 1s ease-in-out;
+  -o-transition:all 1s ease-in-out;
+  -ms-transition:all 1s ease-in-out;
+  transition:all 1s ease-in-out;
+}
+
+h1 { font-size: 32px;}
+h2 { font-size: 28px;}
+h3 { font-size: 24px;}
+
+#container{
+  overflow-x:hidden;
+}
+
+header{
+  background-color: rgb(94,206,116);
+  width:100%;
+  min-width:960px;
+  height:40px;
+  display:block;
+  text-align:center;
+  position:relative;
+  #header-bar{
+    margin: 0 auto;
+    max-width:1000px; 
+  };
+  #header-bar-inner{
+    left:0px;
+  }
+  #header-logo{
+    color: #FFF;
+    float:left;
+    margin: 2px;
+    padding: 1px;
+  }
+  #header-nav{
+    margin-left:500px;
+    float:left;
+  }
+  #header-nav-list li{
+    float:left;
+    margin: 5px 0;
+    padding: 8px 15px;
+    list-style:none;
+  }
+  #header-user{
+    margin:5px 10px;
+    padding: 8px 5px;
+    float:right;
+    right:0;
+  }
+
+  #header-user #login label{
+    padding:5px;
+  }
+}
+
+#main{
+  width: $page-width;
+  margin: 0px auto;
+  text-align:center;
+
+  #main-tab{
+    text-align:center;
+    text-size:22px;
+    width:100%;
+    margin:10px;
+    div{
+      @include grid(2);
+      float:left;
+      padding:5px 0;
+      margin:5px 0;
+
+    }
+  }
+
+  #content{
+    margin: 10px;
+    text-align:left;
+    float:left;
+    @include grid(19);
+  }
+
+  #feature div{
+    float:left;
+    width:28%;
+    margin:10px;
+    padding:10px;
+  }
+}
+
+#search-bar{
+  margin:0 5px;
+  padding:0 5px;
+  input{
+    font-size:18px;
+    @include round(5px);
+    width:250px;
+    height:22px;
+  }
+  button{
+    background-image:url(../img/search_button.png);
+    background-position:0 0;
+    background-color:#fff;
+    width:22px;
+    height:19px;
+    border:0;
+    padding:0;
+    margin:0;
+  }
+  div{
+    float:left;
+    padding:5px;
+  }
+}
+
+.receipt{
+  padding:3px;
+  width:100%;
+  .items{
+    font-size:18px;
+    font-weight:bold;
+    div{
+      border:1px solid green;
+      @include round(3px);
+    }
+  }
+  .total-cost{
+    text-align:left;
+    font-size:26px;
+    padding: 3px;
+  }
+  .toolbar{
+    display:none;
+    float:right;
+    right:0px;
+    bottom:0px;
+  }
+}
+
+.receipt-item{
+  
+}
+
+#receipts-table{
+  width:100%;
+  margin:2px;
+  padding:5px;
+  border-collapse: collapse;
+  tr.row{
+    padding: 7px;
+    border-top: 1px #EBE solid;
+    border-bottom: 1px #EBE solid;
+
+    &:hover{
+      cursor:pointer;
+      background-color: #EBE;
+      .toolbar{
+        display:block;
+      }
+    }
+
+    .date{
+      float:left;
+      @include grid(1);
+      @include round(5px);
+      border:1px solid #AAA;
+      margin:3px 5px;
+      padding:3px;
+      font-size:18px; 
+      font-weight:bold;
+      text-align:center;
+    }
+    .total-cost{
+      @include grid(1.5);
+      float:right;
+      font-size:22px;
+      font-weight:bold;
+      text-align:center;
+      padding:5px;
+      margin:5px;
+    }
+
+    .content{
+      @include grid(15);
+      float:left;
+      .items{
+        font-size:18px;
+        padding:3px 5px;
+        font-weight:bold;
+      }
+      .store{
+        font-size:16px;
+        padding:5px;
+        color:green;
+      }
+    }
+  }
+  td.items{
+    text-align: left;
+  }
+}
+
+#main{
+  #register{
+    margin:10px;
+    margin-top:100px;
+    padding:5px;
+    float:left;
+    width:400px;
+    td{
+      padding:5px;
+    }
+  }
+  #product-description{
+    float:left;
+    margin:10px;
+    margin-top:100px;
+    padding:5px;
+  }
+}
+
+footer{
+  margin:0 auto;
+  text-align:center;
+}
+
+.item{
+  font-size:16px;
+  margin:3px;
+  padding-left:60px;
+}
+.total_cost{
+  float:left;
+}
+
+#action-bar{
+  @include grid(4);
+  padding:15px 0;
+  float:left;
+  min-height:800px;
+  border-right:1px green solid;
+  .active, &:hover{
+    background-color:rgb(94,206,176);
+  }
+  li{
+    margin:0;
+    padding:0;
+    font-size:16px;
+    height:30px;
+    line-height:20px;
+    &:hover{
+      background-color:#CCC;
+    }
+    a{
+      padding:3px;
+      display:block;
+      width:100%;
+      height:100%;
+      text-decoration:none;
+    }
+  }
+}
+

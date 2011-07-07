@@ -24,4 +24,11 @@ describe("receipt model",function(){
       expect(this.receipt.get("items")[1].item_price).toEqual("19.99");
     });
   });
+
+  describe("api",function(){
+    it("should be able to update receipt",function(){
+      this.receipt.save();
+    });
+
+  })
 });
