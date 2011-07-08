@@ -12,7 +12,8 @@ var ReceiptView = Backbone.View.extend({
   },
 
   events:{
-    "click" : "showReceipt"
+    "click" : "showReceipt",
+    "click .close" :"render"
   },
 
   render:function(){
@@ -36,7 +37,7 @@ var ReceiptView = Backbone.View.extend({
     var items = $(this.el).find(".items"),
         self = this;
 
-    _.each(this.model.get("items"),function(model){
+    _.each(self.model.get("items"),function(model){
       items.append(self.itemTemplate(model));
     });
 

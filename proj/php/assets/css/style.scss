@@ -25,12 +25,12 @@ $grid-width : $page-width / $grid;
   width: $grid-width * $grid-number;
 }
 
-@mixin transition{
-  -webkit-transition:all 1s ease-in-out;
-  -moz-transition:all 1s ease-in-out;
-  -o-transition:all 1s ease-in-out;
-  -ms-transition:all 1s ease-in-out;
-  transition:all 1s ease-in-out;
+@mixin transition($sec){
+  -webkit-transition:all $sec ease-in-out;
+  -moz-transition:all $sec ease-in-out;
+  -o-transition:all $sec ease-in-out;
+  -ms-transition:all $sec ease-in-out;
+  transition:all $sec ease-in-out;
 }
 
 h1 { font-size: 32px;}
@@ -41,6 +41,7 @@ h3 { font-size: 24px;}
   overflow-x:hidden;
 }
 
+// header module
 header{
   background-color: rgb(94,206,116);
   width:100%;
@@ -99,7 +100,6 @@ header{
       float:left;
       padding:5px 0;
       margin:5px 0;
-
     }
   }
 
@@ -143,33 +143,8 @@ header{
   }
 }
 
-.receipt{
-  padding:3px;
-  width:100%;
-  .items{
-    font-size:18px;
-    font-weight:bold;
-    div{
-      border:1px solid green;
-      @include round(3px);
-    }
-  }
-  .total-cost{
-    text-align:left;
-    font-size:26px;
-    padding: 3px;
-  }
-  .toolbar{
-    display:none;
-    float:right;
-    right:0px;
-    bottom:0px;
-  }
-}
+//receipt module
 
-.receipt-item{
-  
-}
 
 #receipts-table{
   width:100%;
@@ -177,13 +152,14 @@ header{
   padding:5px;
   border-collapse: collapse;
   tr.row{
+    @include transition(0.3s);
     padding: 7px;
     border-top: 1px #EBE solid;
     border-bottom: 1px #EBE solid;
+    cursor:pointer;
 
     &:hover{
-      cursor:pointer;
-      background-color: #EBE;
+      background-color: #FEE;
       .toolbar{
         display:block;
       }
@@ -224,12 +200,52 @@ header{
         color:green;
       }
     }
-  }
-  td.items{
-    text-align: left;
+
+    //css for full receipt
+    .receipt{
+      position:relative;
+      &:hover{
+        cursor:normal;
+        .toolbar{
+          display:block;
+        }
+      }
+      .store{
+        padding:10px;
+      }
+      .content{
+        @include grid(17.5);
+      }
+      .toolbar{
+        position:absolute;
+        top:0;
+        right:0;
+        display:none;
+        
+      }
+    }  
   }
 }
 
+.receipt-item{
+  font-size:18px;
+  padding:2px;
+  margin:3px;
+  .item_name{
+    width:300px;
+  }
+  .item_qty{
+    float:right;
+    padding-right:100px;
+  }
+  .item_price{
+    float:right;
+    font-size:20px;
+    font-weight:bold;
+  }
+}
+
+//product.php page
 #main{
   #register{
     margin:10px;
@@ -252,15 +268,6 @@ header{
 footer{
   margin:0 auto;
   text-align:center;
-}
-
-.item{
-  font-size:16px;
-  margin:3px;
-  padding-left:60px;
-}
-.total_cost{
-  float:left;
 }
 
 #action-bar{

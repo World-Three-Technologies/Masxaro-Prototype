@@ -4,7 +4,7 @@ var Receipts = Backbone.Collection.extend({
   url: 'receiptOperation.php',
 
   initialize:function(){
-    _.bindAll(this,"sync");
+    _.bindAll(this,"sync","search");
   },
 
   sync:function(method,model,success,error){
@@ -16,5 +16,18 @@ var Receipts = Backbone.Collection.extend({
       }
     }
     $.post(this.url,data,success).error(error);
+  },
+
+  search:function(query,success){
+    var model = this;
+    $.post(this.url,{
+      opcode : "key_search",
+      acc:this.account,
+      key : query
+    }).success(function(data){
+      model.refresh(data);
+      console.log(model);
+      success();
+    });
   }
 });

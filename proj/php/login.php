@@ -31,10 +31,6 @@ $acc = $post['acc'];
 $pwd = $post['pwd'];
 $type = $post['type']; // string, 'user' or 'store'
 
-$acc = 'testNew';
-$pwd = '123';
-$type = 'user';
-
 ob_start();
 
 $ctrl = null;
@@ -51,6 +47,7 @@ switch($type){
 		die('wrong parameters');
 }
 
+
 $result = $ctrl->find($acc, $pwd);
 
 if($result < 0){
@@ -62,5 +59,7 @@ if($result == 0){
 }
 
 echo Tool::login($acc, $type);
+Tool::redirectToPortal();
+
 ob_end_flush();
 ?>

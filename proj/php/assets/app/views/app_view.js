@@ -8,7 +8,7 @@ window.AppView = Backbone.View.extend({
   end:1,
 
   initialize:function(){
-    _.bindAll(this,"render","renderMore","renderReceipt","setEnd");
+    _.bindAll(this,"render","renderMore","renderReceipt","setEnd","search");
     this.model.bind("refresh",this.render);
     this.model.bind("change",this.render);
     this.model.view = this;
@@ -16,6 +16,17 @@ window.AppView = Backbone.View.extend({
 
   events:{
     "click .more": "renderMore",
+    "click #search-button": "search"
+  },
+
+  search:function(){
+    this.$('.row').remove();
+    $('#ajax-loader').show();
+    var query = $('#search-query').val();
+    this.model.search(query,function(){
+      $('#ajax-loader').hide();
+    });
+         
   },
 
   updateStatus:function(){
@@ -24,10 +35,11 @@ window.AppView = Backbone.View.extend({
 
   render:function(){
     this.setEnd();
+
+    this.$('#ajax-loader').hide();
+
     _.each(this.model.models.slice(0,this.end),this.renderReceipt);
     this.updateStatus();
-
-    this.$("#ajax-loader").hide();
 
     if(this.end >= this.model.length ){
       this.$(".more").hide();

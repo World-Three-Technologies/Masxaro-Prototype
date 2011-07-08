@@ -35,16 +35,14 @@
         </nav>
         <div id="receipts">
           <div id="search-bar">
-            <form action="" method="GET">
-              <div>
-                <input type="text" placeholder="search"/>
-              </div>
-              <div>
-                <button type="submit" title="search"></button>
-              </div>
-              <div>Show Receipts</div>
-              <div>Show Items</div>
-            </form>
+            <div>
+              <input id="search-query" type="text" placeholder="search"/>
+            </div>
+            <div>
+              <button id="search-button" type="submit" title="search"></button>
+            </div>
+            <div>Show Receipts</div>
+            <div>Show Items</div>
           </div>
           <table id="receipts-table">
             <td id="ajax-loader" colspan="4"><img src="assets/img/ajax-loader.gif"/></td>
