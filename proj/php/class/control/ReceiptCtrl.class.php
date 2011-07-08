@@ -529,7 +529,7 @@ class ReceiptCtrl extends Ctrl{
 	public function searchReceipt($con, $acc = null){
 		$con = Tool::condArray2SQL($con);
 		
-		$acc = isset($acc) ? "(^$acc%)" : "(.*)";
+		$acc = isset($acc) ? "(^$acc$)" : "(.*)";
 		
 		if(!Tool::securityChk($con)){
 			return false;
