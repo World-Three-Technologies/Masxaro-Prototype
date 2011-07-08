@@ -98,26 +98,19 @@ header {
     float: left;
     padding: 5px; }
 
-.receipt {
-  padding: 3px;
-  width: 100%; }
-  .receipt .items {
-    font-size: 18px;
-    font-weight: bold; }
-    .receipt .items div {
-      border: 1px solid green;
-      border-radius: 3px;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px; }
-  .receipt .total-cost {
-    text-align: left;
-    font-size: 26px;
-    padding: 3px; }
-  .receipt .toolbar {
-    display: none;
+.receipt-item {
+  font-size: 18px;
+  padding: 2px;
+  margin: 3px; }
+  .receipt-item .item_name {
+    width: 300px; }
+  .receipt-item .item_qty {
     float: right;
-    right: 0px;
-    bottom: 0px; }
+    padding-right: 100px; }
+  .receipt-item .item_price {
+    float: right;
+    font-size: 20px;
+    font-weight: bold; }
 
 #receipts-table {
   width: 100%;
@@ -154,7 +147,7 @@ header {
       padding: 5px;
       margin: 5px; }
     #receipts-table tr.row .content {
-      width: 600px;
+      width: 100%;
       float: left; }
       #receipts-table tr.row .content .items {
         font-size: 18px;
@@ -164,8 +157,6 @@ header {
         font-size: 16px;
         padding: 5px;
         color: green; }
-  #receipts-table td.items {
-    text-align: left; }
 
 #main #register {
   margin: 10px;
@@ -184,14 +175,6 @@ header {
 footer {
   margin: 0 auto;
   text-align: center; }
-
-.item {
-  font-size: 16px;
-  margin: 3px;
-  padding-left: 60px; }
-
-.total_cost {
-  float: left; }
 
 #action-bar {
   width: 160px;

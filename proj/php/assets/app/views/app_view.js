@@ -8,7 +8,7 @@ window.AppView = Backbone.View.extend({
   end:1,
 
   initialize:function(){
-    _.bindAll(this,"render","renderMore","renderReceipt","setEnd");
+    _.bindAll(this,"render","renderMore","renderReceipt","setEnd","search");
     this.model.bind("refresh",this.render);
     this.model.bind("change",this.render);
     this.model.view = this;
@@ -16,6 +16,13 @@ window.AppView = Backbone.View.extend({
 
   events:{
     "click .more": "renderMore",
+    "click #search-button": "search"
+  },
+
+  search:function(){
+
+    alert("search query:"+$('#search-query').html());
+         
   },
 
   updateStatus:function(){

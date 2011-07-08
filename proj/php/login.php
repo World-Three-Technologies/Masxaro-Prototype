@@ -51,6 +51,7 @@ switch($type){
 		die('wrong parameters');
 }
 
+
 $result = $ctrl->find($acc, $pwd);
 
 if($result < 0){
@@ -62,5 +63,7 @@ if($result == 0){
 }
 
 echo Tool::login($acc, $type);
+//Tool::redirectToPortal();
+
 ob_end_flush();
 ?>

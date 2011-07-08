@@ -37,10 +37,10 @@
           <div id="search-bar">
             <form action="" method="GET">
               <div>
-                <input type="text" placeholder="search"/>
+                <input id="search-query" type="text" placeholder="search"/>
               </div>
               <div>
-                <button type="submit" title="search"></button>
+                <button id="search-button" type="submit" title="search"></button>
               </div>
               <div>Show Receipts</div>
               <div>Show Items</div>

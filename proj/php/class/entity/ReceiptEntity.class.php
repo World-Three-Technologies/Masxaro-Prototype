@@ -26,7 +26,7 @@
 
 class ReceiptEntity{
 
-	public $receipt_id = NULL;
+	public $id = NULL;
 	public $store_account = NULL;
 	public $store_name = NULL;
 	public $user_account = NULL;
