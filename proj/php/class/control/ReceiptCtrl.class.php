@@ -524,7 +524,7 @@ class ReceiptCtrl extends Ctrl{
 	 * @return array(obj,...) each ReceiptEntity obj conclude 2 arrays, basicInfo & items (array(array(),..))
 	 * 
 	 * @desc
-	 * search for receipts based no certain conditions
+	 * search for receipts of a certain account(option) based on certain conditions
 	 */
 	public function searchReceipt($con, $acc = null){
 		$con = Tool::condArray2SQL($con);
@@ -564,7 +564,6 @@ class ReceiptCtrl extends Ctrl{
 				
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
-		
 		return $this->buildReceiptObj($receipts);
 	}
 	
