@@ -70,10 +70,6 @@ switch($registerType){
 		die("incorrect register information");
 }
 
-if(!$ctrl->chkAccount($param[$accType])){
-	die("account not available");
-}
-
 
 $personEmail = $post['email'];
 
