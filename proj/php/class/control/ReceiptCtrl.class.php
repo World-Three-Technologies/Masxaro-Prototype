@@ -537,8 +537,16 @@ class ReceiptCtrl extends Ctrl{
 		
 		$sql = "
 			SELECT 
-				r.`id`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`,ri.`item_id`,
-        		ri.`item_name`, ri.`item_qty`, ri.`item_discount`, ri.`item_price`
+				r.`id`,
+				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
+				r.`tax`, 
+				r.`total_cost`, 
+				s.`store_name`,
+				ri.`item_id`,
+        		ri.`item_name`, 
+        		ri.`item_qty`, 
+        		ri.`item_discount`, 
+        		ri.`item_price`
 			FROM 
 				`receipt` as r 
 			LEFT JOIN

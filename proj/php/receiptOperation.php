@@ -28,7 +28,6 @@ include_once '../config.php';
 include_once 'header.php';
 
 $opcode = $post['opcode'];
-$opcode = 'key_search';
 
 $ctrl = new ReceiptCtrl();
 
@@ -106,7 +105,7 @@ switch($opcode){
 					),
 				)
 		);
-		echo json_encode($ctrl->searchReceipt($con, 'new'));
+		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
 		break;
 		
 	default:
