@@ -10,12 +10,13 @@
 </script>
 
 <script type="text/template" id="receipt-full-template">
-  <div class="receipt">
+  <div class="receipt clearfix">
+    <div class="toolbar close">close[x]</div>
     <div class="date"></div>
     <div class="content">
       <div class="store"><%= store_name%></div>
       <div class="items"></div> 
-      <hr/>
+      <hr style="border-top:1px black solid;margin:0;"/>
       <div class="total-cost">$<%= total_cost %></div>
     </div>
   </div>

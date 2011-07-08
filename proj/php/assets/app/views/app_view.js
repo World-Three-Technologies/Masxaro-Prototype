@@ -20,8 +20,12 @@ window.AppView = Backbone.View.extend({
   },
 
   search:function(){
-
-    alert("search query:"+$('#search-query').html());
+    this.$('.row').remove();
+    $('#ajax-loader').show();
+    var query = $('#search-query').val();
+    this.model.search(query,function(){
+      $('#ajax-loader').hide();
+    });
          
   },
 
@@ -31,10 +35,11 @@ window.AppView = Backbone.View.extend({
 
   render:function(){
     this.setEnd();
+
+    this.$('#ajax-loader').hide();
+
     _.each(this.model.models.slice(0,this.end),this.renderReceipt);
     this.updateStatus();
-
-    this.$("#ajax-loader").hide();
 
     if(this.end >= this.model.length ){
       this.$(".more").hide();

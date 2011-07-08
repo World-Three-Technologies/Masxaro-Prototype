@@ -529,7 +529,7 @@ class ReceiptCtrl extends Ctrl{
 	public function searchReceipt($con, $acc = null){
 		$con = Tool::condArray2SQL($con);
 		
-		$acc = isset($acc) ? "(^$acc%)" : "(.*)";
+		$acc = isset($acc) ? "(^$acc*)" : "(.*)";
 		
 		if(!Tool::securityChk($con)){
 			return false;
@@ -538,7 +538,7 @@ class ReceiptCtrl extends Ctrl{
 		$sql = "
 			SELECT 
 				r.`id`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`,ri.`item_id`,
-        		ri.`item_name`, ri.`item_qty`, ri.`item_discount`, ri.`item_price`
+        ri.`item_name`, ri.`item_qty`, ri.`item_discount`, ri.`item_price`, s.store_name
 			FROM 
 				`receipt` as r 
 			LEFT JOIN
@@ -561,7 +561,7 @@ class ReceiptCtrl extends Ctrl{
 				r.`receipt_time`
 			DESC
 		";
-				
+
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
 		

@@ -42,7 +42,7 @@ var Receipts = Backbone.Collection.extend({
   url: 'receiptOperation.php',
 
   initialize:function(){
-    _.bindAll(this,"sync");
+    _.bindAll(this,"sync","search");
   },
 
   sync:function(method,model,success,error){
@@ -54,6 +54,19 @@ var Receipts = Backbone.Collection.extend({
       }
     }
     $.post(this.url,data,success).error(error);
+  },
+
+  search:function(query,success){
+    var model = this;
+    $.post(this.url,{
+      opcode : "key_search",
+      acc:this.account,
+      key : query
+    }).success(function(data){
+      model.refresh(data);
+      console.log(model);
+      success();
+    });
   }
 });
 var User = Backbone.Model;
@@ -79,8 +92,12 @@ window.AppView = Backbone.View.extend({
   },
 
   search:function(){
-
-    alert("search query:"+$('#search-query').html());
+    this.$('.row').remove();
+    $('#ajax-loader').show();
+    var query = $('#search-query').val();
+    this.model.search(query,function(){
+      $('#ajax-loader').hide();
+    });
          
   },
 
@@ -90,10 +107,11 @@ window.AppView = Backbone.View.extend({
 
   render:function(){
     this.setEnd();
+
+    this.$('#ajax-loader').hide();
+
     _.each(this.model.models.slice(0,this.end),this.renderReceipt);
     this.updateStatus();
-
-    this.$("#ajax-loader").hide();
 
     if(this.end >= this.model.length ){
       this.$(".more").hide();
@@ -136,7 +154,8 @@ var ReceiptView = Backbone.View.extend({
   },
 
   events:{
-    "click" : "showReceipt"
+    "click" : "showReceipt",
+    "click .close" :"render"
   },
 
   render:function(){
@@ -160,7 +179,7 @@ var ReceiptView = Backbone.View.extend({
     var items = $(this.el).find(".items"),
         self = this;
 
-    _.each(this.model.get("items"),function(model){
+    _.each(self.model.get("items"),function(model){
       items.append(self.itemTemplate(model));
     });
 

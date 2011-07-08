@@ -31,10 +31,6 @@ $acc = $post['acc'];
 $pwd = $post['pwd'];
 $type = $post['type']; // string, 'user' or 'store'
 
-$acc = 'testNew';
-$pwd = '123';
-$type = 'user';
-
 ob_start();
 
 $ctrl = null;
@@ -63,7 +59,7 @@ if($result == 0){
 }
 
 echo Tool::login($acc, $type);
-//Tool::redirectToPortal();
+Tool::redirectToPortal();
 
 ob_end_flush();
 ?>
