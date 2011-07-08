@@ -34,6 +34,7 @@ class ReceiptEntity{
 	public $tax = 1;
 	public $total_cost = 0;
 	public $img = NULL;
+	public $category = 'default';
 	public $deleted = 0;
 	
 	public $items = array();
