@@ -49,7 +49,7 @@ class ReceiptCtrl extends Ctrl{
 		$result = array();
 		
 		if(count($receipts) > 0){
-			$curId = 0;
+			$curRecId = 0;
 			$curRec = null;
 			$curItems = null;
 			$itemRegex = "(^item)";
@@ -57,14 +57,14 @@ class ReceiptCtrl extends Ctrl{
 			foreach($receipts as $cur){
 				
 				$curItems = array();
+				$newRecFlag = false;
 				
-				if($cur['id'] != $curId){
+				if($cur['id'] != $curRecId){
 					$curRec = new ReceiptEntity();
-					
+					$newRecFlag = true;
 				} 
 				
 				foreach($cur as $key=>$value){
-					
 					if(!preg_match($itemRegex, $key)){
 						$curRec->$key = $value;
 					}
@@ -73,15 +73,15 @@ class ReceiptCtrl extends Ctrl{
 					}
 				}
 				
-				if(!empty($curItems)){
+				if(!empty($curItems) && isset($curRec->items)){
 					array_push($curRec->items, $curItems);
 				}
 				
-				if($cur['id'] != $curId){
+				if($newRecFlag){
 					if(!empty($curRec)){
 						array_push($result, $curRec);
 					}
-					$curId = $cur['id'];
+					$curRecId = $cur['id'];
 				}
 			}
 		}
@@ -540,13 +540,15 @@ class ReceiptCtrl extends Ctrl{
 				r.`id`,
 				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
 				r.`tax`, 
-				r.`total_cost`, 
+				r.`total_cost`,
+				r.`receipt_category`, 
 				s.`store_name`,
-				ri.`item_id`,
+				ri.`id` as `item_id`,
         		ri.`item_name`, 
         		ri.`item_qty`, 
         		ri.`item_discount`, 
-        		ri.`item_price`
+        		ri.`item_price`,
+        		ri.`item_category`
 			FROM 
 				`receipt` as r 
 			LEFT JOIN

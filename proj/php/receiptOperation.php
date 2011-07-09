@@ -93,17 +93,48 @@ switch($opcode){
 	
 	case 'key_search':
 		$key = isset($post['key']) ? $post['key'] : '';
+		$key = "%$key%";
 		$con = array(
 				'OR'=>array(
-					'like:0'=>array(
+					'like'.CON_DELIMITER.'0'=>array(
 						'field'=>'item_name',
-						'value'=>"%$key%"
+						'value'=>$key
 					),
-					'like:1'=>array(
+					'like'.CON_DELIMITER.'1'=>array(
 						'field'=>'store_name',
-						'value'=>"%$key%"
+						'value'=>$key
 					),
+					'like'.CON_DELIMITER.'2'=>array(
+						'field'=>'receipt_category',
+						'value'=>$key
+					),
+					'like'.CON_DELIMITER.'3'=>array(
+						'field'=>'item_category',
+						'value'=>$key
+					)
 				)
+		);
+		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
+		break;
+	
+	case 'get_category_receipt':
+		$category = $post['receipt_category'];
+		$con = array(
+					'='=>array(
+							'field'=>'receipt_category',
+							'value'=>$category
+						)
+		);
+		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
+		break;
+	
+	case 'get_store_receipt':
+		$store = $post['store'];
+		$con = array(
+				'='=>array(
+						'field'=>'store_name',
+						'value'=>$store
+					)
 		);
 		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
 		break;
