@@ -30,6 +30,11 @@ class EmailCtrl extends Ctrl{
 	private $client;
 	private $service;
 	
+	/**
+	 * 
+	 * @todo
+	 * uncomment initGdata func when having correct email configuration
+	 */
 	function __construct(){
 		parent::__construct();
 		//$this->initGdata();

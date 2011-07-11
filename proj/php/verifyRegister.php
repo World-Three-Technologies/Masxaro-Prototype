@@ -55,6 +55,11 @@ switch($info[0]){
 
 $tmp = $ctrl->find($acc, $pwd);
 
+/**
+ * @todo
+ * uncomment email account creating parts when having correct administration conifgurations,
+ * change die information
+ */
 if($tmp < 0){
 //	$emailCtrl = new EmailCtrl();
 //	echo $emailCtrl->createUserAcc($acc, Tool::getPassword($acc)) 

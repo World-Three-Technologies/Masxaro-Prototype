@@ -94,6 +94,8 @@ class Tool{
 	}
 	
 	/**
+	 * @todo
+	 * complete securityChk regular expression
 	 * 
 	 * @param string $str
 	 * 
@@ -106,8 +108,8 @@ class Tool{
 	 */
 	public static function securityChk($str){
 		$regex = "(<script>)";
+		//$regex = "(/[^a-z0-9\\/\\\\_.:-]/i)";
 		return !preg_match($regex, $str); 
-		//return true;
 	}
 	
 	/**

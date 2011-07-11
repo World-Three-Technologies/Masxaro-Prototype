@@ -28,6 +28,11 @@ include_once '../config.php';
 $post = null;
 
 if(isset($_POST['json'])){
+	/**
+	 * @desc 
+	 * this is used to accept JSON data from special senario,
+	 * mobile end for example
+	 */
 	$post = str_replace("\\", "", $_POST['json']);
 	$post = json_decode($post, true);
 	$post = $post['json'];

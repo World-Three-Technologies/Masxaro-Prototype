@@ -73,7 +73,7 @@ date_default_timezone_set("UTC");
 /*
  * general config
  */
-define('MIN_ACC_LEN', 6);
+define('MIN_ACC_LEN', 6);//minimal user/store account length
 define('CON_DELIMITER', ':');//delimiter to for operator and operator tag in query conditions
 
 /*
@@ -93,6 +93,11 @@ define('DB_DBNAME', 'w3tdb');
 
 /*
  * email config
+ */
+/**
+ * 
+ * @todo
+ * reconfigure with correct parameters
  */
 define('DOMADMIN_EMAIL', 'btw@masxaro.com');
 define('DOMADMIN_PWD', '123');
