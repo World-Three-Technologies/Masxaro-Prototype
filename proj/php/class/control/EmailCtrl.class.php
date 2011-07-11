@@ -23,7 +23,6 @@
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
  */
-require_once '../library/Zend/Loader.php';
 Zend_Loader::loadClass('Zend_Gdata_ClientLogin');
 Zend_Loader::loadClass('Zend_Gdata_Gapps');
 
@@ -33,6 +32,10 @@ class EmailCtrl extends Ctrl{
 	
 	function __construct(){
 		parent::__construct();
+		//$this->initGdata();
+	}
+	
+	private function initGdata(){
 		try{
 			$this->client = Zend_Gdata_ClientLogin::getHttpClient(
 																DOMADMIN_EMAIL, 

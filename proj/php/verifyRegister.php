@@ -60,7 +60,8 @@ if($tmp < 0){
 //	echo $emailCtrl->createUserAcc($acc, Tool::getPassword($acc)) 
 //		? $ctrl->update($acc, array('verified'=>true)) : 'verification failed.';
 //	die();
-	die('verification success');
+	$result = $ctrl->update($acc, array('verified'=>true))? 'verification success' : 'verification failed.';
+	die($result);
 }
 
 if($tmp == 0){

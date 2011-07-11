@@ -36,7 +36,7 @@ ini_set('include_path',
 			.ROOT_PATH.'/php/class/entity/:'
 			.ROOT_PATH.'/php/class/unitTest/:'
 			.ROOT_PATH.'/php/header.php:'
-			.ROOT_PATH.'/php/class/library/Zend/:'
+			.ROOT_PATH.'/php/class/library:'
         );
 	
 define ( "IS_DEBUG", true );
@@ -55,7 +55,12 @@ ini_set ( 'display_startup_errors', IS_DEBUG );
 	
 ///configuration file
 function __autoload($className) {
-	include_once($className.'.class.php');
+	if(preg_match('(^Zend)', $className)){
+		include_once ROOT_PATH.'/php/class/library/Zend/Loader.php';
+	}
+	else{
+		include_once($className.'.class.php');
+	}
 }
 
 //session manage

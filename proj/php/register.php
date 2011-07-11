@@ -37,7 +37,6 @@ $verifyPage = "verifyRegister.php";
 
 $registerType = $post['type']; //user / store
 
-//normal register
 switch($registerType){
 	case 'user':
 		$param = array(
