@@ -66,7 +66,6 @@ public class ReceiptsView extends Activity implements OnClickListener {
 	private ProgressDialog mRefreshProgress;
 	private Handler mUpdateHandler = new Handler();
 	private Runnable mReceiptThread = new Runnable() {
-		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
 			// TODO: upload the receipt with FROM_NFC flag
@@ -108,7 +107,6 @@ public class ReceiptsView extends Activity implements OnClickListener {
 		}
 	}
 	
-	@Override
 	public void onClick(View v) {
 		if (v == mSyncBtn) {
 			Log.i(TAG, "handler post a new thread");

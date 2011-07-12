@@ -60,7 +60,6 @@ public class TagView extends Activity {
         
         mRejectBtn = (Button)findViewById(R.id.receipt_reject_btn);
         mRejectBtn.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				final Intent nfc_intent = new Intent(TagView.this, NfcConnecting.class);
 				nfc_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -70,7 +69,6 @@ public class TagView extends Activity {
         });
         mConfirmBtn = (Button)findViewById(R.id.receipt_confirm_btn);
         mConfirmBtn.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				// TODO: Temporarily put here
 				String jsonstr = 

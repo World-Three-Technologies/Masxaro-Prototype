@@ -72,7 +72,6 @@ public class ReceiptsListSelector extends Activity implements OnClickListener {
 	private ProgressDialog mRefreshProgress;
 	private Handler mUpdateHandler = new Handler();
 	private Runnable mReceiptThread = new Runnable() {
-		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
 			// TODO: upload the receipt with FROM_NFC flag
@@ -153,7 +152,6 @@ public class ReceiptsListSelector extends Activity implements OnClickListener {
         mList.setAdapter(listAdapter);
         
         mList.setOnItemClickListener(new OnItemClickListener() {  
-  			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
   				// TODO: Display the arg2th receipt in the receipt pool.
@@ -164,7 +162,6 @@ public class ReceiptsListSelector extends Activity implements OnClickListener {
         });
 	}
 	
-	@Override
 	public void onClick(View v) {
 		if (v == mSyncBtn) {
 			Log.i(TAG, "handler post a new thread");
