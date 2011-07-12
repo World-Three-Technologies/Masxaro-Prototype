@@ -27,8 +27,6 @@
 
 package com.android.W3T.app.user;
 
-import com.android.W3T.app.rmanager.ReceiptsManager;
-
 public class UserProfile {
 	// Indicators for logged in or no one logged in.
 	public static final boolean OFFLINE = false;
@@ -42,7 +40,6 @@ public class UserProfile {
 	
 	// Called every time when a new user logged in.
 	public static void resetUserProfile(boolean s, String name) {
-		ReceiptsManager.initReceiptsManager();
 		setStatus(s);
 		setUsername(name);
 	}

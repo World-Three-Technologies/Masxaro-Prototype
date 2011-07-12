@@ -25,14 +25,14 @@
  */
  -->
 
-<LinearLayout
+<RelativeLayout
   	xmlns:android="http://schemas.android.com/apk/res/android"
   	android:id="@+id/login_dialog"
-  	android:layout_width="wrap_content" android:layout_height="wrap_content"
+  	android:layout_width="fill_parent" android:layout_height="wrap_content"
 	android:orientation="vertical"  	
 >
-	<TableLayout
-		android:layout_width="fill_parent" android:layout_height="fill_parent"
+	<TableLayout 
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
   		android:shrinkColumns="0"
   		android:stretchColumns="1"
 	>
@@ -40,29 +40,53 @@
 			<TextView android:text="@string/login_username_lab"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 			/>
-			<!-- Assume that use email address to login. TBD -->
 			<EditText android:id="@+id/login_username"
-				android:layout_height="wrap_content"
-				android:inputType="textEmailAddress"	
-				android:singleLine="true"
+				android:layout_height="wrap_content" android:layout_width="fill_parent"
+				android:inputType="text" android:singleLine="true"
+				android:hint="account" android:gravity="right"
+			/>
+		    <TextView android:text="@string/masxaro_email"
+			    android:layout_height="wrap_content" android:layout_width="fill_parent"
+			    android:gravity="right"
 			/>
 		</TableRow>
 	
-		<TableRow>
-			<TextView android:text="@string/login_password_lab"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-			/>
-			<EditText android:id="@+id/login_password"
-				android:layout_height="wrap_content"
-				android:inputType="textPassword"
-				android:singleLine="true"
-			/>
-		</TableRow>
+		<TableRow android:visibility="invisible">
+            <TextView android:text="@string/login_password_lab"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+            />
+            <EditText android:layout_height="wrap_content"/>
+        </TableRow>
 	
 	</TableLayout>
+	
+	<TableLayout android:id="@+id/pwd_set"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:shrinkColumns="0"
+        android:stretchColumns="1"
+    >
+        <TableRow android:visibility="invisible">
+            <TextView android:text="@string/login_username_lab"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+            />
+            <EditText android:layout_height="wrap_content" android:layout_width="fill_parent"/>
+        </TableRow>
+    
+        <TableRow>
+            <TextView android:text="@string/login_password_lab"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+            />
+            <EditText android:id="@+id/login_password"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:singleLine="true"
+            />
+        </TableRow>
+    
+    </TableLayout>
   
-  	<LinearLayout 
-  		android:layout_width="fill_parent" android:layout_height="fill_parent"
+  	<LinearLayout android:layout_below="@id/pwd_set"
+  		android:layout_width="fill_parent" android:layout_height="wrap_content"
   		android:orientation="horizontal"
   	>
 		<Button android:text="@string/login_submit_btn"
@@ -79,4 +103,4 @@
 	
 	</LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

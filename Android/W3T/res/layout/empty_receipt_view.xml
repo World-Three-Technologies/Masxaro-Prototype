@@ -24,10 +24,28 @@
  *
  */
  -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/empty_receipt_view"
-  android:layout_width="match_parent" android:layout_height="match_parent"
-  android:gravity="center_vertical|center_horizontal"
-  android:text="@string/empty_receipt"
-/>
-
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+>
+	<TextView android:id="@+id/empty_receipt_view"
+	    android:gravity="center_vertical|center_horizontal"
+	    android:text="@string/empty_receipt"
+	    android:layout_width="fill_parent" android:layout_height="fill_parent"
+	/>
+	
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:layout_alignParentBottom="true"
+    >
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:background="@drawable/sync_btn"
+            android:id="@+id/sync_btn"
+        />
+        
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:background="@drawable/backmain_btn"
+            android:id="@+id/back_main_btn"
+        />
+    </LinearLayout>
+    
+</RelativeLayout>

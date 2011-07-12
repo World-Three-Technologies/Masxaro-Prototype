@@ -29,14 +29,19 @@ package com.android.W3T.app;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -44,9 +49,8 @@ import android.widget.Toast;
 
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
-import com.android.W3T.app.user.UserProfile;
 
-public class ReceiptsView extends Activity {
+public class ReceiptsView extends Activity implements OnClickListener {
 	public static final String TAG = "ReceiptsViewActivity";
 	
 	public static final String RECEIVE_ALL = "user_get_all_receipt";
@@ -54,10 +58,10 @@ public class ReceiptsView extends Activity {
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
-//	public static final int EMPTY_VIEW_LAYOUT = R.id.empty_receipt_view;
-//	public static final int RECEITP_VIEW_LAYOUT = R.id.receipt_view;
+	private Button mSyncBtn;
+	private Button mBackListBtn;
+	private Button mBackMainBtn;
 	
-	private Menu mMenu;
 	private int mCurReceipt = 0;
 	private ProgressDialog mRefreshProgress;
 	private Handler mUpdateHandler = new Handler();
@@ -66,19 +70,18 @@ public class ReceiptsView extends Activity {
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
 			// TODO: upload the receipt with FROM_NFC flag
+            NetworkUtil.syncUnsentReceipts();
 			// Download latest 7 receipts from database and upload non-uploaded receipts
 			// to the database.
 			String jsonstr = NetworkUtil.attemptGetReceipt(ReceiptsView.RECEIVE_ALL, "new");
 			if (jsonstr != null) {
-				setContentView(R.layout.receipt_view);
 				Log.i(TAG, "add new receipts");
-				System.out.println(jsonstr);
 				// Set the IsUpload true
 				ReceiptsManager.add(jsonstr, FROM_DB);
 				Log.i(TAG, "finished new receipts");
 				Log.i(TAG, "update receipt view");
-				fillReceiptView(0);
 				mRefreshProgress.dismiss();
+				setBackIntent();
 			}
 		}
 	};
@@ -94,18 +97,38 @@ public class ReceiptsView extends Activity {
 	public void onResume() {
 		Log.i(TAG, "onResume()");
 		super.onResume();
-//		this.openOptionsMenu();
 		if (ReceiptsManager.getNumValid() != 0) {
 			Log.i(TAG, "Receipts exist");
 			setContentView(R.layout.receipt_view);
+			mSyncBtn = (Button) findViewById(R.id.sync_btn);
+			mSyncBtn.setOnClickListener(this);
+			mBackListBtn = (Button) findViewById(R.id.b_to_ls_btn);
+			mBackListBtn.setOnClickListener(this);
 			fillReceiptView(0);
 		}
-//		else {
-//			noReceiptView();
-//		}
 	}
 	
 	@Override
+	public void onClick(View v) {
+		if (v == mSyncBtn) {
+			Log.i(TAG, "handler post a new thread");
+			// Show a progress bar and send account info to server.
+			mRefreshProgress = new ProgressDialog(ReceiptsView.this);
+			mRefreshProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mRefreshProgress.setMessage("Refreshing...");
+			mRefreshProgress.setCancelable(true);
+			mRefreshProgress.show();
+			mUpdateHandler.post(mReceiptThread);
+		}
+		else if (v == mBackListBtn) {
+			setBackIntent();
+		}
+		else if (v == mBackMainBtn) {
+			setBackIntent();
+		}
+	}
+	
+/*	@Override
 	// Thinking of using context menu to display the menu bar next time.
 	public boolean onCreateOptionsMenu(Menu menu) {
         // Hold on to this
@@ -133,18 +156,23 @@ public class ReceiptsView extends Activity {
 			mRefreshProgress.show();
 			mUpdateHandler.post(mReceiptThread);
 			return true;
-		case R.id.sw_receipt_opt:
-			Toast.makeText(this, "Switch to anther receipt view!", Toast.LENGTH_SHORT).show();
-			return true;
-		case R.id.b_to_fp_opt:
-			setBackIntent();
+//		case R.id.sw_receipt_opt:
+//			if (ReceiptsManager.getNumValid() != 0) {
+//				setBackIntent();
+//			}
+//			Toast.makeText(this, "Switch to anther receipt view!", Toast.LENGTH_SHORT).show();
+//			return true;
+		case R.id.b_to_ls_opt:
+			if (ReceiptsManager.getNumValid() != 0) {
+				setBackIntent();
+			}
 			break;
 		default:
 			return false;
 		}
 		return false;
 	}	
-	
+	*/
 	@Override
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
@@ -163,13 +191,6 @@ public class ReceiptsView extends Activity {
 			break;
 		}
 		return super.onKeyUp(keyCode, event);
-	}
-	
-	private void setBackIntent() {
-		// Back to Front Page activity
-		Intent front_page_intent = new Intent(ReceiptsView.this, FrontPage.class);
-		front_page_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		startActivity(front_page_intent);
 	}
 	
 	private int getPrevReceipt(int num) {
@@ -198,6 +219,12 @@ public class ReceiptsView extends Activity {
 			Receipt r = ReceiptsManager.getReceipt(num);
 			((TextView) findViewById(ReceiptsManager.ReceiptViewElements[i]))
 				.setText(r.getEntry(i));
+			if (r.getWhere() == FROM_DB) {
+				((ImageView) findViewById(R.id.receipt_sycn_flag)).setImageResource(R.drawable.sync);
+			}
+			else if (r.getWhere() == FROM_NFC) {
+				((ImageView) findViewById(R.id.receipt_sycn_flag)).setImageResource(R.drawable.unsync);
+			}
 		}
 	}
 	
@@ -209,27 +236,59 @@ public class ReceiptsView extends Activity {
 		for (int i=0;i<numItems;i++) {
 			TableRow row1 = new TableRow(this);
 			TextView itemId = new TextView(this);
-			TextView itemQty = new TextView(this);
-			TextView itemPrice = new TextView(this);
 			itemId.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getItemId()));
-			itemQty.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getQty()));
-			itemPrice.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getPrice()));
+			itemId.setTextColor(getResources().getColor(R.color.black));
+			itemId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			itemId.setPadding(10, 0, 0, 0);
 			row1.addView(itemId);
-			row1.addView(itemQty);
-			row1.addView(itemPrice);
+			
 			TableRow row2 = new TableRow(this);
 			TextView itemName = new TextView(this);
+			TextView itemQty = new TextView(this);
+			TextView itemPrice = new TextView(this);
 			itemName.setText(ReceiptsManager.getReceipt(num).getItem(i).getName());
-			itemName.setPadding(10, 0, 0, 0);
+			itemName.setTextColor(getResources().getColor(R.color.black));
+			itemName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			itemQty.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getQty()));
+			itemQty.setTextColor(getResources().getColor(R.color.black));
+			itemQty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			itemQty.setGravity(Gravity.RIGHT);
+			itemQty.setPadding(0, 0, 10, 0);
+			itemPrice.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getPrice()));
+			itemPrice.setTextColor(getResources().getColor(R.color.black));
+			itemPrice.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			itemPrice.setGravity(Gravity.RIGHT);
+			itemPrice.setPadding(0, 0, 10, 0);
 			row2.addView(itemName);
-			t.addView(row1, pos++);
+			row2.addView(itemQty);
+			row2.addView(itemPrice);
+			
 			t.addView(row2, pos++);
+			t.addView(row1, pos++);
 		}
-		
+	}
+	
+	private void setBackIntent() {
+		// Back to Receipt list activity
+		if (ReceiptsManager.getNumValid() != 0) {
+			Intent receipt_list_intent = new Intent(ReceiptsView.this, ReceiptsListSelector.class);
+			receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			startActivity(receipt_list_intent);
+		}
+		// Back to Front Page when there is no reciept
+		else {
+			Intent front_page_intent = new Intent(ReceiptsView.this, FrontPage.class);
+			front_page_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(front_page_intent);
+		}
 	}
 	
 	private void noReceiptView() {
 		Log.i(TAG, "Create a empty view");
 		setContentView(R.layout.empty_receipt_view);
+		mSyncBtn = (Button) findViewById(R.id.sync_btn);
+		mSyncBtn.setOnClickListener(this);
+		mBackMainBtn = (Button) findViewById(R.id.back_main_btn);
+		mBackMainBtn.setOnClickListener(this);
 	}
 }

@@ -26,5 +26,8 @@
  -->
  
 <resources>
-    <drawable name="screen_background_black">#770000ff</drawable>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gold">#ffcc33</color>
+    <color name="purple">#9999ff</color>
 </resources>
