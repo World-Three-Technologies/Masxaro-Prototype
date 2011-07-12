@@ -40,9 +40,9 @@ import android.nfc.NfcAdapter;
 import com.android.W3T.app.nfc.*;
 
 public class NfcConnecting extends Activity {
-	private NfcAdapter mAdapter;
-    private PendingIntent mPendingIntent;
-    private IntentFilter[] mFilters;
+//	private NfcAdapter mAdapter;
+//    private PendingIntent mPendingIntent;
+//    private IntentFilter[] mFilters;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +100,9 @@ public class NfcConnecting extends Activity {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_DPAD_CENTER:
 			final Intent tag_intent = new Intent(NfcConnecting.this, TagView.class);
+			// Every tag view activity should be called only once.
+			tag_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(tag_intent);
-			System.out.println("Get a fake tag.");
 			break;
 		default:
 			break;

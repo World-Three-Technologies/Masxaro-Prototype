@@ -48,16 +48,22 @@ public class ReceiptsManager {
 	public static final boolean FROM_DB = true;
 	public static final boolean FROM_NFC = false;
 	
-//	public static final String PARAM_RECEIPT_LABEL = "basicInfo";
+	public static final boolean RECEIPT_NEW = true;
+	public static final boolean RECEIPT_IN_POOL = false;
+		
 	public static final String PARAM_ITEM_LABEL = "items";
+	public static final int PARAM_RECEIPT_ID = 2;
 	
 	public final static int[] ReceiptViewElements = {
 		R.id.store_name_txt, R.id.time_txt, R.id.id_txt, R.id.tax_txt ,R.id.total_cost_txt
 	};
 	
 	// This array stores all receipts in mobile app.
-	private static ArrayList<Receipt> Receipts = new ArrayList<Receipt>();
+	private static ArrayList<Receipt> Receipts = new ArrayList< Receipt>();
+	private static int[] sReceiptId = new int[NUM_RECEIPT];
+//	private static int[] sUnSentId = new int[NUM_RECEIPT];
 	private static int sNumValidReceipt = 0;
+//	private static int sNumUnSent = 0;
 	
 	public static void initReceiptsManager() {
 		if (Log.isLoggable(TAG, Log.VERBOSE)) {
@@ -65,30 +71,22 @@ public class ReceiptsManager {
         }
 		for(int i=0;i<NUM_RECEIPT;i++) {
 			Receipts.add(i, new Receipt());
+			sReceiptId[i] = 0;
+//			sUnSentId[i] = 0;
 		}
 		sNumValidReceipt = 0;
-	}	
-	
-	public static int getNumValid() {
-		return sNumValidReceipt;
+//		sNumUnSent = 0;
 	}
 	
-	public static Receipt getReceipt(int index) {
-		return Receipts.get(index);
+	public static void clearReceiptPool() {
+		Receipts.clear();
 	}
 	
-	public static ArrayList<Receipt> getUnSentReceipts() {
-		int cnt = getNumValid();
-		ArrayList<Receipt> result = new ArrayList<Receipt>();
-		for (int i=0;i<cnt;i++) {
-			Receipt r = getReceipt(i);
-			if (r.getWhere() == FROM_NFC) {
-				result.add(r);
-			}
-		}
-		return result;
-	}
-	
+	/*
+	 * This method is called when we get receipts from database or receipt from a nfc tag.
+	 * param where	where the receipts come from, FROM_DB or FROM_NFC.
+	 * param str	the JSON string which includes the content of receipts.
+	 */
 	public static void add(String str, boolean where) {
 		/* Receipt JSON structure: 
 		 * [{"store_account":null,"receipt_id":"101","user_account":null,"receipt_time":"2011-06-21 20:28:41","tax":"0.1","items":[],"total_cost":"10","img":null,"deleted":0,"store_name":"McD"},
@@ -106,28 +104,89 @@ public class ReceiptsManager {
 			// After every loop, a receipt has been created and added into ReceiptsManager.
 			for (int i=0;i < numReceipt;i++) {
 				receiptsInfo[i] = (JSONObject) receiptsArray.get(i);
-				items[i] = receiptsInfo[i].getJSONArray(PARAM_ITEM_LABEL);
 				Receipt r = new Receipt(receiptsInfo[i], where);
-				r.addItems(items[i]);
-				addNewReceipt(r);
+				items[i] = receiptsInfo[i].getJSONArray(PARAM_ITEM_LABEL);
+				if (Log.isLoggable(TAG, Log.VERBOSE)) {
+	                Log.v(TAG, "check whether receipt "+r.getEntry(PARAM_RECEIPT_ID)+" in the pool");
+	            }
+				if (addNewReceipt(r) == RECEIPT_NEW) {
+					r.addItems(items[i]);
+				}
 			}
 			if (Log.isLoggable(TAG, Log.VERBOSE)) {
 	            Log.v(TAG, "adding receipts is done");
 	        }			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	// Add a new receipt into ReceiptManager
-	private static void addNewReceipt(Receipt r) {
+	/* Add a new receipt into ReceiptManager.
+	 * return	if true, the receipt was not in receipt pool before 
+	 * 			and has been added into the pool now.
+	 * 			if false, already in the pool and won't be added.
+	 */
+	private static boolean addNewReceipt(Receipt r) {
+		boolean get = false;
 		if (Log.isLoggable(TAG, Log.VERBOSE)) {
             Log.v(TAG, "add a new receipt into Receipt pool");
         }
-		Receipts.add(sNumValidReceipt, r);
-		sNumValidReceipt++;
-//	TODO:	System.out.println("Any un-delivered receipt?");	
-//	TODO:	System.out.println("Add a new receipt");
+		int id = Integer.parseInt(r.getEntry(PARAM_RECEIPT_ID));
+		for (int i=0;i<NUM_RECEIPT;i++) {
+			if (sReceiptId[i] == id) {
+				get = true;
+				break;
+			}
+		}
+		if (get == false){
+			if (Log.isLoggable(TAG, Log.VERBOSE)) {
+	            Log.v(TAG, "no such receipt, add one");
+	        }
+			Receipts.add(sNumValidReceipt, r);
+			sReceiptId[sNumValidReceipt] = id;
+			sNumValidReceipt++;
+//			if (r.getWhere() == FROM_NFC) {
+//				sUnSentId[sNumUnSent] = id;
+//				sNumUnSent++;
+//			}
+			return RECEIPT_NEW;
+		}
+		if (Log.isLoggable(TAG, Log.VERBOSE)) {
+            Log.v(TAG, "already have such receipt");
+        }
+		return RECEIPT_IN_POOL;
+//		TODO: System.out.println("Any un-delivered receipt?");	
+
+	}
+	
+	public static ArrayList<Receipt> getUnSentReceipts() {
+		int cnt = getNumValid();
+		ArrayList<Receipt> result = new ArrayList<Receipt>();
+		for (int i=0;i<cnt;i++) {
+			Receipt r = getReceipt(i);
+			if (r.getWhere() == FROM_NFC) {
+				result.add(r);
+			}
+		}
+		return result;
+	}
+	
+//	public static void clearUnSentArray() {
+//		for (int i=0;i<sNumUnSent;i++) {
+//			sUnSentId[i] = 0;
+//		}
+//		sNumUnSent = 0;
+//	}
+	
+//	public static int getUnSentNum() {
+//		return sNumUnSent;
+//	}
+	
+	public static int getNumValid() {
+		return sNumValidReceipt;
+	}
+	
+	public static Receipt getReceipt(int index) {
+		return Receipts.get(index);
 	}
 }
