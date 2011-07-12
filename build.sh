@@ -21,7 +21,7 @@
  #
 set -e
 echo "searching root path..."
-ROOT=$(sudo find /Applications/MAMP -name htdocs)
+ROOT=$(sudo find / -name htdocs)
 if [ -z $ROOT ]; then
 	echo "error: cannot find root path(windows-www, linux/unix/mac-htdocs).\n exit."
 	exit
