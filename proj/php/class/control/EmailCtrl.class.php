@@ -37,7 +37,7 @@ class EmailCtrl extends Ctrl{
 	 */
 	function __construct(){
 		parent::__construct();
-		//$this->initGdata();
+		$this->initGdata();
 	}
 	
 	private function initGdata(){
@@ -106,7 +106,7 @@ class EmailCtrl extends Ctrl{
 	 * @desc
 	 * create a masxaro email account for a new user.
 	 */
-	public function createUserAcc($username, $password, $givenName = '', $familyName = ''){
+	public function createUserAcc($username, $password, $givenName = 'N/A', $familyName = 'N/A'){
 		try{
 			$this->service->createUser(
 									$username, 
@@ -117,7 +117,9 @@ class EmailCtrl extends Ctrl{
 									$quota=null
 								);
 		}catch(Exception $e){
-			return false;
+			echo $e;
+			die();
+			//return false;
 		}
 		return true;
 	}

@@ -99,8 +99,8 @@ define('DB_DBNAME', 'w3tdb');
  * @todo
  * reconfigure with correct parameters
  */
-define('DOMADMIN_EMAIL', 'btw@masxaro.com');
-define('DOMADMIN_PWD', '123');
-define('DOMAIN', 'masxaro.com');
+define('DOMADMIN_EMAIL', 'bws@masxaro.net');
+define('DOMADMIN_PWD', 'Masxaro2011!');
+define('DOMAIN', 'masxaro.net');
 
 ?>

@@ -23,7 +23,6 @@
  *  
  * 
  */
-
 include_once '../config.php';
 
 $code = $_GET['code'];
@@ -55,22 +54,24 @@ switch($info[0]){
 
 $tmp = $ctrl->find($acc, $pwd);
 
-/**
- * @todo
- * uncomment email account creating parts when having correct administration conifgurations,
- * change die information
- */
 if($tmp < 0){
-//	$emailCtrl = new EmailCtrl();
-//	echo $emailCtrl->createUserAcc($acc, Tool::getPassword($acc)) 
-//		? $ctrl->update($acc, array('verified'=>true)) : 'verification failed.';
-//	die();
-	$result = $ctrl->update($acc, array('verified'=>true))? 'verification success' : 'verification failed.';
-	die($result);
+	$emailCtrl = new EmailCtrl();
+	if($emailCtrl->createUserAcc($acc, Tool::getPassword($acc))){
+		if($ctrl->update($acc, array('verified'=>true))){
+			die('verification success');
+		}
+		else{
+			$emailCtrl->deleteAcc("$acc@".DOMAIN);
+			die('verification failed, server error.');
+		}
+	} 
+	else{
+		die('verification failed.');
+	}
 }
 
 if($tmp == 0){
-	die('wrong verification');
+	die('illegal verification');
 }
 
 else{
