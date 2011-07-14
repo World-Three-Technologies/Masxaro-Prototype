@@ -199,7 +199,7 @@ class ReceiptCtrl extends Ctrl{
 				$curCost =  $items[$i]['item_price'] * $items[$i]['item_qty'] * $items[$i]['item_discount'];
 				$totalCost += $curCost;
 				
-				$items[$i]['id'] = $receiptId;	
+				$items[$i]['receipt_id'] = $receiptId;	
 				
 				$info = Tool::infoArray2SQL($items[$i]);
 				
