@@ -23,6 +23,13 @@
             </intent-filter>
         </activity>
 
+<<<<<<< HEAD
+<<<<<<< .merge_file_a05328
+		<!-- This activity is intended to show the app tabs after successfully passed
+			username-password check or when the app is running. -->
+=======
+=======
+>>>>>>> da8bc115943369846f0c236f750280372737864d
         <!-- This activity is intended to show the list of the receipts which
             are already in the receipts pool. -->
         <activity android:name=".ReceiptsListSelector"
@@ -37,6 +44,10 @@
 
 		<!-- This activity is intended to show the receipt selected in the receipts
 		    list view. -->
+<<<<<<< HEAD
+>>>>>>> .merge_file_a00608
+=======
+>>>>>>> da8bc115943369846f0c236f750280372737864d
 		<activity android:name=".ReceiptsView"
 			android:label="@string/app_name"
 		>
