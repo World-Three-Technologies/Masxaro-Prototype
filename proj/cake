@@ -6,34 +6,51 @@
 
   $task = $argv[1];
 
-  if($task=="test"){
-    runTest();
-  } else if($task =="seed"){
-    seed();
-  } else if($task =="deploy"){
-    concatJavascripts();
-    system("cp -rf ./ /Library/WebServer/Documents/");
-  } else if($task =="build"){
-    concatJavascripts();
-  } else if($task =="spec"){
-    concatJavascripts();
-    system("open $path/php/assets/spec/SpecRunner.html");
-  } else{
-    usage();
+  switch($task){
+    case "test":
+      runTest();
+      break;
+    case "deploy":
+      concatJavascripts();
+      system("cp -rf ./ /Library/WebServer/Documents/");
+    case "seed":
+      seed();
+      break;
+    case "spec":
+      concatJavascripts();
+      system("open $path/php/assets/spec/SpecRunner.html");
+      break;
+    case "watch":
+      $css_path = $path."/php/assets/css";
+      system("sass --watch $css_path/style.scss:$css_path/style.css");
+      break;
+    case "db":
+      $host = DB_HOST;
+      $user = DB_USER;
+      $pwd = DB_PWD;
+      $db = DB_DBNAME;
+      echo "mysql -h$host -u$user -p$pwd -D $db\n";
+      break;
+    default:
+      usage();
   }
 
   function usage(){
-    echo "usage...\n";
-    echo "./cake test :: run testcase\n";
-    echo "./cake seed :: insert data to database\n";
+    echo "usage:: ./cake [task]\n";
+    echo "  test :: run testcase\n";
+    echo "  seed :: insert data to database\n";
+    echo "  deploy :: deploy website to local address\n";
+    echo "  spec :: run front-end test spec\n";
+    echo "  watch :: watch scss file and compile into css\n";
+    echo "  db :: show mysql console commend for refer...\n";
   }
 
   function runTest(){
-    system("php ./php/test/test.php");
+
   }
 
   function concatJavascripts(){
-
+    desc("concating javascript into app.js...");
     system("cat LICENSE > php/assets/js/app.js");
     system("cat php/assets/app/models/*.js >> php/assets/js/app.js");
     system("cat php/assets/app/views/*.js >> php/assets/js/app.js");
@@ -43,17 +60,19 @@
 
   function seed(){
 
-    //insert user;
+    desc("insert user");
     $userControl = new UserCtrl();
     if($userControl->chkAccount("w3t")){
       $user = array(
       "user_account" => "w3t",
       "pwd" => "w3t",
-      "first_name" => "W3Tester");
+      "first_name" => "W3Tester",
+      ""
+    );
       $userControl->insertUser($user);
     }
 
-    //insert receipts;
+    desc("insert receipt...");
     $receiptControl = new ReceiptCtrl();
     $receipt = array(
       "store_account" => "Mc_NYU",
@@ -87,7 +106,11 @@
 
     $flag = $receiptControl->insertReceipt($receipt,$items);
     if(!$flag){
-      echo "insert fails\n";
+      desc("insert fails");
     }
+  }
+
+  function desc($message){
+    echo $message."\n";
   }
 ?>
