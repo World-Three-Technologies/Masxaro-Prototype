@@ -298,3 +298,13 @@ footer{
   }
 }
 
+.tag{
+  @include round(5px);
+  background-color: rgb(94,206,116);
+  padding:2px 4px;
+  margin-left: 20px;
+  color: #FFF;
+  font-weight:bold;
+  font-size:14px;
+}
+

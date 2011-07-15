@@ -3,7 +3,7 @@
     <div class="date"></div>
     <div class="content">
       <div class="items"></div>
-      <div class="store">at <%= store_name %></div>
+      <div class="store">at <%= store_name %> <span class="tag"><%= category %></span></div>
     </div>
     <div class="total-cost">$<%= total_cost %></div>
   </div>
@@ -14,7 +14,7 @@
     <div class="toolbar close">close[x]</div>
     <div class="date"></div>
     <div class="content">
-      <div class="store"><%= store_name%></div>
+      <div class="store"><%= store_name%> <span class="tag"><%= category %></span></div>
       <div class="items"></div> 
       <hr style="border-top:1px black solid;margin:0;"/>
       <div class="total-cost">$<%= total_cost %></div>
@@ -25,7 +25,7 @@
 <script type="text/template" id="receipt-item-template">
 <div class="receipt-item">
   <span class="item_name">
-    <%= item_name %>
+    <%= item_name %> <span class="tag"><%= item_category %></span>
   </span>
   <span class="item_price">
     $<%= item_price %>

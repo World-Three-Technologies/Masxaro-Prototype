@@ -218,3 +218,14 @@ footer {
       width: 100%;
       height: 100%;
       text-decoration: none; }
+
+.tag {
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  background-color: #5ece74;
+  padding: 2px 4px;
+  margin-left: 20px;
+  color: #FFF;
+  font-weight: bold;
+  font-size: 14px; }
