@@ -1,3 +1,11 @@
+<?php 
+  include_once "../config.php";
+  $acc = $_COOKIE["acc"];
+  if(!Tool::authenticate($acc)){
+    Tool::redirectToProduct();
+  }
+?>
+
 <!doctype html>
 <!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->

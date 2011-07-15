@@ -214,7 +214,6 @@ class ReceiptCtrl extends Ctrl{
 					SET
 						$info	
 				";
-        var_dump($info);
 					
 				if($this->db->insert($sql) < 0){
 					//$this->realDelete($receiptId);
@@ -566,7 +565,6 @@ class ReceiptCtrl extends Ctrl{
 				r.`user_account` regexp '$acc'
 			AND 
 				r.`deleted`=false
-			AND
 				ri.`deleted`=false
 			ORDER BY
 				r.`receipt_time`

@@ -11,13 +11,14 @@
       runTest();
       break;
     case "deploy":
-      buildJavascript();
+      buildJavascripts();
       system("cp -rf ./ /Library/WebServer/Documents/");
+      break;
     case "seed":
       seed();
       break;
     case "spec":
-      buildJavascript();
+      buildJavascripts();
       system("open $path/php/assets/spec/SpecRunner.html");
       break;
     case "watch":
