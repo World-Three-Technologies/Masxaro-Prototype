@@ -94,11 +94,6 @@ define('DB_DBNAME', 'w3tdb');
 /*
  * email config
  */
-/**
- * 
- * @todo
- * reconfigure with correct parameters
- */
 define('DOMADMIN_EMAIL', 'bws@masxaro.net');
 define('DOMADMIN_PWD', 'Masxaro2011!');
 define('DOMAIN', 'masxaro.net');
