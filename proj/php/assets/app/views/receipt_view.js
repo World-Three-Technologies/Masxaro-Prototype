@@ -34,6 +34,7 @@ var ReceiptView = Backbone.View.extend({
 
     $(this.el).html(this.fullTemplate(this.model.toJSON()));
     $(this.el).find(".date").html(new Date(this.model.get("receipt_time")).format());
+
     var items = $(this.el).find(".items"),
         self = this;
 

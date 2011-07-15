@@ -495,7 +495,7 @@ class ReceiptCtrl extends Ctrl{
 			LEFT JOIN
 				`receipt_item` as ri
 			ON
-				r.`id`=ri.`id`
+				r.`id`=ri.`receipt_id`
 			LEFT JOIN
 				`store` as s
 			ON
@@ -543,18 +543,18 @@ class ReceiptCtrl extends Ctrl{
 				r.`total_cost`,
 				r.`receipt_category`, 
 				s.`store_name`,
-				ri.`id` as `item_id`,
-        		ri.`item_name`, 
-        		ri.`item_qty`, 
-        		ri.`item_discount`, 
-        		ri.`item_price`,
-        		ri.`item_category`
+				ri.`item_id`,
+          ri.`item_name`, 
+          ri.`item_qty`, 
+          ri.`item_discount`, 
+          ri.`item_price`,
+          ri.`item_category`
 			FROM 
 				`receipt` as r 
 			LEFT JOIN
 				`receipt_item` as ri
 			ON
-				r.`id`=ri.`id`
+				r.`id`=ri.`receipt_id`
 			LEFT JOIN
 				`store` as s
 			ON
@@ -565,6 +565,7 @@ class ReceiptCtrl extends Ctrl{
 				r.`user_account` regexp '$acc'
 			AND 
 				r.`deleted`=false
+      AND
 				ri.`deleted`=false
 			ORDER BY
 				r.`receipt_time`

@@ -5,7 +5,6 @@
     Tool::redirectToProduct();
   }
 ?>
-
 <!doctype html>
 <!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
