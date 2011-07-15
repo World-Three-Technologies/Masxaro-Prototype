@@ -11,13 +11,13 @@
       runTest();
       break;
     case "deploy":
-      concatJavascripts();
+      buildJavascript();
       system("cp -rf ./ /Library/WebServer/Documents/");
     case "seed":
       seed();
       break;
     case "spec":
-      concatJavascripts();
+      buildJavascript();
       system("open $path/php/assets/spec/SpecRunner.html");
       break;
     case "watch":
@@ -49,8 +49,8 @@
 
   }
 
-  function concatJavascripts(){
-    desc("concating javascript into app.js...");
+  function buildJavascripts(){
+    desc("concatenating javascript into app.js...");
     system("cat LICENSE > php/assets/js/app.js");
     system("cat php/assets/app/models/*.js >> php/assets/js/app.js");
     system("cat php/assets/app/views/*.js >> php/assets/js/app.js");
@@ -78,30 +78,34 @@
       "store_account" => "Mc_NYU",
       "user_account" => "w3t",
       "tax" => 0.0875 ,
+      "receipt_category" => "restaurant",
       "receipt_time" => "now()"
     );
 
     $items = array();
 
     array_push($items, array( 
-           'item_id'=>'3',
-           'item_name'=>'Harry-Potter - I', 
+           'item_name'=>'Big Mac', 
+           'item_id'=>1,
            'item_qty'=>1, 
-           'item_price'=>10.99, 
+           'item_price'=>4.99, 
+           'item_category' =>"food",
            'item_discount'=>1));
 
     array_push($items, array( 
-           'item_id'=>'4',
-           'item_name'=>'Harry-potter - II', 
-           'item_qty'=>2, 
-           'item_price'=>39.99, 
+           'item_name'=>'Salad', 
+           'item_id'=>2,
+           'item_qty'=>1, 
+           'item_price'=>1.99, 
+           'item_category' =>"food",
            'item_discount'=>1));
 
     array_push($items, array( 
-           'item_id'=>'5',
-           'item_name'=>'Harry-potter - III', 
-           'item_qty'=>5, 
-           'item_price'=>19.99, 
+           'item_name'=>'Medium drink', 
+           'item_id'=>3,
+           'item_qty'=>1, 
+           'item_category' =>"food",
+           'item_price'=>1.99, 
            'item_discount'=>1));
 
     $flag = $receiptControl->insertReceipt($receipt,$items);

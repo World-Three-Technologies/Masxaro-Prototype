@@ -156,7 +156,7 @@ class ReceiptCtrl extends Ctrl{
 			}
 			
 		}
-				
+
 		if(!$itemsNull){
 			
 			if($receiptId == null || strlen($receiptId) == 0 || $receiptId == 0){
@@ -174,7 +174,7 @@ class ReceiptCtrl extends Ctrl{
 					`deleted`=false
 			";
 			$this->db->select($sql);
-			
+				
 			if($this->db->numRows() > 0){
 				$result = $this->db->fetchObject();
 				$totalCost = $result[0]->total_cost;
@@ -183,7 +183,7 @@ class ReceiptCtrl extends Ctrl{
 				//$this->realDelete($receiptId);
 				return false;
 			}
-			
+
 			$n = count($items);
 			
 			for($i = 0; $i < $n; $i ++){
@@ -197,16 +197,17 @@ class ReceiptCtrl extends Ctrl{
 				}
 				
 				$curCost =  $items[$i]['item_price'] * $items[$i]['item_qty'] * $items[$i]['item_discount'];
+
 				$totalCost += $curCost;
-				
-				$items[$i]['id'] = $receiptId;	
+
+				$items[$i]['receipt_id'] = $receiptId;	
 				
 				$info = Tool::infoArray2SQL($items[$i]);
 				
 				if(!Tool::securityChk($info)){
 					return false;
 				}
-				
+
 				$sql = "
 					INSERT 
 					INTO 
@@ -214,6 +215,7 @@ class ReceiptCtrl extends Ctrl{
 					SET
 						$info	
 				";
+        var_dump($info);
 					
 				if($this->db->insert($sql) < 0){
 					//$this->realDelete($receiptId);
