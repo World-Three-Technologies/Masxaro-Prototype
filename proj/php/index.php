@@ -27,8 +27,8 @@
           <h4>catagory</h4>
           <ul>
             <li class="active"><a href="#index">Recent [15]</a></li>
-            <li><a href="#index">Grocery</a></li>
-            <li><a href="#index">Payment</a></li>
+            <li><a href="#category/Food">Food</a></li>
+            <li><a href="#category/Default">Default</a></li>
             <li><a href="#index">Overview</a></li>
           </ul>
           <h4>tags</h4>

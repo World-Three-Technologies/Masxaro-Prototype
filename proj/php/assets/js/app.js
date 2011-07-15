@@ -64,7 +64,18 @@ var Receipts = Backbone.Collection.extend({
       key : query
     }).success(function(data){
       model.refresh(data);
-      console.log(model);
+      success();
+    });
+  },
+
+  category:function(category,success){
+    var model = this;
+    $.post(this.url,{
+      opcode : "get_category_receipt",
+      acc:this.account,
+      receipt_category : category
+    }).success(function(data){
+      model.refresh(data);
       success();
     });
   }
@@ -80,7 +91,8 @@ window.AppView = Backbone.View.extend({
   end:1,
 
   initialize:function(){
-    _.bindAll(this,"render","renderMore","renderReceipt","setEnd","search");
+    _.bindAll(this,"render","renderMore","renderReceipt",
+                   "setEnd","search","category","after");
     this.model.bind("refresh",this.render);
     this.model.bind("change",this.render);
     this.model.view = this;
@@ -88,17 +100,30 @@ window.AppView = Backbone.View.extend({
 
   events:{
     "click .more": "renderMore",
-    "click #search-button": "search"
+    "click #search-button": "searchByForm"
   },
 
-  search:function(){
+  search:function(query){
+    this.before();
+    this.model.search(query,this.after);
+  },
+
+  before:function(){
     this.$('.row').remove();
     $('#ajax-loader').show();
-    var query = $('#search-query').val();
-    this.model.search(query,function(){
-      $('#ajax-loader').hide();
-    });
-         
+  },
+
+  after:function(){
+    $('#ajax-loader').hide();
+  },
+
+  searchByForm:function(){
+    this.search($('#search-query').val());
+  },
+
+  category:function(category){
+    this.before();
+    this.model.category(category,this.after);       
   },
 
   updateStatus:function(){
@@ -222,7 +247,9 @@ var AppController = Backbone.Controller.extend({
 
   routes: {
     "" : "index",
-    "index" : "index"        
+    "index" : "index",      
+    "search/:query" : "search",
+    "category/:category" : "category"
   },
 
   index: function(){
@@ -232,8 +259,15 @@ var AppController = Backbone.Controller.extend({
       }
     }
     this.receipts.fetch(options);
-  }
+  },
 
+  search: function(query){
+    appView.search(query);      
+  },
+
+  category: function(category){
+    appView.category(category);        
+  }
 });
 $(function(){
   new AppController();

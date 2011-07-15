@@ -13,7 +13,9 @@ var AppController = Backbone.Controller.extend({
 
   routes: {
     "" : "index",
-    "index" : "index"        
+    "index" : "index",      
+    "search/:query" : "search",
+    "category/:category" : "category"
   },
 
   index: function(){
@@ -23,6 +25,13 @@ var AppController = Backbone.Controller.extend({
       }
     }
     this.receipts.fetch(options);
-  }
+  },
 
+  search: function(query){
+    appView.search(query);      
+  },
+
+  category: function(category){
+    appView.category(category);        
+  }
 });

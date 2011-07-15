@@ -26,7 +26,18 @@ var Receipts = Backbone.Collection.extend({
       key : query
     }).success(function(data){
       model.refresh(data);
-      console.log(model);
+      success();
+    });
+  },
+
+  category:function(category,success){
+    var model = this;
+    $.post(this.url,{
+      opcode : "get_category_receipt",
+      acc:this.account,
+      receipt_category : category
+    }).success(function(data){
+      model.refresh(data);
       success();
     });
   }
