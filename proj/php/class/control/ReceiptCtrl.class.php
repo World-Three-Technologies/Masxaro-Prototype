@@ -377,7 +377,7 @@ class ReceiptCtrl extends Ctrl{
 			SET
 				`deleted` = false
 			WHERE
-				`id` = '$receiptId'
+				`receipt_id` = '$receiptId'
 		";
 		if($this->db->update($sql) <= 0){
 			return false;
@@ -456,7 +456,7 @@ class ReceiptCtrl extends Ctrl{
 			FROM 
 				`receipt_item`
 			WHERE
-				`id`=$receiptId
+				`receipt_id`=$receiptId
 			AND
 				`deleted`=false
 		";
