@@ -41,7 +41,7 @@ $pwd = $info[2];
 
 switch($info[0]){
 	case 'user':
-		$ctrl = new UserCtrl();
+		$ctrl = new CustomerCtrl();
 		break;
 		
 	case 'user':

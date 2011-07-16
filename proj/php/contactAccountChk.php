@@ -30,7 +30,7 @@ $acc = $post['acc'];
 
 $contact = $post['contact'];
 
-$ctrl = new Ctrl();
+$ctrl = new UserCtrl();
 
 $result = 1;
 

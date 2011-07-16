@@ -21,7 +21,7 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  */
-class StoreCtrl extends Ctrl{
+class StoreCtrl extends UserCtrl{
 	
 	function __construct(){
 		parent::__construct();

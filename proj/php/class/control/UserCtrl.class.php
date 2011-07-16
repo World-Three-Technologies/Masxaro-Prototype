@@ -1,6 +1,6 @@
 <?php
 /*
- *  userCtrl.class.php -- user control class 
+ *  UserCtrl.class.php -- user controller 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,10 +21,9 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
- *  user control class, including all control functions for user
+ *  
  */
-
-class UserCtrl extends Ctrl{
+abstract class UserCtrl extends Ctrl{
 	
 	function __construct(){
 		parent::__construct();
@@ -32,225 +31,78 @@ class UserCtrl extends Ctrl{
 	
 	/**
 	 * 
-	 * insert a new user
-	 * 
-	 * @param Array() $info
-	 * 
-	 * @return boolean
-	 */
-	public function insert($info){
-		
-		$info['pwd'] = md5($info['pwd']);
-		
-		$con = Tool::infoArray2SQL($info);
-		
-		if(!Tool::securityChk($con)){
-			return false;
-		}
-		
-		$sql = "
-			INSERT INTO 
-				`user`
-			SET
-				$con
-		";
-			
-		$result = $this->db->insert($sql);
-		
-		if($result < 0){
-			return false;
-		}
-		
-		return true;
-	} 
-	
-	/**
-	 * 
-	 * fake delete account
-	 * @param string $acc
-	 * @return boolean
-	 */
-	public function fakeDeleteUser($acc){
-		
-		if(!Tool::securityChk($acc)){
-			return false;
-		}
-		
-		$sql = "
-			UPDATE 
-				`user`
-			SET
-				`deleted`=true
-			WHERE
-				`user_account`='$acc';
-		";
-		
-		if($this->db->update($sql) <= 0){
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * 
-	 * recover a fake deleted user
-	 * @param string $acc
-	 * @return boolean
-	 */
-	public function recoverDeletedUser($acc){
-		
-		if(!Tool::securityChk($acc)){
-			return false;
-		}
-		
-		$sql = "
-			UPDATE 
-				`user`
-			SET
-				`deleted`=false
-			WHERE
-				`user_account`='$acc';
-		";
-		
-		if($this->db->update($sql) <= 0){
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * 
-	 * real delete account
-	 * @param string $acc
-	 * @return boolean
-	 */
-	public function realDeleteUser($acc){
-		
-		if(!Tool::securityChk($acc)){
-			return false;
-		}
-		
-		$sql = "
-			DELETE
-			FROM 
-				`user`
-			WHERE
-				`user_account`='$acc';
-		";
-		
-		if($this->db->delete($sql) <= 0){
-			return false;
-		}
-		
-		return true;
-	}
-	
-	
-	/**
-	 * 
-	 * @param string $curAcc current account name
-	 * @param array() $info updated info, array('first_name'=>'John', 'age_range_id'=>2, ...)
-	 */
-	public function update($curAcc, $info){
-		
-		$info = Tool::infoArray2SQL($info);
-		
-		if(!Tool::securityChk($info)){
-			return false;
-		}
-		
-		$sql = "
-			UPDATE 
-				`user`
-			SET
-				$info
-			WHERE
-				`user_account` = '$curAcc'
-		";
-		
-		if($this->db->update($sql) <= 0){
-			return false;
-		}
-		
-		return true;
-	}
-	
-	
-	/**
-	 * 
-	 * 
 	 * @param string $acc
 	 * 
-	 * @param string $pwd
-	 * 
-	 * @return int 1: found, verified, 0: not found, -1: found, unverified
+	 * @return boolean
 	 * 
 	 * @desc
-	 * 
-	 * find user 
-	 * 
+	 * check whether a certain account is available
 	 */
-	public function find($acc, $pwd){
+	public function chkAccount($acc){
+		
 		if(!Tool::securityChk($acc)){
 			return false;
 		}
-		
-		$pwd = md5($pwd);
 		
 		$sql = "
 			SELECT 
-				*
+				count(*) as count
 			FROM 
-				`user`
+				`user`, `store`
 			WHERE
 				`user_account`='$acc'
-			AND
-				`pwd`='$pwd'
-			AND 
-				`deleted`=false
+			OR
+				`store_account`='$acc'
 		";
 		
-		$this->db->select($sql);
-		$result = $this->db->fetchAssoc();
-		if($this->db->numRows() == 1){
-			if($result[0]['verified'] == true){
-				return true;
-			}
-			else{
-				return -1;
-			}
+		if($this->db->select($sql) < 0){
+			return false;
 		}
 		
-		return 0;
+		$result = $this->db->fetchObject();
+		
+		if($result[0]->count == 0){
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**
 	 * 
 	 * 
-	 * @param string $acc
+	 * @param string $acc store or user account
 	 * 
-	 * @return object
+	 * @return boolean
 	 * 
 	 * @desc
 	 * 
-	 * according to user account, return user profile object
+	 * check whether the certain contact is available, true: available, false: not available
 	 */
-	public function getUserProfile($acc){
+	public function chkContact($value){
+		
 		$sql = "
 			SELECT 
-				*
+				`value`
 			FROM 
-				`user`
-			WHERE 
-				`user_account`='$acc'
+				`contact`
+			WHERE
+				`value` = '$value'
 		";
 		
 		$this->db->select($sql);
-		$result = $this->db->fetchAssoc();
 		
-		return $result[0];
+		if($this->db->numRows() > 0){
+			return false;
+		}
+		
+		return true;
 	}
+	
+	public abstract function insert($info);
+	public abstract function find($acc, $pwd);
+	public abstract function update($storeAcc, $info);
+	public abstract function delete($storeAcc);
 }
+
 ?>

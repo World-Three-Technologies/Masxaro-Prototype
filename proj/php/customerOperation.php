@@ -29,7 +29,7 @@ include_once 'header.php';
 
 $opcode = $post['opcode'];
 
-$ctrl = new UserCtrl();
+$ctrl = new CustomerCtrl();
 
 switch($opcode){
 	case 'get_profile':
