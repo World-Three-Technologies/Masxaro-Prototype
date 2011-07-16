@@ -33,7 +33,7 @@ $ctrl = new CustomerCtrl();
 
 switch($opcode){
 	case 'get_profile':
-		echo json_encode($ctrl->getUserProfile($post['acc']));
+		echo json_encode($ctrl->getProfile($post['acc']));
 		break;
 	
 	case 'update_profile':
@@ -57,10 +57,10 @@ switch($opcode){
 		$ctrl->recoverDeletedUser($acc);
 		break;
 	
-	case 'real_delete':
+	case 'delete':
 		$acc = $post['acc'];
 		$emailCtrl = new EmailCtrl();
-		echo $emailCtrl->deleteAcc($acc) ? $ctrl->realDeleteUser($acc) : false;
+		echo $emailCtrl->deleteAcc($acc) ? $ctrl->delete($acc) : false;
 		$ctrl->realDeleteUser($acc);
 		break;
 	
