@@ -23,12 +23,19 @@
  * 
  *  
  */
+
+/**
+ * @todo change database user to customer, and change all related names
+ * 
+ * @author yangcongknight
+ *
+ */
 abstract class UserCtrl extends Ctrl{
 	
-	protected $userType = null;//store or customer
+	protected $userType = null;//store or user
 	
 	function __construct($userType){
-		$this->userType = userType;
+		$this->userType = $userType;
 		parent::__construct();
 	}
 	

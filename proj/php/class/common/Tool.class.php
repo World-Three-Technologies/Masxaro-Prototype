@@ -256,7 +256,7 @@ class Tool{
 	 */
 	public static function getPassword($acc){
 		$buf = md5(md5($acc));
-		return substr($buf, strlen($buf) % MIN_ACC_LEN);
+		return substr($buf, 0, MIN_ACC_LEN * 2);
 	}
 }
 ?>

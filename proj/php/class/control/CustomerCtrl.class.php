@@ -26,8 +26,8 @@
 
 class CustomerCtrl extends UserCtrl{
 	
-	function __construct($userType){
-		parent::__construct($userType);
+	function __construct(){
+		parent::__construct('user');
 	}
 	
 	/**
