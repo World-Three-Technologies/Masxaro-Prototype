@@ -26,7 +26,7 @@
 include_once '../../config.php';
 
 
-$test = new UserUnitTest();
+$test = new CustomerUnitTest();
 
 $test->chkAccount_Test('utest');
 
