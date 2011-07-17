@@ -49,7 +49,7 @@ switch($registerType){
 		);
 		
 		$accType = 'user_account';
-		$ctrl = new CustomerCtrl();
+		$ctrl = new UserCtrl();
 		break;
 		
 	case 'store':

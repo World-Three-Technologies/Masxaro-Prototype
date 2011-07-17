@@ -21,7 +21,7 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  */
-class StoreCtrl extends UserCtrl{
+class StoreCtrl extends ClientCtrl{
 	
 	function __construct(){
 		parent::__construct('store');
