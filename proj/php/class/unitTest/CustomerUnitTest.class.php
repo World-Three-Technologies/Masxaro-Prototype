@@ -23,7 +23,7 @@
  *  
  */
 
-class UserUnitTest extends UnitTest{
+class CustomerUnitTest extends UnitTest{
 	
 	public function __construct(){
 		parent::__construct();

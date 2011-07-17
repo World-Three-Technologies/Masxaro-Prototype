@@ -181,6 +181,10 @@ class EmailCtrl extends Ctrl{
 		return true;
 	}
 	
+	
+	public function retrieveAllUser(){
+		return $this->service->retrieveAllUsers();
+	}
 }
 
 ?>

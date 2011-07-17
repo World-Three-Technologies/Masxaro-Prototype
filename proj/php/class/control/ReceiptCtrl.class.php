@@ -298,7 +298,7 @@ class ReceiptCtrl extends Ctrl{
 			FROM 
 				`receipt_item`
 			WHERE
-				`id` = $receiptId
+				`receipt_id` = $receiptId
 		";
 		$delItem = $this->db->delete($sql);
 		
@@ -335,7 +335,7 @@ class ReceiptCtrl extends Ctrl{
 			SET
 				`deleted` = true
 			WHERE
-				`id` = $receiptId
+				`receipt_id` = $receiptId
 		";
 		
 		if($this->db->update($sql) <= 0){
@@ -377,7 +377,7 @@ class ReceiptCtrl extends Ctrl{
 			SET
 				`deleted` = false
 			WHERE
-				`id` = '$receiptId'
+				`receipt_id` = '$receiptId'
 		";
 		if($this->db->update($sql) <= 0){
 			return false;
@@ -495,7 +495,7 @@ class ReceiptCtrl extends Ctrl{
 			LEFT JOIN
 				`receipt_item` as ri
 			ON
-				r.`id`=ri.`id`
+				r.`id`=ri.`receipt_id`
 			LEFT JOIN
 				`store` as s
 			ON
@@ -543,7 +543,7 @@ class ReceiptCtrl extends Ctrl{
 				r.`total_cost`,
 				r.`receipt_category`, 
 				s.`store_name`,
-				ri.`id` as `item_id`,
+				ri.`item_id`,
         		ri.`item_name`, 
         		ri.`item_qty`, 
         		ri.`item_discount`, 
@@ -554,7 +554,7 @@ class ReceiptCtrl extends Ctrl{
 			LEFT JOIN
 				`receipt_item` as ri
 			ON
-				r.`id`=ri.`id`
+				r.`id`=ri.`receipt_id`
 			LEFT JOIN
 				`store` as s
 			ON
