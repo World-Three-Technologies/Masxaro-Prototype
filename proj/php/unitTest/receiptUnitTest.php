@@ -29,14 +29,14 @@ $test = new ReceiptUnitTest();
 
 $test->insertReceipt_Full_Test();
 
-//$test->insertReceipt_Empty_Test();
-//
-//$test->insertReceipt_NewItem_Test($test->testId);
-//
-//$test->fakeDelete_Test($test->testId);
-//
-//$test->recoverDeleted_Test($test->testId);
-//
-//$test->realDelete_Test($test->testId);
+$test->insertReceipt_Empty_Test();
+
+$test->insertReceipt_NewItem_Test($test->testId);
+
+$test->fakeDelete_Test($test->testId);
+
+$test->recoverDeleted_Test($test->testId);
+
+$test->realDelete_Test($test->testId);
 
 ?>
