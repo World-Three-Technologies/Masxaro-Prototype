@@ -80,10 +80,8 @@ class ReceiptUnitTest extends UnitTest{
 		$basicInfo = array(
 							"store_account"=>"Mc_NYU",
 							"user_account"=>"new",
-							"tax"=>0.1
+							"tax"=>10
 						);
-						
-		
 						
 		$this->assertTrue(($this->testId = $this->ctrl->insertReceipt($basicInfo, null)) > 0);
 	}
@@ -116,6 +114,8 @@ class ReceiptUnitTest extends UnitTest{
 					);
 		
 		array_push($items, $item);
+		
+		$items['id'] = $this->testId;
 						
 		
 						
