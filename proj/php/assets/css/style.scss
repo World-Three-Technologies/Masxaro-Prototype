@@ -98,8 +98,13 @@ header{
     div{
       @include grid(2);
       float:left;
-      padding:5px 0;
-      margin:5px 0;
+      padding:10px 0;
+      border: 1px #AAA solid;
+      border-bottom:0;
+      cursor:pointer;
+      &.active,&:hover{
+        background-color: rgb(94,206,176);
+      }
     }
   }
 
@@ -156,7 +161,6 @@ header{
     padding: 7px;
     border-top: 1px #EBE solid;
     border-bottom: 1px #EBE solid;
-    cursor:pointer;
 
     &:hover{
       background-color: #FEE;

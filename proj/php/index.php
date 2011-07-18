@@ -22,6 +22,11 @@
   <?php include_once "layout/header-bar.php" ?>
   <div id="container">
     <div id="main" role="main">
+      <nav id="main-tab" class="clearfix">
+        <div class="tab active">Receipt</div>
+        <div class="tab">Overview</div>
+        <div class="tab">Analysis</div>
+      </nav>
       <nav id="action-bar">
         <div id="action-bar-inner">
           <h4>catagory</h4>
@@ -35,11 +40,6 @@
         <div>
       </nav>
       <div id="content">
-        <nav id="main-tab" class="clearfix">
-          <div class="tab">Receipt</div>
-          <div class="tab">Overview</div>
-          <div class="tab">Analysis</div>
-        </nav>
         <div id="receipts">
           <div id="search-bar">
             <div>

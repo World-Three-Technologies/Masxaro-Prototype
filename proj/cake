@@ -105,7 +105,7 @@
            'item_name'=>'Medium drink', 
            'item_id'=>3,
            'item_qty'=>1, 
-           'item_category' =>"food",
+           'item_category' =>"drink",
            'item_price'=>1.99, 
            'item_discount'=>1));
 

@@ -62,8 +62,12 @@ header {
     #main #main-tab div {
       width: 80px;
       float: left;
-      padding: 5px 0;
-      margin: 5px 0; }
+      padding: 10px 0;
+      border: 1px #AAA solid;
+      border-bottom: 0;
+      cursor: pointer; }
+      #main #main-tab div.active, #main #main-tab div:hover {
+        background-color: #5eceb0; }
   #main #content {
     margin: 10px;
     text-align: left;
@@ -111,8 +115,7 @@ header {
     transition: all 0.3s ease-in-out;
     padding: 7px;
     border-top: 1px #EBE solid;
-    border-bottom: 1px #EBE solid;
-    cursor: pointer; }
+    border-bottom: 1px #EBE solid; }
     #receipts-table tr.row:hover {
       background-color: #FEE; }
       #receipts-table tr.row:hover .toolbar {
