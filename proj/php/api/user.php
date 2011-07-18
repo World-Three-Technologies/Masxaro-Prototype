@@ -1,6 +1,6 @@
 <?php
 /*
- *  contactOperation.php -- contact operation class 
+ *  userOperation.php -- user operations 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -21,46 +21,53 @@
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
+ *  
  */
 
-include_once '../config.php';
+include_once '../../config.php';
 include_once 'header.php';
-
-$acc = $post['acc'];
-
-if(!Tool::authenticate($acc)){
-	echo "error: need login";
-	die();
-}
 
 $opcode = $post['opcode'];
 
-$ctrl = new ContactCtrl();
+$ctrl = new UserCtrl();
 
 switch($opcode){
-	case 'new_contacts':
-		$contacts = $post['contacts'];
-		echo $ctrl->insertContact($contacts);
+	case 'get_profile':
+		echo json_encode($ctrl->getProfile($post['acc']));
 		break;
-		
-	case 'delete_contacts':
-		$values = $post['values'];
-		$n = count($values);
-		$result = true;
-		for($i = 0; $i < $n; $i ++){
-			$result &= $ctrl->deleteContact($values[$i]['value']);
-		}
-		echo $result;
+	
+	case 'update_profile':
+		echo $ctrl->update($post['acc'], $post['info']);
 		break;
-		 
-	case 'get_contacts':
+	
+	case 'verify':
+		echo $ctrl->find($post['acc'], $post['pwd']);
+		break;
+
+	case 'fake_delete':
 		$acc = $post['acc'];
-		$who = $post['who'];
-		echo json_encode($ctrl->getContacts($acc, $who));
+		$emailCtrl = new EmailCtrl();
+		echo $emailCtrl->suspendAcc($acc) ? $ctrl->fakeDeleteUser($acc) : false;
 		break;
 		
+	case 'recover':
+		$acc = $post['acc'];
+		$emailCtrl = new EmailCtrl();
+		echo $emailCtrl->restoreAcc($acc) ? $ctrl->recoverDeletedUser($acc) : false;
+		$ctrl->recoverDeletedUser($acc);
+		break;
+	
+	case 'delete':
+		$acc = $post['acc'];
+		$emailCtrl = new EmailCtrl();
+		echo $emailCtrl->deleteAcc($acc) ? $ctrl->delete($acc) : false;
+		$ctrl->realDeleteUser($acc);
+		break;
+	
 	default:
+		die('wrong parameters');
 		break;
 }
+
 
 ?>

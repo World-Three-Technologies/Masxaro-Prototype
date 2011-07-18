@@ -1,6 +1,6 @@
 <?php
 
-include_once '../../config.php';
+include_once '../../../config.php';
 //ob_start();
 //setcookie('user_acc', 'new', time() + 24 * 60 * 60, '/');
 //var_dump($_COOKIE['user_acc']);

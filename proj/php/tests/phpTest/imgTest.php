@@ -23,7 +23,7 @@
  * 
  */
 
-include_once '../../config.php';
+include_once '../../../config.php';
 
 $path = ROOT_PATH."/buffer/fake_receipt.jpg";
 
