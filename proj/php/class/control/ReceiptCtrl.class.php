@@ -544,79 +544,15 @@ class ReceiptCtrl extends Ctrl{
 			SELECT 
 				r.`id`,
 				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
-				TRIM(
-					TRAILING 
-						'.' 
-					FROM 
-					CAST(
-						TRIM(
-							TRAILING 
-								'0' 
-							FROM 
-								r.`tax`
-							) 
-					AS 
-					CHAR
-					)
-				)
-				AS
-					`tax`,
-				TRIM(
-					TRAILING 
-						'.' 
-					FROM 
-					CAST(
-						TRIM(
-							TRAILING 
-								'0' 
-							FROM 
-								r.`total_cost`
-							) 
-					AS 
-					CHAR
-					)
-				)
-				AS
-					`total_cost`,
+				r.`tax`,
+				r.`total_cost`,
 				r.`receipt_category`, 
 				s.`store_name`,
 				ri.`item_id`,
         		ri.`item_name`, 
         		ri.`item_qty`, 
-        		TRIM(
-					TRAILING 
-						'.' 
-					FROM 
-					CAST(
-						TRIM(
-							TRAILING 
-								'0' 
-							FROM 
-								r.`tax`
-							) 
-					AS 
-					CHAR
-					)
-				)
-				AS
-					`item_discount`,
-				TRIM(
-					TRAILING 
-						'.' 
-					FROM 
-					CAST(
-						TRIM(
-							TRAILING 
-								'0' 
-							FROM 
-								r.`tax`
-							) 
-					AS 
-					CHAR
-					)
-				)
-				AS	
-					`item_price`,
+        		ri.`item_discount`,
+				ri.`item_price`,
         		ri.`item_category`
 			FROM 
 				`receipt` 
