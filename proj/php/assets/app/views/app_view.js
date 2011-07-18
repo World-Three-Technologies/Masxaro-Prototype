@@ -17,12 +17,19 @@ window.AppView = Backbone.View.extend({
 
   events:{
     "click .more": "renderMore",
-    "click #search-button": "searchByForm"
+    "click #search-button": "searchByForm",
+    "keyup #search-query": "submitSearch"
   },
 
   search:function(query){
     this.before();
     this.model.search(query,this.after);
+  },
+
+  submitSearch:function(event){
+    if(event.which == 13){
+      this.searchByForm();
+    }
   },
 
   before:function(){
@@ -62,7 +69,8 @@ window.AppView = Backbone.View.extend({
   },
 
   renderMore:function(){
-    var pageLength = (this.end + this.pageSize <= this.model.length) ? this.end + this.pageSize : this.model.length;
+    var pageLength = (this.end + this.pageSize <= this.model.length) 
+                     ? this.end + this.pageSize : this.model.length;
     _.each(this.model.models.slice(this.end,pageLength),this.renderReceipt);
 
     this.end = pageLength;

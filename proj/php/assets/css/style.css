@@ -226,6 +226,13 @@ footer {
   background-color: #5ece74;
   padding: 2px 4px;
   margin-left: 20px;
-  color: #FFF;
   font-weight: bold;
   font-size: 14px; }
+  .tag:hover {
+    background-color: #5e6a38; }
+  .tag a {
+    color: #FFF; }
+    .tag a:link, .tag a:visited {
+      color: #FFF; }
+    .tag a:hover {
+      color: #FFF; }

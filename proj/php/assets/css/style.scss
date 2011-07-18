@@ -303,8 +303,15 @@ footer{
   background-color: rgb(94,206,116);
   padding:2px 4px;
   margin-left: 20px;
-  color: #FFF;
   font-weight:bold;
   font-size:14px;
+  &:hover{
+    background-color: rgb(94,106,56);
+  }
+  a{
+    &:link, &:visited {color: #FFF}
+    &:hover{ color: #FFF; }
+    color: #FFF; 
+  }
 }
 

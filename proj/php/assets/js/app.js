@@ -16,9 +16,6 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-var Contact = Backbone.Model.extend({
-
-});
 var Receipt = Backbone.Model.extend({
   sync:function(method,model,success,error){
     var data;
@@ -100,12 +97,19 @@ window.AppView = Backbone.View.extend({
 
   events:{
     "click .more": "renderMore",
-    "click #search-button": "searchByForm"
+    "click #search-button": "searchByForm",
+    "keyup #search-query": "submitSearch"
   },
 
   search:function(query){
     this.before();
     this.model.search(query,this.after);
+  },
+
+  submitSearch:function(event){
+    if(event.which == 13){
+      this.searchByForm();
+    }
   },
 
   before:function(){
@@ -145,7 +149,8 @@ window.AppView = Backbone.View.extend({
   },
 
   renderMore:function(){
-    var pageLength = (this.end + this.pageSize <= this.model.length) ? this.end + this.pageSize : this.model.length;
+    var pageLength = (this.end + this.pageSize <= this.model.length) 
+                     ? this.end + this.pageSize : this.model.length;
     _.each(this.model.models.slice(this.end,pageLength),this.renderReceipt);
 
     this.end = pageLength;
