@@ -192,11 +192,15 @@ class ReceiptCtrl extends Ctrl{
 					continue;
 				}
 				
-				if(empty($items[$i]['item_discount']) || $items[$i]['item_discount'] == 0){
-					$items[$i]['item_discount'] = 1;
+				if(empty($items[$i]['item_discount'])){
+					$items[$i]['item_discount'] = 0;
 				}
 				
-				$curCost =  $items[$i]['item_price'] * $items[$i]['item_qty'] * $items[$i]['item_discount'];
+				$curCost =  
+					$items[$i]['item_price'] * 
+					$items[$i]['item_qty'] * 
+					((100 - $items[$i]['item_discount']) / 100);
+				
 				$totalCost += $curCost;
 				
 				$items[$i]['receipt_id'] = $receiptId;	
@@ -220,8 +224,7 @@ class ReceiptCtrl extends Ctrl{
 					return false;
 				}
 			}
-			
-			$totalCost += $totalCost * $basicInfo['tax'];
+			$totalCost = $totalCost * ((100 - $basicInfo['tax']) / 100);
 
 			$sql = "
 				UPDATE 
