@@ -27,7 +27,7 @@ include_once '../../config.php';
 
 $path = "http://localhost/w3t/proj/php/register.php";
 
-$param = "userAccount=testNew&firstName=lala&pwd=123&email=yangcongknight@gmail.com&type=user";
+$param = "userAccount=w3tAcc&firstName=NA&pwd=w3t&email=yangcongknight@gmail.com&type=user";
 
 $ch = curl_init($path);
 curl_setopt($ch, CURLOPT_POST, 1);

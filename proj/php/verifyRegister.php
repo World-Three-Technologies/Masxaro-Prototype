@@ -56,7 +56,7 @@ $tmp = $ctrl->find($acc, $pwd);
 
 if($tmp < 0){
 	$emailCtrl = new EmailCtrl();
-	if($emailCtrl->createUserAcc($acc, Tool::getPassword($acc))){
+	if($emailCtrl->createUserAcc($acc, Tool::getEmailPwd($acc))){
 		if($ctrl->update($acc, array('verified'=>true))){
 			die('verification success');
 		}

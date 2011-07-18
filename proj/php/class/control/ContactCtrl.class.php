@@ -25,7 +25,7 @@
  */
 class ContactCtrl extends Ctrl{
 	
-	public $regex = "(^.*@masxaro.com)";
+	public $regex = "(^.*@masxaro)";
 	
 	function __construct(){
 		parent::__construct();

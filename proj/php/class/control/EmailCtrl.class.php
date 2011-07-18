@@ -86,8 +86,25 @@ class EmailCtrl extends Ctrl{
 	 * 
 	 * @return 
 	 */
-	public function grabEmail($acc){
+	public function grabEmails($acc){
+		$username = "$acc@".DOMAIN;
+		$password = Tool::getEmailPwd($acc);
 		
+		$inbox = imap_open(IMAP_HOST, $username, $password) 
+				or die('Cannot connect to mailbox'.imap_last_error());
+				
+		$emails = imap_search($inbox, 'UNREAD');
+		
+		if($emails){
+			rsort($emails);
+			
+			var_dump($emails);
+		}
+		else{
+			echo 'nothing';
+		}
+		
+		imap_close($inbox);
 	}
 	
 	/**
@@ -184,6 +201,10 @@ class EmailCtrl extends Ctrl{
 	
 	public function retrieveAllUser(){
 		return $this->service->retrieveAllUsers();
+	}
+	
+	public function retrieveUser($acc){
+		return $this->service->retrieveUser($acc);
 	}
 }
 
