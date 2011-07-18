@@ -517,7 +517,9 @@ class ReceiptCtrl extends Ctrl{
 	}
 	
 	/**
-	 * 
+	 * @todo
+	 * consider about the sql here, it's very inefficient and slow since lots of functions
+	 * are used in the sql, maybe change the precision of database instead of handle it while selecting.
 	 * 
 	 * @param array() $con multi-dimension array of searching conditions
 	 * 
