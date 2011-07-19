@@ -224,7 +224,7 @@ class ReceiptCtrl extends Ctrl{
 					return false;
 				}
 			}
-			$totalCost = $totalCost * ((100 - $basicInfo['tax']) / 100);
+			$totalCost += $totalCost * $basicInfo['tax'] / 100;
 
 			$sql = "
 				UPDATE 
