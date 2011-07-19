@@ -167,19 +167,26 @@ header {
         right: 0;
         display: none; }
 
-.receipt-item {
+div.receipt-item {
   font-size: 18px;
   padding: 2px;
   margin: 3px; }
-  .receipt-item .item_name {
+  div.receipt-item .edit {
+    display: none; }
+  div.receipt-item .item_name {
     width: 300px; }
-  .receipt-item .item_qty {
+  div.receipt-item .item_qty {
     float: right;
     padding-right: 100px; }
-  .receipt-item .item_price {
+  div.receipt-item .item_price {
     float: right;
     font-size: 20px;
     font-weight: bold; }
+
+#receipts-table .editing .edit {
+  display: inline-block; }
+#receipts-table .editing .display {
+  display: none; }
 
 #main #register {
   margin: 10px;

@@ -231,10 +231,13 @@ header{
   }
 }
 
-.receipt-item{
+div.receipt-item{
   font-size:18px;
   padding:2px;
   margin:3px;
+  .edit{
+    display:none;
+  }
   .item_name{
     width:300px;
   }
@@ -246,6 +249,14 @@ header{
     float:right;
     font-size:20px;
     font-weight:bold;
+  }
+}
+#receipts-table .editing{
+  .edit{
+    display: inline-block;
+  }
+  .display{
+    display: none;
   }
 }
 

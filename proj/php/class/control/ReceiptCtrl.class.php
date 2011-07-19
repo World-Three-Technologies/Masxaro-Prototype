@@ -608,5 +608,8 @@ class ReceiptCtrl extends Ctrl{
 		
 		return $result;
 	}
+
+  public function updateReceipt($receipt){
+  }
 }
 ?>

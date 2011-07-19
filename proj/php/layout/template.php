@@ -1,5 +1,5 @@
 <script type="text/tamplate" id="receipt-row-template">
-  <div>
+  <div class="receipt-row">
     <div class="date"></div>
     <div class="content">
       <div class="items"></div>
@@ -31,20 +31,25 @@
 </script>
 
 <script type="text/template" id="receipt-item-template">
-<div class="receipt-item">
-  <span class="item_name">
-  <%= item_name %> 
-    <span class="tag">
-      <a href="index.php#category/<%= item_category %>">
-        <%= item_category %>
-      </a>
+<div class="receipt-item" id-data="<%= item_id %>">
+  <div class="display">
+    <span class="item_name">
+    <%= item_name %> 
     </span>
-  </span>
-  <span class="item_price">
-    $<%= item_price %>
-  </span>
-  <span class="item_qty">
-    X <%= item_qty %>
-  </span>
+      <span class="tag">
+        <a href="index.php#category/<%= item_category %>">
+          <%= item_category %>
+        </a>
+      </span>
+    <span class="item_price">
+      $<%= item_price %>
+    </span>
+    <span class="item_qty">
+      X <%= item_qty %>
+    </span>
+  </div>
+  <div class="edit">
+    <input type="text" class="item-input" value="<%= item_name %>" />
+  </div>
 </div>
 </script>

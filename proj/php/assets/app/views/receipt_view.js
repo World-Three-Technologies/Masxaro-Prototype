@@ -12,8 +12,10 @@ var ReceiptView = Backbone.View.extend({
   },
 
   events:{
-    "click" : "showReceipt",
-    "click .close" :"render"
+    "click .receipt-row" : "showReceipt",
+    "click .close" :"render",
+    "dblclick .item_name" : "edit",
+    "blur input" : "afterEdit"
   },
 
   render:function(){
@@ -24,6 +26,32 @@ var ReceiptView = Backbone.View.extend({
     view.find(".items").html(text);
     view.find(".date").html(new Date(this.model.get("receipt_time")).format());
     return this;
+  },
+
+  edit:function(event){
+    var receipt = $(event.target).parent().parent();
+    receipt.addClass("editing");
+    this.$(".editing input").focus();
+    //this.$(".receipt-item").addClass("editing");
+  },
+
+  afterEdit:function(event){
+    var receipt = $(event.target).parent().parent(),
+        value = receipt.find("input").val();
+    receipt.removeClass("editing");
+    receipt.find(".item_name").text(value);
+
+    var item_id = receipt.attr("id-data"); 
+
+    var items = this.model.get("items");
+    _.each(items,function(item){
+      if(item.item_id == item_id){
+        item.item_name = value;
+      }
+    });
+    this.model.set({"items":items});
+    this.model.save();
+    //this.$(".receipt-item").removeClass("editing");        
   },
 
   showReceipt:function(){
