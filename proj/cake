@@ -65,11 +65,10 @@
     $userControl = new UserCtrl();
     if($userControl->chkAccount("w3t")){
       $user = array(
-      "user_account" => "w3t",
-      "pwd" => "w3t",
-      "first_name" => "W3Tester",
-      ""
-    );
+        "user_account" => "w3t",
+        "pwd" => "w3t",
+        "first_name" => "W3Tester",
+      );
       $userControl->insertUser($user);
     }
 
@@ -78,7 +77,7 @@
     $receipt = array(
       "store_account" => "Mc_NYU",
       "user_account" => "w3t",
-      "tax" => 0.0875 ,
+      "tax" => 8.75 ,
       "receipt_category" => "restaurant",
       "receipt_time" => "now()"
     );
