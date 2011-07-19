@@ -11,6 +11,10 @@ var Receipt = Backbone.Model.extend({
         opcode : "f_delete_receipt",
         receipt_id: model.get("receipt_id")
       }
+    }else if(method == "update"){
+      data = {
+        opcode : ""
+      }
     }
     $.post(this.url,data,success).error(error);
   }
