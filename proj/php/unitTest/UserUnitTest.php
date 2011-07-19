@@ -26,22 +26,22 @@
 include_once '../../config.php';
 
 
-$test = new CustomerUnitTest();
+$test = new UserUnitTest();
 
 $test->chkAccount_Test('utest');
 
-$test->insertUser_Test();
+$test->insert_Test();
 
-$test->findUser_Test('utest', '123');
+$test->find_Test('utest', '123');
 
-$test->getUserProfile_Test('utest');
+$test->getProfile_Test('utest');
 
-$test->updateUserInfo_Test('utest');
+$test->update_Test('utest');
 
 $test->fakeDeleteUser_Test('utest');
 
 $test->recoverDeletedUser_Test('utest');
 
-$test->realDeleteUser_Test('utest');
+$test->delete_Test('utest');
 
 ?>

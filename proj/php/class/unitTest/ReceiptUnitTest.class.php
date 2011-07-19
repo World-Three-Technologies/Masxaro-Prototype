@@ -145,7 +145,6 @@ class ReceiptUnitTest extends UnitTest{
 	 * real delete test
 	 */
 	function realDelete_Test($id){
-		
 		$this->assertTrue($this->ctrl->realDelete($id));
 	}
 }

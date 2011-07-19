@@ -139,6 +139,14 @@ switch($opcode){
 		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
 		break;
 		
+	case 'category_receipt':
+		$cat = $post['category'];
+		$receiptId = $post['receipt_id'];
+		
+		$param = array('receipt_category'=>$cat);
+		echo $ctrl->updateReceiptBasic($receiptId, $param);
+		break;
+		
 	default:
 		echo 'wrong parameters';
 		break;
