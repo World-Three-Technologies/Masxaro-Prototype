@@ -199,7 +199,7 @@ class ReceiptCtrl extends Ctrl{
 				$curCost =  
 					$items[$i]['item_price'] * 
 					$items[$i]['item_qty'] * 
-					((100 - $items[$i]['item_discount']) / 100);
+					((100 - $items[$i]['item_discount']) * 0.01);
 				
 				$totalCost += $curCost;
 				
@@ -224,7 +224,7 @@ class ReceiptCtrl extends Ctrl{
 					return false;
 				}
 			}
-			$totalCost += $totalCost * $basicInfo['tax'] / 100;
+			$totalCost += $totalCost * $basicInfo['tax'] * 0.01;
 
 			$sql = "
 				UPDATE 
