@@ -23,13 +23,14 @@ set -e
 echo "searching root path..."
 ROOT=$(sudo find / -name htdocs)
 if [ -z $ROOT ]; then
-	ROOT=$(sudo find / -name www/html)
-	if [ -z $ROOT ]; then
-		echo "error: cannot find root path(www/html or htdocs).\n exit."
-		exit
+        ROOT=$(sudo find / -wholename /var/www/html)
+        if [ -z $ROOT ]; then
+                echo "error: cannot find root path(/var/www/html or htdocs).\n exit."
+                exit
+        fi
 fi
 echo "root path found."
 echo copying files...
 sudo cp -r ./proj/ $ROOT/masxaro/
 echo "ROOT PATH: $ROOT/masxaro/ (http://localhost/masxaro/)"
-echo "done".
+echo "done"
