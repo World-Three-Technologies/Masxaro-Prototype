@@ -12,7 +12,7 @@ var Receipts = Backbone.Collection.extend({
     if(method == "read"){
       data = {
         opcode : "user_get_all_receipt",
-        acc: this.account
+        acc: account
       }
     }
     $.post(this.url,data,success).error(error);
@@ -22,7 +22,7 @@ var Receipts = Backbone.Collection.extend({
     var model = this;
     $.post(this.url,{
       opcode : "key_search",
-      acc:this.account,
+      acc: account,
       key : query
     }).success(function(data){
       model.refresh(data);

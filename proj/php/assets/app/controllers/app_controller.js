@@ -6,7 +6,7 @@ var AppController = Backbone.Controller.extend({
     });
 
     var receipts = this.receipts = new Receipts();
-    receipts.account = user.get("account");
+    window.account = user.get("account");
     window.appView = new AppView({model:receipts });
     window.userView = new UserView({model:user});
   },

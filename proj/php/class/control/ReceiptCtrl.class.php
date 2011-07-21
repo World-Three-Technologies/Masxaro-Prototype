@@ -264,23 +264,22 @@ class ReceiptCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `
-				receipt`
+			UPDATE `receipt`
 			SET
 				$info
 			WHERE
 				`id`=$receiptId
 			AND 
-				`deleted`=false
+				`deleted`=false;
 		";
-		
+
 		if($this->db->update($sql) <= 0){
+      echo $sql;
 			return false;
 		}
 			
 		return true;
 	}
-	
 	
 	/**
 	 * 
@@ -609,7 +608,5 @@ class ReceiptCtrl extends Ctrl{
 		return $result;
 	}
 
-  public function updateReceipt($receipt){
-  }
 }
 ?>

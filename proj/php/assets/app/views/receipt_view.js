@@ -7,14 +7,14 @@ var ReceiptView = Backbone.View.extend({
   itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
 
   initialize:function(){
-    _.bindAll(this,'render','showReceipt','getItemText');
+    _.bindAll(this,'render','showReceipt','getItemText','edit','afterEdit');
     this.model.bind('change',this.render);
   },
 
   events:{
     "click .receipt-row" : "showReceipt",
     "click .close" :"render",
-    "dblclick .item_name" : "edit",
+    "click .item_name" : "edit",
     "blur input" : "afterEdit"
   },
 
@@ -29,29 +29,30 @@ var ReceiptView = Backbone.View.extend({
   },
 
   edit:function(event){
+    //console.log("editing");
     var receipt = $(event.target).parent().parent();
     receipt.addClass("editing");
-    this.$(".editing input").focus();
-    //this.$(".receipt-item").addClass("editing");
   },
 
   afterEdit:function(event){
     var receipt = $(event.target).parent().parent(),
-        value = receipt.find("input").val();
+        name = receipt.find("input.item_name").val(),
+        category = receipt.find("input.item_category").val()
     receipt.removeClass("editing");
-    receipt.find(".item_name").text(value);
+    receipt.find("span.item_name").text(name);
+    receipt.find("a.item_category").text(category);
 
     var item_id = receipt.attr("id-data"); 
 
     var items = this.model.get("items");
     _.each(items,function(item){
       if(item.item_id == item_id){
-        item.item_name = value;
+        item.item_name = name;
+        item.item_category = category;
       }
     });
     this.model.set({"items":items});
     this.model.save();
-    //this.$(".receipt-item").removeClass("editing");        
   },
 
   showReceipt:function(){

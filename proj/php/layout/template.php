@@ -4,8 +4,8 @@
     <div class="content">
       <div class="items"></div>
       <div class="store">at <%= store_name %> <span class="tag">
-        <a href="index.php#category/<%= category %>">
-          <%= category %>
+        <a href="index.php#category/<%= receipt_category %>">
+          <%= receipt_category %>
         </a>
       </span></div>
     </div>
@@ -19,8 +19,8 @@
     <div class="date"></div>
     <div class="content">
     <div class="store"><%= store_name%> <span class="tag">
-    <a href="index.php#category/<%= category %>">
-      <%= category %>
+    <a href="index.php#category/<%= receipt_category %>">
+      <%= receipt_category %>
     </a>
     </span></div>
       <div class="items"></div> 
@@ -37,7 +37,7 @@
     <%= item_name %> 
     </span>
       <span class="tag">
-        <a href="index.php#category/<%= item_category %>">
+        <a href="index.php#category/<%= item_category %>" class="item_category">
           <%= item_category %>
         </a>
       </span>
@@ -49,7 +49,8 @@
     </span>
   </div>
   <div class="edit">
-    <input type="text" class="item-input" value="<%= item_name %>" />
+    <input type="text" class="item_name" value="<%= item_name %>" />
+    <input type="text" class="item_category" value="<%= item_category %>"/>
   </div>
 </div>
 </script>

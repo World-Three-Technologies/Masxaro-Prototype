@@ -17,17 +17,31 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
 var Receipt = Backbone.Model.extend({
+
+  url: 'receiptOperation.php',
+
+  initialize:function(){
+    _.bindAll(this,'sync');
+  },
+
   sync:function(method,model,success,error){
+    model.set({"user_account":account});
     var data;
     if(method == "read"){
       data = {
         opcode : "user_get_receipt_detail",
-        receipt_id: model.get("receipt_id")
+        receipt_id: model.get("receipt_id"),
       }
     }else if(method == "delete"){
       data = {
         opcode : "f_delete_receipt",
         receipt_id: model.get("receipt_id")
+      }
+    }else if(method == "update"){
+      console.log("update");
+      data = {
+        opcode : "update_receipt",
+        receipt : this.toJSON(),
       }
     }
     $.post(this.url,data,success).error(error);
@@ -47,7 +61,7 @@ var Receipts = Backbone.Collection.extend({
     if(method == "read"){
       data = {
         opcode : "user_get_all_receipt",
-        acc: this.account
+        acc: account
       }
     }
     $.post(this.url,data,success).error(error);
@@ -57,7 +71,7 @@ var Receipts = Backbone.Collection.extend({
     var model = this;
     $.post(this.url,{
       opcode : "key_search",
-      acc:this.account,
+      acc: account,
       key : query
     }).success(function(data){
       model.refresh(data);
@@ -182,14 +196,14 @@ var ReceiptView = Backbone.View.extend({
   itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
 
   initialize:function(){
-    _.bindAll(this,'render','showReceipt','getItemText');
+    _.bindAll(this,'render','showReceipt','getItemText','edit','afterEdit');
     this.model.bind('change',this.render);
   },
 
   events:{
     "click .receipt-row" : "showReceipt",
     "click .close" :"render",
-    "dblclick .item_name" : "edit",
+    "click .item_name" : "edit",
     "blur input" : "afterEdit"
   },
 
@@ -204,30 +218,30 @@ var ReceiptView = Backbone.View.extend({
   },
 
   edit:function(event){
+    //console.log("editing");
     var receipt = $(event.target).parent().parent();
     receipt.addClass("editing");
-    this.$(".editing input").focus();
-    //this.$(".receipt-item").addClass("editing");
   },
 
   afterEdit:function(event){
     var receipt = $(event.target).parent().parent(),
-        value = receipt.find("input").val();
+        name = receipt.find("input.item_name").val(),
+        category = receipt.find("input.item_category").val()
     receipt.removeClass("editing");
-    receipt.find(".item_name").text(value);
+    receipt.find("span.item_name").text(name);
+    receipt.find("a.item_category").text(category);
 
     var item_id = receipt.attr("id-data"); 
 
     var items = this.model.get("items");
     _.each(items,function(item){
       if(item.item_id == item_id){
-        item.item_name = value;
+        item.item_name = name;
+        item.item_category = category;
       }
     });
     this.model.set({"items":items});
-    console.log(items);
-    //this.model.save();
-    //this.$(".receipt-item").removeClass("editing");        
+    this.model.save();
   },
 
   showReceipt:function(){
@@ -277,7 +291,7 @@ var AppController = Backbone.Controller.extend({
     });
 
     var receipts = this.receipts = new Receipts();
-    receipts.account = user.get("account");
+    window.account = user.get("account");
     window.appView = new AppView({model:receipts });
     window.userView = new UserView({model:user});
   },
