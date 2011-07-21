@@ -542,7 +542,7 @@ class ReceiptCtrl extends Ctrl{
 				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
 				r.`tax`,
 				r.`total_cost`,
-				s.store_name`,
+				s.`store_name`,
 				ri.`item_id`,
         		ri.`item_name`, 
         		ri.`item_qty`, 
