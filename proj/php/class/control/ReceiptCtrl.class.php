@@ -542,14 +542,12 @@ class ReceiptCtrl extends Ctrl{
 				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
 				r.`tax`,
 				r.`total_cost`,
-				r.`receipt_category`, 
 				s.`store_name`,
 				ri.`item_id`,
         		ri.`item_name`, 
         		ri.`item_qty`, 
         		ri.`item_discount`,
-				ri.`item_price`,
-        		ri.`item_category`
+				ri.`item_price`
 			FROM 
 				`receipt` 
 			AS 
@@ -612,6 +610,73 @@ class ReceiptCtrl extends Ctrl{
 		$result = $this->db->fetchObject();
 		
 		return $result;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param unknown_type $con
+	 * @param unknown_type $acc
+	 * @desc
+	 * search receipts with certain tags
+	 */
+	public function searchTagReceipt($con, $acc){
+		$con = Tool::condArray2SQL($con);
+		
+		$sql = "
+			SELECT
+				`receipt_id`
+			FROM
+				`receipt_tag`
+			WHERE
+				$con
+			AND
+				`user_account`='$acc'
+		";
+		
+		$this->db->select($sql);
+		$ids = $this->db->fetchAssoc();
+		
+		$orsql = "";
+		foreach($ids as $id){
+			$orsql .= "r.`id`={$id['receipt_id']} OR ";
+		}
+		
+		$orsql = substr($orsql, 0, strlen($orsql) - 4);
+		
+		$sql = "
+			SELECT 
+				r.`id`,
+				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
+				r.`tax`,
+				r.`total_cost`,
+				s.`store_name`,
+				ri.`item_id`,
+        		ri.`item_name`, 
+        		ri.`item_qty`, 
+        		ri.`item_discount`,
+				ri.`item_price`
+			FROM 
+				`receipt` as r
+			JOIN
+				`receipt_tag` as rt
+			ON
+				r.`id`=rt.`receipt_id`
+			JOIN
+				`receipt_item` as ri
+			ON
+				r.`id`=ri.`receipt_id`
+			JOIN
+				`store` as s
+			ON
+				r.`store_account`=s.`store_account`
+			WHERE
+				$orsql;
+		";
+				
+		$this->db->select($sql);
+		$receipts = $this->db->fetchAssoc();
+		return $this->buildReceiptObj($receipts);
 	}
 }
 ?>
