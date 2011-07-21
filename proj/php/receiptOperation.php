@@ -28,7 +28,6 @@ include_once '../config.php';
 include_once 'header.php';
 
 $opcode = $post['opcode'];
-$opcode = 'tag_search';
 
 $ctrl = new ReceiptCtrl();
 
@@ -103,14 +102,6 @@ switch($opcode){
 					),
 					'like'.CON_DELIMITER.'1'=>array(
 						'field'=>'store_name',
-						'value'=>$key
-					),
-					'like'.CON_DELIMITER.'2'=>array(
-						'field'=>'receipt_category',
-						'value'=>$key
-					),
-					'like'.CON_DELIMITER.'3'=>array(
-						'field'=>'item_category',
 						'value'=>$key
 					)
 				)
