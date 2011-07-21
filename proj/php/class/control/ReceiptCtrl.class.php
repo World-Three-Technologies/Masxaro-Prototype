@@ -45,7 +45,7 @@ class ReceiptCtrl extends Ctrl{
 	 *  encapsulate basic info & items of a certain receipt into an object,
 	 *  organize all receipt objects into an indexed array, return.
 	 */
-	private function buildReceiptObj($receipts){
+	protected function buildReceiptObj($receipts){
 		$result = array();
 		
 		if(count($receipts) > 0){
@@ -88,6 +88,24 @@ class ReceiptCtrl extends Ctrl{
 		
 		return $result;
 	}
+	
+	/**
+	 * @see ReceiptCtrl::buildReceiptObj
+	 * 
+	 * @param array $receiptObjs
+	 * receipt object array, the result of ReceiptCtrl::buildReceiptObj($receipts)
+	 * 
+	 * @return array $result
+	 * receipt object array with tags fetched
+	 * 
+	 */
+	protected function fetchReceiptTags($receiptObjs){
+		foreach($receiptObjs as $obj){
+			$obj->tags = $this->getReceiptTags($obj->id);
+		}
+		return $obj;
+	}
+	
 	
 	/**
 	 * 
@@ -516,10 +534,12 @@ class ReceiptCtrl extends Ctrl{
 		
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
-		return $this->buildReceiptObj($receipts);
+		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
 	}
 	
 	/**
+	 * @see sample/conArraySample.class.php
+	 * 
 	 * @param array() $con multi-dimension array of searching conditions
 	 * 
 	 * @return array(obj,...) each ReceiptEntity obj conclude 2 arrays, basicInfo & items (array(array(),..))
@@ -577,7 +597,7 @@ class ReceiptCtrl extends Ctrl{
 				
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
-		return $this->buildReceiptObj($receipts);
+		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
 	}
 	
 	/**
@@ -614,8 +634,8 @@ class ReceiptCtrl extends Ctrl{
 	
 	/**
 	 * 
-	 * 
-	 * @param unknown_type $con
+	 * @see sample/conArraySample.class.php
+	 * @param condition array $con
 	 * @param unknown_type $acc
 	 * @desc
 	 * search receipts with certain tags
@@ -632,6 +652,8 @@ class ReceiptCtrl extends Ctrl{
 				$con
 			AND
 				`user_account`='$acc'
+			ORDER BY
+				`receipt_id`
 		";
 		
 		$this->db->select($sql);
@@ -642,7 +664,7 @@ class ReceiptCtrl extends Ctrl{
 			$orsql .= "r.`id`={$id['receipt_id']} OR ";
 		}
 		
-		$orsql = substr($orsql, 0, strlen($orsql) - 4);
+		$orsql = '('.substr($orsql, 0, strlen($orsql) - 4).')';
 		
 		$sql = "
 			SELECT 
@@ -659,10 +681,6 @@ class ReceiptCtrl extends Ctrl{
 			FROM 
 				`receipt` as r
 			JOIN
-				`receipt_tag` as rt
-			ON
-				r.`id`=rt.`receipt_id`
-			JOIN
 				`receipt_item` as ri
 			ON
 				r.`id`=ri.`receipt_id`
@@ -676,7 +694,31 @@ class ReceiptCtrl extends Ctrl{
 				
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
-		return $this->buildReceiptObj($receipts);
+		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
 	}
+	
+	/**
+	 * 
+	 * 
+	 * @param int $id receipt id
+	 * 
+	 * @return array $result
+	 * 
+	 * @desc
+	 * return an array of tags of a certain receipt
+	 */
+	public function getReceiptTags($id){
+		$sql = "
+			SELECT
+				`tag`
+			FROM
+				`receipt_tag`
+			WHERE
+				`receipt_id`=$id
+		";
+		
+		$this->db->select($sql);
+		return $this->db->fetchAssoc();
+	}	
 }
 ?>

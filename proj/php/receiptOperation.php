@@ -115,8 +115,8 @@ switch($opcode){
 		 */
 		$tags = $post['tags'];
 //		$tags = array(
-//				array('tag'=>'movie'),
-//				array('tag'=>'gym')
+//				array('tag'=>'restaurant'),
+//				array('tag'=>'movie')
 //		);
 		if(!is_array($tags)){
 			die('wrong parameters');
