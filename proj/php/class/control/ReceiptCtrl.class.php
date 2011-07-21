@@ -561,7 +561,7 @@ class ReceiptCtrl extends Ctrl{
 			LEFT JOIN
 				`store` as s
 			ON
-				r.`store_account`=s.`store_account`,
+				r.`store_account`=s.`store_account`
 			WHERE
 				$con
 			AND
