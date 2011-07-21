@@ -28,6 +28,7 @@ include_once '../config.php';
 include_once 'header.php';
 
 $opcode = $post['opcode'];
+$opcode = 'tag_search';
 
 $ctrl = new ReceiptCtrl();
 
@@ -116,16 +117,32 @@ switch($opcode){
 		);
 		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
 		break;
-	
-	case 'get_category_receipt':
-		$category = $post['receipt_category'];
+		
+	case 'tag_search':
+		/**
+		 * @see tagOperation.php $tags
+		 */
+		$tags = $post['tags'];
+//		$tags = array(
+//				array('tag'=>'movie'),
+//				array('tag'=>'gym')
+//		);
+		if(!is_array($tags)){
+			die('wrong parameters');
+		}
+		$orConds = array();
+		$i = 0;
+		foreach($tags as $tag){
+			$orConds['='.CON_DELIMITER.$i++] = array(
+													'field'=>'tag',
+													'value'=>$tag['tag']
+												);
+		}
+		
 		$con = array(
-					'='=>array(
-							'field'=>'receipt_category',
-							'value'=>$category
-						)
+					'OR'=>$orConds,
 		);
-		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
+		echo json_encode($ctrl->searchTagReceipt($con, $post['acc']));
 		break;
 	
 	case 'get_store_receipt':
@@ -137,14 +154,6 @@ switch($opcode){
 					)
 		);
 		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
-		break;
-		
-	case 'category_receipt':
-		$cat = $post['category'];
-		$receiptId = $post['receipt_id'];
-		
-		$param = array('receipt_category'=>$cat);
-		echo $ctrl->updateReceiptBasic($receiptId, $param);
 		break;
 		
 	default:
