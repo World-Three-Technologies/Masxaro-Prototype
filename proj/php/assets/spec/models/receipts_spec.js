@@ -31,7 +31,6 @@ describe("receipts model", function(){
 
       this.receipts = new Receipts();
       this.receipts.account = "test";
-
     });
 
     afterEach(function(){
@@ -58,8 +57,8 @@ describe("receipts model", function(){
     });
 
     it("should receive JSON data and refresh data models",function(){
-      var refresh = sinon.spy();
-      this.receipts.bind("refresh",refresh);
+      var reset = sinon.spy();
+      this.receipts.bind("reset",reset);
 
       this.receipts.fetch();
 
@@ -70,7 +69,7 @@ describe("receipts model", function(){
 
       expect(this.receipts.size()).toEqual(2);
       expect(this.receipts.at(0).get("receipt_id")).toEqual(2);
-      expect(refresh.calledOnce).toBeTruthy();
+      expect(reset.calledOnce).toBeTruthy();
     });
   });
 });

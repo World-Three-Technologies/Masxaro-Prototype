@@ -25,7 +25,7 @@ describe("AppRouter",function(){
       var index = sinon.spy();
       this.router.bind("route:index",index);
 
-      window.location.hash = "index";
+      this.router.navigate("index",true);
 
       expect(index.called).toBeTruthy();
 

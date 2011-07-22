@@ -5,30 +5,53 @@
   <title>Jasmine Test Runner</title>
   <link rel="stylesheet" type="text/css" href="lib/jasmine-1.0.2/jasmine.css">
   <!-- fixtures -->
-  <script type="text/tamplate" id="receipt-row-template">
-    <td>$<%= total_cost %></td>
-    <td class="items"></td>
-    <td><%= store_name %></td>
-    <td><%= receipt_time %></td>
-  </script>
+<script type="text/tamplate" id="receipt-row-template">
+  <div class="receipt-row">
+    <div class="date"></div>
+    <div class="content">
+      <div class="items"></div>
+      <div class="store">at <%= store_name %> <span class="tag">
+        <a href="index.php">
+          <%= tag %>
+        </a>
+      </span></div>
+    </div>
+    <div class="total-cost">$<%= total_cost %></div>
+  </div>
+</script>
 
-  <script type="text/template" id="receipt-full-template">
-    <td colspan='4' width="100%">
-      <div class="receipt clearfix">
-        <div class="total-cost">$<%= total_cost %></div>
-        <div class="receipt-row clearfix">
-          <div class="items"></div> 
-          <div class="store">at <%= store_name%></div>
-        </div>
-        <div class="receipt-row clearfix">
-          <div class="date"><%= receipt_time %></div>
-        </div>
-        <div class="toolbar invisible">
-          show full receipt, add tags
-        </div>
-      </div>
-    </td>
-  </script>
+<script type="text/template" id="receipt-full-template">
+  <div class="receipt clearfix">
+    <div class="toolbar close">close[x]</div>
+    <div class="date"></div>
+    <div class="content">
+    <div class="store"><%= store_name%> <span class="tag">
+    <a href="index.php#tags/<%= tag %>">
+      <%= tag %>
+    </a>
+    </span></div>
+      <div class="items"></div> 
+      <hr style="border-top:1px black solid;margin:0;"/>
+      <div class="total-cost">$<%= total_cost %></div>
+    </div>
+  </div>
+</script>
+
+<script type="text/template" id="receipt-item-template">
+<div class="receipt-item" id-data="<%= item_id %>">
+  <div class="display">
+    <span class="item_name">
+      <%= item_name %> 
+    </span>
+    <span class="item_price">
+      $<%= item_price %>
+    </span>
+    <span class="item_qty">
+      X <%= item_qty %>
+    </span>
+  </div>
+</div>
+</script>
   <!-- end of fixtures-->
 
   <script src="lib/jasmine-1.0.2/jasmine.js"></script>

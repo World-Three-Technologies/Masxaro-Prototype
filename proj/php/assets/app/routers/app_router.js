@@ -7,7 +7,7 @@ var AppRouter = Backbone.Router.extend({
     });
 
     var receipts = this.receipts = new Receipts();
-    window.account = user.get("account");
+    window.account = receipts.account = user.get("account");
     window.appView = new AppView({model:receipts });
     window.userView = new UserView({model:user});
   },

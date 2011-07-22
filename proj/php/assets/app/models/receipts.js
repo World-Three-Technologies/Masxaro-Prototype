@@ -12,7 +12,7 @@ var Receipts = Backbone.Collection.extend({
     if(method == "read"){
       data = {
         opcode : "user_get_all_receipt",
-        acc: account
+        acc: this.account
       }
     }
     $.post(this.url,data,options.success).error(options.error);

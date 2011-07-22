@@ -6,7 +6,7 @@ var Receipt = Backbone.Model.extend({
     _.bindAll(this,'sync');
   },
 
-  sync:function(method,model,success,error){
+  sync:function(method,model,options){
     model.set({"user_account":account});
     var data;
     if(method == "read"){
@@ -20,6 +20,6 @@ var Receipt = Backbone.Model.extend({
         receipt_id: model.get("receipt_id")
       }
     }
-    $.post(this.url,data,success).error(error);
+    $.post(this.url,data,options.success).error(options.error);
   }
 });
