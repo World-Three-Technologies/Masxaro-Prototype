@@ -18,7 +18,7 @@ describe("AppRouter",function(){
     expect(userView.model).toEqual(this.router.user);
   });
 
-  describe("route",function(){
+  describe("routes",function(){
     
     it("should match index and fetch receipts",function(){
       
@@ -30,6 +30,7 @@ describe("AppRouter",function(){
       expect(index.called).toBeTruthy();
 
       this.router.unbind("route:index");
+      this.router.navigate("",false);
     });
 
   });
