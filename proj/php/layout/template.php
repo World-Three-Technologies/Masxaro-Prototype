@@ -34,23 +34,14 @@
 <div class="receipt-item" id-data="<%= item_id %>">
   <div class="display">
     <span class="item_name">
-    <%= item_name %> 
+      <%= item_name %> 
     </span>
-      <span class="tag">
-        <a href="index.php#category/<%= item_category %>" class="item_category">
-          <%= item_category %>
-        </a>
-      </span>
     <span class="item_price">
       $<%= item_price %>
     </span>
     <span class="item_qty">
       X <%= item_qty %>
     </span>
-  </div>
-  <div class="edit">
-    <input type="text" class="item_name" value="<%= item_name %>" />
-    <input type="text" class="item_category" value="<%= item_category %>"/>
   </div>
 </div>
 </script>

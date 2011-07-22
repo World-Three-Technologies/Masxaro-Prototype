@@ -37,12 +37,6 @@ var Receipt = Backbone.Model.extend({
         opcode : "f_delete_receipt",
         receipt_id: model.get("receipt_id")
       }
-    }else if(method == "update"){
-      console.log("update");
-      data = {
-        opcode : "update_receipt",
-        receipt : this.toJSON(),
-      }
     }
     $.post(this.url,data,success).error(error);
   }
@@ -56,7 +50,7 @@ var Receipts = Backbone.Collection.extend({
     _.bindAll(this,"sync","search");
   },
 
-  sync:function(method,model,success,error){
+  sync:function(method,model,options){
     var data;
     if(method == "read"){
       data = {
@@ -64,7 +58,7 @@ var Receipts = Backbone.Collection.extend({
         acc: account
       }
     }
-    $.post(this.url,data,success).error(error);
+    $.post(this.url,data,options.success).error(options.error);
   },
 
   search:function(query,success){
@@ -74,22 +68,10 @@ var Receipts = Backbone.Collection.extend({
       acc: account,
       key : query
     }).success(function(data){
-      model.refresh(data);
+      model.reset(data);
       success();
     });
   },
-
-  category:function(category,success){
-    var model = this;
-    $.post(this.url,{
-      opcode : "get_category_receipt",
-      acc:this.account,
-      receipt_category : category
-    }).success(function(data){
-      model.refresh(data);
-      success();
-    });
-  }
 });
 var User = Backbone.Model;
 window.AppView = Backbone.View.extend({
@@ -102,13 +84,12 @@ window.AppView = Backbone.View.extend({
   end:1,
 
   initialize:function(){
-    _.bindAll(this,"render","renderMore","renderReceipt",
-                   "setEnd","search","category","after");
+    _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
+                  "setEnd","search","category","after");
     //hack:: should move the logic of before together
     this.model.bind("sync",this.before);
-    this.model.bind("refresh",this.render);
+    this.model.bind("reset",this.render);
     this.model.bind("change",this.render);
-    this.model.view = this;
   },
 
   events:{
@@ -151,7 +132,7 @@ window.AppView = Backbone.View.extend({
   },
 
   render:function(){
-    this.$('.row').remove();
+    this.cleanResults();
     this.setEnd();
 
     this.$('#ajax-loader').hide();
@@ -163,6 +144,10 @@ window.AppView = Backbone.View.extend({
       this.$(".more").hide();
     }
     return this;
+  },
+
+  cleanResults:function(){
+    this.$('.row').remove();
   },
 
   renderMore:function(){
@@ -203,8 +188,6 @@ var ReceiptView = Backbone.View.extend({
   events:{
     "click .receipt-row" : "showReceipt",
     "click .close" :"render",
-    "click .item_name" : "edit",
-    "blur input" : "afterEdit"
   },
 
   render:function(){
@@ -218,7 +201,6 @@ var ReceiptView = Backbone.View.extend({
   },
 
   edit:function(event){
-    //console.log("editing");
     var receipt = $(event.target).parent().parent();
     receipt.addClass("editing");
   },
@@ -279,13 +261,13 @@ var UserView = Backbone.View.extend({
 
   render:function(){
     $("#username").text(this.model.get("account")); 
-    this.$("#user-flash").text(this.model.get("flash")); 
     return this;
   }
 });
-var AppController = Backbone.Controller.extend({
+var AppRouter = Backbone.Router.extend({
 
   initialize: function(){
+    _.bindAll(this,"index");
     var user = this.user = new User({
       account:readCookie("user_acc"),
     });
@@ -300,7 +282,6 @@ var AppController = Backbone.Controller.extend({
     "" : "index",
     "index" : "index",      
     "search/:query" : "search",
-    "category/:category" : "category"
   },
 
   index: function(){
@@ -314,13 +295,9 @@ var AppController = Backbone.Controller.extend({
 
   search: function(query){
     appView.search(query);      
-  },
-
-  category: function(category){
-    appView.category(category);        
   }
 });
 $(function(){
-  new AppController();
-  Backbone.history.start();
+  new AppRouter();
+  Backbone.history.start({pushState:false});
 });

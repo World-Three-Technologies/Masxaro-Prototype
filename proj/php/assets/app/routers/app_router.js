@@ -1,6 +1,7 @@
-var AppController = Backbone.Controller.extend({
+var AppRouter = Backbone.Router.extend({
 
   initialize: function(){
+    _.bindAll(this,"index");
     var user = this.user = new User({
       account:readCookie("user_acc"),
     });
@@ -15,7 +16,6 @@ var AppController = Backbone.Controller.extend({
     "" : "index",
     "index" : "index",      
     "search/:query" : "search",
-    "category/:category" : "category"
   },
 
   index: function(){
@@ -29,9 +29,5 @@ var AppController = Backbone.Controller.extend({
 
   search: function(query){
     appView.search(query);      
-  },
-
-  category: function(category){
-    appView.category(category);        
   }
 });

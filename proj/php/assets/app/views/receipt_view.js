@@ -14,8 +14,6 @@ var ReceiptView = Backbone.View.extend({
   events:{
     "click .receipt-row" : "showReceipt",
     "click .close" :"render",
-    "click .item_name" : "edit",
-    "blur input" : "afterEdit"
   },
 
   render:function(){
@@ -29,7 +27,6 @@ var ReceiptView = Backbone.View.extend({
   },
 
   edit:function(event){
-    //console.log("editing");
     var receipt = $(event.target).parent().parent();
     receipt.addClass("editing");
   },

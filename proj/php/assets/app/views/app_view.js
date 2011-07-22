@@ -8,13 +8,12 @@ window.AppView = Backbone.View.extend({
   end:1,
 
   initialize:function(){
-    _.bindAll(this,"render","renderMore","renderReceipt",
-                   "setEnd","search","category","after");
+    _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
+                  "setEnd","search","category","after");
     //hack:: should move the logic of before together
     this.model.bind("sync",this.before);
-    this.model.bind("refresh",this.render);
+    this.model.bind("reset",this.render);
     this.model.bind("change",this.render);
-    this.model.view = this;
   },
 
   events:{
@@ -57,7 +56,7 @@ window.AppView = Backbone.View.extend({
   },
 
   render:function(){
-    this.$('.row').remove();
+    this.cleanResults();
     this.setEnd();
 
     this.$('#ajax-loader').hide();
@@ -69,6 +68,10 @@ window.AppView = Backbone.View.extend({
       this.$(".more").hide();
     }
     return this;
+  },
+
+  cleanResults:function(){
+    this.$('.row').remove();
   },
 
   renderMore:function(){

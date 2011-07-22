@@ -103,7 +103,7 @@ class ReceiptCtrl extends Ctrl{
 		foreach($receiptObjs as $obj){
 			$obj->tags = $this->getReceiptTags($obj->id);
 		}
-		return $obj;
+		return $receiptObjs;
 	}
 	
 	

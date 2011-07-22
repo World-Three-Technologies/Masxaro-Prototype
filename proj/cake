@@ -55,7 +55,7 @@
     system("cat LICENSE > php/assets/js/app.js");
     system("cat php/assets/app/models/*.js >> php/assets/js/app.js");
     system("cat php/assets/app/views/*.js >> php/assets/js/app.js");
-    system("cat php/assets/app/controllers/*.js >> php/assets/js/app.js");
+    system("cat php/assets/app/routers/*.js >> php/assets/js/app.js");
     system("cat php/assets/app/app.js >> php/assets/js/app.js");
   }
 

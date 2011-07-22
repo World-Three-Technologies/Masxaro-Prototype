@@ -146,5 +146,5 @@ switch($opcode){
 		);
 		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
 		break;
-
+}
 ?>

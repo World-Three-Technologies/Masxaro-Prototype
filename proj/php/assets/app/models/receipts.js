@@ -7,7 +7,7 @@ var Receipts = Backbone.Collection.extend({
     _.bindAll(this,"sync","search");
   },
 
-  sync:function(method,model,success,error){
+  sync:function(method,model,options){
     var data;
     if(method == "read"){
       data = {
@@ -15,7 +15,7 @@ var Receipts = Backbone.Collection.extend({
         acc: account
       }
     }
-    $.post(this.url,data,success).error(error);
+    $.post(this.url,data,options.success).error(options.error);
   },
 
   search:function(query,success){
@@ -25,20 +25,8 @@ var Receipts = Backbone.Collection.extend({
       acc: account,
       key : query
     }).success(function(data){
-      model.refresh(data);
+      model.reset(data);
       success();
     });
   },
-
-  category:function(category,success){
-    var model = this;
-    $.post(this.url,{
-      opcode : "get_category_receipt",
-      acc:this.account,
-      receipt_category : category
-    }).success(function(data){
-      model.refresh(data);
-      success();
-    });
-  }
 });
