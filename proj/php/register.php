@@ -100,13 +100,7 @@ if($ctrl->insert($param)){
 	if(!$ctrlCon->insertContact($contacts)){
 		//rollback
 		$ctrlCon->deleteAccContact($param[$accType]);
-		switch($registerType){
-			case 'user':
-				$ctrl->realDeleteUser($param[$accType]);
-				break;
-			case 'store':
-				$ctrl->delete($param[$accType]);
-		}
+		$ctrl->delete($param[$accType]);
 		die("insert contacts information failed");
 	}
 	
@@ -129,8 +123,7 @@ if($ctrl->insert($param)){
 				  <title>Masxaro registration verification</title>\n
 				</head>
 				<body>
-				  <p>Please click following link to verify your registration!</p>
-				  $code
+				  <p>Please click <a href='$code'><strong>here</strong></a> to verify your registration!</p>
 				</body>
 				</html>
 	";

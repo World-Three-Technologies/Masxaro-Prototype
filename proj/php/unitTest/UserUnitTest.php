@@ -1,6 +1,6 @@
 <?php
 /*
- * Dbconfig.php -- DB configuration 
+ *  userUnitTest.php -- unit test for user control class  
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -20,39 +20,28 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
- * 
- *  Database configuration file
- *  configure database connection data
+ *  
  */
 
+include_once '../../config.php';
 
-return array(
-	/**
-	 * AWS
-	 * MariaDB
-	 */
-	'host' => '46.51.255.119', 
-    'user' => 'w3t',
-	'pwd' => 'w3t',
-	'dbName' => 'w3tdb'
-	
-	/**
-	 * localhost
-	 */
-//	'host' => 'localhost', 
-//    'user' => 'root',
-//	'pwd' => 'root',
-//	'dbName' => 'w3tdb'
-	
-	/**
-	 * Godaddy
-	 * 
-	 * MySQL
-	 */
-//	'host' => 'w3tdb.db.7762973.hostedresource.com', 
-//    'user' => 'w3tdb',
-//	'pwd' => 'W3TAdmin',
-//	'dbName' => 'w3tdb'
-);
+
+$test = new UserUnitTest();
+
+$test->chkAccount_Test('utest');
+
+$test->insert_Test();
+
+$test->find_Test('utest', '123');
+
+$test->getProfile_Test('utest');
+
+$test->update_Test('utest');
+
+$test->fakeDeleteUser_Test('utest');
+
+$test->recoverDeletedUser_Test('utest');
+
+$test->delete_Test('utest');
 
 ?>

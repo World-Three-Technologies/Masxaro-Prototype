@@ -254,9 +254,9 @@ class Tool{
 	 * @desc
 	 * retrieve the password of masxaro mailbox according to user account
 	 */
-	public static function getPassword($acc){
+	public static function getEmailPwd($acc){
 		$buf = md5(md5($acc));
-		return substr($buf, strlen($buf) % MIN_ACC_LEN);
+		return substr($buf, 0, MIN_ACC_LEN * 2);
 	}
 }
 ?>

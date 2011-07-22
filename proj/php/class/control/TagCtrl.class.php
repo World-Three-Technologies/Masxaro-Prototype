@@ -23,7 +23,7 @@
  *
  */
 
-class CategoryCtrl extends Ctrl{
+class TagCtrl extends Ctrl{
 	public function __construct(){
 		parent::__construct();
 	}
@@ -35,14 +35,14 @@ class CategoryCtrl extends Ctrl{
 	 * 
 	 * @return boolean
 	 */
-	public function insertCategory($info){
+	public function insert($info){
 		
 		$info = Tool::infoArray2SQL($info);
 		
 		$sql = "
 			INSERT
 			INTO
-				`category`
+				`tag`
 			SET
 				$info
 		";
@@ -56,17 +56,19 @@ class CategoryCtrl extends Ctrl{
 	/**
 	 * 
 	 * 
-	 * @param string $cat
+	 * @param string $tag
 	 * 
 	 * @return boolean
 	 */
-	public function deleteCategory($cat){
+	public function delete($con){
+		$con = Tool::condArray2SQL($con);
+		
 		$sql = "
 			DELETE
 			FROM
-				`category`
+				`tag`
 			WHERE
-				`category` = '$cat'
+				$con
 		";
 		
 		if($this->db->delete($sql) <= 0){
@@ -82,20 +84,62 @@ class CategoryCtrl extends Ctrl{
 	 * @return assoc-array result set
 	 * 
 	 * @desc
-	 * get category of certain target: receipt, all, item
+	 * get tags of certain con
 	 */
-	public function getTargetCategory($con){
+	public function select($con){
 		$con = Tool::condArray2SQL($con);
 		$sql = "
 			SELECT
 				*
 			FROM
-				`category`
+				`tag`
 			WHERE
 				$con
 		";
 		$this->db->select($sql);
 		return $this->db->fetchAssoc();
+	}
+	
+	/**
+	 * 
+	 * tag a receipt
+	 */
+	public function tagReceipt($info){
+		$info = Tool::infoArray2SQL($info);
+		
+		$sql = "
+			INSERT
+			INTO
+				`receipt_tag`
+			SET
+				$info
+		";
+		
+		if($this->db->insert($sql) < 0){
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * delete a tag of a receipt
+	 * @param con-array $con
+	 */
+	public function deleteReceiptTag($con){
+		$con = Tool::condArray2SQL($con);
+		
+		$sql = "
+			DELETE
+			FROM
+				`receipt_tag`
+			WHERE
+				$con
+		";
+		
+		if($this->db->delete($sql) <= 0){
+			return false;
+		}
+		return true;
 	}
 }
 

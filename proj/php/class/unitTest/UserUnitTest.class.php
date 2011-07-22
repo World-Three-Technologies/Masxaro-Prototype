@@ -30,7 +30,7 @@ class UserUnitTest extends UnitTest{
 		$this->ctrl = new UserCtrl();
 	}
 	
-	public function insertUser_Test(){
+	public function insert_Test(){
 		$info = array(
 						'user_account'=>'utest',
 						'pwd'=>'123'
@@ -46,33 +46,33 @@ class UserUnitTest extends UnitTest{
 		$this->assertTrue($this->ctrl->recoverDeletedUser($acc));
 	}
 	
-	public function realDeleteUser_Test($acc){
-		$this->assertTrue($this->ctrl->realDeleteUser($acc));
+	public function delete_Test($acc){
+		$this->assertTrue($this->ctrl->delete($acc));
 	}
 	
 	public function chkAccount_Test($acc){
 		$this->assertTrue($this->ctrl->chkAccount($acc));
 	}
 	
-	public function updateUserInfo_Test($acc){
+	public function update_Test($acc){
 		$info = array(
 						'user_account'=>'utest',
 						'pwd'=>'123'
 					);
 		
-		$this->assertTrue($this->ctrl->updateUserInfo($acc, $info));
+		$this->assertTrue($this->ctrl->update($acc, $info));
 	}
 	
-	public function findUser_Test($acc, $pwd){
-		$this->assertTrue($this->ctrl->findUser($acc, $pwd));
+	public function find_Test($acc, $pwd){
+		$this->assertTrue($this->ctrl->find($acc, $pwd));
 	}
 	
-	public function getUserProfile_Test($acc){
+	public function getProfile_Test($acc){
 		$info = array(
 						'user_account'=>'utest',
 						'pwd'=>md5('123')
 					);
-		$value = $this->ctrl->getUserProfile('utest');
+		$value = $this->ctrl->getProfile('utest');
 		
 		unset($value['first_name']);
 		unset($value['age_range_id']);

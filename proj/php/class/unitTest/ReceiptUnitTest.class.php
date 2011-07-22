@@ -41,7 +41,7 @@ class ReceiptUnitTest extends UnitTest{
 		$basicInfo = array(
 							"store_account"=>"Mc_NYU",
 							"user_account"=>"new",
-							"tax"=>0.1
+							"tax"=>15
 						);
 						
 		$items = array();
@@ -50,7 +50,7 @@ class ReceiptUnitTest extends UnitTest{
 						"item_id"=>23,
 						"item_name"=>"Coffee",
 						"item_qty"=>1,
-						"item_price"=>1.00,
+						"item_price"=>1,
 					);
 					
 		array_push($items, $item);
@@ -58,8 +58,9 @@ class ReceiptUnitTest extends UnitTest{
 		$item = array(
 						"item_id"=>29,
 						"item_name"=>"Salad",
+						"item_discount"=>"30",
 						"item_qty"=>1,
-						"item_price"=>3.00,
+						"item_price"=>3,
 					);
 		
 		array_push($items, $item);
@@ -79,10 +80,8 @@ class ReceiptUnitTest extends UnitTest{
 		$basicInfo = array(
 							"store_account"=>"Mc_NYU",
 							"user_account"=>"new",
-							"tax"=>0.1
+							"tax"=>10
 						);
-						
-		
 						
 		$this->assertTrue(($this->testId = $this->ctrl->insertReceipt($basicInfo, null)) > 0);
 	}
@@ -115,6 +114,8 @@ class ReceiptUnitTest extends UnitTest{
 					);
 		
 		array_push($items, $item);
+		
+		$items['id'] = $this->testId;
 						
 		
 						
@@ -144,7 +145,6 @@ class ReceiptUnitTest extends UnitTest{
 	 * real delete test
 	 */
 	function realDelete_Test($id){
-		
 		$this->assertTrue($this->ctrl->realDelete($id));
 	}
 }
