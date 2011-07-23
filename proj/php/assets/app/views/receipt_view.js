@@ -22,6 +22,8 @@ var ReceiptView = Backbone.View.extend({
 
     var text = this.getItemText(this.model.get("items"));
     view.find(".items").html(text);
+    var tags = this.getTags(this.model.get("tags"));
+    view.find(".tags").html(tags);
     view.find(".date").html(new Date(this.model.get("receipt_time")).format());
     return this;
   },
@@ -38,18 +40,6 @@ var ReceiptView = Backbone.View.extend({
     receipt.removeClass("editing");
     receipt.find("span.item_name").text(name);
     receipt.find("a.item_category").text(category);
-
-    var item_id = receipt.attr("id-data"); 
-
-    var items = this.model.get("items");
-    _.each(items,function(item){
-      if(item.item_id == item_id){
-        item.item_name = name;
-        item.item_category = category;
-      }
-    });
-    this.model.set({"items":items});
-    this.model.save();
   },
 
   showReceipt:function(){
@@ -68,6 +58,9 @@ var ReceiptView = Backbone.View.extend({
       items.append(self.itemTemplate(model));
     });
 
+    var tags = this.getLinkTags(this.model.get("tags"));
+    $(this.el).find(".tags").html(tags);
+
     window.lastOpen = this;
   },
 
@@ -75,5 +68,18 @@ var ReceiptView = Backbone.View.extend({
     return _.reduce(items,function(memo,item){
       return memo + item.item_name + ", ";
     },"").slice(0,-2);
+  },
+
+  getTags:function(tags){
+    return _.reduce(tags,function(html,tag){
+      return html + "<span class='tag'>" + tag + "</span>";
+    },"");        
+  },
+
+  getLinkTags:function(tags){
+    return _.reduce(tags,function(html,tag){
+      return html + "<span class='tag'><a href='index.php#tag/"+tag+"'>"
+                  + tag + "</a></span>";
+    },"");        
   }
 });

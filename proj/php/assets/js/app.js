@@ -47,7 +47,7 @@ var Receipts = Backbone.Collection.extend({
   url: 'receiptOperation.php',
 
   initialize:function(){
-    _.bindAll(this,"sync","search");
+    _.bindAll(this,"sync","search","searchTag");
   },
 
   sync:function(method,model,options){
@@ -72,8 +72,42 @@ var Receipts = Backbone.Collection.extend({
       success();
     });
   },
+
+  searchTag:function(tags,success){
+    var model = this;
+    $.post(this.url,{
+      opcode : "tag_search",
+      acc: account,
+      tags : tags,
+    }).success(function(data){
+      model.reset(data);
+      success();
+    });
+  }
 });
 var User = Backbone.Model;
+window.ActionView = Backbone.View.extend({
+  
+  el:$("#action-bar"),
+
+  initialize:function(){
+    _.bindAll(this,"setTags");   
+    this.setTags();
+  },
+
+  setTags:function(){
+    $.post("tagOperation.php",{
+      opcode : "get_user_tags",
+      user_account: account,
+    }).success(function(data){
+      console.log(data);
+      var tags = JSON.parse(data);
+      _.each(tags,function(tag){
+        this.$(".action").append("<li><a href='#tag/"+tag+"'>"+ tag +"</a></li>");
+      });
+    });
+  }
+});
 window.AppView = Backbone.View.extend({
   el:$("#receipts"),
 
@@ -111,11 +145,13 @@ window.AppView = Backbone.View.extend({
 
   before:function(){
     $('#ajax-loader').show();
+    $('.receipts-stat').hide();
     this.$('.row').remove();
   },
 
   after:function(){
     $('#ajax-loader').hide();
+    $('.receipts-stat').show();
   },
 
   searchByForm:function(){
@@ -170,6 +206,11 @@ window.AppView = Backbone.View.extend({
 
   setEnd:function(){
     this.end = (this.model.length > 10) ? 10 : this.model.length;       
+  },
+
+  searchTag:function(tags){
+    this.before();
+    this.model.searchTag(tags.split("-"),this.after);
   }
 });
 var ReceiptView = Backbone.View.extend({
@@ -196,6 +237,8 @@ var ReceiptView = Backbone.View.extend({
 
     var text = this.getItemText(this.model.get("items"));
     view.find(".items").html(text);
+    var tags = this.getTags(this.model.get("tags"));
+    view.find(".tags").html(tags);
     view.find(".date").html(new Date(this.model.get("receipt_time")).format());
     return this;
   },
@@ -212,18 +255,6 @@ var ReceiptView = Backbone.View.extend({
     receipt.removeClass("editing");
     receipt.find("span.item_name").text(name);
     receipt.find("a.item_category").text(category);
-
-    var item_id = receipt.attr("id-data"); 
-
-    var items = this.model.get("items");
-    _.each(items,function(item){
-      if(item.item_id == item_id){
-        item.item_name = name;
-        item.item_category = category;
-      }
-    });
-    this.model.set({"items":items});
-    this.model.save();
   },
 
   showReceipt:function(){
@@ -242,6 +273,9 @@ var ReceiptView = Backbone.View.extend({
       items.append(self.itemTemplate(model));
     });
 
+    var tags = this.getLinkTags(this.model.get("tags"));
+    $(this.el).find(".tags").html(tags);
+
     window.lastOpen = this;
   },
 
@@ -249,6 +283,19 @@ var ReceiptView = Backbone.View.extend({
     return _.reduce(items,function(memo,item){
       return memo + item.item_name + ", ";
     },"").slice(0,-2);
+  },
+
+  getTags:function(tags){
+    return _.reduce(tags,function(html,tag){
+      return html + "<span class='tag'>" + tag + "</span>";
+    },"");        
+  },
+
+  getLinkTags:function(tags){
+    return _.reduce(tags,function(html,tag){
+      return html + "<span class='tag'><a href='index.php#tag/"+tag+"'>"
+                  + tag + "</a></span>";
+    },"");        
   }
 });
 var UserView = Backbone.View.extend({
@@ -267,7 +314,7 @@ var UserView = Backbone.View.extend({
 var AppRouter = Backbone.Router.extend({
 
   initialize: function(){
-    _.bindAll(this,"index");
+    _.bindAll(this,"index","search","searchTag");
     var user = this.user = new User({
       account:readCookie("user_acc"),
     });
@@ -276,12 +323,14 @@ var AppRouter = Backbone.Router.extend({
     window.account = receipts.account = user.get("account");
     window.appView = new AppView({model:receipts });
     window.userView = new UserView({model:user});
+    window.actionview = new ActionView();
   },
 
   routes: {
     "" : "index",
     "index" : "index",      
     "search/:query" : "search",
+    "tag/:tag" : "searchTag"
   },
 
   index: function(){
@@ -295,6 +344,10 @@ var AppRouter = Backbone.Router.extend({
 
   search: function(query){
     appView.search(query);      
+  },
+
+  searchTag: function(tag){
+    appView.searchTag(tag);           
   }
 });
 $(function(){

@@ -30,9 +30,21 @@ describe("AppRouter",function(){
       expect(index.called).toBeTruthy();
 
       this.router.unbind("route:index");
-      this.router.navigate("",false);
     });
 
+    it("should match tag and search tag",function(){
+      var searchTag = sinon.spy();
+      this.router.bind("route:searchTag",searchTag);
+
+      this.router.navigate("tag/test",true);
+      expect(searchTag.called).toBeTruthy();
+
+      this.router.unbind("route:searchTag");
+    });
+
+    afterEach(function(){
+      this.router.navigate("",false);
+    });
   });
 
 });

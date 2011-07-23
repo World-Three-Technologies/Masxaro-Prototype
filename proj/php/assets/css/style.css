@@ -165,7 +165,8 @@ header {
         position: absolute;
         top: 0;
         right: 0;
-        display: none; }
+        display: none;
+        cursor: pointer; }
 
 div.receipt-item {
   font-size: 18px;
@@ -229,20 +230,21 @@ footer {
       height: 100%;
       text-decoration: none; }
 
-.tag {
+.tags .tag {
   border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   background-color: #5ece74;
   padding: 2px 4px;
-  margin-left: 20px;
+  margin-left: 5px;
   font-weight: bold;
-  font-size: 14px; }
-  .tag:hover {
+  font-size: 14px;
+  color: #FFF; }
+  .tags .tag:hover {
     background-color: #5e6a38; }
-  .tag a {
+  .tags .tag a {
     color: #FFF; }
-    .tag a:link, .tag a:visited {
+    .tags .tag a:link, .tags .tag a:visited {
       color: #FFF; }
-    .tag a:hover {
+    .tags .tag a:hover {
       color: #FFF; }

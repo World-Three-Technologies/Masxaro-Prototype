@@ -3,10 +3,7 @@
     <div class="date"></div>
     <div class="content">
       <div class="items"></div>
-      <div class="store">at <%= store_name %> <span class="tag">
-        <a href="index.php">
-          <%= tag %>
-        </a>
+      <div class="store">at <%= store_name %> <span class="tags">
       </span></div>
     </div>
     <div class="total-cost">$<%= total_cost %></div>
@@ -18,11 +15,11 @@
     <div class="toolbar close">close[x]</div>
     <div class="date"></div>
     <div class="content">
-    <div class="store"><%= store_name%> <span class="tag">
-    <a href="index.php#tags/<%= tag %>">
-      <%= tag %>
-    </a>
-    </span></div>
+      <div class="store">
+        <%= store_name %> 
+        <span class="tags"></span> 
+        <span class="edit">[edit]</span>
+      </div>
       <div class="items"></div> 
       <hr style="border-top:1px black solid;margin:0;"/>
       <div class="total-cost">$<%= total_cost %></div>
@@ -31,7 +28,7 @@
 </script>
 
 <script type="text/template" id="receipt-item-template">
-<div class="receipt-item" id-data="<%= item_id %>">
+<div class="receipt-item">
   <div class="display">
     <span class="item_name">
       <%= item_name %> 

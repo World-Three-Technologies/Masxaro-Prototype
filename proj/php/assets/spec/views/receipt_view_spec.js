@@ -47,7 +47,6 @@ describe("receipt view",function(){
   it("can render receipt with items data after clicked",function(){
     this.view.render();
     $(this.view.el).click();
-    console.log($(this.view.el).html());
 
     expect(this.view.$(".total-cost").text()).toEqual("$"+fixtures.receipt.total_cost);
   });

@@ -99,11 +99,11 @@ class ReceiptCtrl extends Ctrl{
 	 * receipt object array with tags fetched
 	 * 
 	 */
-	protected function fetchReceiptTags($receiptObjs){
-		foreach($receiptObjs as $obj){
-			$obj->tags = $this->getReceiptTags($obj->id);
+	protected function fetchReceiptTags($receipts){
+		foreach($receipts as $receipt){
+			$receipt->tags = $this->getReceiptTags($receipt->id);
 		}
-		return $receiptObjs;
+		return $receipts;
 	}
 	
 	
@@ -714,11 +714,11 @@ class ReceiptCtrl extends Ctrl{
 			FROM
 				`receipt_tag`
 			WHERE
-				`receipt_id`=$id
+				`receipt_id` = $id
 		";
 		
 		$this->db->select($sql);
-		return $this->db->fetchAssoc();
+		return $this->db->fetchArray();
 	}	
 }
 ?>

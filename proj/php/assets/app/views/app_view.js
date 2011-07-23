@@ -35,11 +35,13 @@ window.AppView = Backbone.View.extend({
 
   before:function(){
     $('#ajax-loader').show();
+    $('.receipts-stat').hide();
     this.$('.row').remove();
   },
 
   after:function(){
     $('#ajax-loader').hide();
+    $('.receipts-stat').show();
   },
 
   searchByForm:function(){
@@ -94,5 +96,10 @@ window.AppView = Backbone.View.extend({
 
   setEnd:function(){
     this.end = (this.model.length > 10) ? 10 : this.model.length;       
+  },
+
+  searchTag:function(tags){
+    this.before();
+    this.model.searchTag(tags.split("-"),this.after);
   }
 });
