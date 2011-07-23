@@ -30,6 +30,8 @@
 include_once '../config.php';
 include_once 'header.php';
 
+die(REGISTER_V_URL);
+
 $personEmail = "";
 $ctrl = null;
 $accType = "";
