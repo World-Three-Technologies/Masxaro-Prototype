@@ -25,7 +25,7 @@
  */
 
 class ReceiptEntity{
-
+	//basic info
 	public $id = NULL;
 	public $store_account = NULL;
 	public $store_name = NULL;
@@ -37,6 +37,8 @@ class ReceiptEntity{
 	public $category = 'default';
 	public $deleted = 0;
 	
+	//additional info
 	public $items = array();
+	public $tags = array();
 }
 ?>

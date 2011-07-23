@@ -45,7 +45,7 @@ class ReceiptCtrl extends Ctrl{
 	 *  encapsulate basic info & items of a certain receipt into an object,
 	 *  organize all receipt objects into an indexed array, return.
 	 */
-	private function buildReceiptObj($receipts){
+	protected function buildReceiptObj($receipts){
 		$result = array();
 		
 		if(count($receipts) > 0){
@@ -88,6 +88,24 @@ class ReceiptCtrl extends Ctrl{
 		
 		return $result;
 	}
+	
+	/**
+	 * @see ReceiptCtrl::buildReceiptObj
+	 * 
+	 * @param array $receiptObjs
+	 * receipt object array, the result of ReceiptCtrl::buildReceiptObj($receipts)
+	 * 
+	 * @return array $result
+	 * receipt object array with tags fetched
+	 * 
+	 */
+	protected function fetchReceiptTags($receiptObjs){
+		foreach($receiptObjs as $obj){
+			$obj->tags = $this->getReceiptTags($obj->id);
+		}
+		return $receiptObjs;
+	}
+	
 	
 	/**
 	 * 
@@ -199,7 +217,7 @@ class ReceiptCtrl extends Ctrl{
 				$curCost =  
 					$items[$i]['item_price'] * 
 					$items[$i]['item_qty'] * 
-					((100 - $items[$i]['item_discount']) / 100);
+					((100 - $items[$i]['item_discount']) * 0.01);
 				
 				$totalCost += $curCost;
 				
@@ -224,7 +242,7 @@ class ReceiptCtrl extends Ctrl{
 					return false;
 				}
 			}
-			$totalCost = $totalCost * ((100 - $basicInfo['tax']) / 100);
+			$totalCost += $totalCost * $basicInfo['tax'] * 0.01;
 
 			$sql = "
 				UPDATE 
@@ -267,8 +285,8 @@ class ReceiptCtrl extends Ctrl{
 		}
 		
 		$sql = "
-			UPDATE `
-				receipt`
+			UPDATE 
+				`receipt`
 			SET
 				$info
 			WHERE
@@ -516,13 +534,11 @@ class ReceiptCtrl extends Ctrl{
 		
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
-		return $this->buildReceiptObj($receipts);
+		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
 	}
 	
 	/**
-	 * @todo
-	 * consider about the sql here, it's very inefficient and slow since lots of functions
-	 * are used in the sql, maybe change the precision of database instead of handle it while selecting.
+	 * @see sample/conArraySample.class.php
 	 * 
 	 * @param array() $con multi-dimension array of searching conditions
 	 * 
@@ -546,14 +562,12 @@ class ReceiptCtrl extends Ctrl{
 				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
 				r.`tax`,
 				r.`total_cost`,
-				r.`receipt_category`, 
 				s.`store_name`,
 				ri.`item_id`,
         		ri.`item_name`, 
         		ri.`item_qty`, 
         		ri.`item_discount`,
-				ri.`item_price`,
-        		ri.`item_category`
+				ri.`item_price`
 			FROM 
 				`receipt` 
 			AS 
@@ -583,7 +597,7 @@ class ReceiptCtrl extends Ctrl{
 				
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
-		return $this->buildReceiptObj($receipts);
+		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
 	}
 	
 	/**
@@ -617,5 +631,94 @@ class ReceiptCtrl extends Ctrl{
 		
 		return $result;
 	}
+	
+	/**
+	 * 
+	 * @see sample/conArraySample.class.php
+	 * @param condition array $con
+	 * @param unknown_type $acc
+	 * @desc
+	 * search receipts with certain tags
+	 */
+	public function searchTagReceipt($con, $acc){
+		$con = Tool::condArray2SQL($con);
+		
+		$sql = "
+			SELECT
+				`receipt_id`
+			FROM
+				`receipt_tag`
+			WHERE
+				$con
+			AND
+				`user_account`='$acc'
+			ORDER BY
+				`receipt_id`
+		";
+		
+		$this->db->select($sql);
+		$ids = $this->db->fetchAssoc();
+		
+		$orsql = "";
+		foreach($ids as $id){
+			$orsql .= "r.`id`={$id['receipt_id']} OR ";
+		}
+		
+		$orsql = '('.substr($orsql, 0, strlen($orsql) - 4).')';
+		
+		$sql = "
+			SELECT 
+				r.`id`,
+				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
+				r.`tax`,
+				r.`total_cost`,
+				s.`store_name`,
+				ri.`item_id`,
+        		ri.`item_name`, 
+        		ri.`item_qty`, 
+        		ri.`item_discount`,
+				ri.`item_price`
+			FROM 
+				`receipt` as r
+			JOIN
+				`receipt_item` as ri
+			ON
+				r.`id`=ri.`receipt_id`
+			JOIN
+				`store` as s
+			ON
+				r.`store_account`=s.`store_account`
+			WHERE
+				$orsql;
+		";
+				
+		$this->db->select($sql);
+		$receipts = $this->db->fetchAssoc();
+		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param int $id receipt id
+	 * 
+	 * @return array $result
+	 * 
+	 * @desc
+	 * return an array of tags of a certain receipt
+	 */
+	public function getReceiptTags($id){
+		$sql = "
+			SELECT
+				`tag`
+			FROM
+				`receipt_tag`
+			WHERE
+				`receipt_id`=$id
+		";
+		
+		$this->db->select($sql);
+		return $this->db->fetchAssoc();
+	}	
 }
 ?>

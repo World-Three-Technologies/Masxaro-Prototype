@@ -29,12 +29,7 @@ Zend_Loader::loadClass('Zend_Gdata_Gapps');
 class EmailCtrl extends Ctrl{
 	private $client;
 	private $service;
-	
-	/**
-	 * 
-	 * @todo
-	 * uncomment initGdata func when having correct email configuration
-	 */
+
 	function __construct(){
 		parent::__construct();
 		$this->initGdata();
@@ -93,18 +88,39 @@ class EmailCtrl extends Ctrl{
 		$inbox = imap_open(IMAP_HOST, $username, $password) 
 				or die('Cannot connect to mailbox'.imap_last_error());
 				
-		$emails = imap_search($inbox, 'UNREAD');
+		$emails = imap_search($inbox, 'ALL');
 		
-		if($emails){
-			rsort($emails);
-			
-			var_dump($emails);
-		}
-		else{
-			echo 'nothing';
-		}
+		if($emails) {
+  
+			  /* begin output var */
+			  $output = '';
+			  
+			  /* put the newest emails on top */
+			  rsort($emails);
+			  /* for every email... */
+			  foreach($emails as $email_number) {
+			    
+			    /* get information specific to this email */
+			    $overview = imap_fetch_overview($inbox,$email_number,0);
+			    $message = imap_fetchbody($inbox,$email_number,2);
+			    
+			    /* output the email header information */
+			    $output.= '<div class="toggler '.($overview[0]->seen ? 'read' : 'unread').'">';
+			    $output.= '<span class="subject">'.$overview[0]->subject.'</span> ';
+			    $output.= '<span class="from">'.$overview[0]->from.'</span>';
+			    $output.= '<span class="date">on '.$overview[0]->date.'</span>';
+			    $output.= '</div>';
+			    
+			    /* output the email body */
+			    $output.= '<div class="body">'.$message.'</div>';
+		      }
+			  
+			  echo $output;
+			}
+			else{
+				echo 'no email';
+			}
 		
-		imap_close($inbox);
 	}
 	
 	/**

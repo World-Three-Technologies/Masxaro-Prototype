@@ -25,7 +25,6 @@
  */
 
 /**
- * @todo change database user to customer, and change all related names
  * 
  * @author yangcongknight
  *
@@ -76,37 +75,6 @@ abstract class ClientCtrl extends Ctrl{
 		}
 		
 		return false;
-	}
-	
-	/**
-	 * 
-	 * 
-	 * @param string $acc store or user account
-	 * 
-	 * @return boolean
-	 * 
-	 * @desc
-	 * 
-	 * check whether the certain contact is available, true: available, false: not available
-	 */
-	public function chkContact($value){
-		
-		$sql = "
-			SELECT 
-				`value`
-			FROM 
-				`contact`
-			WHERE
-				`value` = '$value'
-		";
-		
-		$this->db->select($sql);
-		
-		if($this->db->numRows() > 0){
-			return false;
-		}
-		
-		return true;
 	}
 	
 	/**

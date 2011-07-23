@@ -30,7 +30,8 @@ $acc = $post['acc'];
 
 $contact = $post['contact'];
 
-$ctrl = new UserCtrl();
+$ctrl = new ClientCtrl();
+$conCtrl = new ContactCtrl();
 
 $result = 1;
 
@@ -38,7 +39,7 @@ if(isset($acc) && !$ctrl->chkAccount($acc)){
 	$result = 0;
 }
 
-if(isset($contact) && !$ctrl->chkContact($contact)){
+if(isset($contact) && !$conCtrl->chkContact($contact)){
 	$result = -1;
 }
 
