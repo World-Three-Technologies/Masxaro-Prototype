@@ -99,4 +99,11 @@ define('DOMADMIN_PWD', 'Masxaro2011!');
 define('DOMAIN', 'masxaro.net');
 define('IMAP_HOST', '{imap.gmail.com:993/imap/ssl/novalidate-cert}INBOX');
 
+/*
+ * register config
+ */
+$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+$targetUrl = substr($url, 0, strripos($url, "/") + 1).'php/verifyRegister.php';
+define('REGISTER_V_URL', $targetUrl);
+
 ?>

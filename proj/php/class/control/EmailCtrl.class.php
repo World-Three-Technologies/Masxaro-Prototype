@@ -51,6 +51,28 @@ class EmailCtrl extends Ctrl{
 	/**
 	 * 
 	 * 
+	 * @param string $url verificaton url with register code
+	 * 
+	 * @desc
+	 * generate registration confirmation email content
+	 */
+	public function registerEmailGen($url){
+		$email = "
+				<html>
+					<head>
+					  <title>Masxaro registration verification</title>\n
+					</head>
+					<body>
+					  <p>Please click <a href='$url'><strong>here</strong></a> to verify your registration!</p>
+					</body>
+				</html>
+		";
+		return $email;
+	}
+	
+	/**
+	 * 
+	 * 
 	 * @param string $to
 	 * 
 	 * @param string $subject
@@ -77,6 +99,28 @@ class EmailCtrl extends Ctrl{
 	/**
 	 * 
 	 * 
+	 * @param string $personalEmail client email address
+	 * 
+	 * @param string $code register code
+	 * 
+	 * @desc
+	 * send register confirmation email
+	 * 
+	 * @return
+	 * boolean
+	 */
+	public function sendRegisterEmail($personalEmail, $code){
+		$subject = "Please verify your registration on Masxaro.com";
+		return $this->mail(
+						$personalEmail, 
+						$subject, 
+						$this->registerEmailGen(REGISTER_V_URL."?code=$code")
+				);
+	}
+	
+	/**
+	 * 
+	 * 
 	 * @param string $acc
 	 * 
 	 * @return 
@@ -92,26 +136,23 @@ class EmailCtrl extends Ctrl{
 		
 		if($emails) {
   
-			  /* begin output var */
 			  $output = '';
-			  
-			  /* put the newest emails on top */
 			  rsort($emails);
-			  /* for every email... */
 			  foreach($emails as $email_number) {
+			  	
+			  	$message = imap_fetchbody($inbox,$email_number,2);
+			  	echo $message;
+			  	die();
 			    
-			    /* get information specific to this email */
 			    $overview = imap_fetch_overview($inbox,$email_number,0);
 			    $message = imap_fetchbody($inbox,$email_number,2);
 			    
-			    /* output the email header information */
 			    $output.= '<div class="toggler '.($overview[0]->seen ? 'read' : 'unread').'">';
 			    $output.= '<span class="subject">'.$overview[0]->subject.'</span> ';
 			    $output.= '<span class="from">'.$overview[0]->from.'</span>';
 			    $output.= '<span class="date">on '.$overview[0]->date.'</span>';
 			    $output.= '</div>';
 			    
-			    /* output the email body */
 			    $output.= '<div class="body">'.$message.'</div>';
 		      }
 			  

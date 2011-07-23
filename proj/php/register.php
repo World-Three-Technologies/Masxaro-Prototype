@@ -76,10 +76,12 @@ if($ctrl->insert($param)){
 
 	$contacts = array();
 	
+	$account = $param[$accType];
+	
 	//masxaro email
-	$email = "$param[$accType]@".DOMAIN;
+	$email = "$account@".DOMAIN;
 	array_push($contacts, array(
-							$accType=>$param[$accType],
+							$accType=>$account,
 							'contact_type'=>'email',
 							'value'=>$email
 						)
@@ -88,48 +90,40 @@ if($ctrl->insert($param)){
 	//personal email
 	$email = $personEmail;
 	array_push($contacts, array(
-							$accType=>$param[$accType],
+							$accType=>$account,
 							'contact_type'=>'email',
 							'value'=>$email
 						)
 	);
 	
 	$ctrlCon = new ContactCtrl();
-	$email = new EmailCtrl();
+	$ctrlEmail = new EmailCtrl();
 	
 	if(!$ctrlCon->insertContact($contacts)){
 		//rollback
-		$ctrlCon->deleteAccContact($param[$accType]);
-		$ctrl->delete($param[$accType]);
+		$ctrlCon->deleteAccContact($account);
+		$ctrl->delete($account);
 		die("insert contacts information failed");
 	}
 	
 	$codeParam = array(
 		$registerType,
-		$param[$accType],
+		$account,
 		$param['pwd'],
 		$personEmail
 	); 
+	
 	$code = Tool::verifyCodeGen($codeParam);
 	
-	$mailSub = "Please verify your registration on Masxaro.com";
-	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
-	$url = substr($url, 0, strripos($url, "/") + 1).'verifyRegister.php';
-	$code = $url."?code=$code";
-
-	$mailContent = "
-				<html>
-				<head>
-				  <title>Masxaro registration verification</title>\n
-				</head>
-				<body>
-				  <p>Please click <a href='$code'><strong>here</strong></a> to verify your registration!</p>
-				</body>
-				</html>
-	";
-	
-	if($email->mail($personEmail, $mailSub, $mailContent)){
-		echo "Register Success, please check your mailbox for authenticate\n";
+	if($ctrlEmail->sendRegisterEmail($personEmail, $code)){
+		echo "Register Success, please check your mailbox for authenticate";
+	}
+	else{
+		echo "System error, register failed";
+		
+		//roll back
+		$ctrlCon->deleteAccContact($account);
+		$ctrl->delete($account);
 	}
 }
 

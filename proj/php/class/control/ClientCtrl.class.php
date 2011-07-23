@@ -24,17 +24,12 @@
  *  
  */
 
-/**
- * 
- * @author yangcongknight
- *
- */
 abstract class ClientCtrl extends Ctrl{
 	
-	protected $userType = null;//store or user
+	protected $clientType = null;//store or user
 	
-	function __construct($userType){
-		$this->userType = $userType;
+	function __construct($clientType){
+		$this->clientType = $clientType;
 		parent::__construct();
 	}
 	
@@ -85,7 +80,7 @@ abstract class ClientCtrl extends Ctrl{
 	 * @return boolean
 	 * 
 	 * @desc
-	 * insert a new user(store/customer)
+	 * insert a new client(store/user), depending on instances of ClientCtrl (UserCtrl or StoreCtrl)
 	 */
 	public function insert($info){
 		
@@ -100,7 +95,7 @@ abstract class ClientCtrl extends Ctrl{
 		$sql = "
 			INSERT
 			INTO 
-				`$this->userType`
+				`$this->clientType`
 			SET
 				$info
 		";
@@ -124,7 +119,7 @@ abstract class ClientCtrl extends Ctrl{
 	 * 
 	 * @desc
 	 * 
-	 * find user (store/customer)
+	 * find client(store/user), depending on instances of ClientCtrl (UserCtrl or StoreCtrl)
 	 * 
 	 */
 	public function find($acc, $pwd){
@@ -138,9 +133,9 @@ abstract class ClientCtrl extends Ctrl{
 			SELECT 
 				*
 			FROM 
-				`$this->userType`
+				`$this->clientType`
 			WHERE
-				`{$this->userType}_account`='$acc'
+				`{$this->clientType}_account`='$acc'
 			AND
 				`pwd`='$pwd'
 		";
@@ -168,7 +163,7 @@ abstract class ClientCtrl extends Ctrl{
 	 * 
 	 * @desc
 	 * 
-	 * update user(store/customer) info
+	 * update client(store/user), depending on instances of ClientCtrl (UserCtrl or StoreCtrl)
 	 * 
 	 */
 	public function update($acc, $info){
@@ -180,11 +175,11 @@ abstract class ClientCtrl extends Ctrl{
 		
 		$sql = "
 			UPDATE 
-				`$this->userType`
+				`$this->clientType`
 			SET
 				$info
 			WHERE
-				`{$this->userType}_account`='$acc'
+				`{$this->clientType}_account`='$acc'
 		";
 			
 		if($this->db->update($sql) <= 0){
@@ -203,16 +198,16 @@ abstract class ClientCtrl extends Ctrl{
 	 * 
 	 * @desc
 	 * 
-	 * delete a store
+	 * delete a client(store/user), depending on instances of ClientCtrl (UserCtrl or StoreCtrl)
 	 */
 	public function delete($acc){
 		
 		$sql = "
 			DELETE
 			FROM 
-				`$this->userType`
+				`$this->clientType`
 			WHERE
-				`{$this->userType}_account`='$acc'
+				`{$this->clientType}_account`='$acc'
 		";
 		
 		if($this->db->delete($sql) <= 0){
@@ -231,16 +226,17 @@ abstract class ClientCtrl extends Ctrl{
 	 * 
 	 * @desc
 	 * 
-	 * according to user account, return user profile object
+	 * according to client account, return client profile object (store/user)
+	 * depending on instances of ClientCtrl (UserCtrl or StoreCtrl)
 	 */
 	public function getProfile($acc){
 		$sql = "
 			SELECT 
 				*
 			FROM 
-				`$this->userType`
+				`$this->clientType`
 			WHERE 
-				`{$this->userType}_account`='$acc'
+				`{$this->clientType}_account`='$acc'
 		";
 		
 		$this->db->select($sql);
