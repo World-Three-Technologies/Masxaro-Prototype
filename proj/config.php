@@ -102,8 +102,8 @@ define('IMAP_HOST', '{imap.gmail.com:993/imap/ssl/novalidate-cert}INBOX');
 /*
  * register config
  */
-$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
-$targetUrl = substr($url, 0, strripos($url, "/") + 1).'php/verifyRegister.php';
-define('REGISTER_V_URL', $targetUrl);
+$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+$url = substr($url, 0, strripos($url, "/") + 1).'verifyRegister.php';
+define('REGISTER_V_URL', $url);
 
 ?>
