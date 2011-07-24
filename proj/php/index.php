@@ -31,7 +31,7 @@
         <div id="action-bar-inner">
           <h4>tags</h4>
           <ul class="action">
-            <li class="active"><a href="#index">Recent</a></li>
+            <li class="tag-recent"><a href="#index">Recent</a></li>
           </ul>
         <div>
       </nav>

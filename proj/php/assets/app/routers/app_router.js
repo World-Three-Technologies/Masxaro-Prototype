@@ -10,7 +10,7 @@ var AppRouter = Backbone.Router.extend({
     window.account = receipts.account = user.get("account");
     window.appView = new AppView({model:receipts });
     window.userView = new UserView({model:user});
-    window.actionview = new ActionView();
+    window.actionView = new ActionView();
   },
 
   routes: {
@@ -27,6 +27,7 @@ var AppRouter = Backbone.Router.extend({
       }
     }
     this.receipts.fetch(options);
+    actionView.setTags("recent");
   },
 
   search: function(query){
@@ -34,6 +35,7 @@ var AppRouter = Backbone.Router.extend({
   },
 
   searchTag: function(tag){
+    actionView.setTags(tag);
     appView.searchTag(tag);           
   }
 });
