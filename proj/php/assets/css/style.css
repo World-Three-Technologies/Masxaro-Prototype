@@ -239,7 +239,8 @@ footer {
   margin-left: 5px;
   font-weight: bold;
   font-size: 14px;
-  color: #FFF; }
+  color: #FFF;
+  z-index: 10; }
   .tags .tag:hover {
     background-color: #5e6a38; }
   .tags .tag a {

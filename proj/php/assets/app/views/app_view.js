@@ -9,8 +9,7 @@ window.AppView = Backbone.View.extend({
 
   initialize:function(){
     _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
-                  "setEnd","search","category","after");
-    //hack:: should move the logic of before together
+                  "setEnd","search","category","after","fetch");
     this.model.bind("sync",this.before);
     this.model.bind("reset",this.render);
     this.model.bind("change",this.render);
@@ -101,5 +100,10 @@ window.AppView = Backbone.View.extend({
   searchTag:function(tags){
     this.before();
     this.model.searchTag(tags.split("-"),this.after);
+  },
+
+  fetch:function(){
+    this.before();
+    this.model.fetch({success:this.after});      
   }
 });

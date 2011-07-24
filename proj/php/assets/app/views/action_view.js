@@ -6,14 +6,15 @@ window.ActionView = Backbone.View.extend({
     _.bindAll(this,"setTags","setActive","setActiveByTag");   
   },
 
-  isSet:false,
+  isTagsLoaded:false,
 
   events:{
     "click .action li":"setActive"
   },
 
+  //check if the 
   setTags:function(tag){
-    if(this.isSet){
+    if(this.isTagsLoaded){
       this.setActiveByTag(tag);
       return;
     }
@@ -28,7 +29,7 @@ window.ActionView = Backbone.View.extend({
                                  "'><a href='#tag/"+tag+"'>"+ tag +"</a></li>");
       });
       view.setActiveByTag(tag);
-      view.isSet = true;
+      view.isTagsLoaded = true;
     });
   },
 

@@ -22,7 +22,7 @@ var ReceiptView = Backbone.View.extend({
 
     var text = this.getItemText(this.model.get("items"));
     view.find(".items").html(text);
-    var tags = this.getTags(this.model.get("tags"));
+    var tags = this.getLinkTags(this.model.get("tags"));
     view.find(".tags").html(tags);
     view.find(".date").html(new Date(this.model.get("receipt_time")).format());
     return this;

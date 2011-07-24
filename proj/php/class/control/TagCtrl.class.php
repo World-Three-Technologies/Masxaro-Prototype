@@ -96,7 +96,7 @@ class TagCtrl extends Ctrl{
 				$con
 		";
 		$this->db->select($sql);
-		return $this->db->fetchArray();
+		return $this->db->fetchArray(MYSQL_NUM);
 	}
 	
 	/**

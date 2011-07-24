@@ -100,10 +100,14 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 */
 	protected function fetchReceiptTags($receipts){
-		foreach($receipts as $receipt){
-			$receipt->tags = $this->getReceiptTags($receipt->id);
-		}
-		return $receipts;
+    foreach($receipts as $receipt){
+      $ids[] = $receipt->id;
+    }
+    $tags = $this->getReceiptsTags($ids);
+    foreach($receipts as $receipt){
+      $receipt->tags = $tags[$receipt->id];
+    }
+    return $receipts;
 	}
 	
 	
@@ -707,18 +711,47 @@ class ReceiptCtrl extends Ctrl{
 	 * @desc
 	 * return an array of tags of a certain receipt
 	 */
-	public function getReceiptTags($id){
+  public function getReceiptTags($id){
 		$sql = "
 			SELECT
 				`tag`
 			FROM
 				`receipt_tag`
 			WHERE
-				`receipt_id` = $id
+				`receipt_id` = ($id)
+		";
+
+		$this->db->select($sql);
+		$results = $this->db->fetchAssoc();
+  
+  }
+
+  /*
+   * @param array(int) receipt ids
+   *
+   * @return array $tags
+   *
+   * @desc return tags array for each receipt, indexed with receipt id
+   */
+	public function getReceiptsTags($ids){
+    $idList = implode(',',$ids);
+		$sql = "
+			SELECT
+				`receipt_id`, `tag`
+			FROM
+				`receipt_tag`
+			WHERE
+				`receipt_id` IN ($idList)
 		";
 		
 		$this->db->select($sql);
-		return $this->db->fetchArray();
+		$results = $this->db->fetchAssoc();
+
+    foreach($results as $result){
+      $tags[$result['receipt_id']][] = $result['tag'];
+    }
+    return $tags;
 	}	
+
 }
 ?>

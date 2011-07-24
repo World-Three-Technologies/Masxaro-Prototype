@@ -94,14 +94,15 @@ window.ActionView = Backbone.View.extend({
     _.bindAll(this,"setTags","setActive","setActiveByTag");   
   },
 
-  isSet:false,
+  isTagsLoaded:false,
 
   events:{
     "click .action li":"setActive"
   },
 
+  //check if the 
   setTags:function(tag){
-    if(this.isSet){
+    if(this.isTagsLoaded){
       this.setActiveByTag(tag);
       return;
     }
@@ -116,7 +117,7 @@ window.ActionView = Backbone.View.extend({
                                  "'><a href='#tag/"+tag+"'>"+ tag +"</a></li>");
       });
       view.setActiveByTag(tag);
-      view.isSet = true;
+      view.isTagsLoaded = true;
     });
   },
 
@@ -141,8 +142,7 @@ window.AppView = Backbone.View.extend({
 
   initialize:function(){
     _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
-                  "setEnd","search","category","after");
-    //hack:: should move the logic of before together
+                  "setEnd","search","category","after","fetch");
     this.model.bind("sync",this.before);
     this.model.bind("reset",this.render);
     this.model.bind("change",this.render);
@@ -233,6 +233,11 @@ window.AppView = Backbone.View.extend({
   searchTag:function(tags){
     this.before();
     this.model.searchTag(tags.split("-"),this.after);
+  },
+
+  fetch:function(){
+    this.before();
+    this.model.fetch({success:this.after});      
   }
 });
 var ReceiptView = Backbone.View.extend({
@@ -259,7 +264,7 @@ var ReceiptView = Backbone.View.extend({
 
     var text = this.getItemText(this.model.get("items"));
     view.find(".items").html(text);
-    var tags = this.getTags(this.model.get("tags"));
+    var tags = this.getLinkTags(this.model.get("tags"));
     view.find(".tags").html(tags);
     view.find(".date").html(new Date(this.model.get("receipt_time")).format());
     return this;
@@ -361,6 +366,7 @@ var AppRouter = Backbone.Router.extend({
         $("#ajax-loader").html("<h3>error in model request</h3>");
       }
     }
+    appView.fetch();
     this.receipts.fetch(options);
     actionView.setTags("recent");
   },
