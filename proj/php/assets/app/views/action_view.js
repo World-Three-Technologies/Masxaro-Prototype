@@ -3,19 +3,18 @@ window.ActionView = Backbone.View.extend({
   el:$("#action-bar"),
 
   initialize:function(){
-    _.bindAll(this,"setTags","setActive","setActiveByTag");   
+    _.bindAll(this,"setTags","setActive");   
   },
 
-  isTagsLoaded:false,
+  tagsIsLoaded:false,
 
   events:{
     "click .action li":"setActive"
   },
 
-  //check if the 
   setTags:function(tag){
-    if(this.isTagsLoaded){
-      this.setActiveByTag(tag);
+    if(this.tagsIsLoaded){
+      this.setActive(tag);
       return;
     }
     var view = this;
@@ -28,18 +27,18 @@ window.ActionView = Backbone.View.extend({
         this.$(".action").append("<li class='tag-"+ tag +
                                  "'><a href='#tag/"+tag+"'>"+ tag +"</a></li>");
       });
-      view.setActiveByTag(tag);
-      view.isTagsLoaded = true;
+      view.setActive(tag);
+      view.tagsIsLoaded = true;
     });
   },
 
-  setActive:function(){
+  setActive:function(target){
     this.$(".active").removeClass("active");
-    this.$(event.target).parent().addClass("active");
-  },
-
-  setActiveByTag:function(tag){
-    this.$(".active").removeClass("active");
-    this.$(".tag-"+tag).addClass("active");
+    if(target == "undefined"){
+      target = this.$(event.target).parent();
+    }else{
+      target = this.$(".tag-"+target).addClass("active");
+    }
+    target.addClass("active");
   }
 });
