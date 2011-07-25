@@ -30,9 +30,6 @@ include_once 'header.php';
 $opcode = $post['opcode'];
 $userAcc = $post['acc'];
 
-$opcode = 'key_search';
-$userAcc = 'new';
-
 $ctrl = new ReceiptCtrl();
 
 Tool::setJSON();
