@@ -42,7 +42,7 @@ $tags = $post['tags'];
 // 		);
 $user = $post['user_account'];
 $receipt = $post['receipt_id'];
-if(!is_array($tags)){
+if(isset($tags) && !is_array($tags)){
 	die('wrong parameters');
 }
 

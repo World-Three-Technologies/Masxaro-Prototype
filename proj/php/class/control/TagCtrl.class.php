@@ -62,7 +62,6 @@ class TagCtrl extends Ctrl{
 	 */
 	public function delete($con){
 		$con = Tool::condArray2SQL($con);
-		
 		$sql = "
 			DELETE
 			FROM
@@ -90,14 +89,14 @@ class TagCtrl extends Ctrl{
 		$con = Tool::condArray2SQL($con);
 		$sql = "
 			SELECT
-				*
+			  tag	
 			FROM
 				`tag`
 			WHERE
 				$con
 		";
 		$this->db->select($sql);
-		return $this->db->fetchAssoc();
+		return $this->db->fetchArray(MYSQL_NUM);
 	}
 	
 	/**

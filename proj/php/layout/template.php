@@ -1,9 +1,17 @@
 <script type="text/tamplate" id="receipt-row-template">
-  <div>
+  <div class="receipt-row">
     <div class="date"></div>
     <div class="content">
       <div class="items"></div>
-      <div class="store">at <%= store_name %></div>
+      <div class="store">at <%= store_name %> 
+        <span class="tags">
+        <% _.each(tags,function(tag){ %>
+        <span class='tag'>
+          <a href='index.php#tag/<%= tag %>'>
+            <%=tag%>
+          </a>
+        </span>
+      <% }); %></span></div>
     </div>
     <div class="total-cost">$<%= total_cost %></div>
   </div>
@@ -14,7 +22,27 @@
     <div class="toolbar close">close[x]</div>
     <div class="date"></div>
     <div class="content">
-      <div class="store"><%= store_name%></div>
+      <div class="store">
+        <%= store_name %> 
+        <span class="tags">
+        <% _.each(tags,function(tag){ %>
+        <span class='tag'>
+          <a href='index.php#tag/<%= tag %>'>
+            <%= tag %>
+          </a>
+        </span>
+        <% }); %>
+        </span> 
+        <span class='edit edit-area'>
+        <% _.each(tags,function(tag){ %>
+        <span>
+          <input type="text" value="<%= tag%>" size="10"></input> 
+        </span>
+        <% }); %>
+        </span>
+        <span class="edit add-button">[add]</span>
+        <span class="edit-button">[edit]</span>
+      </div>
       <div class="items"></div> 
       <hr style="border-top:1px black solid;margin:0;"/>
       <div class="total-cost">$<%= total_cost %></div>
@@ -24,14 +52,16 @@
 
 <script type="text/template" id="receipt-item-template">
 <div class="receipt-item">
-  <span class="item_name">
-    <%= item_name %>
-  </span>
-  <span class="item_price">
-    $<%= item_price %>
-  </span>
-  <span class="item_qty">
-    X <%= item_qty %>
-  </span>
+  <div class="display">
+    <span class="item_name">
+      <%= item_name %> 
+    </span>
+    <span class="item_price">
+      $<%= item_price %>
+    </span>
+    <span class="item_qty">
+      X <%= item_qty %>
+    </span>
+  </div>
 </div>
 </script>

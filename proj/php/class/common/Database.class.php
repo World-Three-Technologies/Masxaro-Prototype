@@ -153,12 +153,14 @@ class Database
   }  
   
   /*
-   * get result as an indexed and associated array
+   * get result as an indexed array
    */  
   public function fetchArray($resultType=MYSQL_BOTH){  
-  	$all = array();
-	while (($tmp[] = mysql_fetch_array($this->result)) == true) {$all = $tmp;}
-	return $all;
+    $all = array();
+    while ($tmp = mysql_fetch_array($this->result,$resultType)) {
+      $all[] = $tmp;
+    }
+    return $all;
   }  
       
   /*

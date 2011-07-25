@@ -3,7 +3,7 @@ describe("receipt view",function(){
   beforeEach(function(){
     var template = "<td>$<%= total_cost %></td>"+ 
     "<td class='items'></td>" +
-    "<td><%= store_name %></td>" +
+    "<td class='store'><%= store_name %></td>" +
     "<td><%= receipt_time %></td>";
 
     setFixtures(template);
@@ -30,11 +30,10 @@ describe("receipt view",function(){
   });
 
   it("can render model data with template",function(){
-    //TODO: remove the template from html fixture or inject it
 
     this.view.render();
 
-    expect(this.view.$("td").first().text()).toEqual("$208");
+    expect(this.view.$(".total-cost").text()).toEqual("$208");
   
   });
 
@@ -49,7 +48,7 @@ describe("receipt view",function(){
     this.view.render();
     $(this.view.el).click();
 
-    expect(this.view.$(".store").text()).toEqual("at "+ fixtures.receipt.store_name);
+    expect(this.view.$(".total-cost").text()).toEqual("$"+fixtures.receipt.total_cost);
   });
 
   it("can hide other opened receipt after clicked",function(){

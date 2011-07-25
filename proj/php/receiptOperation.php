@@ -149,10 +149,8 @@ switch($opcode){
 		 * @see tagOperation.php $tags
 		 */
 		$tags = $post['tags'];
-//		$tags = array(
-//				array('tag'=>'restaurant'),
-//				array('tag'=>'movie')
-//		);
+		//$tags = array('restaurant','movie');
+
 		if(!is_array($tags)){
 			die('wrong parameters');
 		}
@@ -161,7 +159,7 @@ switch($opcode){
 		foreach($tags as $tag){
 			$orConds['='.CON_DELIMITER.$i++] = array(
 													'field'=>'tag',
-													'value'=>$tag['tag']
+													'value'=>$tag
 												);
 		}
 		
@@ -181,10 +179,5 @@ switch($opcode){
 		);
 		echo json_encode($ctrl->searchReceipt($con, $userAcc));
 		break;
-		
-	default:
-		echo 'wrong parameters';
-		break;
 }
-
 ?>

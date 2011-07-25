@@ -16,16 +16,21 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-var Contact = Backbone.Model.extend({
-
-});
 var Receipt = Backbone.Model.extend({
-  sync:function(method,model,success,error){
+
+  url: 'receiptOperation.php',
+
+  initialize:function(){
+    _.bindAll(this,'sync');
+  },
+
+  sync:function(method,model,options){
+    model.set({"user_account":account});
     var data;
     if(method == "read"){
       data = {
         opcode : "user_get_receipt_detail",
-        receipt_id: model.get("receipt_id")
+        receipt_id: model.get("receipt_id"),
       }
     }else if(method == "delete"){
       data = {
@@ -33,7 +38,7 @@ var Receipt = Backbone.Model.extend({
         receipt_id: model.get("receipt_id")
       }
     }
-    $.post(this.url,data,success).error(error);
+    $.post(this.url,data,options.success).error(options.error);
   }
 });
 var Receipts = Backbone.Collection.extend({
@@ -42,10 +47,10 @@ var Receipts = Backbone.Collection.extend({
   url: 'receiptOperation.php',
 
   initialize:function(){
-    _.bindAll(this,"sync","search");
+    _.bindAll(this,"sync","search","searchTag");
   },
 
-  sync:function(method,model,success,error){
+  sync:function(method,model,options){
     var data;
     if(method == "read"){
       data = {
@@ -53,23 +58,80 @@ var Receipts = Backbone.Collection.extend({
         acc: this.account
       }
     }
-    $.post(this.url,data,success).error(error);
+    $.post(this.url,data,options.success).error(options.error);
   },
 
   search:function(query,success){
     var model = this;
     $.post(this.url,{
       opcode : "key_search",
-      acc:this.account,
+      acc: account,
       key : query
     }).success(function(data){
-      model.refresh(data);
-      console.log(model);
+      model.reset(data);
+      success();
+    });
+  },
+
+  searchTag:function(tags,success){
+    var model = this;
+    $.post(this.url,{
+      opcode : "tag_search",
+      acc: account,
+      tags : tags,
+    }).success(function(data){
+      model.reset(data);
       success();
     });
   }
 });
 var User = Backbone.Model;
+window.ActionView = Backbone.View.extend({
+  
+  el:$("#action-bar"),
+
+  tagTemplate : _.template("<li class='tag-<%= tag %>'>"+
+                           "<a href='#tag/<%= tag %>'><%= tag %></a></li>"),
+
+  initialize:function(){
+    _.bindAll(this,"setTags","setActive");   
+  },
+
+  tagsIsLoaded:false,
+
+  events:{
+    "click .action li":"setActive"
+  },
+
+  setTags:function(tag){
+    if(this.tagsIsLoaded){
+      this.setActive(tag);
+      return;
+    }
+    var view = this;
+    $.post("tagOperation.php",{
+      opcode : "get_user_tags",
+      user_account: account,
+    }).success(function(data){
+      var tags = JSON.parse(data);
+      _.each(tags,function(tag){
+        this.$(".action").append(view.tagTemplate({tag:tag}));
+      });
+      view.setActive(tag);
+      view.tagsIsLoaded = true;
+    });
+  },
+
+  setActive:function(target){
+    this.$(".active").removeClass("active");
+    if(target == "undefined"){
+      target = this.$(event.target).parent();
+    }else{
+      target = this.$(".tag-"+target).addClass("active");
+    }
+    target.addClass("active");
+  }
+});
 window.AppView = Backbone.View.extend({
   el:$("#receipts"),
 
@@ -80,25 +142,48 @@ window.AppView = Backbone.View.extend({
   end:1,
 
   initialize:function(){
-    _.bindAll(this,"render","renderMore","renderReceipt","setEnd","search");
-    this.model.bind("refresh",this.render);
+    _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
+                  "setEnd","search","category","after","fetch");
+    this.model.bind("sync",this.before);
+    this.model.bind("reset",this.render);
     this.model.bind("change",this.render);
-    this.model.view = this;
   },
 
   events:{
     "click .more": "renderMore",
-    "click #search-button": "search"
+    "click #search-button": "searchByForm",
+    "keyup #search-query": "submitSearch"
   },
 
-  search:function(){
-    this.$('.row').remove();
+  search:function(query){
+    this.before();
+    this.model.search(query,this.after);
+  },
+
+  submitSearch:function(event){
+    if(event.which == 13){
+      this.searchByForm();
+    }
+  },
+
+  before:function(){
     $('#ajax-loader').show();
-    var query = $('#search-query').val();
-    this.model.search(query,function(){
-      $('#ajax-loader').hide();
-    });
-         
+    $('.receipts-stat').hide();
+    this.$('.row').remove();
+  },
+
+  after:function(){
+    $('#ajax-loader').hide();
+    $('.receipts-stat').show();
+  },
+
+  searchByForm:function(){
+    this.search($('#search-query').val());
+  },
+
+  category:function(category){
+    this.before();
+    this.model.category(category,this.after);       
   },
 
   updateStatus:function(){
@@ -106,6 +191,7 @@ window.AppView = Backbone.View.extend({
   },
 
   render:function(){
+    this.cleanResults();
     this.setEnd();
 
     this.$('#ajax-loader').hide();
@@ -119,8 +205,13 @@ window.AppView = Backbone.View.extend({
     return this;
   },
 
+  cleanResults:function(){
+    this.$('.row').remove();
+  },
+
   renderMore:function(){
-    var pageLength = (this.end + this.pageSize <= this.model.length) ? this.end + this.pageSize : this.model.length;
+    var pageLength = (this.end + this.pageSize <= this.model.length) 
+                     ? this.end + this.pageSize : this.model.length;
     _.each(this.model.models.slice(this.end,pageLength),this.renderReceipt);
 
     this.end = pageLength;
@@ -138,6 +229,16 @@ window.AppView = Backbone.View.extend({
 
   setEnd:function(){
     this.end = (this.model.length > 10) ? 10 : this.model.length;       
+  },
+
+  searchTag:function(tags){
+    this.before();
+    this.model.searchTag(tags.split("-"),this.after);
+  },
+
+  fetch:function(options){
+    this.before();
+    this.model.fetch({success:this.after,error:options.error});      
   }
 });
 var ReceiptView = Backbone.View.extend({
@@ -149,13 +250,15 @@ var ReceiptView = Backbone.View.extend({
   itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
 
   initialize:function(){
-    _.bindAll(this,'render','showReceipt','getItemText');
+    _.bindAll(this,'render','showReceipt','getItemText','editTags','saveTags');
     this.model.bind('change',this.render);
   },
 
   events:{
-    "click" : "showReceipt",
-    "click .close" :"render"
+    "click .receipt-row" : "showReceipt",
+    "click .edit-button" : "editTags",
+    "click .close" :"render",
+    "click .add-button" : "newTag",
   },
 
   render:function(){
@@ -168,6 +271,32 @@ var ReceiptView = Backbone.View.extend({
     return this;
   },
 
+  editTags:function(){
+    var content = $(event.target).parent().parent();
+    content.addClass("editing");
+    this.$('.edit-button').text("[save]");
+    $(event.target).unbind("click");
+    console.log(event.target);
+  },
+
+  saveTags:function(){
+    var content = $(event.target).parent().parent();
+    console.log(content.hasClass("editing"));
+    content.removeClass("editing");
+    this.$('.edit-button').text("[edit]");
+//      .unbind("click",this.saveTags)
+//      .bind("click",this.editTags);
+  },
+
+  newTag:function(){
+    var tag = $("<input type='text' size='10'/>");
+    this.$('.edit-area').append(tag);     
+  },
+
+  deleteTag:function(){
+            
+  },
+
   showReceipt:function(){
 
     if(window.lastOpen){
@@ -176,6 +305,7 @@ var ReceiptView = Backbone.View.extend({
 
     $(this.el).html(this.fullTemplate(this.model.toJSON()));
     $(this.el).find(".date").html(new Date(this.model.get("receipt_time")).format());
+
     var items = $(this.el).find(".items"),
         self = this;
 
@@ -190,6 +320,13 @@ var ReceiptView = Backbone.View.extend({
     return _.reduce(items,function(memo,item){
       return memo + item.item_name + ", ";
     },"").slice(0,-2);
+  },
+
+  getLinkTags:function(tags){
+    return _.reduce(tags,function(html,tag){
+      return html + "<span class='tag'><a href='index.php#tag/"+tag+"'>"
+                  + tag + "</a></span>";
+    },"");        
   }
 });
 var UserView = Backbone.View.extend({
@@ -202,26 +339,29 @@ var UserView = Backbone.View.extend({
 
   render:function(){
     $("#username").text(this.model.get("account")); 
-    this.$("#user-flash").text(this.model.get("flash")); 
     return this;
   }
 });
-var AppController = Backbone.Controller.extend({
+var AppRouter = Backbone.Router.extend({
 
   initialize: function(){
+    _.bindAll(this,"index","search","searchTag");
     var user = this.user = new User({
       account:readCookie("user_acc"),
     });
 
     var receipts = this.receipts = new Receipts();
-    receipts.account = user.get("account");
+    window.account = receipts.account = user.get("account");
     window.appView = new AppView({model:receipts });
     window.userView = new UserView({model:user});
+    window.actionView = new ActionView();
   },
 
   routes: {
     "" : "index",
-    "index" : "index"        
+    "index" : "index",      
+    "search/:query" : "search",
+    "tag/:tag" : "searchTag"
   },
 
   index: function(){
@@ -230,11 +370,20 @@ var AppController = Backbone.Controller.extend({
         $("#ajax-loader").html("<h3>error in model request</h3>");
       }
     }
-    this.receipts.fetch(options);
-  }
+    appView.fetch(options);
+    actionView.setTags("recent");
+  },
 
+  search: function(query){
+    appView.search(query);      
+  },
+
+  searchTag: function(tag){
+    actionView.setTags(tag);
+    appView.searchTag(tag);           
+  }
 });
 $(function(){
-  new AppController();
-  Backbone.history.start();
+  new AppRouter();
+  Backbone.history.start({pushState:false});
 });

@@ -7,13 +7,15 @@ var ReceiptView = Backbone.View.extend({
   itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
 
   initialize:function(){
-    _.bindAll(this,'render','showReceipt','getItemText');
+    _.bindAll(this,'render','showReceipt','getItemText','editTags','saveTags');
     this.model.bind('change',this.render);
   },
 
   events:{
-    "click" : "showReceipt",
-    "click .close" :"render"
+    "click .receipt-row" : "showReceipt",
+    "click .edit-button" : "editTags",
+    "click .close" :"render",
+    "click .add-button" : "newTag",
   },
 
   render:function(){
@@ -26,6 +28,32 @@ var ReceiptView = Backbone.View.extend({
     return this;
   },
 
+  editTags:function(){
+    var content = $(event.target).parent().parent();
+    content.addClass("editing");
+    this.$('.edit-button').text("[save]");
+    $(event.target).unbind("click");
+    console.log(event.target);
+  },
+
+  saveTags:function(){
+    var content = $(event.target).parent().parent();
+    console.log(content.hasClass("editing"));
+    content.removeClass("editing");
+    this.$('.edit-button').text("[edit]");
+//      .unbind("click",this.saveTags)
+//      .bind("click",this.editTags);
+  },
+
+  newTag:function(){
+    var tag = $("<input type='text' size='10'/>");
+    this.$('.edit-area').append(tag);     
+  },
+
+  deleteTag:function(){
+            
+  },
+
   showReceipt:function(){
 
     if(window.lastOpen){
@@ -34,6 +62,7 @@ var ReceiptView = Backbone.View.extend({
 
     $(this.el).html(this.fullTemplate(this.model.toJSON()));
     $(this.el).find(".date").html(new Date(this.model.get("receipt_time")).format());
+
     var items = $(this.el).find(".items"),
         self = this;
 
@@ -48,5 +77,12 @@ var ReceiptView = Backbone.View.extend({
     return _.reduce(items,function(memo,item){
       return memo + item.item_name + ", ";
     },"").slice(0,-2);
+  },
+
+  getLinkTags:function(tags){
+    return _.reduce(tags,function(html,tag){
+      return html + "<span class='tag'><a href='index.php#tag/"+tag+"'>"
+                  + tag + "</a></span>";
+    },"");        
   }
 });

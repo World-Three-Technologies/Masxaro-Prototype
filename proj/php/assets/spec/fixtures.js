@@ -21,7 +21,8 @@ var fixtures = {
           "item_discount":1,
           "item_price":"19.99"
         }
-      ]
+      ],
+      "tag": ["food","fast_food"]
   },
 
   receipts : [{
@@ -33,7 +34,8 @@ var fixtures = {
           "item_name":"test",
           "item_price":299,
           "item_qty": 3
-        }]
+        }],
+        "tag": ["food","fast_food"]
       }, {
         "receipt_id":3, 
         "store_name":"Mac Store",
@@ -43,6 +45,7 @@ var fixtures = {
           "item_name":"test",
           "item_price":299,
           "item_qty": 3
-        }]
+        }],
+        "tag": ["food","fast_food"]
   }]
 }
