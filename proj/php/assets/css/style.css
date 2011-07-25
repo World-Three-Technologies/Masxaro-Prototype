@@ -119,7 +119,7 @@ header {
     #receipts-table tr.row:hover {
       background-color: #FEE; }
       #receipts-table tr.row:hover .toolbar {
-        display: block; }
+        display: inline-block; }
     #receipts-table tr.row .date {
       float: left;
       width: 40px;
@@ -155,25 +155,30 @@ header {
       position: relative; }
       #receipts-table tr.row .receipt:hover {
         cursor: normal; }
-        #receipts-table tr.row .receipt:hover .toolbar {
-          display: block; }
+        #receipts-table tr.row .receipt:hover span.toolbar {
+          display: inline-block; }
       #receipts-table tr.row .receipt .store {
         padding: 10px; }
       #receipts-table tr.row .receipt .content {
         width: 700px; }
       #receipts-table tr.row .receipt .toolbar {
-        position: absolute;
-        top: 0;
-        right: 0;
         display: none;
         cursor: pointer; }
+      #receipts-table tr.row .receipt .close {
+        position: absolute;
+        top: 0;
+        right: 0; }
+      #receipts-table tr.row .receipt .editing .edit {
+        display: inline-block; }
+      #receipts-table tr.row .receipt .editing .tags {
+        display: none; }
+      #receipts-table tr.row .receipt .edit {
+        display: none; }
 
 div.receipt-item {
   font-size: 18px;
   padding: 2px;
   margin: 3px; }
-  div.receipt-item .edit {
-    display: none; }
   div.receipt-item .item_name {
     width: 300px; }
   div.receipt-item .item_qty {
@@ -183,11 +188,6 @@ div.receipt-item {
     float: right;
     font-size: 20px;
     font-weight: bold; }
-
-#receipts-table .editing .edit {
-  display: inline-block; }
-#receipts-table .editing .display {
-  display: none; }
 
 #main #register {
   margin: 10px;
@@ -244,8 +244,12 @@ footer {
   .tags .tag:hover {
     background-color: #5e6a38; }
   .tags .tag a {
+    text-decoration: none;
     color: #FFF; }
     .tags .tag a:link, .tags .tag a:visited {
       color: #FFF; }
     .tags .tag a:hover {
       color: #FFF; }
+
+.edit-button {
+  cursor: pointer; }

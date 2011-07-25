@@ -165,7 +165,7 @@ header{
     &:hover{
       background-color: #FEE;
       .toolbar{
-        display:block;
+        display:inline-block;
       }
     }
 
@@ -210,8 +210,8 @@ header{
       position:relative;
       &:hover{
         cursor:normal;
-        .toolbar{
-          display:block;
+        span.toolbar{
+          display:inline-block;
         }
       }
       .store{
@@ -221,11 +221,22 @@ header{
         @include grid(17.5);
       }
       .toolbar{
+        display:none;
+        cursor:pointer;
+      }
+      .close{
         position:absolute;
         top:0;
         right:0;
+      }
+      .editing .edit{
+        display: inline-block;
+      }
+      .editing .tags{
         display:none;
-        cursor:pointer;
+      }
+      .edit{
+        display:none;
       }
     }  
   }
@@ -235,9 +246,6 @@ div.receipt-item{
   font-size:18px;
   padding:2px;
   margin:3px;
-  .edit{
-    display:none;
-  }
   .item_name{
     width:300px;
   }
@@ -252,12 +260,6 @@ div.receipt-item{
   }
 }
 #receipts-table .editing{
-  .edit{
-    display: inline-block;
-  }
-  .display{
-    display: none;
-  }
 }
 
 //product.php page
@@ -326,9 +328,13 @@ footer{
     background-color: rgb(94,106,56);
   }
   a{
+    text-decoration:none;
     &:link, &:visited {color: #FFF}
     &:hover{ color: #FFF; }
     color: #FFF; 
   }
+}
+.edit-button{
+  cursor:pointer;
 }
 

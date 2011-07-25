@@ -3,8 +3,15 @@
     <div class="date"></div>
     <div class="content">
       <div class="items"></div>
-      <div class="store">at <%= store_name %> <span class="tags">
-      </span></div>
+      <div class="store">at <%= store_name %> 
+        <span class="tags">
+        <% _.each(tags,function(tag){ %>
+        <span class='tag'>
+          <a href='index.php#tag/<%= tag %>'>
+            <%=tag%>
+          </a>
+        </span>
+      <% }); %></span></div>
     </div>
     <div class="total-cost">$<%= total_cost %></div>
   </div>
@@ -17,8 +24,24 @@
     <div class="content">
       <div class="store">
         <%= store_name %> 
-        <span class="tags"></span> 
-        <span class="edit">[edit]</span>
+        <span class="tags">
+        <% _.each(tags,function(tag){ %>
+        <span class='tag'>
+          <a href='index.php#tag/<%= tag %>'>
+            <%= tag %>
+          </a>
+        </span>
+        <% }); %>
+        </span> 
+        <span class='edit edit-area'>
+        <% _.each(tags,function(tag){ %>
+        <span>
+          <input type="text" value="<%= tag%>" size="10"></input> 
+        </span>
+        <% }); %>
+        </span>
+        <span class="edit add-button">[add]</span>
+        <span class="edit-button">[edit]</span>
       </div>
       <div class="items"></div> 
       <hr style="border-top:1px black solid;margin:0;"/>

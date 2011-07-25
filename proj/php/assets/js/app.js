@@ -250,13 +250,15 @@ var ReceiptView = Backbone.View.extend({
   itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
 
   initialize:function(){
-    _.bindAll(this,'render','showReceipt','getItemText','edit','afterEdit');
+    _.bindAll(this,'render','showReceipt','getItemText','editTags','saveTags');
     this.model.bind('change',this.render);
   },
 
   events:{
     "click .receipt-row" : "showReceipt",
+    "click .edit-button" : "editTags",
     "click .close" :"render",
+    "click .add-button" : "newTag",
   },
 
   render:function(){
@@ -265,24 +267,34 @@ var ReceiptView = Backbone.View.extend({
 
     var text = this.getItemText(this.model.get("items"));
     view.find(".items").html(text);
-    var tags = this.getLinkTags(this.model.get("tags"));
-    view.find(".tags").html(tags);
     view.find(".date").html(new Date(this.model.get("receipt_time")).format());
     return this;
   },
 
-  edit:function(event){
-    var receipt = $(event.target).parent().parent();
-    receipt.addClass("editing");
+  editTags:function(){
+    var content = $(event.target).parent().parent();
+    content.addClass("editing");
+    this.$('.edit-button').text("[save]");
+    $(event.target).unbind("click");
+    console.log(event.target);
   },
 
-  afterEdit:function(event){
-    var receipt = $(event.target).parent().parent(),
-        name = receipt.find("input.item_name").val(),
-        category = receipt.find("input.item_category").val()
-    receipt.removeClass("editing");
-    receipt.find("span.item_name").text(name);
-    receipt.find("a.item_category").text(category);
+  saveTags:function(){
+    var content = $(event.target).parent().parent();
+    console.log(content.hasClass("editing"));
+    content.removeClass("editing");
+    this.$('.edit-button').text("[edit]");
+//      .unbind("click",this.saveTags)
+//      .bind("click",this.editTags);
+  },
+
+  newTag:function(){
+    var tag = $("<input type='text' size='10'/>");
+    this.$('.edit-area').append(tag);     
+  },
+
+  deleteTag:function(){
+            
   },
 
   showReceipt:function(){
@@ -301,9 +313,6 @@ var ReceiptView = Backbone.View.extend({
       items.append(self.itemTemplate(model));
     });
 
-    var tags = this.getLinkTags(this.model.get("tags"));
-    $(this.el).find(".tags").html(tags);
-
     window.lastOpen = this;
   },
 
@@ -311,12 +320,6 @@ var ReceiptView = Backbone.View.extend({
     return _.reduce(items,function(memo,item){
       return memo + item.item_name + ", ";
     },"").slice(0,-2);
-  },
-
-  getTags:function(tags){
-    return _.reduce(tags,function(html,tag){
-      return html + "<span class='tag'>" + tag + "</span>";
-    },"");        
   },
 
   getLinkTags:function(tags){
