@@ -542,18 +542,31 @@ class ReceiptCtrl extends Ctrl{
 			ON
 				r.`store_account`=s.`store_account`
 			WHERE
-				$con
-			AND
 				r.`user_account` regexp '$acc'
 			AND 
 				r.`deleted`=false
 			AND
 				ri.`deleted`=false
-			ORDER BY
-				r.`receipt_time`
-			DESC
+			AND
+				r.`id`
+      		IN
+      			(
+	      			SELECT
+	      				`receipt`.`id`
+	      			FROM
+	      				`receipt`,
+	      				`receipt_item`,
+	      				`store`
+	      			WHERE
+	      				$con
+	      			AND
+	      				`receipt_id`=`id`
+	      			AND
+	      				`receipt`.`store_account`=`store`.`store_account`
+	      			ORDER BY
+	      				`receipt`.`receipt_time`
+      			)
 		";
-				
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
 		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));

@@ -28,6 +28,10 @@ include_once '../config.php';
 include_once 'header.php';
 
 $opcode = $post['opcode'];
+$userAcc = $post['acc'];
+
+$opcode = 'key_search';
+$userAcc = 'new';
 
 $ctrl = new ReceiptCtrl();
 
@@ -65,7 +69,7 @@ switch($opcode){
 		
 	case 'user_get_all_receipt_basic':
 		//user get  all receipts' basic info
-		echo json_encode($ctrl->userGetAllReceiptBasic($post['acc']));
+		echo json_encode($ctrl->userGetAllReceiptBasic($userAcc));
 		break;
 		
 	case 'user_get_receipt_item':
@@ -78,7 +82,7 @@ switch($opcode){
 		$con = array(
 						'='=>array(
 									'field'=>'user_account',
-									'value'=>$post['acc']
+									'value'=>$userAcc
 								  )
 					);
 		echo json_encode($ctrl->searchReceipt($con));
@@ -94,22 +98,53 @@ switch($opcode){
 		break;
 	
 	case 'key_search':
-		//search receipts based on keyword in item_name and store_name
-		$key = isset($post['key']) ? $post['key'] : '';
-		$key = "%$key%";
-		$con = array(
-				'OR'=>array(
-					'like'.CON_DELIMITER.'0'=>array(
-						'field'=>'item_name',
-						'value'=>$key
-					),
-					'like'.CON_DELIMITER.'1'=>array(
-						'field'=>'store_name',
-						'value'=>$key
-					)
-				)
-		);
-		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
+		/*
+		 * search receipts based on keywords in item_name and store_name
+		 * 
+		 * multiple keywords should be organized as an 1-d array
+		 *
+		 * array(key1, key2, key3...), eg. array('Coffee', 'coke')
+		 */
+		
+		$keys = isset($post['keys']) ? $post['keys'] : '';
+		
+		$keys = array('Coffee', 'coke');
+		
+		$con = array();
+		
+		if(!is_array($keys)){
+			$keys = "%$keys%";
+			
+			// 'item_name LIKE %keys% OR store_name LIKE %$keys%'
+			$con['OR'] = array(
+							'LIKE'.CON_DELIMITER.'0'=>array(
+								'field'=>'item_name',
+								'value'=>$keys
+							),
+							'LIKE'.CON_DELIMITER.'1'=>array(
+								'field'=>'store_name',
+								'value'=>$keys
+							)
+						);
+		}
+		else{
+			$tmp = array();
+			$i = 0;
+			foreach($keys as $key){
+				$key = "%$key%";
+				$tmp['like'.CON_DELIMITER.$i ++] = array(
+														'field'=>'item_name',
+														'value'=>$key
+													);
+				$tmp['like'.CON_DELIMITER.$i ++] = array(
+														'field'=>'store_name',
+														'value'=>$key
+													);
+			}
+			$con['OR'] = $tmp;
+		}
+		
+		echo json_encode($ctrl->searchReceipt($con, $userAcc));
 		break;
 		
 	case 'tag_search':
@@ -136,7 +171,7 @@ switch($opcode){
 		$con = array(
 					'OR'=>$orConds,
 		);
-		echo json_encode($ctrl->searchTagReceipt($con, $post['acc']));
+		echo json_encode($ctrl->searchTagReceipt($con, $userAcc));
 		break;
 	
 	case 'get_store_receipt':
@@ -147,7 +182,7 @@ switch($opcode){
 						'value'=>$store
 					)
 		);
-		echo json_encode($ctrl->searchReceipt($con, $post['acc']));
+		echo json_encode($ctrl->searchReceipt($con, $userAcc));
 		break;
 		
 	default:
