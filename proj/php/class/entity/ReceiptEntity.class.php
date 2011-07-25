@@ -33,8 +33,8 @@ class ReceiptEntity{
 	public $receipt_time = NULL;
 	public $tax = 1;
 	public $total_cost = 0;
+	public $source = 'default';
 	public $img = NULL;
-	public $category = 'default';
 	public $deleted = 0;
 	
 	//additional info

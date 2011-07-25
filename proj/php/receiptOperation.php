@@ -41,13 +41,15 @@ switch($opcode){
 		break;
 	
 	case 'new_item':
-		//2-d array
+		/*
+		 * items: array(array(), ...), 2-d array of items
+		 * each sub array is an item
+		 */
 		$items = $post['items'];
 		echo $ctrl->insertReceipt(null, $items);
 		break;
 		
 	case 'f_delete_receipt':
-		//fake delete one receipt
 		echo $ctrl->fakeDelete($post['id']);
 		break;
 		
@@ -92,6 +94,7 @@ switch($opcode){
 		break;
 	
 	case 'key_search':
+		//search receipts based on keyword in item_name and store_name
 		$key = isset($post['key']) ? $post['key'] : '';
 		$key = "%$key%";
 		$con = array(

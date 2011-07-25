@@ -495,48 +495,6 @@ class ReceiptCtrl extends Ctrl{
 		
 	}
 	
-	
-	/**
-	 * 
-	 * @param string $userAcc
-	 * 
-	 * @return array(obj,...) each ReceiptEntity obj conclude 2 arrays, basicInfo & items (array(array(),..))
-	 * 
-	 * @desc
-	 * 
-	 * return detail information of a certain receipt
-	 */
-	public function userGetAllReceipt($userAcc){
-		$sql = "
-			SELECT 
-				r.`id`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`,ri.`item_id`,
-        		ri.`item_name`, ri.`item_qty`, ri.`item_discount`, ri.`item_price`
-			FROM 
-				`receipt` as r 
-			LEFT JOIN
-				`receipt_item` as ri
-			ON
-				r.`id`=ri.`receipt_id`
-			LEFT JOIN
-				`store` as s
-			ON
-				r.`store_account`=s.`store_account`
-			WHERE
-				r.`user_account`='$userAcc'
-			AND 
-				r.`deleted`=false
-			AND
-				ri.`deleted`=false
-			ORDER BY
-				r.`receipt_time`
-			DESC
-		";
-		
-		$this->db->select($sql);
-		$receipts = $this->db->fetchAssoc();
-		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
-	}
-	
 	/**
 	 * @see sample/conArraySample.class.php
 	 * 
@@ -562,6 +520,7 @@ class ReceiptCtrl extends Ctrl{
 				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
 				r.`tax`,
 				r.`total_cost`,
+				r.`source`,
 				s.`store_name`,
 				ri.`item_id`,
         		ri.`item_name`, 
@@ -613,7 +572,13 @@ class ReceiptCtrl extends Ctrl{
 	public function getReceiptDetail($receiptId){
 		$sql = "
 			SELECT 
-				r.`id`,r.`user_account`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`
+				r.`id`,
+				r.`user_account`,
+				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time,
+				r.`tax`, 
+				r.`total_cost`,
+				r.`source`, 
+				s.`store_name`
 			FROM 
 				`receipt` as r 
 			JOIN
@@ -635,8 +600,12 @@ class ReceiptCtrl extends Ctrl{
 	/**
 	 * 
 	 * @see sample/conArraySample.class.php
-	 * @param condition array $con
-	 * @param unknown_type $acc
+	 * @see php/receiptOperation.php: tag_search
+	 * 
+	 * @param condition array $con 
+	 * here the $con array should be an 'OR' statement only includes tags
+	 * 
+	 * @param string $acc
 	 * @desc
 	 * search receipts with certain tags
 	 */
@@ -672,6 +641,7 @@ class ReceiptCtrl extends Ctrl{
 				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
 				r.`tax`,
 				r.`total_cost`,
+				r.`source`,
 				s.`store_name`,
 				ri.`item_id`,
         		ri.`item_name`, 
