@@ -267,19 +267,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `w3tdb`.`user_unverified`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `w3tdb`.`user_unverified` ;
-
-CREATE  TABLE IF NOT EXISTS `w3tdb`.`user_unverified` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `code` TEXT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `code_UNIQUE` (`code` ASC) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `w3tdb`.`tag`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `w3tdb`.`tag` ;
