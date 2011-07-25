@@ -26,8 +26,7 @@ var AppRouter = Backbone.Router.extend({
         $("#ajax-loader").html("<h3>error in model request</h3>");
       }
     }
-    appView.fetch();
-    this.receipts.fetch(options);
+    appView.fetch(options);
     actionView.setTags("recent");
   },
 

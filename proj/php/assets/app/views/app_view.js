@@ -102,8 +102,8 @@ window.AppView = Backbone.View.extend({
     this.model.searchTag(tags.split("-"),this.after);
   },
 
-  fetch:function(){
+  fetch:function(options){
     this.before();
-    this.model.fetch({success:this.after});      
+    this.model.fetch({success:this.after,error:options.error});      
   }
 });

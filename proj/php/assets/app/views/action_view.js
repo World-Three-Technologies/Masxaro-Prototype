@@ -2,6 +2,9 @@ window.ActionView = Backbone.View.extend({
   
   el:$("#action-bar"),
 
+  tagTemplate : _.template("<li class='tag-<%= tag %>'>"+
+                           "<a href='#tag/<%= tag %>'><%= tag %></a></li>"),
+
   initialize:function(){
     _.bindAll(this,"setTags","setActive");   
   },
@@ -24,8 +27,7 @@ window.ActionView = Backbone.View.extend({
     }).success(function(data){
       var tags = JSON.parse(data);
       _.each(tags,function(tag){
-        this.$(".action").append("<li class='tag-"+ tag +
-                                 "'><a href='#tag/"+tag+"'>"+ tag +"</a></li>");
+        this.$(".action").append(view.tagTemplate({tag:tag}));
       });
       view.setActive(tag);
       view.tagsIsLoaded = true;

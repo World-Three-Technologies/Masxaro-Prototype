@@ -90,6 +90,9 @@ window.ActionView = Backbone.View.extend({
   
   el:$("#action-bar"),
 
+  tagTemplate : _.template("<li class='tag-<%= tag %>'>"+
+                           "<a href='#tag/<%= tag %>'><%= tag %></a></li>"),
+
   initialize:function(){
     _.bindAll(this,"setTags","setActive");   
   },
@@ -112,8 +115,7 @@ window.ActionView = Backbone.View.extend({
     }).success(function(data){
       var tags = JSON.parse(data);
       _.each(tags,function(tag){
-        this.$(".action").append("<li class='tag-"+ tag +
-                                 "'><a href='#tag/"+tag+"'>"+ tag +"</a></li>");
+        this.$(".action").append(view.tagTemplate({tag:tag}));
       });
       view.setActive(tag);
       view.tagsIsLoaded = true;
@@ -234,9 +236,9 @@ window.AppView = Backbone.View.extend({
     this.model.searchTag(tags.split("-"),this.after);
   },
 
-  fetch:function(){
+  fetch:function(options){
     this.before();
-    this.model.fetch({success:this.after});      
+    this.model.fetch({success:this.after,error:options.error});      
   }
 });
 var ReceiptView = Backbone.View.extend({
@@ -365,8 +367,7 @@ var AppRouter = Backbone.Router.extend({
         $("#ajax-loader").html("<h3>error in model request</h3>");
       }
     }
-    appView.fetch();
-    this.receipts.fetch(options);
+    appView.fetch(options);
     actionView.setTags("recent");
   },
 
