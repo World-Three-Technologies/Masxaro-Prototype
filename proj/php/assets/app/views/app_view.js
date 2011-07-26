@@ -8,25 +8,48 @@ window.AppView = Backbone.View.extend({
   end:1,
 
   initialize:function(){
-    _.bindAll(this,"render","renderMore","renderReceipt","setEnd","search");
-    this.model.bind("refresh",this.render);
+    _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
+                  "setEnd","search","category","after","fetch");
+    this.model.bind("sync",this.before);
+    this.model.bind("reset",this.render);
     this.model.bind("change",this.render);
-    this.model.view = this;
   },
 
   events:{
     "click .more": "renderMore",
-    "click #search-button": "search"
+    "click #search-button": "searchByForm",
+    "keyup #search-query": "submitSearch"
   },
 
-  search:function(){
-    this.$('.row').remove();
+  search:function(query){
+    this.before();
+    this.model.search(query,this.after);
+  },
+
+  submitSearch:function(event){
+    if(event.which == 13){
+      this.searchByForm();
+    }
+  },
+
+  before:function(){
     $('#ajax-loader').show();
-    var query = $('#search-query').val();
-    this.model.search(query,function(){
-      $('#ajax-loader').hide();
-    });
-         
+    $('.receipts-stat').hide();
+    this.$('.row').remove();
+  },
+
+  after:function(){
+    $('#ajax-loader').hide();
+    $('.receipts-stat').show();
+  },
+
+  searchByForm:function(){
+    this.search($('#search-query').val());
+  },
+
+  category:function(category){
+    this.before();
+    this.model.category(category,this.after);       
   },
 
   updateStatus:function(){
@@ -34,6 +57,7 @@ window.AppView = Backbone.View.extend({
   },
 
   render:function(){
+    this.cleanResults();
     this.setEnd();
 
     this.$('#ajax-loader').hide();
@@ -47,8 +71,13 @@ window.AppView = Backbone.View.extend({
     return this;
   },
 
+  cleanResults:function(){
+    this.$('.row').remove();
+  },
+
   renderMore:function(){
-    var pageLength = (this.end + this.pageSize <= this.model.length) ? this.end + this.pageSize : this.model.length;
+    var pageLength = (this.end + this.pageSize <= this.model.length) 
+                     ? this.end + this.pageSize : this.model.length;
     _.each(this.model.models.slice(this.end,pageLength),this.renderReceipt);
 
     this.end = pageLength;
@@ -66,5 +95,15 @@ window.AppView = Backbone.View.extend({
 
   setEnd:function(){
     this.end = (this.model.length > 10) ? 10 : this.model.length;       
+  },
+
+  searchTag:function(tags){
+    this.before();
+    this.model.searchTag(tags.split("-"),this.after);
+  },
+
+  fetch:function(options){
+    this.before();
+    this.model.fetch({success:this.after,error:options.error});      
   }
 });

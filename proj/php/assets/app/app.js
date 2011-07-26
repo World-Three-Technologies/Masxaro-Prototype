@@ -1,4 +1,4 @@
 $(function(){
-  new AppController();
-  Backbone.history.start();
+  new AppRouter();
+  Backbone.history.start({pushState:false});
 });

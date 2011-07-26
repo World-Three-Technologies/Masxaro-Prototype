@@ -99,11 +99,15 @@ class ReceiptCtrl extends Ctrl{
 	 * receipt object array with tags fetched
 	 * 
 	 */
-	protected function fetchReceiptTags($receiptObjs){
-		foreach($receiptObjs as $obj){
-			$obj->tags = $this->getReceiptTags($obj->id);
-		}
-		return $receiptObjs;
+	protected function fetchReceiptTags($receipts){
+    foreach($receipts as $receipt){
+      $ids[] = $receipt->id;
+    }
+    $tags = $this->getReceiptsTags($ids);
+    foreach($receipts as $receipt){
+      $receipt->tags = $tags[$receipt->id];
+    }
+    return $receipts;
 	}
 	
 	
@@ -174,7 +178,7 @@ class ReceiptCtrl extends Ctrl{
 			}
 			
 		}
-				
+
 		if(!$itemsNull){
 			
 			if($receiptId == null || strlen($receiptId) == 0 || $receiptId == 0){
@@ -192,7 +196,7 @@ class ReceiptCtrl extends Ctrl{
 					`deleted`=false
 			";
 			$this->db->select($sql);
-			
+				
 			if($this->db->numRows() > 0){
 				$result = $this->db->fetchObject();
 				$totalCost = $result[0]->total_cost;
@@ -201,7 +205,7 @@ class ReceiptCtrl extends Ctrl{
 				//$this->realDelete($receiptId);
 				return false;
 			}
-			
+
 			$n = count($items);
 			
 			for($i = 0; $i < $n; $i ++){
@@ -220,7 +224,6 @@ class ReceiptCtrl extends Ctrl{
 					((100 - $items[$i]['item_discount']) * 0.01);
 				
 				$totalCost += $curCost;
-				
 				$items[$i]['receipt_id'] = $receiptId;	
 				
 				$info = Tool::infoArray2SQL($items[$i]);
@@ -228,7 +231,7 @@ class ReceiptCtrl extends Ctrl{
 				if(!Tool::securityChk($info)){
 					return false;
 				}
-				
+
 				$sql = "
 					INSERT 
 					INTO 
@@ -242,6 +245,7 @@ class ReceiptCtrl extends Ctrl{
 					return false;
 				}
 			}
+
 			$totalCost += $totalCost * $basicInfo['tax'] * 0.01;
 
 			$sql = "
@@ -292,16 +296,16 @@ class ReceiptCtrl extends Ctrl{
 			WHERE
 				`id`=$receiptId
 			AND 
-				`deleted`=false
+				`deleted`=false;
 		";
-		
+
 		if($this->db->update($sql) <= 0){
+      echo $sql;
 			return false;
 		}
 			
 		return true;
 	}
-	
 	
 	/**
 	 * 
@@ -477,7 +481,7 @@ class ReceiptCtrl extends Ctrl{
 			FROM 
 				`receipt_item`
 			WHERE
-				`id`=$receiptId
+				`receipt_id`=$receiptId
 			AND
 				`deleted`=false
 		";
@@ -523,10 +527,10 @@ class ReceiptCtrl extends Ctrl{
 				r.`source`,
 				s.`store_name`,
 				ri.`item_id`,
-        		ri.`item_name`, 
-        		ri.`item_qty`, 
-        		ri.`item_discount`,
-				ri.`item_price`
+        ri.`item_name`, 
+        ri.`item_qty`, 
+        ri.`item_discount`,
+        ri.`item_price`
 			FROM 
 				`receipt` 
 			AS 
@@ -545,7 +549,7 @@ class ReceiptCtrl extends Ctrl{
 				r.`user_account` regexp '$acc'
 			AND 
 				r.`deleted`=false
-			AND
+      AND
 				ri.`deleted`=false
 			AND
 				r.`id`
@@ -690,18 +694,47 @@ class ReceiptCtrl extends Ctrl{
 	 * @desc
 	 * return an array of tags of a certain receipt
 	 */
-	public function getReceiptTags($id){
+  public function getReceiptTags($id){
 		$sql = "
 			SELECT
 				`tag`
 			FROM
 				`receipt_tag`
 			WHERE
-				`receipt_id`=$id
+				`receipt_id` = ($id)
+		";
+
+		$this->db->select($sql);
+		$results = $this->db->fetchAssoc();
+  
+  }
+
+  /*
+   * @param array(int) receipt ids
+   *
+   * @return array $tags
+   *
+   * @desc return tags array for each receipt, indexed with receipt id
+   */
+	public function getReceiptsTags($ids){
+    $idList = implode(',',$ids);
+		$sql = "
+			SELECT
+				`receipt_id`, `tag`
+			FROM
+				`receipt_tag`
+			WHERE
+				`receipt_id` IN ($idList)
 		";
 		
 		$this->db->select($sql);
-		return $this->db->fetchAssoc();
+		$results = $this->db->fetchAssoc();
+
+    foreach($results as $result){
+      $tags[$result['receipt_id']][] = $result['tag'];
+    }
+    return $tags;
 	}	
+
 }
 ?>

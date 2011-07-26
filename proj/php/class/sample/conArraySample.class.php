@@ -23,7 +23,6 @@ $con = array(
 							)
 				)
 );
-
 //echo json_encode($con);
 echo Tool::condArray2SQL($con);
 die();

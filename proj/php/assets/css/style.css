@@ -62,8 +62,12 @@ header {
     #main #main-tab div {
       width: 80px;
       float: left;
-      padding: 5px 0;
-      margin: 5px 0; }
+      padding: 10px 0;
+      border: 1px #AAA solid;
+      border-bottom: 0;
+      cursor: pointer; }
+      #main #main-tab div.active, #main #main-tab div:hover {
+        background-color: #5eceb0; }
   #main #content {
     margin: 10px;
     text-align: left;
@@ -111,12 +115,11 @@ header {
     transition: all 0.3s ease-in-out;
     padding: 7px;
     border-top: 1px #EBE solid;
-    border-bottom: 1px #EBE solid;
-    cursor: pointer; }
+    border-bottom: 1px #EBE solid; }
     #receipts-table tr.row:hover {
       background-color: #FEE; }
       #receipts-table tr.row:hover .toolbar {
-        display: block; }
+        display: inline-block; }
     #receipts-table tr.row .date {
       float: left;
       width: 40px;
@@ -152,28 +155,36 @@ header {
       position: relative; }
       #receipts-table tr.row .receipt:hover {
         cursor: normal; }
-        #receipts-table tr.row .receipt:hover .toolbar {
-          display: block; }
+        #receipts-table tr.row .receipt:hover span.toolbar {
+          display: inline-block; }
       #receipts-table tr.row .receipt .store {
         padding: 10px; }
       #receipts-table tr.row .receipt .content {
         width: 700px; }
       #receipts-table tr.row .receipt .toolbar {
+        display: none;
+        cursor: pointer; }
+      #receipts-table tr.row .receipt .close {
         position: absolute;
         top: 0;
-        right: 0;
+        right: 0; }
+      #receipts-table tr.row .receipt .editing .edit {
+        display: inline-block; }
+      #receipts-table tr.row .receipt .editing .tags {
+        display: none; }
+      #receipts-table tr.row .receipt .edit {
         display: none; }
 
-.receipt-item {
+div.receipt-item {
   font-size: 18px;
   padding: 2px;
   margin: 3px; }
-  .receipt-item .item_name {
+  div.receipt-item .item_name {
     width: 300px; }
-  .receipt-item .item_qty {
+  div.receipt-item .item_qty {
     float: right;
     padding-right: 100px; }
-  .receipt-item .item_price {
+  div.receipt-item .item_price {
     float: right;
     font-size: 20px;
     font-weight: bold; }
@@ -218,3 +229,27 @@ footer {
       width: 100%;
       height: 100%;
       text-decoration: none; }
+
+.tags .tag {
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  background-color: #5ece74;
+  padding: 2px 4px;
+  margin-left: 5px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #FFF;
+  z-index: 10; }
+  .tags .tag:hover {
+    background-color: #5e6a38; }
+  .tags .tag a {
+    text-decoration: none;
+    color: #FFF; }
+    .tags .tag a:link, .tags .tag a:visited {
+      color: #FFF; }
+    .tags .tag a:hover {
+      color: #FFF; }
+
+.edit-button {
+  cursor: pointer; }

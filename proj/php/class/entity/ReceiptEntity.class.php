@@ -27,7 +27,6 @@
 class ReceiptEntity{
 	//basic info
 	public $id = NULL;
-	public $store_account = NULL;
 	public $store_name = NULL;
 	public $user_account = NULL;
 	public $receipt_time = NULL;

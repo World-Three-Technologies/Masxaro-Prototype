@@ -15,16 +15,11 @@ describe("user view",function(){
 
   it("have user model and binding to #user",function(){
     expect(this.view.model.get("account")).toEqual(this.userFixture.account);
-    expect(this.view.model.get("flash")).toEqual(this.userFixture.flash);
     expect(this.view.el).toHaveId('user');
 
   })
   
   it("can set user name to #username",function(){
     expect($("#username").text()).toEqual(this.userFixture.account);
-  });
-
-  it("can set notice message to flash",function(){
-    expect(this.view.$("#user-flash").text()).toEqual(this.userFixture.flash);
   });
 });

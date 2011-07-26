@@ -1,3 +1,10 @@
+<?php 
+  include_once "../config.php";
+  $acc = $_COOKIE["acc"];
+  if(!Tool::authenticate($acc)){
+    Tool::redirectToProduct();
+  }
+?>
 <!doctype html>
 <!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
@@ -15,24 +22,20 @@
   <?php include_once "layout/header-bar.php" ?>
   <div id="container">
     <div id="main" role="main">
+      <nav id="main-tab" class="clearfix">
+        <div class="tab active">Receipt</div>
+        <div class="tab">Overview</div>
+        <div class="tab">Analysis</div>
+      </nav>
       <nav id="action-bar">
         <div id="action-bar-inner">
-          <h4>catagory</h4>
-          <ul>
-            <li class="active"><a href="#index">Recent [15]</a></li>
-            <li><a href="#index">Grocery</a></li>
-            <li><a href="#index">Payment</a></li>
-            <li><a href="#index">Overview</a></li>
-          </ul>
           <h4>tags</h4>
+          <ul class="action">
+            <li class="tag-recent"><a href="#index">Recent</a></li>
+          </ul>
         <div>
       </nav>
       <div id="content">
-        <nav id="main-tab" class="clearfix">
-          <div class="tab">Receipt</div>
-          <div class="tab">Overview</div>
-          <div class="tab">Analysis</div>
-        </nav>
         <div id="receipts">
           <div id="search-bar">
             <div>

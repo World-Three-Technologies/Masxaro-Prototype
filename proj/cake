@@ -6,88 +6,115 @@
 
   $task = $argv[1];
 
-  if($task=="test"){
-    runTest();
-  } else if($task =="seed"){
-    seed();
-  } else if($task =="deploy"){
-    concatJavascripts();
-    system("cp -rf ./ /Library/WebServer/Documents/");
-  } else if($task =="build"){
-    concatJavascripts();
-  } else if($task =="spec"){
-    concatJavascripts();
-    system("open $path/php/assets/spec/SpecRunner.html");
-  } else{
-    usage();
+  switch($task){
+    case "test":
+      runTest();
+      break;
+    case "deploy":
+      buildJavascripts();
+      system("cp -rf ./ /Library/WebServer/Documents/");
+      break;
+    case "seed":
+      seed();
+      break;
+    case "spec":
+      buildJavascripts();
+      system("open $path/php/assets/spec/SpecRunner.html");
+      break;
+    case "watch":
+      $css_path = $path."/php/assets/css";
+      system("sass --watch $css_path/style.scss:$css_path/style.css");
+      break;
+    case "db":
+      $host = DB_HOST;
+      $user = DB_USER;
+      $pwd = DB_PWD;
+      $db = DB_DBNAME;
+      echo "mysql -h$host -u$user -p$pwd -D $db\n";
+      break;
+    default:
+      usage();
   }
 
   function usage(){
-    echo "usage...\n";
-    echo "./cake test :: run testcase\n";
-    echo "./cake seed :: insert data to database\n";
+    echo "usage:: ./cake [task]\n";
+    echo "  test :: run testcase\n";
+    echo "  seed :: insert data to database\n";
+    echo "  deploy :: deploy website to local address\n";
+    echo "  spec :: run front-end test spec\n";
+    echo "  watch :: watch scss file and compile into css\n";
+    echo "  db :: show mysql console commend for refer...\n";
   }
 
   function runTest(){
-    system("php ./php/test/test.php");
+
   }
 
-  function concatJavascripts(){
-
+  function buildJavascripts(){
+    desc("concatenating javascript into app.js...");
     system("cat LICENSE > php/assets/js/app.js");
     system("cat php/assets/app/models/*.js >> php/assets/js/app.js");
     system("cat php/assets/app/views/*.js >> php/assets/js/app.js");
-    system("cat php/assets/app/controllers/*.js >> php/assets/js/app.js");
+    system("cat php/assets/app/routers/*.js >> php/assets/js/app.js");
     system("cat php/assets/app/app.js >> php/assets/js/app.js");
   }
 
   function seed(){
 
-    //insert user;
+    desc("insert user");
     $userControl = new UserCtrl();
     if($userControl->chkAccount("w3t")){
       $user = array(
-      "user_account" => "w3t",
-      "pwd" => "w3t",
-      "first_name" => "W3Tester");
+        "user_account" => "w3t",
+        "pwd" => "w3t",
+        "first_name" => "W3Tester",
+      );
       $userControl->insertUser($user);
     }
 
-    //insert receipts;
+    desc("insert receipt...");
     $receiptControl = new ReceiptCtrl();
     $receipt = array(
       "store_account" => "Mc_NYU",
       "user_account" => "w3t",
-      "tax" => 0.0875 ,
+      "tax" => 8.75 ,
+      "receipt_category" => "restaurant",
       "receipt_time" => "now()"
     );
 
     $items = array();
 
     array_push($items, array( 
-           'item_id'=>'3',
-           'item_name'=>'Harry-Potter - I', 
+           'item_name'=>'Big Mac', 
+           'item_id'=>1,
            'item_qty'=>1, 
-           'item_price'=>10.99, 
+           'item_price'=>4.99, 
+           'item_category' =>"food",
            'item_discount'=>1));
 
     array_push($items, array( 
-           'item_id'=>'4',
-           'item_name'=>'Harry-potter - II', 
-           'item_qty'=>2, 
-           'item_price'=>39.99, 
+           'item_name'=>'Salad', 
+           'item_id'=>2,
+           'item_qty'=>1, 
+           'item_price'=>1.99, 
+           'item_category' =>"food",
            'item_discount'=>1));
 
     array_push($items, array( 
-           'item_id'=>'5',
-           'item_name'=>'Harry-potter - III', 
-           'item_qty'=>5, 
-           'item_price'=>19.99, 
+           'item_name'=>'Medium drink', 
+           'item_id'=>3,
+           'item_qty'=>1, 
+           'item_category' =>"drink",
+           'item_price'=>1.99, 
            'item_discount'=>1));
 
     $flag = $receiptControl->insertReceipt($receipt,$items);
     if(!$flag){
-      echo "insert fails\n";
+      desc("insert fails");
     }
+  }
+
+  function desc($message){
+    echo $message."\n";
   }
 ?>

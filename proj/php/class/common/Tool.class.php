@@ -92,6 +92,7 @@ class Tool{
 		}
 		return '('.implode(" $curOperator ", $buffer).')';
 	}
+
 	
 	/**
 	 * @todo
