@@ -567,9 +567,9 @@ class ReceiptCtrl extends Ctrl{
 	      				`receipt_id`=`id`
 	      			AND
 	      				`receipt`.`store_account`=`store`.`store_account`
-	      			ORDER BY
-	      				`receipt`.`receipt_time`
       			)
+      ORDER BY
+        `r`.`receipt_time` DESC
 		";
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
@@ -629,7 +629,7 @@ class ReceiptCtrl extends Ctrl{
 	public function searchTagReceipt($con, $acc){
 		$con = Tool::condArray2SQL($con);
 		
-		$sql = "
+		$receiptIdSql = "
 			SELECT
 				`receipt_id`
 			FROM
@@ -642,16 +642,6 @@ class ReceiptCtrl extends Ctrl{
 				`receipt_id`
 		";
 		
-		$this->db->select($sql);
-		$ids = $this->db->fetchAssoc();
-		
-		$orsql = "";
-		foreach($ids as $id){
-			$orsql .= "r.`id`={$id['receipt_id']} OR ";
-		}
-		
-		$orsql = '('.substr($orsql, 0, strlen($orsql) - 4).')';
-		
 		$sql = "
 			SELECT 
 				r.`id`,
@@ -661,9 +651,9 @@ class ReceiptCtrl extends Ctrl{
 				r.`source`,
 				s.`store_name`,
 				ri.`item_id`,
-        		ri.`item_name`, 
-        		ri.`item_qty`, 
-        		ri.`item_discount`,
+        ri.`item_name`, 
+        ri.`item_qty`, 
+        ri.`item_discount`,
 				ri.`item_price`
 			FROM 
 				`receipt` as r
@@ -675,8 +665,11 @@ class ReceiptCtrl extends Ctrl{
 				`store` as s
 			ON
 				r.`store_account`=s.`store_account`
-			WHERE
-				$orsql;
+      WHERE `r`.id IN (
+        $receiptIdSql
+      ) 
+      GROUP BY 
+        r.receipt_time DESC;
 		";
 				
 		$this->db->select($sql);
@@ -717,6 +710,7 @@ class ReceiptCtrl extends Ctrl{
    * @desc return tags array for each receipt, indexed with receipt id
    */
 	public function getReceiptsTags($ids){
+    if(!isset($ids)) return false;
     $idList = implode(',',$ids);
 		$sql = "
 			SELECT
@@ -735,6 +729,5 @@ class ReceiptCtrl extends Ctrl{
     }
     return $tags;
 	}	
-
 }
 ?>

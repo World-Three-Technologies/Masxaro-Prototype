@@ -155,7 +155,7 @@ header {
       position: relative; }
       #receipts-table tr.row .receipt:hover {
         cursor: normal; }
-        #receipts-table tr.row .receipt:hover span.toolbar {
+        #receipts-table tr.row .receipt:hover span.toolbar, #receipts-table tr.row .receipt:hover .toolbar {
           display: inline-block; }
       #receipts-table tr.row .receipt .store {
         padding: 10px; }
@@ -253,3 +253,7 @@ footer {
 
 .edit-button {
   cursor: pointer; }
+
+.separator {
+  border-top: 1px black solid;
+  margin: 0; }

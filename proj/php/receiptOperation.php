@@ -82,7 +82,7 @@ switch($opcode){
 									'value'=>$userAcc
 								  )
 					);
-		echo json_encode($ctrl->searchReceipt($con));
+		echo json_encode($ctrl->searchReceipt($con,$userAcc));
 		break;
 		
 	case 'user_get_receipt_detail':
@@ -104,8 +104,6 @@ switch($opcode){
 		 */
 		
 		$keys = isset($post['keys']) ? $post['keys'] : '';
-		
-		$keys = array('Coffee', 'coke');
 		
 		$con = array();
 		
@@ -149,7 +147,6 @@ switch($opcode){
 		 * @see tagOperation.php $tags
 		 */
 		$tags = $post['tags'];
-		//$tags = array('restaurant','movie');
 
 		if(!is_array($tags)){
 			die('wrong parameters');

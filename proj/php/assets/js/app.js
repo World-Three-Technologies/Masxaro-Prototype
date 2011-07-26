@@ -143,7 +143,7 @@ window.AppView = Backbone.View.extend({
 
   initialize:function(){
     _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
-                  "setEnd","search","category","after","fetch");
+                  "setEnd","search","after","fetch");
     this.model.bind("sync",this.before);
     this.model.bind("reset",this.render);
     this.model.bind("change",this.render);
@@ -167,9 +167,9 @@ window.AppView = Backbone.View.extend({
   },
 
   before:function(){
-    $('#ajax-loader').show();
+    this.cleanResults();
     $('.receipts-stat').hide();
-    this.$('.row').remove();
+    $('#ajax-loader').show();
   },
 
   after:function(){
@@ -181,13 +181,8 @@ window.AppView = Backbone.View.extend({
     this.search($('#search-query').val());
   },
 
-  category:function(category){
-    this.before();
-    this.model.category(category,this.after);       
-  },
-
   updateStatus:function(){
-    this.$(".receipts-stat .stat").text(this.start + " to "+ this.end +" in "+this.model.length);
+    this.$(".stat").text(this.start + " to "+ this.end +" in "+this.model.length);
   },
 
   render:function(){
@@ -201,6 +196,8 @@ window.AppView = Backbone.View.extend({
 
     if(this.end >= this.model.length ){
       this.$(".more").hide();
+    }else{
+      this.$(".more").show();
     }
     return this;
   },
@@ -215,10 +212,13 @@ window.AppView = Backbone.View.extend({
     _.each(this.model.models.slice(this.end,pageLength),this.renderReceipt);
 
     this.end = pageLength;
+
     this.updateStatus();
 
     if(this.end === this.model.length){
       this.$(".more").hide();
+    }else{
+      this.$(".more").show();
     }
   },
 
@@ -237,6 +237,7 @@ window.AppView = Backbone.View.extend({
   },
 
   fetch:function(options){
+
     this.before();
     this.model.fetch({success:this.after,error:options.error});      
   }
@@ -276,7 +277,6 @@ var ReceiptView = Backbone.View.extend({
     content.addClass("editing");
     this.$('.edit-button').text("[save]");
     $(event.target).unbind("click");
-    console.log(event.target);
   },
 
   saveTags:function(){

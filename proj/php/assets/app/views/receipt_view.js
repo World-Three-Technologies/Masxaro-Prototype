@@ -33,7 +33,6 @@ var ReceiptView = Backbone.View.extend({
     content.addClass("editing");
     this.$('.edit-button').text("[save]");
     $(event.target).unbind("click");
-    console.log(event.target);
   },
 
   saveTags:function(){

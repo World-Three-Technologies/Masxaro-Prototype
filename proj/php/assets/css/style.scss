@@ -210,7 +210,7 @@ header{
       position:relative;
       &:hover{
         cursor:normal;
-        span.toolbar{
+        span.toolbar, .toolbar{
           display:inline-block;
         }
       }
@@ -336,5 +336,9 @@ footer{
 }
 .edit-button{
   cursor:pointer;
+}
+.separator{
+  border-top:1px black solid;
+  margin:0;
 }
 
