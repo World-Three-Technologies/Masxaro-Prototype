@@ -59,7 +59,6 @@ if($result == 0){
 }
 
 echo Tool::login($acc, $type);
-Tool::redirectToPortal();
 
 ob_end_flush();
 ?>

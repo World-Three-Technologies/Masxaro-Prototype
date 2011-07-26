@@ -16,6 +16,46 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   
   <?php include_once "layout/header.php" ?>
+  <script src="assets/js/vendor/jquery.js"></script>
+  <script src="assets/js/vendor/jquery.validate.js"></script>
+<script>
+
+$(function(){
+  $("#login").validate({
+    submitHandler:function(form){
+      $.post("login.php",{
+        acc:$("#login .acc").val(),
+        pwd:$("#login .pwd").val(),
+        type:"user"
+      }).success(function(data){
+        if(data == "1"){
+          location.href = "index.php";
+        }else{
+          alert(data);
+        }
+      });
+    }
+  });
+
+  $("#register").validate({
+    submitHandler:function(){
+      $.post("register.php",{
+        userAccount: $("#register .user-account").val(),
+        firstName: $("#register .first-name").val(),
+        email : $("#register .email").val(),
+        pwd : $("#register .pwd").val(),
+        type:"user"
+      }).success(function(data){
+        if(data == "1"){
+          alert("Thank you for register, please check your email for activating");
+        }else{
+          alert(data);
+        }
+      });
+    }
+  });
+});
+  </script>
 
 </head>
 
@@ -29,10 +69,12 @@
             <h2>Masxaro</h2>
           </div>
           <div id="header-user">
-            <form id="login" action="login.php" method="POST">
+            <form id="login">
               <input type="hidden" name="type" value="user"/>
-              <label for="acc" title="Username">Username</label><input type="text" name="acc"></input>
-              <label for="pwd" title="password">Password</label><input type="password" name="pwd"></input>
+              <label for="acc" title="Username">Username</label>
+              <input class="required acc" type="text" name="acc"></input>
+              <label for="pwd" title="password">Password</label>
+              <input class="required pwd" type="password" name="pwd"></input>
               <button>Login</button>
             </form>
           </div>
@@ -41,24 +83,25 @@
     </header>
     <div id="main" role="main">
       <div class="clearfix">
-        <div id="register">
-          <form action="register.php" method="POST">
+        <div>
+          <form id="register">
             <table>
               <tr>
                 <td><label for="userAccount" title="Username">Username</label></td>
-                <td><input type="text" name="userAccount"></input></td>
+                <td><input class="required user-account" type="text" name="userAccount"></input></td>
+                <td></td>
               </tr>
               <tr>
                 <td><label for="firstName" title="firstName">First Name</label></td>
-                <td><input type="text" name="firstName"></input></td>
+                <td><input class="required first-name" type="text" name="firstName"></input></td>
               </tr>
               <tr>
                 <td><label for="pwd" title="password">Password</label></td>
-                <td><input type="password" name="pwd"></input></td>
+                <td><input class="required pwd" minlength="6" type="password" name="pwd"></input></td>
               </tr>
               <tr>
                 <td><label for="email" title="email">Email</label></td>
-                <td><input type="text" name="email"></input></td>
+                <td><input class="required email" type="text" name="email"></input></td>
                 <input type="hidden" name="type" value="user"></input>
               </tr>
               <tr><td></td><td><button>Register</button></td></tr>
