@@ -23,7 +23,7 @@ var Receipts = Backbone.Collection.extend({
     $.post(this.url,{
       opcode : "key_search",
       acc: account,
-      key : query
+      keys : query
     }).success(function(data){
       model.reset(data);
       success();

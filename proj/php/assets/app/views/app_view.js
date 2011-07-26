@@ -12,7 +12,7 @@ window.AppView = Backbone.View.extend({
                   "setEnd","search","after","fetch");
     this.model.bind("sync",this.before);
     this.model.bind("reset",this.render);
-    this.model.bind("change",this.render);
+    //this.model.bind("change",this.render);
   },
 
   events:{
@@ -103,7 +103,6 @@ window.AppView = Backbone.View.extend({
   },
 
   fetch:function(options){
-
     this.before();
     this.model.fetch({success:this.after,error:options.error});      
   }

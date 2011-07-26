@@ -39,7 +39,12 @@ var Receipt = Backbone.Model.extend({
       }
     }
     $.post(this.url,data,options.success).error(options.error);
+  },
+
+  updateTags:function(){
+    console.log(this.get("tags"));          
   }
+  
 });
 var Receipts = Backbone.Collection.extend({
   model: Receipt,
@@ -66,7 +71,7 @@ var Receipts = Backbone.Collection.extend({
     $.post(this.url,{
       opcode : "key_search",
       acc: account,
-      key : query
+      keys : query
     }).success(function(data){
       model.reset(data);
       success();
@@ -146,7 +151,7 @@ window.AppView = Backbone.View.extend({
                   "setEnd","search","after","fetch");
     this.model.bind("sync",this.before);
     this.model.bind("reset",this.render);
-    this.model.bind("change",this.render);
+    //this.model.bind("change",this.render);
   },
 
   events:{
@@ -237,7 +242,6 @@ window.AppView = Backbone.View.extend({
   },
 
   fetch:function(options){
-
     this.before();
     this.model.fetch({success:this.after,error:options.error});      
   }
@@ -249,20 +253,24 @@ var ReceiptView = Backbone.View.extend({
   template:_.template($('#receipt-row-template').html() || "<div/>"),
   fullTemplate:_.template($('#receipt-full-template').html() || "<div/>"),
   itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
+  isEditing:false,
 
   initialize:function(){
-    _.bindAll(this,'render','showReceipt','getItemText','editTags','saveTags');
-    this.model.bind('change',this.render);
+    _.bindAll(this,'render','showReceipt','getItemText',
+              'editTags','getTags');
+    this.model.bind('change',this.showReceipt);
   },
 
   events:{
     "click .receipt-row" : "showReceipt",
-    "click .edit-button" : "editTags",
     "click .close" :"render",
     "click .add-button" : "newTag",
+    "click .edit-button" : "editTags"
   },
 
+
   render:function(){
+    console.log("rendering...");
     var view = $(this.el);
     view.html(this.template(this.model.toJSON()));
 
@@ -274,22 +282,29 @@ var ReceiptView = Backbone.View.extend({
 
   editTags:function(){
     var content = $(event.target).parent().parent();
-    content.addClass("editing");
-    this.$('.edit-button').text("[save]");
-    $(event.target).unbind("click");
+    if(!this.isEditing){
+      content.addClass("editing");
+      this.$('.edit-button').text("[save]");
+      this.isEditing = true;
+    }else{
+      content.removeClass("editing");
+      this.model.set({tags: this.getTags() });
+      this.model.updateTags();
+      this.$('.edit-button').text("[edit]");
+      this.isEditing = false;
+    }
   },
 
-  saveTags:function(){
-    var content = $(event.target).parent().parent();
-    console.log(content.hasClass("editing"));
-    content.removeClass("editing");
-    this.$('.edit-button').text("[edit]");
-//      .unbind("click",this.saveTags)
-//      .bind("click",this.editTags);
+  getTags:function(){
+    var tags = [];
+    _.each(this.$(".edit-tag"),function(tag){
+      tags.push($(tag).val());
+    });     
+    return tags;
   },
 
   newTag:function(){
-    var tag = $("<input type='text' size='10'/>");
+    var tag = $("<input type='text' size='10' class='edit-tag'/><span class='delete-btn'>[X]</span>");
     this.$('.edit-area').append(tag);     
   },
 
@@ -299,7 +314,8 @@ var ReceiptView = Backbone.View.extend({
 
   showReceipt:function(){
 
-    if(window.lastOpen){
+    if(window.lastOpen && window.lastOpen != this){
+      console.log(window.lastOpen);
       window.lastOpen.render();
     }
 
@@ -312,7 +328,6 @@ var ReceiptView = Backbone.View.extend({
     _.each(self.model.get("items"),function(model){
       items.append(self.itemTemplate(model));
     });
-
     window.lastOpen = this;
   },
 

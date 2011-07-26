@@ -21,5 +21,10 @@ var Receipt = Backbone.Model.extend({
       }
     }
     $.post(this.url,data,options.success).error(options.error);
+  },
+
+  updateTags:function(){
+    console.log(this.get("tags"));          
   }
+  
 });

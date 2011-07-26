@@ -710,7 +710,7 @@ class ReceiptCtrl extends Ctrl{
    * @desc return tags array for each receipt, indexed with receipt id
    */
 	public function getReceiptsTags($ids){
-    if(!isset($ids)) return false;
+    if(!isset($ids) || !is_array($ids)) return false;
     $idList = implode(',',$ids);
 		$sql = "
 			SELECT

@@ -36,7 +36,8 @@
         <span class='edit edit-area'>
         <% _.each(tags,function(tag){ %>
           <span>
-            <input type="text" value="<%= tag%>" size="10"></input> 
+          <input type="text" class="edit-tag" value="<%= tag%>" size="10"></input>
+          <span class="delete-btn" tag-data='<%= tag %>'>[X]</span>
           </span>
         <% }); %>
         </span>
