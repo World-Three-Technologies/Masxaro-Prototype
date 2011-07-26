@@ -105,7 +105,7 @@ switch($opcode){
 		
 		$keys = isset($post['keys']) ? $post['keys'] : '';
 		
-		$keys = array('Coffee', 'coke');
+		//$keys = array('Coffee', 'coke');
 		
 		$con = array();
 		
