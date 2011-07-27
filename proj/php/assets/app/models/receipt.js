@@ -1,9 +1,10 @@
 var Receipt = Backbone.Model.extend({
 
   url: 'receiptOperation.php',
+  tagUrl: 'tagOperation.php',
 
   initialize:function(){
-    _.bindAll(this,'sync');
+    _.bindAll(this,'sync','updateTags','removeTags','saveTags');
   },
 
   sync:function(method,model,options){
@@ -23,8 +24,40 @@ var Receipt = Backbone.Model.extend({
     $.post(this.url,data,options.success).error(options.error);
   },
 
-  updateTags:function(){
-    console.log(this.get("tags"));          
+  updateTags:function(oldTags){
+    var tags = this.get("tags"),
+        deletedTags = _.difference(oldTags,tags),
+        newTags = _.difference(tags,oldTags);
+    this.removeTags(deletedTags);          
+    this.saveTags(newTags);          
+  },
+
+  saveTags:function(tags){
+    if(!tags || tags.length == 0){
+      return false;
+    }
+    $.post(this.tagUrl,{
+      opcode:"add_receipt_tags",
+      user_account:account,
+      tags:tags,
+      receipt_id:this.id
+    }).success(function(data){
+      console.log(data);
+    });
+  },
+
+  removeTags:function(tags){
+    if(!tags || tags.length == 0){
+      return false;
+    }
+    $.post(this.tagUrl,{
+      opcode:"delete_receipt_tags",
+      user_account:account,
+      tags:tags,
+      receipt_id:this.id
+    }).success(function(data){
+      console.log(data);
+    });
+             
   }
-  
 });

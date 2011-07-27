@@ -6,6 +6,7 @@ var ReceiptView = Backbone.View.extend({
   fullTemplate:_.template($('#receipt-full-template').html() || "<div/>"),
   itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
   isEditing:false,
+  tagState:[],
 
   initialize:function(){
     _.bindAll(this,'render','showReceipt','getItemText',
@@ -33,16 +34,25 @@ var ReceiptView = Backbone.View.extend({
   },
 
   editTags:function(){
+    //sequence is important here...
     var content = this.$(".content");
+
     if(!this.isEditing){
-      this.isEditing = true;
+
       content.addClass("editing");
+      this.isEditing = true;
+
       this.$('.edit-button').text("[save]");
+      this.tagState = this.model.get("tags");
+
     }else{
+      //set isEditing before render the receipt, so the input box will be disappear
       content.removeClass("editing");
       this.isEditing = false;
+
       this.model.set({tags: this.getTags() });
-      this.model.updateTags();
+      this.model.updateTags(this.tagState);
+
       this.$('.edit-button').text("[edit]");
     }
   },
@@ -71,6 +81,7 @@ var ReceiptView = Backbone.View.extend({
     if(window.lastOpen && window.lastOpen != this){
       window.lastOpen.render();
     }
+    window.lastOpen = this;
 
     $(this.el).html(this.fullTemplate(this.model.toJSON()));
     $(this.el).find(".date").html(new Date(this.model.get("receipt_time")).format());
@@ -86,19 +97,11 @@ var ReceiptView = Backbone.View.extend({
       this.$(".content").addClass("editing");
       this.$('.edit-button').text("[save]");
     }
-    window.lastOpen = this;
   },
 
   getItemText:function(items){
     return _.reduce(items,function(memo,item){
       return memo + item.item_name + ", ";
     },"").slice(0,-2);
-  },
-
-  getLinkTags:function(tags){
-    return _.reduce(tags,function(html,tag){
-      return html + "<span class='tag'><a href='index.php#tag/"+tag+"'>"
-                  + tag + "</a></span>";
-    },"");        
   }
 });
