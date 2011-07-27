@@ -499,84 +499,7 @@ class ReceiptCtrl extends Ctrl{
 		
 	}
 	
-	/**
-	 * @see sample/conArraySample.class.php
-	 * 
-	 * @param array() $con multi-dimension array of searching conditions
-	 * 
-	 * @return array(obj,...) each ReceiptEntity obj conclude 2 arrays, basicInfo & items (array(array(),..))
-	 * 
-	 * @desc
-	 * search for receipts of a certain account(option) based on certain conditions
-	 */
-	public function searchReceipt($con, $acc = null){
-		$con = Tool::condArray2SQL($con);
-		
-		$acc = isset($acc) ? "(^$acc$)" : "(.*)";
-		
-		if(!Tool::securityChk($con)){
-			return false;
-		}
-		
-		$sql = "
-			SELECT 
-				r.`id`,
-				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
-				r.`tax`,
-				r.`total_cost`,
-				r.`source`,
-				s.`store_name`,
-				ri.`item_id`,
-        ri.`item_name`, 
-        ri.`item_qty`, 
-        ri.`item_discount`,
-        ri.`item_price`
-			FROM 
-				`receipt` 
-			AS 
-				r 
-			LEFT JOIN
-				`receipt_item` 
-			AS 
-				ri
-			ON
-				r.`id`=ri.`receipt_id`
-			LEFT JOIN
-				`store` as s
-			ON
-				r.`store_account`=s.`store_account`
-			WHERE
-				r.`user_account` regexp '$acc'
-			AND 
-				r.`deleted`=false
-      AND
-				ri.`deleted`=false
-			AND
-				r.`id`
-      		IN
-      			(
-	      			SELECT
-	      				`receipt`.`id`
-	      			FROM
-	      				`receipt`,
-	      				`receipt_item`,
-	      				`store`
-	      			WHERE
-	      				$con
-	      			AND
-	      				`receipt_id`=`id`
-	      			AND
-	      				`receipt`.`store_account`=`store`.`store_account`
-      			)
-      ORDER BY
-        `r`.`receipt_time` DESC
-		";
-		$this->db->select($sql);
-		$receipts = $this->db->fetchAssoc();
-		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
-	}
-	
-	/**
+/**
 	 * 
 	 * @param string receiptId
 	 * 
@@ -615,18 +538,108 @@ class ReceiptCtrl extends Ctrl{
 	}
 	
 	/**
+	 * @see sample/conArraySample.class.php
+	 * 
+	 * @param condition-array $con multi-dimension array of searching conditions
+	 * 
+	 * @param string $acc user account(optional)
+	 * 
+	 * @param int $limitStart limit start offset(optional)
+	 * 
+	 * @param int $limitEnd limit end offset(optional)
+	 * 
+	 * @return array(obj,...) each ReceiptEntity obj conclude 2 arrays, basicInfo & items (array(array(),..))
+	 * 
+	 * @desc
+	 * search for receipts of a certain account(option) based on certain conditions
+	 */
+	public function searchReceipt($con, $acc = null, $limitStart = 0, $limitEnd = 999999){
+		$con = Tool::condArray2SQL($con);
+		
+		$acc = isset($acc) ? "(^$acc$)" : "(.*)";
+		
+		if(!Tool::securityChk($con)){
+			return false;
+		}
+		
+		$sql = "
+			SELECT 
+				r.`id`,
+				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
+				r.`tax`,
+				r.`total_cost`,
+				r.`source`,
+				s.`store_name`,
+				ri.`item_id`,
+		        ri.`item_name`, 
+		        ri.`item_qty`, 
+		        ri.`item_discount`,
+		        ri.`item_price`
+			FROM 
+				`receipt` 
+			AS 
+				r 
+			LEFT JOIN
+				`receipt_item` 
+			AS 
+				ri
+			ON
+				r.`id`=ri.`receipt_id`
+			LEFT JOIN
+				`store` as s
+			ON
+				r.`store_account`=s.`store_account`
+			WHERE
+				r.`user_account` regexp '$acc'
+			AND 
+				r.`deleted`=false
+      		AND
+				ri.`deleted`=false
+			AND
+				r.`id`
+      		IN
+      			(
+	      			SELECT
+	      				`receipt`.`id`
+	      			FROM
+	      				`receipt`,
+	      				`receipt_item`,
+	      				`store`
+	      			WHERE
+	      				$con
+	      			AND
+	      				`receipt_id`=`id`
+	      			AND
+	      				`receipt`.`store_account`=`store`.`store_account`
+      			)
+		      ORDER BY
+		        `r`.`receipt_time` DESC
+		      LIMIT
+		      	$limitStart, $limitEnd
+		";
+		$this->db->select($sql);
+		$receipts = $this->db->fetchAssoc();
+		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
+	}
+	
+	/**
 	 * 
 	 * @see sample/conArraySample.class.php
 	 * @see php/receiptOperation.php: tag_search
 	 * 
-	 * @param condition array $con 
+	 * @param condition-array $con 
 	 * here the $con array should be an 'OR' statement only includes tags
 	 * 
 	 * @param string $acc
+	 * 
+	 * @param int $limitStart limit start offset(optional)
+	 * 
+	 * @param int $limitEnd limit end offset(optional)
+	 * 
 	 * @desc
 	 * search receipts with certain tags
 	 */
-	public function searchTagReceipt($con, $acc){
+	public function searchTagReceipt($con, $acc, $limitStart = 0, $limitEnd = 999999){
 		$con = Tool::condArray2SQL($con);
 		
 		$receiptIdSql = "
@@ -665,11 +678,13 @@ class ReceiptCtrl extends Ctrl{
 				`store` as s
 			ON
 				r.`store_account`=s.`store_account`
-      WHERE `r`.id IN (
-        $receiptIdSql
-      ) 
-      GROUP BY 
-        r.receipt_time DESC;
+      		WHERE `r`.id IN (
+		        $receiptIdSql
+		    ) 
+		    GROUP BY 
+		        r.receipt_time DESC
+		    LIMIT
+		      	$limitStart, $limitEnd
 		";
 				
 		$this->db->select($sql);

@@ -30,6 +30,16 @@ include_once 'header.php';
 $opcode = $post['opcode'];
 $userAcc = $post['acc'];
 
+/**
+ * @desc
+ * result set offset control, optional
+ * 
+ * @param int $limitStart
+ * @param int $limitEnd
+ **/
+$limitStart = $post['limitStart'];
+$limitEnd = $post['limitEnd'];
+
 $ctrl = new ReceiptCtrl();
 
 Tool::setJSON();
@@ -64,16 +74,6 @@ switch($opcode){
 		echo $ctrl->recoverDeleted($post['id']);
 		break;
 		
-	case 'user_get_all_receipt_basic':
-		//user get  all receipts' basic info
-		echo json_encode($ctrl->userGetAllReceiptBasic($userAcc));
-		break;
-		
-	case 'user_get_receipt_item':
-		//user get items info of one certain receipt
-		echo json_encode($ctrl->userGetReceiptItems($post['id']));
-		break;
-		
 	case 'user_get_all_receipt':
 		//user get all receipt, with basic info and all items info
 		$con = array(
@@ -84,24 +84,23 @@ switch($opcode){
 					);
 		echo json_encode($ctrl->searchReceipt($con,$userAcc));
 		break;
-		
-	case 'user_get_receipt_detail':
-		//user get basic info of one certain receipt
-		echo json_encode($ctrl->getReceiptDetail($post['id']));
-		break;
 	
 	case 'search':
 		echo json_encode($ctrl->searchReceipt($post['con']));
 		break;
 	
 	case 'key_search':
-		/*
+		/**
+		 * @desc
 		 * search receipts based on keywords in item_name and store_name
 		 * 
 		 * multiple keywords should be organized as an 1-d array
 		 *
 		 * array(key1, key2, key3...), eg. array('Coffee', 'coke')
-		 */
+		 * 
+		 * POST:
+		 * @param array keys
+		 **/
 		
 		$keys = isset($post['keys']) ? $post['keys'] : '';
 		
@@ -139,13 +138,29 @@ switch($opcode){
 			$con['OR'] = $tmp;
 		}
 		
-		echo json_encode($ctrl->searchReceipt($con, $userAcc));
+		if(isset($limitStart) && isset($limitEnd)){
+			echo json_encode($ctrl->searchReceipt($con, $userAcc, $limitStart, $limitEnd));
+		}
+		else{
+			echo json_encode($ctrl->searchReceipt($con, $userAcc));
+		}
 		break;
 		
 	case 'tag_search':
 		/**
 		 * @see tagOperation.php $tags
-		 */
+		 * 
+		 * @desc
+		 * search receipts based on tags
+		 * 
+		 * multiple tags should be organized as an 1-d array
+		 *
+		 * array(tag1, tag2, tag3...), eg. array('gym', 'museum')
+		 * 
+		 * POST:
+		 * @param array tags
+		 **/
+		
 		$tags = $post['tags'];
 
 		if(!is_array($tags)){
@@ -163,7 +178,93 @@ switch($opcode){
 		$con = array(
 					'OR'=>$orConds,
 		);
-		echo json_encode($ctrl->searchTagReceipt($con, $userAcc));
+		
+		if(isset($limitStart) && isset($limitEnd)){
+			echo json_encode($ctrl->searchTagReceipt($con, $userAcc, $limitStart, $limitEnd));
+		}
+		else{
+			echo json_encode($ctrl->searchTagReceipt($con, $userAcc));
+		}
+		break;
+		
+	case 'time_search':
+		/**
+		 * @desc
+		 * search receipts based on time range
+		 * 
+		 * date format: YY-MM-DD HH:MM:SS or YY-MM-DD
+		 * 
+		 * POST:
+		 * start or end cannot be null at the same time,
+		 * at least one of them should be set
+		 * @param string start start date
+		 *      
+		 * @param string end end date
+		 * 
+		 * @param int limitStart (optional)
+		 *      
+		 * @param int limitEnd   (optional)
+		 **/
+		$start = $post['start'];
+		$end = $post['end'];
+		
+		$searchOption = -1;
+		
+		if(isset($start)){
+			$searchOption = 0;
+			if(isset($end)){
+				$searchOption = 2;
+			}
+		}
+		else if(isset($end)){
+			$searchOption = 1;
+		}
+		else{
+			die('wrong parameter');
+		}
+		
+		$con = array();
+		
+		switch($searchOption){
+			case 0:
+				$con = array(
+						'>='=>array(
+								'field'=>'receipt_time',
+								'value'=>$start
+							)
+				);
+				break;
+			case 1:
+				$con = array(
+						'<='=>array(
+								'field'=>'receipt_time',
+								'value'=>$end
+							)
+				);
+				break;
+			case 2:
+				$con = array(
+						'AND'=>array(
+							'>='=>array(
+								'field'=>'receipt_time',
+								'value'=>$start
+							),
+							'<='=>array(
+								'field'=>'receipt_time',
+								'value'=>$end
+							),
+						)
+						
+				);
+				break;
+		}
+
+		if(isset($limitStart) && isset($limitEnd)){
+			echo json_encode($ctrl->searchReceipt($con, $userAcc, $limitStart, $limitEnd));
+		}
+		else{
+			echo json_encode($ctrl->searchReceipt($con, $userAcc));
+		}
 		break;
 	
 	case 'get_store_receipt':
