@@ -285,7 +285,7 @@ switch($opcode){
 						);
 		break;
 	
-	case 'get_store_receipt':
+	case 'get_store_receipts':
 		$store = $post['store'];
 		$con = array(
 				'='=>array(
@@ -299,7 +299,7 @@ switch($opcode){
 						);
 		break;
 		
-	case 'get_source_receipt':
+	case 'get_source_receipts':
 		//get receipts from certain sources
 		
 		$sources = $post['sources'];
