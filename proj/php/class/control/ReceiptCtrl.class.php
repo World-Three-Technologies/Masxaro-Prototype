@@ -430,12 +430,16 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * @param string $userAcc
 	 * 
+	 * @param int $limitStart limit start offset(optional)
+	 * 
+	 * @param int $limitOffset limit offset(optional)
+	 * 
 	 * @return array(object);
 	 * 
 	 * @desc
 	 * get all receipt based on a certain user account
 	 */
-	public function userGetAllReceiptBasic($userAcc){
+	public function userGetAllReceiptBasic($userAcc, $limitStart, $limitOffset = 999999){
 
 		$sql = "
 			SELECT 
@@ -451,8 +455,9 @@ class ReceiptCtrl extends Ctrl{
 			AND 
 				`deleted`=false
 			ORDER BY
-				r.`receipt_time`
-			DESC;
+				r.`receipt_time` DESC
+			LIMIT
+		      	$limitStart, $limitOffset
 		";
 		
 		$this->db->select($sql);
@@ -546,14 +551,14 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * @param int $limitStart limit start offset(optional)
 	 * 
-	 * @param int $limitEnd limit end offset(optional)
+	 * @param int $limitOffset limit end offset(optional)
 	 * 
 	 * @return array(obj,...) each ReceiptEntity obj conclude 2 arrays, basicInfo & items (array(array(),..))
 	 * 
 	 * @desc
 	 * search for receipts of a certain account(option) based on certain conditions
 	 */
-	public function searchReceipt($con, $acc = null, $limitStart = 0, $limitEnd = 999999){
+	public function searchReceipt($con, $acc = null, $limitStart = 0, $limitOffset = 999999){
 		$con = Tool::condArray2SQL($con);
 		
 		$acc = isset($acc) ? "(^$acc$)" : "(.*)";
@@ -615,7 +620,7 @@ class ReceiptCtrl extends Ctrl{
 		      ORDER BY
 		        `r`.`receipt_time` DESC
 		      LIMIT
-		      	$limitStart, $limitEnd
+		      	$limitStart, $limitOffset
 		";
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
@@ -634,12 +639,12 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * @param int $limitStart limit start offset(optional)
 	 * 
-	 * @param int $limitEnd limit end offset(optional)
+	 * @param int $limitOffset limit offset(optional)
 	 * 
 	 * @desc
 	 * search receipts with certain tags
 	 */
-	public function searchTagReceipt($con, $acc, $limitStart = 0, $limitEnd = 999999){
+	public function searchTagReceipt($con, $acc, $limitStart = 0, $limitOffset = 999999){
 		$con = Tool::condArray2SQL($con);
 		
 		$receiptIdSql = "
@@ -684,7 +689,7 @@ class ReceiptCtrl extends Ctrl{
 		    GROUP BY 
 		        r.receipt_time DESC
 		    LIMIT
-		      	$limitStart, $limitEnd
+		      	$limitStart, $limitOffset
 		";
 				
 		$this->db->select($sql);

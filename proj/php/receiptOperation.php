@@ -35,10 +35,10 @@ $userAcc = $post['acc'];
  * result set offset control, optional
  * 
  * @param int $limitStart
- * @param int $limitEnd
+ * @param int $limitOffset
  **/
 $limitStart = $post['limitStart'];
-$limitEnd = $post['limitEnd'];
+$limitOffset = $post['limitOffset'];
 
 $ctrl = new ReceiptCtrl();
 
@@ -83,6 +83,20 @@ switch($opcode){
 								  )
 					);
 		echo json_encode($ctrl->searchReceipt($con,$userAcc));
+		break;
+	
+	case 'user_get_all_receipt_basic':
+		//user get all receip basic information
+		if(isset($limitStart) && isset($limitOffset)){
+			echo json_encode($ctrl->userGetAllReceiptBasic($userAcc, $limitStart, $limitOffset));
+		}
+		else{
+			echo json_encode($ctrl->userGetAllReceiptBasic($userAcc));
+		}
+		break;
+		
+	case 'user_get_receipt_items':
+		echo json_encode($ctrl->userGetReceiptItems($post['receiptId']));
 		break;
 	
 	case 'search':
@@ -138,8 +152,8 @@ switch($opcode){
 			$con['OR'] = $tmp;
 		}
 		
-		if(isset($limitStart) && isset($limitEnd)){
-			echo json_encode($ctrl->searchReceipt($con, $userAcc, $limitStart, $limitEnd));
+		if(isset($limitStart) && isset($limitOffset)){
+			echo json_encode($ctrl->searchReceipt($con, $userAcc, $limitStart, $limitOffset));
 		}
 		else{
 			echo json_encode($ctrl->searchReceipt($con, $userAcc));
@@ -179,8 +193,8 @@ switch($opcode){
 					'OR'=>$orConds,
 		);
 		
-		if(isset($limitStart) && isset($limitEnd)){
-			echo json_encode($ctrl->searchTagReceipt($con, $userAcc, $limitStart, $limitEnd));
+		if(isset($limitStart) && isset($limitOffset)){
+			echo json_encode($ctrl->searchTagReceipt($con, $userAcc, $limitStart, $limitOffset));
 		}
 		else{
 			echo json_encode($ctrl->searchTagReceipt($con, $userAcc));
@@ -259,8 +273,8 @@ switch($opcode){
 				break;
 		}
 
-		if(isset($limitStart) && isset($limitEnd)){
-			echo json_encode($ctrl->searchReceipt($con, $userAcc, $limitStart, $limitEnd));
+		if(isset($limitStart) && isset($limitOffset)){
+			echo json_encode($ctrl->searchReceipt($con, $userAcc, $limitStart, $limitOffset));
 		}
 		else{
 			echo json_encode($ctrl->searchReceipt($con, $userAcc));
@@ -278,4 +292,6 @@ switch($opcode){
 		echo json_encode($ctrl->searchReceipt($con, $userAcc));
 		break;
 }
+
+
 ?>

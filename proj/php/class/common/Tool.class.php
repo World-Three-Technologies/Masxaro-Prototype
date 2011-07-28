@@ -25,6 +25,7 @@
  */
 
 class Tool{
+	
 	/**
 	 * infoArray to SQL query
 	 *

@@ -25,7 +25,6 @@
  */
 
 define('ROOT_PATH', dirname(__FILE__));
-
 ini_set('default_charset', 'utf-8');
 
 ini_set('include_path', 
@@ -53,7 +52,6 @@ if (IS_DEBUG) {
 
 ini_set ( 'display_startup_errors', IS_DEBUG );
 	
-///configuration file
 function __autoload($className) {
 	if(preg_match('(^Zend)', $className)){
 		include_once ROOT_PATH.'/php/class/library/Zend/Loader.php';
@@ -73,7 +71,7 @@ date_default_timezone_set("UTC");
 /*
  * general config
  */
-define('MIN_ACC_LEN', 6);//minimal user/store account length
+define('MIN_ACC_LEN', 6);//minimal user/store account length, used for verify code generation
 define('CON_DELIMITER', ':');//delimiter to for operator and operator tag in query conditions
 
 /*
