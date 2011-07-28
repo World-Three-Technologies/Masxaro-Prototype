@@ -30,6 +30,98 @@ class ReceiptCtrl extends Ctrl{
 		parent::__construct();
 	}
 	
+	/**
+	 * 
+	 * 
+	 * 
+	 * @param string $acc user/store account
+	 * 
+	 * @param string $subquery subquery statement, should return a set of receipt id
+	 * 
+	 * @param string $groupBy (optional) set group by field
+	 * 
+	 * @param string $orderBy (optional) set order by field, default as 'receipt_time'
+	 * 
+	 * @param boolean $orderDesc
+	 * 
+	 * @param int $limitStart (optional) limit start offset(optional)
+	 * 
+	 * @param int $limitOffset (optional) limit offset(optional)
+	 * 
+	 * @desc
+	 * build the basic sql statement for receipt searching
+	 */
+	protected function buildSearchSql($acc, $subquery, $limitStart=0, $limitOffset=999999, 
+										   $groupBy=null, $orderBy='receipt_time', $orderDesc=true){
+										   	
+		$limitStart = isset($limitStart) ? $limitStart : 0;
+		$limitOffset = isset($limitOffset) ? $limitOffset : 999999;
+		$orderBy = isset($orderBy) ? $orderBy : 'receipt_time';
+		$orderDesc = isset($orderDesc) ? $orderDesc : true;
+										   	
+		$sql = "
+			SELECT 
+				r.`id`,
+				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
+				r.`tax`,
+				r.`total_cost`,
+				r.`source`,
+				s.`store_name`,
+				ri.`item_id`,
+		        ri.`item_name`, 
+		        ri.`item_qty`, 
+		        ri.`item_discount`,
+		        ri.`item_price`
+			FROM 
+				`receipt` 
+			AS 
+				r 
+			LEFT JOIN
+				`receipt_item` 
+			AS 
+				ri
+			ON
+				r.`id`=ri.`receipt_id`
+			LEFT JOIN
+				`store` as s
+			ON
+				r.`store_account`=s.`store_account`
+			WHERE
+				r.`user_account`='$acc'
+			AND 
+				r.`deleted`=false
+      		AND
+				ri.`deleted`=false
+			AND
+				r.`id`
+      		IN
+      			(
+	      			$subquery
+      			)";
+	      			
+	      if(isset($groupBy)){
+	      	$sql .= "
+	      		GROUP BY
+	      			$groupBy
+	      	";
+	      }
+	      
+	      $sql .= "
+	      		ORDER BY
+	      			$orderBy
+	      ";
+	      
+	      if($orderDesc){
+	      	$sql .= "DESC";
+	      }
+	      			
+	      $sql .= "
+	      		LIMIT
+	      			$limitStart, $limitOffset
+	      ";
+	      			
+	      return $sql;
+	}
 	
 	/**
 	 * 
@@ -100,14 +192,14 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 */
 	protected function fetchReceiptTags($receipts){
-    foreach($receipts as $receipt){
-      $ids[] = $receipt->id;
-    }
-    $tags = $this->getReceiptsTags($ids);
-    foreach($receipts as $receipt){
-      $receipt->tags = $tags[$receipt->id];
-    }
-    return $receipts;
+	    foreach($receipts as $receipt){
+	      $ids[] = $receipt->id;
+	    }
+	    $tags = $this->getReceiptsTags($ids);
+	    foreach($receipts as $receipt){
+	      $receipt->tags = $tags[$receipt->id];
+	    }
+	    return $receipts;
 	}
 	
 	
@@ -434,16 +526,31 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * @param int $limitOffset limit offset(optional)
 	 * 
+	 * @param string $groupBy (optional) set group by field
+	 * 
+	 * @param string $orderBy (optional) set order by field, default as 'receipt_time'
+	 * 
 	 * @return array(object);
 	 * 
 	 * @desc
 	 * get all receipt based on a certain user account
 	 */
-	public function userGetAllReceiptBasic($userAcc, $limitStart, $limitOffset = 999999){
+	public function userGetAllReceiptBasic($userAcc, $limitStart, $limitOffset = 999999,
+											$groupBy=null, $orderBy='receipt_time', $orderDesc=true){
+												
+		$limitStart = isset($limitStart) ? $limitStart : 0;
+		$limitOffset = isset($limitOffset) ? $limitOffset : 999999;
+		$orderBy = isset($orderBy) ? $orderBy : 'receipt_time';
+		$orderDesc = isset($orderDesc) ? $orderDesc : true;
 
 		$sql = "
 			SELECT 
-				r.`id`,r.`user_account`,r.`receipt_time`, r.`tax`, r.`total_cost`, s.`store_name`
+				r.`id`,
+				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
+				r.`tax`,
+				r.`total_cost`,
+				r.`source`,
+				s.`store_name`
 			FROM 
 				`receipt` as r
 			JOIN 
@@ -454,10 +561,20 @@ class ReceiptCtrl extends Ctrl{
 				r.`user_account`='$userAcc'
 			AND 
 				`deleted`=false
-			ORDER BY
-				r.`receipt_time` DESC
-			LIMIT
-		      	$limitStart, $limitOffset
+			";
+		
+		if(isset($groupBy)){
+			$sql .= "
+				ORDER BY
+					$groupBy
+			";
+		}
+		
+		$sql .= "
+				ORDER BY
+					r.`receipt_time` DESC
+				LIMIT
+				    $limitStart, $limitOffset
 		";
 		
 		$this->db->select($sql);
@@ -465,7 +582,7 @@ class ReceiptCtrl extends Ctrl{
 		if($this->db->numRows() == 0){
 			return "";
 		} else{
-			return $this->db->fetchObject();
+			return $this->db->fetchAssoc();
 		}
 	}
 	
@@ -498,7 +615,7 @@ class ReceiptCtrl extends Ctrl{
 		}
 		
 		else{
-			$result = $this->db->fetchObject();
+			$result = $this->db->fetchAssoc();
 			return $result;
 		}
 		
@@ -537,7 +654,7 @@ class ReceiptCtrl extends Ctrl{
 		";
 		
 		$this->db->select($sql);
-		$result = $this->db->fetchObject();
+		$result = $this->db->fetchAssoc();
 		
 		return $result;
 	}
@@ -547,64 +664,34 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * @param condition-array $con multi-dimension array of searching conditions
 	 * 
-	 * @param string $acc user account(optional)
+	 * @param string $acc user account
 	 * 
 	 * @param int $limitStart limit start offset(optional)
 	 * 
 	 * @param int $limitOffset limit end offset(optional)
+	 * 
+	 * @param string $groupBy (optional) set group by field
+	 * 
+	 * @param string $orderBy (optional) set order by field, default as 'receipt_time'
+	 * 
+	 * @param boolean $orderDesc
 	 * 
 	 * @return array(obj,...) each ReceiptEntity obj conclude 2 arrays, basicInfo & items (array(array(),..))
 	 * 
 	 * @desc
 	 * search for receipts of a certain account(option) based on certain conditions
 	 */
-	public function searchReceipt($con, $acc = null, $limitStart = 0, $limitOffset = 999999){
+	public function searchReceipt($con, $acc, $limitStart = 0, $limitOffset = 999999,
+									$groupBy=null, $orderBy='receipt_time', $orderDesc=true){
+										
 		$con = Tool::condArray2SQL($con);
-		
-		$acc = isset($acc) ? "(^$acc$)" : "(.*)";
 		
 		if(!Tool::securityChk($con)){
 			return false;
 		}
 		
-		$sql = "
-			SELECT 
-				r.`id`,
-				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
-				r.`tax`,
-				r.`total_cost`,
-				r.`source`,
-				s.`store_name`,
-				ri.`item_id`,
-		        ri.`item_name`, 
-		        ri.`item_qty`, 
-		        ri.`item_discount`,
-		        ri.`item_price`
-			FROM 
-				`receipt` 
-			AS 
-				r 
-			LEFT JOIN
-				`receipt_item` 
-			AS 
-				ri
-			ON
-				r.`id`=ri.`receipt_id`
-			LEFT JOIN
-				`store` as s
-			ON
-				r.`store_account`=s.`store_account`
-			WHERE
-				r.`user_account` regexp '$acc'
-			AND 
-				r.`deleted`=false
-      		AND
-				ri.`deleted`=false
-			AND
-				r.`id`
-      		IN
-      			(
-	      			SELECT
+		$subquery = "
+					SELECT DISTINCT
 	      				`receipt`.`id`
 	      			FROM
 	      				`receipt`,
@@ -616,12 +703,11 @@ class ReceiptCtrl extends Ctrl{
 	      				`receipt_id`=`id`
 	      			AND
 	      				`receipt`.`store_account`=`store`.`store_account`
-      			)
-		      ORDER BY
-		        `r`.`receipt_time` DESC
-		      LIMIT
-		      	$limitStart, $limitOffset
 		";
+	      				
+	    $sql = $this->buildSearchSql($acc, $subquery, $limitStart, $limitOffset, 
+	    							$groupBy, $orderBy, $orderDesc);
+		
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
 		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
@@ -639,15 +725,22 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * @param int $limitStart limit start offset(optional)
 	 * 
-	 * @param int $limitOffset limit offset(optional)
+	 * @param int $limitOffset limit end offset(optional)
+	 * 
+	 * @param string $groupBy (optional) set group by field
+	 * 
+	 * @param string $orderBy (optional) set order by field, default as 'receipt_time'
+	 * 
+	 * @param boolean $orderDesc
 	 * 
 	 * @desc
 	 * search receipts with certain tags
 	 */
-	public function searchTagReceipt($con, $acc, $limitStart = 0, $limitOffset = 999999){
+	public function searchTagReceipt($con, $acc, $limitStart = 0, $limitOffset = 999999,
+									$groupBy=null, $orderBy='receipt_time', $orderDesc=true){
 		$con = Tool::condArray2SQL($con);
 		
-		$receiptIdSql = "
+		$subquery = "
 			SELECT
 				`receipt_id`
 			FROM
@@ -660,37 +753,8 @@ class ReceiptCtrl extends Ctrl{
 				`receipt_id`
 		";
 		
-		$sql = "
-			SELECT 
-				r.`id`,
-				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
-				r.`tax`,
-				r.`total_cost`,
-				r.`source`,
-				s.`store_name`,
-				ri.`item_id`,
-        ri.`item_name`, 
-        ri.`item_qty`, 
-        ri.`item_discount`,
-				ri.`item_price`
-			FROM 
-				`receipt` as r
-			JOIN
-				`receipt_item` as ri
-			ON
-				r.`id`=ri.`receipt_id`
-			JOIN
-				`store` as s
-			ON
-				r.`store_account`=s.`store_account`
-      		WHERE `r`.id IN (
-		        $receiptIdSql
-		    ) 
-		    GROUP BY 
-		        r.receipt_time DESC
-		    LIMIT
-		      	$limitStart, $limitOffset
-		";
+		$sql = $this->buildSearchSql($acc, $subquery, $limitStart, $limitOffset, 
+	    							$groupBy, $orderBy, $orderDesc);
 				
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
@@ -719,7 +783,7 @@ class ReceiptCtrl extends Ctrl{
 
 		$this->db->select($sql);
 		$results = $this->db->fetchAssoc();
-  
+  		return $results;
   }
 
   /*
@@ -730,24 +794,24 @@ class ReceiptCtrl extends Ctrl{
    * @desc return tags array for each receipt, indexed with receipt id
    */
 	public function getReceiptsTags($ids){
-    if(!isset($ids) || !is_array($ids)) return false;
-    $idList = implode(',',$ids);
-		$sql = "
-			SELECT
-				`receipt_id`, `tag`
-			FROM
-				`receipt_tag`
-			WHERE
-				`receipt_id` IN ($idList)
-		";
-		
-		$this->db->select($sql);
-		$results = $this->db->fetchAssoc();
-
-    foreach($results as $result){
-      $tags[$result['receipt_id']][] = $result['tag'];
-    }
-    return $tags;
+	    if(!isset($ids) || !is_array($ids)) return false;
+	    $idList = implode(',',$ids);
+			$sql = "
+				SELECT
+					`receipt_id`, `tag`
+				FROM
+					`receipt_tag`
+				WHERE
+					`receipt_id` IN ($idList)
+			";
+			
+			$this->db->select($sql);
+			$results = $this->db->fetchAssoc();
+	
+	    foreach($results as $result){
+	      $tags[$result['receipt_id']][] = $result['tag'];
+	    }
+    	return $tags;
 	}	
 }
 ?>

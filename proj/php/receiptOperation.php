@@ -34,11 +34,22 @@ $userAcc = $post['acc'];
  * @desc
  * result set offset control, optional
  * 
- * @param int $limitStart
- * @param int $limitOffset
+ * @var int $limitStart
+ * @var int $limitOffset
  **/
 $limitStart = $post['limitStart'];
 $limitOffset = $post['limitOffset'];
+
+/**
+ * @desc
+ * sql options, all are optional
+ * @var string $groupBy
+ * @var string $orderBy
+ * @var boolean $orderDesc
+ */
+$groupBy=$post['groupBy']; 
+$orderBy=$post['orderBy'];   
+$orderDesc=$post['orderDesc']; 
 
 $ctrl = new ReceiptCtrl();
 
@@ -82,25 +93,22 @@ switch($opcode){
 									'value'=>$userAcc
 								  )
 					);
-		echo json_encode($ctrl->searchReceipt($con,$userAcc));
+		echo json_encode(
+							$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
+											  	$groupBy, $orderBy, $orderDesc)
+						);
 		break;
 	
 	case 'user_get_all_receipt_basic':
 		//user get all receip basic information
-		if(isset($limitStart) && isset($limitOffset)){
-			echo json_encode($ctrl->userGetAllReceiptBasic($userAcc, $limitStart, $limitOffset));
-		}
-		else{
-			echo json_encode($ctrl->userGetAllReceiptBasic($userAcc));
-		}
+		echo json_encode(
+							$ctrl->userGetAllReceiptBasic($userAcc, $limitStart, $limitOffset, 
+											  	$groupBy, $orderBy, $orderDesc)
+						);
 		break;
 		
 	case 'user_get_receipt_items':
 		echo json_encode($ctrl->userGetReceiptItems($post['receiptId']));
-		break;
-	
-	case 'search':
-		echo json_encode($ctrl->searchReceipt($post['con']));
 		break;
 	
 	case 'key_search':
@@ -117,6 +125,8 @@ switch($opcode){
 		 **/
 		
 		$keys = isset($post['keys']) ? $post['keys'] : '';
+		
+		//$keys = array('coffee', 'coke');
 		
 		$con = array();
 		
@@ -152,12 +162,10 @@ switch($opcode){
 			$con['OR'] = $tmp;
 		}
 		
-		if(isset($limitStart) && isset($limitOffset)){
-			echo json_encode($ctrl->searchReceipt($con, $userAcc, $limitStart, $limitOffset));
-		}
-		else{
-			echo json_encode($ctrl->searchReceipt($con, $userAcc));
-		}
+		echo json_encode(
+							$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
+											  	$groupBy, $orderBy, $orderDesc)
+						);
 		break;
 		
 	case 'tag_search':
@@ -193,12 +201,10 @@ switch($opcode){
 					'OR'=>$orConds,
 		);
 		
-		if(isset($limitStart) && isset($limitOffset)){
-			echo json_encode($ctrl->searchTagReceipt($con, $userAcc, $limitStart, $limitOffset));
-		}
-		else{
-			echo json_encode($ctrl->searchTagReceipt($con, $userAcc));
-		}
+		echo json_encode(
+							$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
+											  	$groupBy, $orderBy, $orderDesc)
+						);
 		break;
 		
 	case 'time_search':
@@ -273,12 +279,10 @@ switch($opcode){
 				break;
 		}
 
-		if(isset($limitStart) && isset($limitOffset)){
-			echo json_encode($ctrl->searchReceipt($con, $userAcc, $limitStart, $limitOffset));
-		}
-		else{
-			echo json_encode($ctrl->searchReceipt($con, $userAcc));
-		}
+		echo json_encode(
+							$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
+											  	$groupBy, $orderBy, $orderDesc)
+						);
 		break;
 	
 	case 'get_store_receipt':
@@ -289,9 +293,35 @@ switch($opcode){
 						'value'=>$store
 					)
 		);
-		echo json_encode($ctrl->searchReceipt($con, $userAcc));
+		echo json_encode(
+							$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
+											  	$groupBy, $orderBy, $orderDesc)
+						);
+		break;
+		
+	case 'get_source_receipt':
+		//get receipts from certain sources
+		
+		$sources = $post['sources'];
+		
+		$orConds = array();
+		$i = 0;
+		foreach($sources as $source){
+			$orConds['='.CON_DELIMITER.$i++] = array(
+													'field'=>'source',
+													'value'=>$source
+												);
+		}
+		
+		$con = array(
+					'OR'=>$orConds,
+		);
+		
+		echo json_encode(
+							$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
+											  	$groupBy, $orderBy, $orderDesc)
+						);
 		break;
 }
-
 
 ?>
