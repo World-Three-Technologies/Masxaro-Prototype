@@ -51,7 +51,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.*;
 
 import com.android.W3T.app.MainPage;
-import com.android.W3T.app.ReceiptsView;
 import com.android.W3T.app.rmanager.Receipt;
 import com.android.W3T.app.rmanager.ReceiptsManager;
 import com.android.W3T.app.user.UserProfile;
@@ -134,7 +133,6 @@ public class NetworkUtil {
             		return true;
             	}
             	String s = EntityUtils.toString(response.getEntity());
-            	System.out.println(s);
             	if (s.equals("1")) {
             		return true;
             	}
@@ -171,7 +169,7 @@ public class NetworkUtil {
 	        	request = new HttpPost(new URI(RECEIPT_OP_URL));
 	            // Add your data
 	            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-	            nameValuePairs.add(new BasicNameValuePair("opcode", "user_get_all_receipt_basic"));
+	            nameValuePairs.add(new BasicNameValuePair("opcode", "user_get_all_receipt"));
 	            nameValuePairs.add(new BasicNameValuePair("acc", uname));
 	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 	            // Execute HTTP Post Request

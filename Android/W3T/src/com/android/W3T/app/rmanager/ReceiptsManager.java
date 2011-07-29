@@ -40,6 +40,7 @@ import com.android.W3T.app.R;
 
 public class ReceiptsManager {
 	public static final String TAG = "ReceiptManager";
+	
 	public static final int NUM_RECEIPT = 7;
 	public static final int NUM_RECEIPT_ENTRY = 5;
 	public static final int NUM_ITEM_ENTRY = 4;

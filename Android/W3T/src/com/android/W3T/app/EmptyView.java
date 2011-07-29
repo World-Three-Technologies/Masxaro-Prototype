@@ -83,7 +83,7 @@ public static final String TAG = "EmptyViewActivity";
 					finish();
 				}
 				else {
-					Toast.makeText(EmptyView.this, "No Receipts in the system yet", Toast.LENGTH_SHORT);
+					Toast.makeText(EmptyView.this, "No Receipts in the system yet", Toast.LENGTH_SHORT).show();
 					Intent front_page_intent = new Intent(EmptyView.this, MainPage.class);
 					front_page_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 					startActivity(front_page_intent);
