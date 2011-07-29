@@ -35,9 +35,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -45,22 +42,21 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
+import com.android.W3T.app.user.UserProfile;
 
 public class ReceiptsView extends Activity implements OnClickListener {
 	public static final String TAG = "ReceiptsViewActivity";
 	
-	public static final String RECEIVE_ALL = "user_get_all_receipt";
+	private static final String RECEIVE_ALL_BASIC = NetworkUtil.METHOD_RECEIVE_ALL_BASIC;
 	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
-	private Button mRefreshBtn;
+	private Button mSyncBtn;
 	private Button mBackListBtn;
-	private Button mBackFrontBtn;
 	
 	private int mCurReceipt = 0;
 	private ProgressDialog mRefreshProgress;
@@ -70,17 +66,20 @@ public class ReceiptsView extends Activity implements OnClickListener {
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
 			// TODO: upload the receipt with FROM_NFC flag
-			// Download latest 7 receipts from database and upload non-uploaded receipts
+			// Upload non-uploaded receipts and download latest 7 receipts from database. 
 			// to the database.
-			String jsonstr = NetworkUtil.attemptGetReceipt(ReceiptsView.RECEIVE_ALL, "new");
+//            NetworkUtil.syncUnsentReceipts();
+			String jsonstr = NetworkUtil.attemptGetReceiptBasic(RECEIVE_ALL_BASIC, UserProfile.getUsername());
 			if (jsonstr != null) {
-				Log.i(TAG, "add new receipts");
+				Log.i(TAG, "add new receipts basic");
+				System.out.println(jsonstr);
 				// Set the IsUpload true
-				ReceiptsManager.add(jsonstr, FROM_DB);
+//				ReceiptsManager.add(jsonstr, FROM_DB);
 				Log.i(TAG, "finished new receipts");
 				Log.i(TAG, "update receipt view");
 				mRefreshProgress.dismiss();
-				setBackIntent();
+				
+//				setBackIntent();
 			}
 		}
 	};
@@ -89,27 +88,24 @@ public class ReceiptsView extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		Log.i(TAG, "onCreate(" + savedInstanceState +")");
         super.onCreate(savedInstanceState);
-        noReceiptView();
+        setContentView(R.layout.receipt_view);
+		mSyncBtn = (Button) findViewById(R.id.sync_btn);
+		mSyncBtn.setOnClickListener(this);
+		mBackListBtn = (Button) findViewById(R.id.b_to_ls_btn);
+		mBackListBtn.setOnClickListener(this);
 	}
 	
 	@Override
 	public void onResume() {
 		Log.i(TAG, "onResume()");
 		super.onResume();
-		if (ReceiptsManager.getNumValid() != 0) {
-			Log.i(TAG, "Receipts exist");
-			setContentView(R.layout.receipt_view);
-			mRefreshBtn = (Button) findViewById(R.id.refresh_btn);
-			mRefreshBtn.setOnClickListener(this);
-			mBackListBtn = (Button) findViewById(R.id.b_to_ls_btn);
-			mBackListBtn.setOnClickListener(this);
-			fillReceiptView(0);
-		}
+		int id = this.getIntent().getIntExtra("num", 0);
+		fillReceiptView(id);
 	}
 	
 	@Override
 	public void onClick(View v) {
-		if (v == mRefreshBtn) {
+		if (v == mSyncBtn) {
 			Log.i(TAG, "handler post a new thread");
 			// Show a progress bar and send account info to server.
 			mRefreshProgress = new ProgressDialog(ReceiptsView.this);
@@ -120,9 +116,6 @@ public class ReceiptsView extends Activity implements OnClickListener {
 			mUpdateHandler.post(mReceiptThread);
 		}
 		else if (v == mBackListBtn) {
-			setBackIntent();
-		}
-		else if (v == mBackFrontBtn) {
 			setBackIntent();
 		}
 	}
@@ -203,13 +196,8 @@ public class ReceiptsView extends Activity implements OnClickListener {
 	}
 	
 	private void fillReceiptView(int num) {
-		if (ReceiptsManager.getNumValid() != 0) {
-			fillBasicInfo(num);
-			fillItemsRows(num);
-		}
-		else {
-			noReceiptView();
-		}
+		fillBasicInfo(num);
+		fillItemsRows(num);
 	}
 	
 	private void fillBasicInfo(int num) {
@@ -269,25 +257,8 @@ public class ReceiptsView extends Activity implements OnClickListener {
 	
 	private void setBackIntent() {
 		// Back to Receipt list activity
-		if (ReceiptsManager.getNumValid() != 0) {
-			Intent receipt_list_intent = new Intent(ReceiptsView.this, ReceiptsListSelector.class);
-			receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-			startActivity(receipt_list_intent);
-		}
-		// Back to Front Page when there is no reciept
-		else {
-			Intent front_page_intent = new Intent(ReceiptsView.this, FrontPage.class);
-			front_page_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			startActivity(front_page_intent);
-		}
-	}
-	
-	private void noReceiptView() {
-		Log.i(TAG, "Create a empty view");
-		setContentView(R.layout.empty_receipt_view);
-		mRefreshBtn = (Button) findViewById(R.id.refresh_btn);
-		mRefreshBtn.setOnClickListener(this);
-		mBackFrontBtn = (Button) findViewById(R.id.b_to_fr_btn);
-		mBackFrontBtn.setOnClickListener(this);
+		Intent receipt_list_intent = new Intent(ReceiptsView.this, ReceiptsList.class);
+		receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+		startActivity(receipt_list_intent);
 	}
 }

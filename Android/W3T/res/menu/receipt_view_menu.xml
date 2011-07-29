@@ -28,7 +28,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/refresh_opt"
 		android:icon="@drawable/refresh"
-		android:title="Refresh"
+		android:title="Sync"
 	/>
 		    
 	<!-- <item android:title="Switch Image View"
@@ -37,7 +37,8 @@
 	/>  -->
 
 	<item android:id="@+id/b_to_ls_opt"
-	   	android:title="Back to Front Page"
+	   	android:title="Back to Main Page"
+	   	android:icon="@drawable/back"
 	/>
 
 </menu>

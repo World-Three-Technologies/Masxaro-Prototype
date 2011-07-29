@@ -24,8 +24,8 @@
  *
  */
  -->
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/receipt_view"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
     android:orientation="vertical"
@@ -34,11 +34,9 @@
         android:orientation="vertical"
         android:layout_margin="5dip" android:layout_weight="0.3"
         android:background="@color/white"
-        android:weightSum="2.0"
     >
         <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
             android:orientation="vertical"
-            android:layout_weight="0.75"
         >
             <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -75,12 +73,12 @@
                 android:gravity="left" android:layout_marginLeft="10dip"
                 android:textColor="@color/black"
 	        />
-        </LinearLayout>
+        
         <!-- 35dip height per item, 5 items maximum for the emulator 
            It starts from 55 dip. -->
-        <ScrollView android:layout_width="wrap_content" android:layout_height="230dip"
+        <ScrollView android:layout_width="fill_parent" android:layout_height="230dip"
             android:scrollbars="none"
-            android:layout_marginLeft="10dip" android:layout_weight="0.4"
+            android:layout_marginLeft="10dip"
         >
 	        <TableLayout android:id="@+id/items_table" 
 	            android:layout_width="fill_parent" android:layout_height="fill_parent"
@@ -122,7 +120,6 @@
         <TableLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
             android:stretchColumns="0"
             android:paddingTop="10dip" android:paddingBottom="10dip"
-            android:layout_weight="0.85"
         > 
             <!-- Tax -->
             <TableRow>
@@ -155,14 +152,15 @@
                 />
             </TableRow>
         </TableLayout>
+        </LinearLayout>
     </LinearLayout>
-	
+
 	<LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
         android:gravity="bottom" android:layout_weight="1.7"
     >
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/refresh_btn"
-            android:id="@id/refresh_btn"
+            android:background="@drawable/sync_btn"
+            android:id="@id/sync_btn"
         />
         
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -170,5 +168,5 @@
             android:id="@+id/b_to_ls_btn"
         />
     </LinearLayout>
-	
+
 </LinearLayout>

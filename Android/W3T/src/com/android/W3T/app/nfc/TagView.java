@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
-import com.android.W3T.app.ReceiptsListSelector;
+import com.android.W3T.app.ReceiptsList;
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
 import com.android.W3T.app.user.UserProfile;
@@ -76,11 +76,7 @@ public class TagView extends Activity {
 				String jsonstr = 
 					new String("[{\"store_account\":null,\"receipt_id\":\"105\",\"user_account\":null,\"receipt_time\":\"2011-06-29 10:45:32\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"hamburger\",\"item_id\":\"1010\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"img\":null,\"deleted\":0,\"store_name\":\"McD\"}]");
 	            ReceiptsManager.add(jsonstr, FROM_NFC);
-	            ArrayList<Receipt> receipts = ReceiptsManager.getUnSentReceipts();
-	            int num = receipts.size();
-	            for (int i=0;i<num;i++) {
-	            	NetworkUtil.attemptSendReceipt(UserProfile.getUsername(), receipts.get(i));
-	            }
+//	            NetworkUtil.syncUnsentReceipts();
 				setBackIntent();
 				finish();
 			}
@@ -126,7 +122,7 @@ public class TagView extends Activity {
     }
 	
 	private void setBackIntent() {
-		Intent receipt_list_intent = new Intent(TagView.this, ReceiptsListSelector.class);
+		Intent receipt_list_intent = new Intent(TagView.this, ReceiptsList.class);
 		receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 		startActivity(receipt_list_intent);
 	}

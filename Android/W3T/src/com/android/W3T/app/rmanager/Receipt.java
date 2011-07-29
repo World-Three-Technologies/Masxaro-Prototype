@@ -193,9 +193,9 @@ public class Receipt {
 //		mTotal = tt; 
 //	}
 //	
-//	private void setWhere(boolean w) {
-//		mWhere = w;
-//	}
+	public void setWhere(boolean w) {
+		mWhere = w;
+	}
 	
 //	private void setTax(String t) {
 //		mTax = t;

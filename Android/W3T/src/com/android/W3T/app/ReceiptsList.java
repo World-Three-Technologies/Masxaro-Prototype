@@ -34,6 +34,7 @@ import java.util.Map;
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.Receipt;
 import com.android.W3T.app.rmanager.ReceiptsManager;
+import com.android.W3T.app.user.UserProfile;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -52,7 +53,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ReceiptsListSelector extends Activity implements OnClickListener {
+public class ReceiptsList extends Activity implements OnClickListener {
 	public static final String TAG = "ReceiptListView";
 	
 	public static final String SYNC_IMG = "entry_sync";
@@ -62,33 +63,40 @@ public class ReceiptsListSelector extends Activity implements OnClickListener {
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 //	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
+	private static final String RECEIVE_ALL_BASIC = NetworkUtil.METHOD_RECEIVE_ALL_BASIC;
+	
 	private static final int ENTRY_STORE_NAME = Receipt.ENTRY_STORE_NAME;
 	private static final int ENTRY_TIME = Receipt.ENTRY_TIME;
 	
 	private ListView mList;
-	private Button mRefreshBtn;
+	private Button mSyncBtn;
 	private Button mBackFrontBtn;
 	
-	private ProgressDialog mRefreshProgress;
+	private ProgressDialog mSyncProgress;
 	private Handler mUpdateHandler = new Handler();
 	private Runnable mReceiptThread = new Runnable() {
 		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
 			// TODO: upload the receipt with FROM_NFC flag
+            NetworkUtil.syncUnsentReceipts();
 			// Download latest 7 receipts from database and upload non-uploaded receipts
 			// to the database.
-			String jsonstr = NetworkUtil.attemptGetReceipt(ReceiptsView.RECEIVE_ALL, "new");
+			String jsonstr = NetworkUtil.attemptGetReceiptBasic(RECEIVE_ALL_BASIC, UserProfile.getUsername());
 			if (jsonstr != null) {
 				Log.i(TAG, "add new receipts");
+				// TODO: pick up the basic info of the latest 7 receipts and list them here.
+//				System.out.println(jsonstr);
 				// Set the IsUpload true
-				ReceiptsManager.add(jsonstr, FROM_DB);
+//				ReceiptsManager.add(jsonstr, FROM_DB);
 				Log.i(TAG, "finished new receipts");
 				Log.i(TAG, "update receipt view");
-				mRefreshProgress.dismiss();
-				Intent receipt_list_intent = new Intent(ReceiptsListSelector.this, ReceiptsListSelector.class);
+				mSyncProgress.dismiss();
+				
+				Intent receipt_list_intent = new Intent(ReceiptsList.this, ReceiptsList.class);
 				receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 				startActivity(receipt_list_intent);
+				finish();
 			}
 		}
 	};
@@ -96,22 +104,24 @@ public class ReceiptsListSelector extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.receipt_selector);
-        mRefreshBtn = (Button) findViewById(R.id.refresh_btn);
-		mRefreshBtn.setOnClickListener(this);
-		mBackFrontBtn = (Button) findViewById(R.id.b_to_fr_btn);
+        setContentView(R.layout.receipt_list);
+        mSyncBtn = (Button) findViewById(R.id.sync_btn);
+        mSyncBtn.setOnClickListener(this);
+		mBackFrontBtn = (Button) findViewById(R.id.back_main_btn);
 		mBackFrontBtn.setOnClickListener(this);
     }
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		mList = (ListView) findViewById(R.id.receipt_selector);  
+		mList = (ListView) findViewById(R.id.receipt_list);  
         // Create the dynamic array, which includes all receipt entries.
 		Log.i(TAG, "add category entry");
         ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> category = new HashMap<String, Object>();
         category.put(SYNC_IMG, R.drawable.list_unsync);
+//        category.put(TITLE_TEXT, getResources().getString(R.string.receipt_list_merchant));
+//        category.put(TIME_TEXT, getResources().getString(R.string.receipt_list_date));
         category.put(TITLE_TEXT, "Merchant");
         category.put(TIME_TEXT, "Date/Time");
         listItem.add(category);
@@ -144,7 +154,7 @@ public class ReceiptsListSelector extends Activity implements OnClickListener {
         // Create adapter's entries, which corresponds to the elements of the 
         // above dynamic array.  
         ReceiptListAdapter listAdapter = new ReceiptListAdapter(this,listItem,
-            R.layout.receipt_selector_entry,
+            R.layout.receipt_list_entry,
             new String[] {SYNC_IMG, TITLE_TEXT, TIME_TEXT},   
             new int[] {R.id.list_receipt_sync_flag,R.id.list_receipt_title, R.id.list_receipt_time}
         );
@@ -153,11 +163,14 @@ public class ReceiptsListSelector extends Activity implements OnClickListener {
         
         mList.setOnItemClickListener(new OnItemClickListener() {  
   			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-  				// TODO: Display the arg2th receipt in the receipt pool.
-  				final Intent receipt_view_intent = new Intent(ReceiptsListSelector.this, ReceiptsView.class);
+			public void onItemClick(AdapterView<?> parent, View view, int pos,
+					long id) {
+  				// TODO: should get the receipt id of the posth receipt here.
+  				// TODO: check whether the posth receipt in the latest receipt pool 
+  				// TODO: Display the posth receipt in the receipt pool.
+  				final Intent receipt_view_intent = new Intent(ReceiptsList.this, ReceiptsView.class);
   				receipt_view_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+  				receipt_view_intent.putExtra("pos", pos-1);
   				startActivity(receipt_view_intent);
 			}  
         });
@@ -165,21 +178,22 @@ public class ReceiptsListSelector extends Activity implements OnClickListener {
 	
 	@Override
 	public void onClick(View v) {
-		if (v == mRefreshBtn) {
+		if (v == mSyncBtn) {
 			Log.i(TAG, "handler post a new thread");
 			// Show a progress bar and send account info to server.
-			mRefreshProgress = new ProgressDialog(ReceiptsListSelector.this);
-			mRefreshProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			mRefreshProgress.setMessage("Refreshing...");
-			mRefreshProgress.setCancelable(true);
-			mRefreshProgress.show();
+			mSyncProgress = new ProgressDialog(ReceiptsList.this);
+			mSyncProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mSyncProgress.setMessage("Syncing...");
+			mSyncProgress.setCancelable(true);
+			mSyncProgress.show();
 			mUpdateHandler.post(mReceiptThread);
 		}
 		else if (v == mBackFrontBtn) {
 			// Back to Front Page when there is no reciept
-			Intent front_page_intent = new Intent(ReceiptsListSelector.this, FrontPage.class);
+			Intent front_page_intent = new Intent(ReceiptsList.this, MainPage.class);
 			front_page_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(front_page_intent);
+			finish();
 		}
 	}
 	
@@ -197,7 +211,7 @@ public class ReceiptsListSelector extends Activity implements OnClickListener {
 				View row = super.getView(position, convertView, parent);
 		        TextView title = (TextView) row.findViewById(R.id.list_receipt_title);
 		        title.setTextColor(getResources().getColor(R.color.white));
-		        return super.getView(position, convertView, parent);
+//		        return super.getView(position, convertView, parent);
 			}
 			return super.getView(position, convertView, parent);
 	    }

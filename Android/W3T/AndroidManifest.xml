@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.android.W3T.app"
-      android:versionCode="1"
-      android:versionName="1.0">
+<!-- 
+/*
+ * AndroidManifest.xml - The manifest file of the Android app. 
+ *
+ *  Copyright 2011 World Three Technologies, Inc. 
+ *  All Rights Reserved.
+ * 
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Written by Yichao Yu <yichao@Masxaro>
+ *
+ */
+ -->
+<manifest 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.W3T.app"
+    android:versionCode="1"
+    android:versionName="1.0"
+>
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.INTERNET" /> 
     
@@ -10,9 +37,11 @@
     
 	<uses-feature android:name="android.hardware.nfc" android:required="true" />
 
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
+    <application android:icon="@drawable/icon" android:label="@string/app_name"
+        android:debuggable="true"
+    >
         <!-- the logging-in progress bar will be in this activity -->
-        <activity android:name=".FrontPage"
+        <activity android:name=".MainPage"
         	android:label="@string/app_name"
         >
             <intent-filter>
@@ -23,11 +52,10 @@
 
         <!-- This activity is intended to show the list of the receipts which
             are already in the receipts pool. -->
-        <activity android:name=".ReceiptsListSelector"
+        <activity android:name=".ReceiptsList"
             android:label="@string/app_name"
         >
             <intent-filter>
-                <!-- This action is the user successfully login our system. -->
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>          
@@ -45,6 +73,26 @@
 			</intent-filter>	  	  
 		</activity>
 		
+		<!-- This activity is the empty view when there is no receipt in the app. -->
+        <activity android:name=".EmptyView"
+            android:label="@string/app_name"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>          
+        </activity>
+		
+		<!-- This is the search functionality -->
+		<activity android:name=".SearchView"
+		    android:label="@string/app_name"
+		>
+		    <intent-filter>
+		        <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+		    </intent-filter>
+		</activity>
+		
 		<!-- This is the NFC communication activity which indicates the NFC link
 			is connecting after the cell phone is put close to a vendor machine. -->
 		<activity android:name="NfcConnecting"
@@ -58,7 +106,7 @@
 		
 		<!-- The received receipt is displayed on this activity -->
 		<activity android:name=".nfc.TagView"
-			android:theme="@android:style/Theme.NoTitleBar"
+			android:label="@string/app_name"
 		>
 			<intent-filter>
 				<action android:name="android.nfc.action.TAG_DISCOVERED" />

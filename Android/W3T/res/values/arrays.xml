@@ -25,9 +25,10 @@
  */
  -->
 <resources>
-    <string-array name="sort_types">
-        <item>ID</item>
+    <string-array name="search_by">
+        <item>Store Name</item>
+        <item>Item Name</item>
+        <item>Tag</item>
         <item>Date</item>
-        <item>Store name</item>
     </string-array>
 </resources>

@@ -50,23 +50,57 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.*;
 
-import com.android.W3T.app.FrontPage;
+import com.android.W3T.app.MainPage;
 import com.android.W3T.app.ReceiptsView;
 import com.android.W3T.app.rmanager.Receipt;
+import com.android.W3T.app.rmanager.ReceiptsManager;
 import com.android.W3T.app.user.UserProfile;
 
 public class NetworkUtil {
-	public static final int LOGIN = FrontPage.DIALOG_LOGIN;
-	public static final int LOGOUT = FrontPage.DIALOG_LOGOUT;
+	public static final int LOGIN = MainPage.DIALOG_LOGIN;
+	public static final int LOGOUT = MainPage.DIALOG_LOGOUT;
+	
+	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
 	public static final String BASE_URL = "http://sweethomeforus.com/php";
 	public static final String LOGIN_URL = BASE_URL + "/login.php";
 	public static final String LOGOUT_URL = BASE_URL + "/logoff.php";
 	public static final String RECEIPT_OP_URL = BASE_URL + "/receiptOperation.php";
 	
-	private static final String METHOD_RECEIVE_ALL = ReceiptsView.RECEIVE_ALL; 
+	public static final String METHOD_RECEIVE_ALL_BASIC = "user_get_all_receipt"; 
+	public static final String METHOD_KEY_SEARCH = "key_search";
+	public static final String METHOD_TAG_SEARCH = "tag_search";
+	public static final String METHOD_DATE_SEARCH = "time_search";
 	
 	private static HttpClient mClient = new DefaultHttpClient();
+	
+	private static boolean checkNetwork() {
+		return true;
+	}
+	
+	public static boolean syncUnsentReceipts() {
+		ArrayList<Receipt> receipts = ReceiptsManager.getUnSentReceipts();
+        int num = receipts.size();
+        for (int i=0;i<num;i++) {
+        	NetworkUtil.attemptSendReceipt(UserProfile.getUsername(), receipts.get(i));
+        	// if the transit succeeded, set the flag.
+        	receipts.get(i).setWhere(FROM_DB);
+        }
+        return true;
+	}
+	
+	/*
+	 * This method is for attempting to login or logout.
+	 * With the uname and pwd, the method will try to login/out.
+	 * And the parameter op decides which operation it is.
+	 * 
+	 * @param String uname	user name used to login/out
+	 *        String pwd	password used to login/out
+	 *        int op 		whether this operation is login or logout
+	 *        
+	 * @return boolean 	whether the login/out is successful.
+	 */
 	
 	public static boolean attemptLogin(String uname, String pwd, int op) {   
 		// Here we may want to check the network status.
@@ -100,6 +134,7 @@ public class NetworkUtil {
             		return true;
             	}
             	String s = EntityUtils.toString(response.getEntity());
+            	System.out.println(s);
             	if (s.equals("1")) {
             		return true;
             	}
@@ -125,10 +160,10 @@ public class NetworkUtil {
     }
 
 	// return null means something wrong.
-	public static String attemptGetReceipt(String method, String uname) {
+	public static String attemptGetReceiptBasic(String method, String uname) {
 		// Here we may want to check the network status.
 		checkNetwork();
-		if (method.equals(METHOD_RECEIVE_ALL)) {
+		if (method.equals(METHOD_RECEIVE_ALL_BASIC)) {
 			
 			HttpPost request;
 	        
@@ -136,15 +171,15 @@ public class NetworkUtil {
 	        	request = new HttpPost(new URI(RECEIPT_OP_URL));
 	            // Add your data
 	            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-	            nameValuePairs.add(new BasicNameValuePair("opcode", "user_get_all_receipt"));
+	            nameValuePairs.add(new BasicNameValuePair("opcode", "user_get_all_receipt_basic"));
 	            nameValuePairs.add(new BasicNameValuePair("acc", uname));
 	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-	            System.out.println(request.getEntity().getContent());
 	            // Execute HTTP Post Request
 	            HttpResponse response = mClient.execute(request);
 	            
-	            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {	            	
-	            	return EntityUtils.toString(response.getEntity());
+	            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+	            	String s = EntityUtils.toString(response.getEntity());
+	            	return s;
 	            }
 	            return null;
 	        }
@@ -155,7 +190,7 @@ public class NetworkUtil {
 		return null;
 	}
 	
-	public static void attemptSendReceipt(String uname, Receipt r) {
+	public static boolean attemptSendReceipt(String uname, Receipt r) {
 		// Here we may want to check the network status.
 		checkNetwork();
         try {
@@ -163,7 +198,8 @@ public class NetworkUtil {
         	JSONObject basicInfo = new JSONObject();
         	basicInfo.put("store_account", r.getEntry(0));	// store name
         	basicInfo.put("tax", r.getEntry(3));			// tax
-        	basicInfo.put("receipt_time", "now()");			// receipt time
+        	basicInfo.put("receipt_time", "2011-07-12 06:12:32");			// receipt time
+        	basicInfo.put("receipt_id", "105");
         	basicInfo.put("user_account", UserProfile.getUsername());
         	JSONObject receipt = new JSONObject();
         	receipt.put("receipt", basicInfo);
@@ -184,16 +220,64 @@ public class NetworkUtil {
 
         	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
         	System.out.println(in.readLine());
+        	return true;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
+		return false;
 	}
 	
-	private static boolean checkNetwork() {
-		return true;
-	}
+	public static String attemptSearch(String op) {   
+		// Here we may want to check the network status.
+		checkNetwork();
+
+        HttpPost request;
+        
+        try {
+        	
+            request = new HttpPost();
+            request.setURI(new URI(RECEIPT_OP_URL));
+        	if (op == METHOD_KEY_SEARCH) {
+        		// Add your data
+	            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+	            nameValuePairs.add(new BasicNameValuePair("opcode", op));
+	            nameValuePairs.add(new BasicNameValuePair("key", "Coffee"));
+	            nameValuePairs.add(new BasicNameValuePair("key", "Salad"));
+	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        	}
+        	else if (op == METHOD_TAG_SEARCH) {
+        		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        		nameValuePairs.add(new BasicNameValuePair("opcode", op));
+	            nameValuePairs.add(new BasicNameValuePair("tag", "McD"));
+	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        	}
+            // Execute HTTP Post Request
+            HttpResponse response = mClient.execute(request);
+            
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            	String s = EntityUtils.toString(response.getEntity());
+            	System.out.println(s);
+            	return s;
+            }
+            return null;
+        } catch (URISyntaxException e) {   
+            e.printStackTrace();   
+         
+        } catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+    }
+
 }

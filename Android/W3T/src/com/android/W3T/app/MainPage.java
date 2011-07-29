@@ -51,7 +51,7 @@ import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.ReceiptsManager;
 import com.android.W3T.app.user.*;
 
-public class FrontPage extends Activity {
+public class MainPage extends Activity {
 	public static final String TAG = "FrontPageActivity";
 	// Indicators for every dialog view.
 	public static final int DIALOG_LOGIN = 1;
@@ -60,7 +60,7 @@ public class FrontPage extends Activity {
 	private static final boolean OFF_LINE = UserProfile.OFFLINE;
 	private static final boolean ON_LINE = UserProfile.ONLINE;
 	
-//	private LinearLayout mFrontPage;
+//	private LinearLayout mMainPage;
 	private TextView mUname;
 //	private ImageView mFractalImg;
 	
@@ -87,13 +87,13 @@ public class FrontPage extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		Log.i(TAG, "onCreate(" + savedInstanceState + ")");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.front_page);
+        setContentView(R.layout.main_page);
         
         Log.i(TAG, "Get FrontPage elements");
-//        mFrontPage = (LinearLayout) findViewById(R.id.front_page);
+//        mMainPage = (LinearLayout) findViewById(R.id.main_page);
         mUname = (TextView) findViewById(R.id.Username);
 //        mFractalImg = (ImageView) findViewById(R.id.FractalFern);
-        mLogProgress = new ProgressDialog(FrontPage.this);
+        mLogProgress = new ProgressDialog(MainPage.this);
 	}
 	
 	@Override
@@ -101,10 +101,10 @@ public class FrontPage extends Activity {
 		super.onResume();
 		Log.i(TAG, "onResume" + "Set FrontPage elements");
 		if (UserProfile.getStatus() == ON_LINE) {
-			setFrontPage(UserProfile.getUsername()+getResources().getString(R.string.masxaro_email), 0);
+			setMainPage(UserProfile.getUsername()+getResources().getString(R.string.masxaro_email), 0);
 		}
 		else {
-			setFrontPage("Not Login", 0);
+			setMainPage("Not Login", 0);
 		}
 	}
 		
@@ -166,21 +166,22 @@ public class FrontPage extends Activity {
 		case R.id.view_receipt_opt:
 			// Start the receipt view activity
 			Log.i(TAG, "View receipt option selected");
-			Log.i(TAG, "Set a new intent: ReceiptsListSelector");
 			if (ReceiptsManager.getNumValid() != 0) {
-				final Intent receipt_list_intent = new Intent(FrontPage.this, ReceiptsListSelector.class);
-				receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				final Intent receipt_list_intent = new Intent(MainPage.this, ReceiptsList.class);
+				receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 				startActivity(receipt_list_intent);
 			}
 			else {
-				final Intent receipt_view_intent = new Intent(FrontPage.this, ReceiptsView.class);
-				receipt_view_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-				startActivity(receipt_view_intent);
+				final Intent empty_view_intent = new Intent(MainPage.this, EmptyView.class);
+				empty_view_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				startActivity(empty_view_intent);
 			}
 			break;
 		case R.id.search_opt:
 			Log.i(TAG, "Search receipt option selected");
-			
+			final Intent receipt_search_intent = new Intent(MainPage.this, SearchView.class);
+			receipt_search_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			startActivity(receipt_search_intent);
 			return true;
 		case R.id.view_coupon_opt:
 			Log.i(TAG, "View coupon option selected");
@@ -219,7 +220,7 @@ public class FrontPage extends Activity {
 			if (duration >= 100 && UserProfile.getStatus() == ON_LINE) {
 				// A valid touch screen event.
 				Log.i(TAG, "Set a new intent: NfcConnecting");
-				final Intent nfc_intent = new Intent(FrontPage.this, NfcConnecting.class);
+				final Intent nfc_intent = new Intent(MainPage.this, NfcConnecting.class);
 				nfc_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 				startActivity(nfc_intent);
 			}
@@ -238,6 +239,8 @@ public class FrontPage extends Activity {
 		case KeyEvent.KEYCODE_DPAD_CENTER:
 			openOptionsMenu();
 			break;
+		case KeyEvent.KEYCODE_BACK:
+			return true;
 		default:
 			break;
 		}
@@ -247,7 +250,7 @@ public class FrontPage extends Activity {
 	private void setLoginDialog() {
 		// Login dialog is a custom dialog, we take care of every details of it.
 		if (mLoginDialog == null) {
-			mLoginDialog = new Dialog(FrontPage.this);
+			mLoginDialog = new Dialog(MainPage.this);
 			// Set the Login dialog view
 			mLoginDialog.setContentView(R.layout.login_dialog);
 			mLoginDialog.setTitle("Log In:");
@@ -281,11 +284,11 @@ public class FrontPage extends Activity {
 				}
 				else {
 				    if (!nametext) {
-						Toast.makeText(FrontPage.this, "Please input user name", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainPage.this, "Please input user name", Toast.LENGTH_SHORT).show();
 						mLoginDialog.show();
 				    }
 				    if (!pwdtext) {
-						Toast.makeText(FrontPage.this, "Please input password", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainPage.this, "Please input password", Toast.LENGTH_SHORT).show();
 						mLoginDialog.show();
 				    }
 				}
@@ -315,8 +318,6 @@ public class FrontPage extends Activity {
 		        	   mLogProgress.setMessage("Logging out...");
 		        	   mLogProgress.setCancelable(true);
 		        	   mLogProgress.show();
-//		        	   UserProfile.resetUserProfile(OFF_LINE, null);
-//		        	   setFrontPage(null, 0);
 		           }
 		       })
 		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -328,7 +329,7 @@ public class FrontPage extends Activity {
 		mLogoutDialog = builder.create();
 	}
 	
-	private void setFrontPage(String uname, int pic) {
+	private void setMainPage(String uname, int pic) {
 		mUname.setText((CharSequence)uname);
         // TODO: set the front page's fractal fern image to indicate different status.
 	}
@@ -357,29 +358,28 @@ public class FrontPage extends Activity {
 		    	if (isSuccessful) {
 		    		UserProfile.resetUserProfile(ON_LINE, username);
 		    		ReceiptsManager.initReceiptsManager();
-			    	setFrontPage(UserProfile.getUsername()+getResources().getString(R.string.masxaro_email), 0);
-			    	Toast.makeText(FrontPage.this, "Login succeeded!", Toast.LENGTH_SHORT).show();
+		    		setMainPage(UserProfile.getUsername()+getResources().getString(R.string.masxaro_email), 0);
+			    	Toast.makeText(MainPage.this, "Login succeeded!", Toast.LENGTH_SHORT).show();
 		    	}
 		    	else {
 		    		mLoginDialog.show();
-		    		Toast.makeText(FrontPage.this, "Login failed!", Toast.LENGTH_SHORT).show();
+		    		Toast.makeText(MainPage.this, "Login failed!", Toast.LENGTH_SHORT).show();
 		    	}
 	    	}
 	    	else if (UserProfile.getStatus() == ON_LINE) {
 	    		if (isSuccessful) {
-	    			// TODO: clear all user data
 	    			Log.i(TAG, "reset user profile");
 		    		UserProfile.resetUserProfile(OFF_LINE, null);
 		    		Log.i(TAG, "reset front page");
-			    	setFrontPage("Not Login", 0);
+		    		setMainPage("Not Login", 0);
 			    	Log.i(TAG, "reset receipt manager");
 			    	ReceiptsManager.clearReceiptPool();
 			    	Log.i(TAG, "log out succeeded");
-			    	Toast.makeText(FrontPage.this, "Logout succeeded!", Toast.LENGTH_SHORT).show();
+			    	Toast.makeText(MainPage.this, "Logout succeeded!", Toast.LENGTH_SHORT).show();
 		    	}
 		    	else {
 		    		mLogoutDialog.show();
-		    		Toast.makeText(FrontPage.this, "Logout failed!", Toast.LENGTH_SHORT).show();
+		    		Toast.makeText(MainPage.this, "Logout failed!", Toast.LENGTH_SHORT).show();
 		    	}
 	    	}
 	    }

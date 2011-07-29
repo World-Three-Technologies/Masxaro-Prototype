@@ -33,18 +33,19 @@
 	    android:text="@string/empty_receipt"
 	    android:layout_width="fill_parent" android:layout_height="fill_parent"
 	/>
-
+	
     <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
         android:orientation="horizontal" android:layout_alignParentBottom="true"
     >
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/refresh_btn"
-            android:id="@+id/refresh_btn"
+            android:background="@drawable/sync_btn"
+            android:id="@+id/sync_btn"
         />
         
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/backfront_btn"
-            android:id="@+id/b_to_fr_btn"
+            android:background="@drawable/backmain_btn"
+            android:id="@+id/back_main_btn"
         />
     </LinearLayout>
+    
 </RelativeLayout>
