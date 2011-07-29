@@ -81,7 +81,7 @@ class Tool{
 				return is_bool($con) ? $con : "'".$con."'";
 			}
 			else{
-				die('wrong parameter');
+				die('illegal condition statement');
 			}
 		}
 		

@@ -30,6 +30,16 @@ include_once 'header.php';
 $opcode = $post['opcode'];
 $userAcc = $post['acc'];
 
+//following parameters are optional
+
+/**
+ * 
+ * @desc
+ * for mobile end
+ * @var boolean $mobile
+ */
+$mobile = $post['mobile'];
+
 /**
  * @desc
  * result set offset control, optional
@@ -98,190 +108,22 @@ switch($opcode){
 											  	$groupBy, $orderBy, $orderDesc)
 						);
 		break;
-	
-	case 'user_get_all_receipt_basic':
-		//user get all receip basic information
-		echo json_encode(
-							$ctrl->userGetAllReceiptBasic($userAcc, $limitStart, $limitOffset, 
-											  	$groupBy, $orderBy, $orderDesc)
-						);
-		break;
 		
 	case 'user_get_receipt_items':
 		echo json_encode($ctrl->userGetReceiptItems($post['receiptId']));
 		break;
 	
-	case 'key_search':
+	case 'user_get_receipt_detail':
+		echo json_encode($ctrl->getReceiptDetail($post['receiptId']));
+	
+	case 'search':
 		/**
-		 * @desc
-		 * search receipts based on keywords in item_name and store_name
-		 * 
-		 * multiple keywords should be organized as an 1-d array
-		 *
-		 * array(key1, key2, key3...), eg. array('Coffee', 'coke')
-		 * 
-		 * POST:
-		 * @param array keys
-		 **/
-		
-		$keys = isset($post['keys']) ? $post['keys'] : '';
-		
-		//$keys = array('coffee', 'coke');
-		
-		$con = array();
-		
-		if(!is_array($keys)){
-			$keys = "%$keys%";
-			
-			// 'item_name LIKE %keys% OR store_name LIKE %$keys%'
-			$con['OR'] = array(
-							'LIKE'.CON_DELIMITER.'0'=>array(
-								'field'=>'item_name',
-								'value'=>$keys
-							),
-							'LIKE'.CON_DELIMITER.'1'=>array(
-								'field'=>'store_name',
-								'value'=>$keys
-							)
-						);
-		}
-		else{
-			$tmp = array();
-			$i = 0;
-			foreach($keys as $key){
-				$key = "%$key%";
-				$tmp['like'.CON_DELIMITER.$i ++] = array(
-														'field'=>'item_name',
-														'value'=>$key
-													);
-				$tmp['like'.CON_DELIMITER.$i ++] = array(
-														'field'=>'store_name',
-														'value'=>$key
-													);
-			}
-			$con['OR'] = $tmp;
-		}
-		
+		 * @see searchingConHandler()
+		 */
+		$con = searchingConHandler();
 		echo json_encode(
 							$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
-											  	$groupBy, $orderBy, $orderDesc)
-						);
-		break;
-		
-	case 'tag_search':
-		/**
-		 * @see tagOperation.php $tags
-		 * 
-		 * @desc
-		 * search receipts based on tags
-		 * 
-		 * multiple tags should be organized as an 1-d array
-		 *
-		 * array(tag1, tag2, tag3...), eg. array('gym', 'museum')
-		 * 
-		 * POST:
-		 * @param array tags
-		 **/
-		
-		$tags = $post['tags'];
-
-		if(!is_array($tags)){
-			die('wrong parameters');
-		}
-		$orConds = array();
-		$i = 0;
-		foreach($tags as $tag){
-			$orConds['='.CON_DELIMITER.$i++] = array(
-													'field'=>'tag',
-													'value'=>$tag
-												);
-		}
-		
-		$con = array(
-					'OR'=>$orConds,
-		);
-		
-		echo json_encode(
-							$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
-											  	$groupBy, $orderBy, $orderDesc)
-						);
-		break;
-		
-	case 'time_search':
-		/**
-		 * @desc
-		 * search receipts based on time range
-		 * 
-		 * date format: YY-MM-DD HH:MM:SS or YY-MM-DD
-		 * 
-		 * POST:
-		 * start or end cannot be null at the same time,
-		 * at least one of them should be set
-		 * @param string start start date
-		 *      
-		 * @param string end end date
-		 * 
-		 * @param int limitStart (optional)
-		 *      
-		 * @param int limitEnd   (optional)
-		 **/
-		$start = $post['start'];
-		$end = $post['end'];
-		
-		$searchOption = -1;
-		
-		if(isset($start)){
-			$searchOption = 0;
-			if(isset($end)){
-				$searchOption = 2;
-			}
-		}
-		else if(isset($end)){
-			$searchOption = 1;
-		}
-		else{
-			die('wrong parameter');
-		}
-		
-		$con = array();
-		
-		switch($searchOption){
-			case 0:
-				$con = array(
-						'>='=>array(
-								'field'=>'receipt_time',
-								'value'=>$start
-							)
-				);
-				break;
-			case 1:
-				$con = array(
-						'<='=>array(
-								'field'=>'receipt_time',
-								'value'=>$end
-							)
-				);
-				break;
-			case 2:
-				$con = array(
-						'AND'=>array(
-							'>='=>array(
-								'field'=>'receipt_time',
-								'value'=>$start
-							),
-							'<='=>array(
-								'field'=>'receipt_time',
-								'value'=>$end
-							),
-						)
-						
-				);
-				break;
-		}
-
-		echo json_encode(
-							$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
-											  	$groupBy, $orderBy, $orderDesc)
+											  	$groupBy, $orderBy, $orderDesc, $mobile)
 						);
 		break;
 	
@@ -307,7 +149,7 @@ switch($opcode){
 		$orConds = array();
 		$i = 0;
 		foreach($sources as $source){
-			$orConds['='.CON_DELIMITER.$i++] = array(
+			$orConds['=:'.$i++] = array(
 													'field'=>'source',
 													'value'=>$source
 												);
@@ -322,6 +164,120 @@ switch($opcode){
 											  	$groupBy, $orderBy, $orderDesc)
 						);
 		break;
+		
+	default:
+		die('wrong parameter');
+}
+
+/**
+ * @desc
+ * search receipts based on keywords in item_name and store_name,
+ * and time range, tags
+ * 
+ * multiple keywords should be organized as an 1-d array
+ * keys=>array(key1, key2, key3...), eg. keys=>array('Coffee', 'coke')
+ * 
+ * multiple tags should be organized as an 1-d array
+ * tags=>array(tag1, tag2, tag3...), eg. tags=>array('food', 'restaurant')
+ * 
+ * time range should be organized as an 1-d array (at least one of start, end should be set)
+ * array('timeRange'=>array('start'=>'', 'end'=>''))
+ * 
+ * POST (optional):
+ * @param array keys
+ * 
+ * @param array $tags
+ * 
+ * @param array $timeRange 'timeRange'=>array('start'=>'', 'end'=>''), 
+ *                          date format: YY-MM-DD HH:MM:SS or YY-MM-DD
+ * 
+ * @return
+ * encoded JSON of receipt object array
+ **/
+function searchingConHandler(){
+	
+	//array('timeRange'=>array('start'=>'', 'end'=>''))
+	$timeStart = $post['timeRange']['start'];
+	$timeEnd = $post['timeRange']['end'];
+	
+	$keys = isset($post['keys']) ? $post['keys'] : '';
+	$tags = $post['tags'];
+	
+	$con = array();
+	
+		//keys
+	if(!is_array($keys)){
+		$keys = "%$keys%";
+		
+		// 'item_name LIKE %keys% OR store_name LIKE %$keys%'
+		$con['OR'] = array(
+				'LIKE:0'=>array(
+						'field'=>'item_name',
+						'value'=>$keys
+					),
+				'LIKE:1'=>array(
+					'field'=>'store_name',
+					'value'=>$keys
+				)
+			);
+	}
+	else{
+		$tmp = array();
+		$i = 0;
+		foreach($keys as $key){
+			$key = "%$key%";
+			$tmp['like:'.$i ++] = array(
+								'field'=>'item_name',
+								'value'=>$key
+				);
+				$tmp['like:'.$i ++] = array(
+									'field'=>'store_name',
+									'value'=>$key
+				);
+			}
+		$con['OR'] = $tmp;
+	}
+	
+	//tags
+	if(isset($tags) && is_array($tags)){
+		$tmp = array();
+		$i = 0;
+		foreach($tags as $tag){
+			$tag = "%$tag%";
+			$tmp['like:'.$i ++] = array(
+								'field'=>'tag',
+								'value'=>$tag
+			);
+	}
+	$con['OR:'."1"] = $tmp;
+	$con['='] = array(
+			'field'=>'`receipt_tag`.`receipt_id`',
+			'field:1'=>'`receipt`.`id`'
+		);
+	}
+	
+	//time range
+	if(isset($timeStart)){
+		$con['>='] = array(
+			'field'=>'receipt_time',
+			'value'=>$timeStart
+		);
+	}
+	if(isset($timeEnd)){
+		$con['<='] = array(
+			'field'=>'receipt_time',
+			'value'=>$timeEnd
+		);
+	}
+	
+	$con['value'] = 1;
+	
+	//organize into AND condition
+	$tmp = array();
+	$tmp['AND'] = $con;
+	$con = $tmp;
+	
+	return $con;
 }
 
 ?>

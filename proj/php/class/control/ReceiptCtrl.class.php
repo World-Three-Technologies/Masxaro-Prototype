@@ -49,7 +49,7 @@ class ReceiptCtrl extends Ctrl{
 	 * @param int $limitOffset (optional) limit offset(optional)
 	 * 
 	 * @desc
-	 * build the basic sql statement for receipt searching
+	 * build the basic sql statement for receipt searching, return receipt full entities with all information
 	 */
 	protected function buildSearchSql($acc, $subquery, $limitStart=0, $limitOffset=999999, 
 										   $groupBy=null, $orderBy='receipt_time', $orderDesc=true){
@@ -125,6 +125,86 @@ class ReceiptCtrl extends Ctrl{
 	
 	/**
 	 * 
+	 * 
+	 * 
+	 * @param string $acc user/store account
+	 * 
+	 * @param string $subquery subquery statement, should return a set of receipt id
+	 * 
+	 * @param string $groupBy (optional) set group by field
+	 * 
+	 * @param string $orderBy (optional) set order by field, default as 'receipt_time'
+	 * 
+	 * @param boolean $orderDesc
+	 * 
+	 * @param int $limitStart (optional) limit start offset(optional)
+	 * 
+	 * @param int $limitOffset (optional) limit offset(optional)
+	 * 
+	 * @desc
+	 * build the basic sql statement for receipt searching, return receipt full entities with all information
+	 */
+	protected function buildSearchSql_mobile($acc, $subquery, $limitStart=0, $limitOffset=999999, 
+										   $groupBy=null, $orderBy='receipt_time', $orderDesc=true){
+		$limitStart = isset($limitStart) ? $limitStart : 0;
+		$limitOffset = isset($limitOffset) ? $limitOffset : 999999;
+		$orderBy = isset($orderBy) ? $orderBy : 'receipt_time';
+		$orderDesc = isset($orderDesc) ? $orderDesc : true;
+										   	
+		$sql = "
+			SELECT 
+				r.`id`,
+				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
+				r.`tax`,
+				r.`total_cost`,
+				r.`source`,
+				s.`store_name`
+			FROM 
+				`receipt` 
+			AS 
+				r
+			LEFT JOIN
+				`store` as s
+			ON
+				r.`store_account`=s.`store_account`
+			WHERE
+				r.`user_account`='$acc'
+			AND 
+				r.`deleted`=false
+			AND
+				r.`id`
+      		IN
+      			(
+	      			$subquery
+      			)";
+	      			
+	      if(isset($groupBy)){
+	      	$sql .= "
+	      		GROUP BY
+	      			$groupBy
+	      	";
+	      }
+	      
+	      $sql .= "
+	      		ORDER BY
+	      			$orderBy
+	      ";
+	      
+	      if($orderDesc){
+	      	$sql .= "DESC";
+	      }
+	      			
+	      $sql .= "
+	      		LIMIT
+	      			$limitStart, $limitOffset
+	      ";
+	      			
+	      return $sql;
+	}
+	
+	/**
+	 * @see ReceiptEntity
+	 * 
 	 * @param array() $receipts 
 	 * 	associate array, 
 	 *  the result set selected by joining `receipt` & `receipt_item` with certain conditions
@@ -183,6 +263,7 @@ class ReceiptCtrl extends Ctrl{
 	
 	/**
 	 * @see ReceiptCtrl::buildReceiptObj
+	 * @see ReceiptEntity
 	 * 
 	 * @param array $receiptObjs
 	 * receipt object array, the result of ReceiptCtrl::buildReceiptObj($receipts)
@@ -674,7 +755,9 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * @param string $orderBy (optional) set order by field, default as 'receipt_time'
 	 * 
-	 * @param boolean $orderDesc
+	 * @param boolean $orderDesc (optional)
+	 * 
+	 * @param boolean $mobile (optional) whether request is coming from mobile end, default as false
 	 * 
 	 * @return array(obj,...) each ReceiptEntity obj conclude 2 arrays, basicInfo & items (array(array(),..))
 	 * 
@@ -682,8 +765,11 @@ class ReceiptCtrl extends Ctrl{
 	 * search for receipts of a certain account(option) based on certain conditions
 	 */
 	public function searchReceipt($con, $acc, $limitStart = 0, $limitOffset = 999999,
-									$groupBy=null, $orderBy='receipt_time', $orderDesc=true){
-										
+									$groupBy=null, $orderBy='receipt_time', $orderDesc=true, $mobile=false){
+
+		if(!isset($mobile)){
+			$mobile = false;
+		}
 		$con = Tool::condArray2SQL($con);
 		
 		if(!Tool::securityChk($con)){
@@ -696,18 +782,25 @@ class ReceiptCtrl extends Ctrl{
 	      			FROM
 	      				`receipt`,
 	      				`receipt_item`,
-	      				`store`
+	      				`store`,
+	      				`receipt_tag`
 	      			WHERE
 	      				$con
 	      			AND
-	      				`receipt_id`=`id`
+	      				`receipt_item`.`receipt_id`=`id`
 	      			AND
 	      				`receipt`.`store_account`=`store`.`store_account`
 		";
-	      				
-	    $sql = $this->buildSearchSql($acc, $subquery, $limitStart, $limitOffset, 
+
+	    $sql = $mobile ? 
+	    			$this->buildSearchSql_mobile($acc, $subquery, $limitStart, $limitOffset, 
+	    							$groupBy, $orderBy, $orderDesc)
+	    			:
+	    			$this->buildSearchSql($acc, $subquery, $limitStart, $limitOffset, 
 	    							$groupBy, $orderBy, $orderDesc);
-		
+	    						
+	    							
+	    							
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
 		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
@@ -786,7 +879,7 @@ class ReceiptCtrl extends Ctrl{
   		return $results;
   }
 
-  /*
+  /**
    * @param array(int) receipt ids
    *
    * @return array $tags
