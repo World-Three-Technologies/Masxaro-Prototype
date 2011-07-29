@@ -119,8 +119,23 @@ switch($opcode){
 	case 'search':
 		/**
 		 * @see searchingConHandler()
+		 * 
+		 * POST (optional):
+		 * @param array keys
+		 * 
+		 * @param array $tags
+		 * 
+		 * @param array $timeRange 'timeRange'=>array('start'=>'', 'end'=>''), 
+		 *                          date format: YYYY-MM-DD HH:MM:SS or YYYY-MM-DD
 		 */
-		$con = searchingConHandler();
+		//array('timeRange'=>array('start'=>'', 'end'=>''))
+		$timeStart = $post['timeRange']['start'];
+		$timeEnd = $post['timeRange']['end'];
+		
+		$keys = isset($post['keys']) ? $post['keys'] : '';
+		$tags = $post['tags'];
+		
+		$con = searchingConHandler($keys, $tags, $timeStart, $timeEnd);
 		echo json_encode(
 							$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
 											  	$groupBy, $orderBy, $orderDesc, $mobile)
@@ -194,14 +209,7 @@ switch($opcode){
  * @return
  * encoded JSON of receipt object array
  **/
-function searchingConHandler(){
-	
-	//array('timeRange'=>array('start'=>'', 'end'=>''))
-	$timeStart = $post['timeRange']['start'];
-	$timeEnd = $post['timeRange']['end'];
-	
-	$keys = isset($post['keys']) ? $post['keys'] : '';
-	$tags = $post['tags'];
+function searchingConHandler($keys, $tags, $timeStart, $timeEnd){
 	
 	$con = array();
 	
