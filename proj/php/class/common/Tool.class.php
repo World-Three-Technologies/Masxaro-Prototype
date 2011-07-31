@@ -27,9 +27,47 @@
 class Tool{
 	
 	/**
-	 * infoArray to SQL query
+	 * @param array() $info (key1 => value1, key2 => value2, key3 => value3...)
+	 * 
+	 * @return array(string, string) SQL
+	 * 1-d array, insert sql using values, SQL[0]: columns, SQL[1]: values
+	 * eg: array(columns=>"key1, key2, key3", values=>"value1, value2, value3")
+	 * 
+	 * @desc
+	 * convert info array to insert sql using values, aiming at batch insertion
+	 */
+	public static function infoArray2ValueSQL($info){
+		$sqlColumn = '';
+		$sqlValues = '';
+		
+		$regxFunc = '(^.*\(\))';
+		//$regxNumber = '(^[0-9]+$)';
+		
+		foreach ($info as $key => $value){
+			$sqlColumn .= "`$key`,";
+			
+			//if(preg_match($regxFunc, $value) || preg_match($regxNumber, $value)){
+			if(preg_match($regxFunc, $value)){
+				$sqlValues .= "$value,";
+			}
+			
+			else if(!isset($value) || strcasecmp($value, 'null') == 0){
+				$sqlValues .= "NULL,";
+				continue;
+			}
+			else{
+				$sqlValues .= "'$value',";
+			}
+		}
+		$sqlColumn = substr($sqlColumn, 0, -1);	
+		$sqlValues = substr($sqlValues, 0, -1);	
+		return array("columns"=>$sqlColumn, "values"=>$sqlValues);
+	}
+	
+	/**
+	 * convert infoArray of insertion to set statement 
 	 *
-	 * @param array() contains item info ([0] key1 => value1, [1] key2 => value2, [2] key3 => value3...)
+	 * @param array() $info (key1 => value1, key2 => value2, key3 => value3...)
 	 * 
 	 * @return string SQL query ("key1=v1, key2=v2...")
 	 */

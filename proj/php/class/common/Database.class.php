@@ -260,8 +260,14 @@ class Database
     return $this->affected_rows;
   }  
   
-  /*
+  /**
+   * @param string $sql insert sql
+   * 
+   * @return insertion id
+   * 
+   * @desc
    * insert
+   * 
    */  
   public function insert($sql){
   	$execConfirm = 0;

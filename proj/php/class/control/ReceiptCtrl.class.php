@@ -381,6 +381,8 @@ class ReceiptCtrl extends Ctrl{
 
 			$n = count($items);
 			
+			$sqlColumns = "";
+			$sqlValues = "";
 			for($i = 0; $i < $n; $i ++){
 				
 				if(empty($items[$i])){
@@ -399,26 +401,31 @@ class ReceiptCtrl extends Ctrl{
 				$totalCost += $curCost;
 				$items[$i]['receipt_id'] = $receiptId;	
 				
-				$info = Tool::infoArray2SQL($items[$i]);
+				//$info = Tool::infoArray2SQL($items[$i]);
+				$info = Tool::infoArray2ValueSQL($items[$i]);
 				
-				if(!Tool::securityChk($info)){
+				if(!Tool::securityChk($info['values'])){
 					return false;
 				}
+				
+				$sqlColumns = "({$info['columns']})";
 
-				$sql = "
-					INSERT 
-					INTO 
-						`receipt_item`
-					SET
-						$info	
-				";
-					
-				if($this->db->insert($sql) < 0){
-					//$this->realDelete($receiptId);
-					return false;
-				}
+				$sqlValues .= "({$info['values']}),";
 			}
-
+			
+			$sqlValues = substr($sqlValues, 0, -1);
+			$sql = "
+				INSERT INTO
+					`receipt_item`
+					$sqlColumns
+				VALUES
+					$sqlValues
+			";
+					
+			if($this->db->insert($sql) < 0){
+				return false;
+			}
+			
 			$totalCost += $totalCost * $basicInfo['tax'] * 0.01;
 
 			$sql = "
@@ -427,13 +434,13 @@ class ReceiptCtrl extends Ctrl{
 				SET
 					`total_cost`=$totalCost
 				WHERE
-					`id`='$receiptId'
+					`id`=$receiptId
 				AND 
 					`deleted`=false
 			";
 			
 			if($this->db->update($sql) <= 0){
-				//$this->realDelete($receiptId);
+				$this->realDelete($receiptId);
 				return false;
 			}
 		}

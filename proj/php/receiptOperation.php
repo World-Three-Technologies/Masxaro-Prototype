@@ -39,7 +39,6 @@ $userAcc = $post['acc'];
  * @var boolean $mobile
  */
 $mobile = $post['mobile'];
-
 /**
  * @desc
  * result set offset control, optional
@@ -66,7 +65,7 @@ $ctrl = new ReceiptCtrl();
 Tool::setJSON();
 
 switch($opcode){
-	case 'new_receipt':
+	case 'new_receipt_basic':
 		//1-d array
 		$basicInfo = $post['receipt'];
 		echo $ctrl->insertReceipt($basicInfo, null);
@@ -79,6 +78,37 @@ switch($opcode){
 		 */
 		$items = $post['items'];
 		echo $ctrl->insertReceipt(null, $items);
+		break;
+		
+	case 'new_receipt':
+		/**
+		 * @see 'new_item'
+		 * @see 'new_receipt_basic'
+		 */
+		
+		echo $ctrl->insertReceipt($post['receipt'], $post['items']);
+		
+//		$receipt = array(
+//			store_account=>'Mc_NYU',
+//			user_account=>'w3t',
+//			tax=>10,
+//		);
+		
+//		$items = array(
+//				array(
+//					item_id=>10,
+//					item_name=>'fries-mid',
+//					item_qty=>2,
+//					item_price=>1.99
+//				),
+//				array(
+//					item_id=>2,
+//					item_name=>'Salad',
+//					item_qty=>1,
+//					item_price=>1
+//				)
+//		);
+		//echo $ctrl->insertReceipt($receipt, $items);
 		break;
 		
 	case 'f_delete_receipt':
