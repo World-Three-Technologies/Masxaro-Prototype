@@ -679,7 +679,7 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * @param string $receiptId
 	 * 
-	 * @return array(obj, ...) items
+	 * @return 2-d-array() items
 	 * 
 	 * return all items of a receipt
 	 */
