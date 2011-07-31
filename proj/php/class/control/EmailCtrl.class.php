@@ -140,9 +140,9 @@ class EmailCtrl extends Ctrl{
 			  rsort($emails);
 			  foreach($emails as $email_number) {
 			  	
-//			  	$message = imap_fetchbody($inbox,$email_number,2);
-//			  	echo $message;
-//			  	die();
+			  	$message = imap_fetchbody($inbox,$email_number,2);
+			  	echo $message;
+			  	die();
 			    
 			    $overview = imap_fetch_overview($inbox,$email_number,0);
 			    $message = imap_fetchbody($inbox,$email_number,2);
