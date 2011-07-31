@@ -145,6 +145,7 @@ switch($opcode){
 	
 	case 'user_get_receipt_detail':
 		echo json_encode($ctrl->getReceiptDetail($post['receiptId']));
+		break;
 	
 	case 'search':
 		/**
