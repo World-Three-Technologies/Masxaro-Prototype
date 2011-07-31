@@ -26,13 +26,19 @@
 
 package com.android.W3T.app.rmanager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Receipt {
+public class Receipt implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8704584220504619955L;
 	
 	public static final int ENTRY_STORE_NAME = 0;
 	public static final int ENTRY_TIME = 1;
@@ -164,7 +170,7 @@ public class Receipt {
 	}
 	
 	private String getTax() {
-		return basic.getTime();
+		return basic.getTax();
 	}
 	
 	public boolean getWhere() {

@@ -93,6 +93,17 @@
 		    </intent-filter>
 		</activity>
 		
+		<!-- This activity is only used for viewing the selected search result. -->
+        <activity android:name=".SearchResultView"
+            android:label="@string/app_name"
+        >
+            <intent-filter>
+                <!-- This action is the user successfully login our system. -->
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>          
+        </activity>
+		
 		<!-- This is the NFC communication activity which indicates the NFC link
 			is connecting after the cell phone is put close to a vendor machine. -->
 		<activity android:name="NfcConnecting"

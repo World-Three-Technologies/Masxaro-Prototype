@@ -42,6 +42,7 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -68,7 +69,9 @@ public class NetworkUtil {
 	public static final String LOGOUT_URL = BASE_URL + "/logoff.php";
 	public static final String RECEIPT_OP_URL = BASE_URL + "/receiptOperation.php";
 	
-	public static final String METHOD_RECEIVE_ALL_BASIC = "user_get_all_receipt"; 
+	public static final String METHOD_RECEIVE_ALL_BASIC = "user_get_all_receipt";
+	public static final String METHOD_RECEIVE_RECEIPT_DETAIL = "user_get_receipt_detail";
+	public static final String METHOD_RECEIVE_RECEIPT_ITEMS = "user_get_receipt_items";
 	public static final String METHOD_KEY_SEARCH = "key_search";
 	public static final String METHOD_TAG_SEARCH = "tag_search";
 	public static final String METHOD_DATE_SEARCH = "time_search";
@@ -164,33 +167,59 @@ public class NetworkUtil {
     }
 
 	// return null means something wrong.
-	public static String attemptGetReceiptBasic(String method, String uname) {
+	public static String attemptGetReceipt(String method, String uname, String id) {
+		HttpPost request;
+		
 		// Here we may want to check the network status.
 		checkNetwork();
-		if (method.equals(METHOD_RECEIVE_ALL_BASIC)) {
-			
-			HttpPost request;
-	        
-	        try {
-	        	request = new HttpPost(new URI(RECEIPT_OP_URL));
-	            // Add your data
-	            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-	            nameValuePairs.add(new BasicNameValuePair("opcode", "user_get_all_receipt"));
+		
+		try {
+			request = new HttpPost(new URI(RECEIPT_OP_URL));
+			if (method.equals(METHOD_RECEIVE_ALL_BASIC)) {
+		        // Add your data
+		        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		        nameValuePairs.add(new BasicNameValuePair("opcode", METHOD_RECEIVE_ALL_BASIC));
+		        nameValuePairs.add(new BasicNameValuePair("acc", uname));
+		        request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			}
+			else if (method.equals(METHOD_RECEIVE_RECEIPT_DETAIL)) {
+				// Add your data
+	            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+	            nameValuePairs.add(new BasicNameValuePair("opcode", METHOD_RECEIVE_RECEIPT_DETAIL));
 	            nameValuePairs.add(new BasicNameValuePair("acc", uname));
+	            nameValuePairs.add(new BasicNameValuePair("receiptId", id));
 	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-	            // Execute HTTP Post Request
-	            HttpResponse response = mClient.execute(request);
-	            
-	            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-	            	String s = EntityUtils.toString(response.getEntity());
-	            	return s;
-	            }
-	            return null;
-	        }
-	        catch (Exception e) {
-	        	
-	        }	
-		}		
+			}
+			else if (method.equals(METHOD_RECEIVE_RECEIPT_ITEMS)) {
+				// Add your data
+	            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+	            nameValuePairs.add(new BasicNameValuePair("opcode", METHOD_RECEIVE_RECEIPT_ITEMS));
+	            nameValuePairs.add(new BasicNameValuePair("acc", uname));
+	            nameValuePairs.add(new BasicNameValuePair("receiptId", id));
+	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			}
+			
+            // Execute HTTP Post Request
+            HttpResponse response = mClient.execute(request);
+            
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            	String s = EntityUtils.toString(response.getEntity());
+            	return s;
+            }
+            return null;
+		} catch (URISyntaxException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
@@ -290,7 +319,7 @@ public class NetworkUtil {
             	jsonstr.put("json", param);
         	}
         	else if (op == METHOD_TAG_SEARCH) {
-        		
+
         	}
         	else if (op == METHOD_DATE_SEARCH) {
         		if (terms.length > 2) {

@@ -69,7 +69,7 @@ public static final String TAG = "EmptyViewActivity";
 //            NetworkUtil.syncUnsentReceipts();
 			// Download latest 7 receipts from database and upload non-uploaded receipts
 			// to the database.
-			String jsonstr = NetworkUtil.attemptGetReceiptBasic(RECEIVE_ALL_BASIC, UserProfile.getUsername());
+			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL_BASIC, UserProfile.getUsername(), null);
 			if (jsonstr != null) {
 				System.out.println(jsonstr);
 				// Set the IsUpload true

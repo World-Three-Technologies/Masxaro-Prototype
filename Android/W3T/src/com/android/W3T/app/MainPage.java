@@ -180,7 +180,7 @@ public class MainPage extends Activity {
 		case R.id.search_opt:
 			Log.i(TAG, "Search receipt option selected");
 			final Intent receipt_search_intent = new Intent(MainPage.this, SearchView.class);
-			receipt_search_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			receipt_search_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(receipt_search_intent);
 			return true;
 		case R.id.view_coupon_opt:

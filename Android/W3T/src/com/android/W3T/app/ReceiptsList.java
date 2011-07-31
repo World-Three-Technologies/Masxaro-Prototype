@@ -82,7 +82,7 @@ public class ReceiptsList extends Activity implements OnClickListener {
             NetworkUtil.syncUnsentReceipts();
 			// Download latest 7 receipts from database and upload non-uploaded receipts
 			// to the database.
-			String jsonstr = NetworkUtil.attemptGetReceiptBasic(RECEIVE_ALL_BASIC, UserProfile.getUsername());
+			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL_BASIC, UserProfile.getUsername(), null);
 			if (jsonstr != null) {
 				Log.i(TAG, "add new receipts");
 				// TODO: pick up the basic info of the latest 7 receipts and list them here.

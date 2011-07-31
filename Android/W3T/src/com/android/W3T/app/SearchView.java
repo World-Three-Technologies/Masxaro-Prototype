@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.BasicInfo;
+import com.android.W3T.app.user.UserProfile;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -43,6 +44,9 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class SearchView extends Activity implements OnClickListener {
 	public static final String TAG = "SearchViewActivity";
 
+	private static final String RECEIVE_RECEIPT_DETAIL = "user_get_receipt_detail";
+	private static final String RECEIVE_RECEIPT_ITEMS = "user_get_receipt_items";
+	
 	public static final String TITLE_TEXT = "entry_title";
 	public static final String TIME_TEXT = "entry_time";
 	public static final String TOTAL_TEXT = "entry_total";
@@ -58,20 +62,22 @@ public class SearchView extends Activity implements OnClickListener {
 	
 	private static final int START_DATE_DIALOG_ID = 1;
 	private static final int END_DATE_DIALOG_ID = 2;
-//	private TextView t;
 	
-	
+	private ArrayList<BasicInfo> basics = new ArrayList<BasicInfo>();
 	private int mSearchBy = 0;
 	private int mSearchRange = SEVEN_DAYS;
+	
+	private EditText mSearchTerms;
+	private ImageButton mSearchBtn;
+	
 	private LinearLayout mDynamicSearchRange;
 	private Spinner mSearchBySpinner;
 	private Spinner mSearchRangeSpinner;
-	private EditText mSearchTerms;
-	private ImageButton mSearchBtn;
 	private EditText mStartText;
 	private String mStartDate;
 	private EditText mEndText;
 	private String mEndDate;
+	
 	private ListView mResultList;
 	private ProgressDialog mSearchProgress;
 	private Handler mSearchHandler = new Handler();
@@ -91,11 +97,9 @@ public class SearchView extends Activity implements OnClickListener {
 				if (!text.equals("")) {
 					terms = text.split(" ");
 					result = NetworkUtil.attemptSearch("key_search", 0-mSearchRange, terms);
-//					t.setText(NetworkUtil.attemptSearch("key_search", 0-mSearchRange, terms));
 				}
 				else {
 					result = NetworkUtil.attemptSearch("key_search", 0-mSearchRange, null);
-//					t.setText(NetworkUtil.attemptSearch("key_search", 0-mSearchRange, null));
 				}
 				createSearchResultList(searchResultDecode(result));
 				break;
@@ -105,7 +109,6 @@ public class SearchView extends Activity implements OnClickListener {
 				break;
 			case DATE:
 				Log.i(TAG, "search the terms by date");
-				// TODO: add if statement for no date selecting.
 				if (!mStartDate.equals("") && !mEndDate.equals("")) {
 					text = text + " " + mStartDate + " " + mEndDate;
 					terms = text.split(" ");
@@ -127,6 +130,33 @@ public class SearchView extends Activity implements OnClickListener {
 		}
 	};
 	
+	Bundle mReceiptBundle = new Bundle();
+	private String mId = new String();
+	private ProgressDialog mDownloadProgress;
+	private Handler mDownloadHandler = new Handler();
+	private Runnable mDownloadThread = new Runnable() {
+		@Override
+		public void run() {
+			Log.i(TAG, "retrieve receipts from database");
+			
+			String detailstr = null;
+			detailstr = NetworkUtil.attemptGetReceipt(RECEIVE_RECEIPT_DETAIL,
+					UserProfile.getUsername(), mId);
+			String itemsstr = null;
+			itemsstr = NetworkUtil.attemptGetReceipt(RECEIVE_RECEIPT_ITEMS,
+					UserProfile.getUsername(), mId);
+			mDownloadProgress.dismiss();
+			if (detailstr != null && itemsstr != null) {
+				Log.i(TAG, "add new receipts basic");
+				mReceiptBundle.putSerializable("detail", detailstr);
+				mReceiptBundle.putSerializable("items", itemsstr);
+				final Intent search_result_intent = new Intent(SearchView.this, SearchResultView.class);
+				search_result_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				search_result_intent.putExtras(mReceiptBundle);
+				startActivity(search_result_intent);
+			}
+		}
+	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -137,7 +167,6 @@ public class SearchView extends Activity implements OnClickListener {
 	    
 	    mSearchTerms = (EditText) findViewById(R.id.search_terms);
 	    
-//	    t=(TextView) findViewById(R.id.tmp);
 	    mDynamicSearchRange = (LinearLayout) findViewById(R.id.dynamic_search_range);
 	    setSearchSpinner();
 	    
@@ -254,10 +283,11 @@ public class SearchView extends Activity implements OnClickListener {
     }
 	
 	private ArrayList<BasicInfo> searchResultDecode(String r) {
+		// Clear the basics history.
+		basics.clear();
 		try {
 			JSONArray result = new JSONArray(r);
 			int num = result.length();
-			ArrayList<BasicInfo> basics = new ArrayList<BasicInfo>();
 			for (int i=0;i<num;i++) {
 				JSONObject b = result.getJSONObject(i);
 				basics.add(new BasicInfo(b));
@@ -311,11 +341,13 @@ public class SearchView extends Activity implements OnClickListener {
 	  			@Override
 				public void onItemClick(AdapterView<?> parent, View view, int pos,
 						long id) {
-	  				// TODO: Only view the result. So the receipt view activity should be only.
-	  				final Intent receipt_view_intent = new Intent(SearchView.this, ReceiptsView.class);
-	  				receipt_view_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-	  				receipt_view_intent.putExtra("pos", pos-1);
-	  				startActivity(receipt_view_intent);
+	  				mId = basics.get(pos-1).getId();
+	  				mDownloadProgress = new ProgressDialog(SearchView.this);
+	  				mDownloadProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+	  				mDownloadProgress.setMessage("Downloading...");
+	  				mDownloadProgress.setCancelable(true);
+	  				mDownloadProgress.show();
+	  				mDownloadHandler.post(mDownloadThread);
 				}  
 	        });	
 		}

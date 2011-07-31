@@ -69,7 +69,7 @@ public class ReceiptsView extends Activity implements OnClickListener {
 			// Upload non-uploaded receipts and download latest 7 receipts from database. 
 			// to the database.
 //            NetworkUtil.syncUnsentReceipts();
-			String jsonstr = NetworkUtil.attemptGetReceiptBasic(RECEIVE_ALL_BASIC, UserProfile.getUsername());
+			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL_BASIC, UserProfile.getUsername(), null);
 			if (jsonstr != null) {
 				Log.i(TAG, "add new receipts basic");
 				System.out.println(jsonstr);
@@ -78,8 +78,6 @@ public class ReceiptsView extends Activity implements OnClickListener {
 				Log.i(TAG, "finished new receipts");
 				Log.i(TAG, "update receipt view");
 				mRefreshProgress.dismiss();
-				
-//				setBackIntent();
 			}
 		}
 	};
