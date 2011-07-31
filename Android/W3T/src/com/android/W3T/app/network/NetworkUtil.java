@@ -36,6 +36,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -60,7 +61,7 @@ public class NetworkUtil {
 	public static final int LOGOUT = MainPage.DIALOG_LOGOUT;
 	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
-	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
+//	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
 	public static final String BASE_URL = "http://sweethomeforus.com/php";
 	public static final String LOGIN_URL = BASE_URL + "/login.php";
@@ -71,6 +72,11 @@ public class NetworkUtil {
 	public static final String METHOD_KEY_SEARCH = "key_search";
 	public static final String METHOD_TAG_SEARCH = "tag_search";
 	public static final String METHOD_DATE_SEARCH = "time_search";
+	
+	private static final int SEVEN_DAYS = 7;
+	private static final int FOURTEEN_DAYS = 14;
+	private static final int ONE_MONTH = 1;
+	private static final int THREE_MONTHS = 3;
 	
 	private static HttpClient mClient = new DefaultHttpClient();
 	
@@ -194,9 +200,9 @@ public class NetworkUtil {
         try {
             // Add your data
         	JSONObject basicInfo = new JSONObject();
-        	basicInfo.put("store_account", r.getEntry(0));	// store name
-        	basicInfo.put("tax", r.getEntry(3));			// tax
-        	basicInfo.put("receipt_time", "2011-07-12 06:12:32");			// receipt time
+        	basicInfo.put("store_account", r.getEntry(0));			// store name
+        	basicInfo.put("tax", r.getEntry(3));					// tax
+        	basicInfo.put("receipt_time", "2011-07-12 06:12:32");	// receipt time
         	basicInfo.put("receipt_id", "105");
         	basicInfo.put("user_account", UserProfile.getUsername());
         	JSONObject receipt = new JSONObject();
@@ -229,7 +235,7 @@ public class NetworkUtil {
 		return false;
 	}
 	
-	public static String attemptSearch(String op) {   
+	public static String attemptSearch(String op, int range, String[] terms) {   
 		// Here we may want to check the network status.
 		checkNetwork();
 
@@ -239,29 +245,91 @@ public class NetworkUtil {
         	
             request = new HttpPost();
             request.setURI(new URI(RECEIPT_OP_URL));
+            
+            JSONObject param = new JSONObject();
+            param.put("acc", UserProfile.getUsername());
+            param.put("opcode", "search");
+            param.put("mobile", true);
+            JSONObject jsonstr = new JSONObject();
+            
         	if (op == METHOD_KEY_SEARCH) {
         		// Add your data
-	            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-	            nameValuePairs.add(new BasicNameValuePair("opcode", op));
-	            nameValuePairs.add(new BasicNameValuePair("key", "Coffee"));
-	            nameValuePairs.add(new BasicNameValuePair("key", "Salad"));
-	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        		// Add keys if there is any.
+        		if (terms != null) {
+        			JSONArray keys = new JSONArray();
+        			int numTerm = terms.length;
+            		for (int i=0;i<numTerm;i++) {
+            			keys.put(terms[i]);
+            		}
+            		param.put("keys", keys);
+        		}
+        		// Calculate the Search Range by last N days
+        		Calendar c = Calendar.getInstance();
+        		if (range == -SEVEN_DAYS || range == -FOURTEEN_DAYS) {
+        			// 7 days or 14 days
+        			c.add(Calendar.DAY_OF_MONTH, range);
+        		}
+        		else if (range == -ONE_MONTH || range == -THREE_MONTHS) {
+        			// 1 month or 6 month
+        			c.add(Calendar.MONTH, range);
+        		}
+        		
+        		String timeStart = String.valueOf(c.get(Calendar.YEAR));
+        		timeStart += ("-"+String.valueOf(c.get(Calendar.MONTH)+1));
+        		timeStart += ("-"+String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
+        		Calendar current = Calendar.getInstance();
+        		String timeEnd = String.valueOf(current.get(Calendar.YEAR));
+        		timeEnd += ("-"+String.valueOf(current.get(Calendar.MONTH)+1));
+        		timeEnd += ("-"+String.valueOf(current.get(Calendar.DAY_OF_MONTH)));
+        		
+        		JSONObject timeRange = new JSONObject();
+        		timeRange.put("start", timeStart);
+        		timeRange.put("end", timeEnd);
+        		param.put("timeRange", timeRange);
+            	
+            	jsonstr.put("json", param);
         	}
         	else if (op == METHOD_TAG_SEARCH) {
-        		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        		nameValuePairs.add(new BasicNameValuePair("opcode", op));
-	            nameValuePairs.add(new BasicNameValuePair("tag", "McD"));
-	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        		
         	}
-            // Execute HTTP Post Request
-            HttpResponse response = mClient.execute(request);
-            
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            	String s = EntityUtils.toString(response.getEntity());
-            	System.out.println(s);
-            	return s;
-            }
-            return null;
+        	else if (op == METHOD_DATE_SEARCH) {
+        		if (terms.length > 2) {
+        			// Add keys if there is any.
+            		JSONArray keys = new JSONArray();
+            		int numTerm = terms.length - 2;
+                	for (int i=0;i<numTerm;i++) {
+                		keys.put(terms[i]);
+                	}
+                	param.put("keys", keys);
+        		}
+        		else if (terms.length < 2) {
+        			System.out.println("Wrong terms");
+        			return null;
+        		}
+        		JSONObject timeRange = new JSONObject();
+        		timeRange.put("start", terms[terms.length - 2]);
+        		timeRange.put("end", terms[terms.length - 1]);
+        		System.out.println(terms[terms.length - 2]);
+        		System.out.println(terms[terms.length - 1]);
+        		param.put("timeRange", timeRange);
+            	
+            	jsonstr.put("json", param);
+
+        	}
+        	URL url = new URL(RECEIPT_OP_URL);
+        	URLConnection connection = url.openConnection();
+        	connection.setDoOutput(true);
+
+        	OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+        	// Must put "json=" here for server to decoding the data
+        	String data = "json=" + jsonstr.toString();
+        	out.write(data);
+        	out.flush();
+        	out.close();
+
+        	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+        	return in.readLine();
+        	
         } catch (URISyntaxException e) {   
             e.printStackTrace();   
          
@@ -272,6 +340,9 @@ public class NetworkUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

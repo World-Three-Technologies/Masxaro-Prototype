@@ -25,8 +25,10 @@
  */
 
 include_once '../config.php';
+include_once 'header.php';
 
-$opcode = $_POST['opcode'];
+$opcode = $post['opcode'];
+$userAcc = $post['acc'];
 
 $ctrl = new ReceiptCtrl();
 
@@ -35,50 +37,144 @@ Tool::setJSON();
 switch($opcode){
 	case 'new_receipt':
 		//1-d array
-		$basicInfo = $_POST['receipt'];
+		$basicInfo = $post['receipt'];
 		echo $ctrl->insertReceipt($basicInfo, null);
 		break;
 	
 	case 'new_item':
-		//2-d array
-		$items = $_POST['items'];
+		/*
+		 * items: array(array(), ...), 2-d array of items
+		 * each sub array is an item
+		 */
+		$items = $post['items'];
 		echo $ctrl->insertReceipt(null, $items);
 		break;
 		
 	case 'f_delete_receipt':
-		//fake delete one receipt
-		echo $ctrl->fakeDelete($_POST['receipt_id']);
+		echo $ctrl->fakeDelete($post['id']);
 		break;
 		
 	case 'delete_receipt':
 		//delete one receipt
-		echo $ctrl->realDelete($_POST['receipt_id']);
+		echo $ctrl->realDelete($post['id']);
 		break;
 		
 	case 'recover':
 		//recover fake deleted receipt
-		echo $ctrl->recoverDeleted($_POST['receipt_id']);
+		echo $ctrl->recoverDeleted($post['id']);
 		break;
 		
 	case 'user_get_all_receipt_basic':
 		//user get  all receipts' basic info
-		echo json_encode($ctrl->userGetAllReceiptBasic($_POST['acc']));
+		echo json_encode($ctrl->userGetAllReceiptBasic($userAcc));
 		break;
 		
 	case 'user_get_receipt_item':
 		//user get items info of one certain receipt
-		echo json_encode($ctrl->userGetReceiptItems($_POST['receipt_id']));
+		echo json_encode($ctrl->userGetReceiptItems($post['id']));
 		break;
 		
 	case 'user_get_all_receipt':
 		//user get all receipt, with basic info and all items info
-		echo json_encode($ctrl->userGetAllReceipt($_POST['acc']));
+		$con = array(
+						'='=>array(
+									'field'=>'user_account',
+									'value'=>$userAcc
+								  )
+					);
+		echo json_encode($ctrl->searchReceipt($con,$userAcc));
 		break;
 		
 	case 'user_get_receipt_detail':
 		//user get basic info of one certain receipt
-		echo json_encode($ctrl->getReceiptDetail($_POST['receipt_id']));
+		echo json_encode($ctrl->getReceiptDetail($post['id']));
+		break;
+	
+	case 'search':
+		echo json_encode($ctrl->searchReceipt($post['con']));
+		break;
+	
+	case 'key_search':
+		/*
+		 * search receipts based on keywords in item_name and store_name
+		 * 
+		 * multiple keywords should be organized as an 1-d array
+		 *
+		 * array(key1, key2, key3...), eg. array('Coffee', 'coke')
+		 */
+		
+		$keys = isset($post['keys']) ? $post['keys'] : '';
+		
+		$con = array();
+		
+		if(!is_array($keys)){
+			$keys = "%$keys%";
+			
+			// 'item_name LIKE %keys% OR store_name LIKE %$keys%'
+			$con['OR'] = array(
+							'LIKE'.CON_DELIMITER.'0'=>array(
+								'field'=>'item_name',
+								'value'=>$keys
+							),
+							'LIKE'.CON_DELIMITER.'1'=>array(
+								'field'=>'store_name',
+								'value'=>$keys
+							)
+						);
+		}
+		else{
+			$tmp = array();
+			$i = 0;
+			foreach($keys as $key){
+				$key = "%$key%";
+				$tmp['like'.CON_DELIMITER.$i ++] = array(
+														'field'=>'item_name',
+														'value'=>$key
+													);
+				$tmp['like'.CON_DELIMITER.$i ++] = array(
+														'field'=>'store_name',
+														'value'=>$key
+													);
+			}
+			$con['OR'] = $tmp;
+		}
+		
+		echo json_encode($ctrl->searchReceipt($con, $userAcc));
+		break;
+		
+	case 'tag_search':
+		/**
+		 * @see tagOperation.php $tags
+		 */
+		$tags = $post['tags'];
+
+		if(!is_array($tags)){
+			die('wrong parameters');
+		}
+		$orConds = array();
+		$i = 0;
+		foreach($tags as $tag){
+			$orConds['='.CON_DELIMITER.$i++] = array(
+													'field'=>'tag',
+													'value'=>$tag
+												);
+		}
+		
+		$con = array(
+					'OR'=>$orConds,
+		);
+		echo json_encode($ctrl->searchTagReceipt($con, $userAcc));
+		break;
+	
+	case 'get_store_receipt':
+		$store = $post['store'];
+		$con = array(
+				'='=>array(
+						'field'=>'store_name',
+						'value'=>$store
+					)
+		);
+		echo json_encode($ctrl->searchReceipt($con, $userAcc));
 		break;
 }
-
 ?>

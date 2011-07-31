@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
 /*
- * arrays.xml - All String array const used in app  
+ * search_range_spinner.xml - 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -24,16 +24,12 @@
  *
  */
  -->
-<resources>
-    <string-array name="search_by">
-        <item>Store or Item</item>
-        <item>Tag</item>
-        <item>Date</item>
-    </string-array>
-    <string-array name="search_range">
-        <item>Last 7 days</item>
-        <item>Last 14 days</item>
-        <item>Last 1 month</item>
-        <item>Last 3 months</item>
-    </string-array>
-</resources>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search_spinner_layout"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+>
+    <Spinner android:id="@+id/search_range_spinner"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+    />
+</LinearLayout>

@@ -58,11 +58,12 @@ public class Receipt {
 //	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 //	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
-	private String mReceiptId;
-	private	String mStoreName;
-	private String mTime;
-	private String mTax;
-	private String mTotal;
+//	private String mReceiptId;
+//	private	String mStoreName;
+//	private String mTime;
+//	private String mTax;
+//	private String mTotal;
+	private BasicInfo basic;
 //	private String img;
 //	private String delete;
 	private ArrayList<ReceiptItem> mItems;	// Items in this receipt
@@ -72,11 +73,12 @@ public class Receipt {
 									// The receipt retrieved from database sets true.
 									// The receipt retrieved from nfc tag sets false
 	public Receipt() {
-		mReceiptId = new String("ID@0000");
-		mStoreName = new String("N/A");
-		mTime = new String("N/A");
-		mTotal = new String("N/A");
-		mTax = new String("N/A");
+//		mReceiptId = new String("ID@0000");
+//		mStoreName = new String("N/A");
+//		mTime = new String("N/A");
+//		mTotal = new String("N/A");
+//		mTax = new String("N/A");
+		basic = new BasicInfo();
 //		img = new String("N/A");
 //		delete = new String();
 		mItems = new ArrayList<ReceiptItem>();
@@ -85,19 +87,15 @@ public class Receipt {
 	}
 	
 	public Receipt(JSONObject str, boolean w) {
-		try {
-			mReceiptId = str.get(PARAM_RECEIPT_ID).toString();
-			mTime = str.get(PARAM_RECEIPT_TIME).toString();
-			mStoreName = str.get(PARAM_RECEIPT_STORE_NAME).toString();
-			mTotal = str.get(PARAM_RECEIPT_TOTAL).toString();
-			mTax = str.get(PARAM_RECEIPT_TAX).toString();
-			mItems = new ArrayList<ReceiptItem>();
-			mNumItems = 0;
-			mWhere = w;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//			mReceiptId = str.get(PARAM_RECEIPT_ID).toString();
+		//			mTime = str.get(PARAM_RECEIPT_TIME).toString();
+		//			mStoreName = str.get(PARAM_RECEIPT_STORE_NAME).toString();
+		//			mTotal = str.get(PARAM_RECEIPT_TOTAL).toString();
+		//			mTax = str.get(PARAM_RECEIPT_TAX).toString();
+		basic = new BasicInfo(str);
+		mItems = new ArrayList<ReceiptItem>();
+		mNumItems = 0;
+		mWhere = w;
 	}
 	
 	public String getEntry(int i) {
@@ -154,19 +152,19 @@ public class Receipt {
 	}
 	
 	private String getId() {
-		return mReceiptId;
+		return basic.getId();
 	}
 	
 	private String getStoreName() {
-		return mStoreName;
+		return basic.getStoreName();
 	}
 	
 	private String getTime() {
-		return mTime;
+		return basic.getTime();
 	}
 	
 	private String getTax() {
-		return mTax;
+		return basic.getTime();
 	}
 	
 	public boolean getWhere() {
@@ -174,7 +172,7 @@ public class Receipt {
 	}
 	
 	private String getTotal() {
-		return mTotal;
+		return basic.getTotal();
 	}
 	
 //	private void setId(String id) {

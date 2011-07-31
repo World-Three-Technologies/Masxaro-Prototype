@@ -211,7 +211,7 @@ public class ReceiptsList extends Activity implements OnClickListener {
 				View row = super.getView(position, convertView, parent);
 		        TextView title = (TextView) row.findViewById(R.id.list_receipt_title);
 		        title.setTextColor(getResources().getColor(R.color.white));
-//		        return super.getView(position, convertView, parent);
+		        return super.getView(position, convertView, parent);
 			}
 			return super.getView(position, convertView, parent);
 	    }
