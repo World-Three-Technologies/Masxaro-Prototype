@@ -32,6 +32,7 @@ class ReceiptEntity{
 	public $receipt_time = NULL;
 	public $tax = 1;
 	public $total_cost = 0;
+	public $currency_mark = '$';
 	public $source = 'default';
 	public $img = NULL;
 	public $deleted = 0;
