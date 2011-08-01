@@ -52,14 +52,17 @@ class ReceiptCtrl extends Ctrl{
 	 * build the basic sql statement for receipt searching, return receipt full entities with all information
 	 */
 	protected function buildSearchSql($acc, $subquery, $limitStart=0, $limitOffset=999999, 
-										   $groupBy=null, $orderBy='receipt_time', $orderDesc=true){
+									$groupBy=null, $orderBy='receipt_time', $orderDesc=true, $mobile=false){
 										   	
 		$limitStart = isset($limitStart) ? $limitStart : 0;
 		$limitOffset = isset($limitOffset) ? $limitOffset : 999999;
 		$orderBy = isset($orderBy) ? $orderBy : 'receipt_time';
 		$orderDesc = isset($orderDesc) ? $orderDesc : true;
-										   	
-		$sql = "
+		$mobile = isset($mobile) ? $mobile : false;
+		
+		$sql = "";
+		if(!$mobile){
+			$sql = "
 			SELECT 
 				r.`id`,
 				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
@@ -98,60 +101,9 @@ class ReceiptCtrl extends Ctrl{
       			(
 	      			$subquery
       			)";
-	      			
-	      if(isset($groupBy)){
-	      	$sql .= "
-	      		GROUP BY
-	      			$groupBy
-	      	";
-	      }
-	      
-	      $sql .= "
-	      		ORDER BY
-	      			$orderBy
-	      ";
-	      
-	      if($orderDesc){
-	      	$sql .= "DESC";
-	      }
-	      			
-	      $sql .= "
-	      		LIMIT
-	      			$limitStart, $limitOffset
-	      ";
-	      			
-	      return $sql;
-	}
-	
-	/**
-	 * 
-	 * 
-	 * 
-	 * @param string $acc user/store account
-	 * 
-	 * @param string $subquery subquery statement, should return a set of receipt id
-	 * 
-	 * @param string $groupBy (optional) set group by field
-	 * 
-	 * @param string $orderBy (optional) set order by field, default as 'receipt_time'
-	 * 
-	 * @param boolean $orderDesc
-	 * 
-	 * @param int $limitStart (optional) limit start offset(optional)
-	 * 
-	 * @param int $limitOffset (optional) limit offset(optional)
-	 * 
-	 * @desc
-	 * build the basic sql statement for receipt searching, return receipt full entities with all information
-	 */
-	protected function buildSearchSql_mobile($acc, $subquery, $limitStart=0, $limitOffset=999999, 
-										   $groupBy=null, $orderBy='receipt_time', $orderDesc=true){
-		$limitStart = isset($limitStart) ? $limitStart : 0;
-		$limitOffset = isset($limitOffset) ? $limitOffset : 999999;
-		$orderBy = isset($orderBy) ? $orderBy : 'receipt_time';
-		$orderDesc = isset($orderDesc) ? $orderDesc : true;
-										   	
-		$sql = "
+		}
+		else{
+			$sql = "
 			SELECT 
 				r.`id`,
 				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
@@ -177,29 +129,30 @@ class ReceiptCtrl extends Ctrl{
       			(
 	      			$subquery
       			)";
+		}
 	      			
-	      if(isset($groupBy)){
-	      	$sql .= "
-	      		GROUP BY
-	      			$groupBy
-	      	";
-	      }
-	      
-	      $sql .= "
-	      		ORDER BY
-	      			$orderBy
-	      ";
-	      
-	      if($orderDesc){
-	      	$sql .= "DESC";
-	      }
-	      			
-	      $sql .= "
-	      		LIMIT
-	      			$limitStart, $limitOffset
-	      ";
-	      			
-	      return $sql;
+	    if(isset($groupBy)){
+	    	$sql .= "
+	    		GROUP BY
+	    			$groupBy
+	    	";
+	    }
+	    
+	    $sql .= "
+	    	ORDER BY
+	    		$orderBy
+	    ";
+	    
+	    if($orderDesc){
+	    	$sql .= "DESC";
+	    }
+	    			
+	    $sql .= "
+	    	LIMIT
+	    		$limitStart, $limitOffset
+	    ";
+	    			
+	    return $sql;
 	}
 	
 	/**
@@ -298,6 +251,22 @@ class ReceiptCtrl extends Ctrl{
 	 * @param array(array(), array()...) $items
 	 * 
 	 * @return boolean
+	 * 
+	 * @example
+	 * $items = array(
+	 * 		array(
+	 * 			item_id=>10,
+	 * 			item_name=>'fries-mid',
+	 * 			item_qty=>2,
+	 * 			item_price=>1.99
+	 * 		),
+	 * 		array(
+	 * 			item_id=>2,
+	 * 			item_name=>'Salad',
+	 * 			item_qty=>1,
+	 * 			item_price=>1
+	 * 			)
+	 * );
 	 * 
 	 * @desc
 	 * 
@@ -608,75 +577,6 @@ class ReceiptCtrl extends Ctrl{
 	/**
 	 * 
 	 * 
-	 * @param string $userAcc
-	 * 
-	 * @param int $limitStart limit start offset(optional)
-	 * 
-	 * @param int $limitOffset limit offset(optional)
-	 * 
-	 * @param string $groupBy (optional) set group by field
-	 * 
-	 * @param string $orderBy (optional) set order by field, default as 'receipt_time'
-	 * 
-	 * @return array(object);
-	 * 
-	 * @desc
-	 * get all receipt based on a certain user account
-	 */
-	public function userGetAllReceiptBasic($userAcc, $limitStart, $limitOffset = 999999,
-											$groupBy=null, $orderBy='receipt_time', $orderDesc=true){
-												
-		$limitStart = isset($limitStart) ? $limitStart : 0;
-		$limitOffset = isset($limitOffset) ? $limitOffset : 999999;
-		$orderBy = isset($orderBy) ? $orderBy : 'receipt_time';
-		$orderDesc = isset($orderDesc) ? $orderDesc : true;
-
-		$sql = "
-			SELECT 
-				r.`id`,
-				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
-				r.`tax`,
-				r.`total_cost`,
-				r.`source`,
-				s.`store_name`
-			FROM 
-				`receipt` as r
-			JOIN 
-				`store` as s
-			ON
-				r.`store_account`=s.`store_account`
-			AND
-				r.`user_account`='$userAcc'
-			AND 
-				`deleted`=false
-			";
-		
-		if(isset($groupBy)){
-			$sql .= "
-				ORDER BY
-					$groupBy
-			";
-		}
-		
-		$sql .= "
-				ORDER BY
-					r.`receipt_time` DESC
-				LIMIT
-				    $limitStart, $limitOffset
-		";
-		
-		$this->db->select($sql);
-		
-		if($this->db->numRows() == 0){
-			return "";
-		} else{
-			return $this->db->fetchAssoc();
-		}
-	}
-	
-	/**
-	 * 
-	 * 
 	 * @param string $receiptId
 	 * 
 	 * @return 2-d-array() items
@@ -717,7 +617,7 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * @desc
 	 * 
-	 * return detail information of a certain receipt
+	 * return detail information of a certain receipt, without items
 	 */
 	public function getReceiptDetail($receiptId){
 		$sql = "
@@ -742,9 +642,9 @@ class ReceiptCtrl extends Ctrl{
 		";
 		
 		$this->db->select($sql);
-		$result = $this->db->fetchAssoc();
 		
-		return $result;
+		$receipts = $this->db->fetchAssoc();
+		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
 	}
 	
 	/**
@@ -799,14 +699,8 @@ class ReceiptCtrl extends Ctrl{
 	      				`receipt`.`store_account`=`store`.`store_account`
 		";
 
-	    $sql = $mobile ? 
-	    			$this->buildSearchSql_mobile($acc, $subquery, $limitStart, $limitOffset, 
-	    							$groupBy, $orderBy, $orderDesc)
-	    			:
-	    			$this->buildSearchSql($acc, $subquery, $limitStart, $limitOffset, 
-	    							$groupBy, $orderBy, $orderDesc);
-	    						
-	    							
+	    $sql = $this->buildSearchSql($acc, $subquery, $limitStart, $limitOffset, 
+	    							$groupBy, $orderBy, $orderDesc, $mobile);
 	    							
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
@@ -837,7 +731,7 @@ class ReceiptCtrl extends Ctrl{
 	 * search receipts with certain tags
 	 */
 	public function searchTagReceipt($con, $acc, $limitStart = 0, $limitOffset = 999999,
-									$groupBy=null, $orderBy='receipt_time', $orderDesc=true){
+									$groupBy=null, $orderBy='receipt_time', $orderDesc=true, $mobile=false){
 		$con = Tool::condArray2SQL($con);
 		
 		$subquery = "
@@ -854,37 +748,12 @@ class ReceiptCtrl extends Ctrl{
 		";
 		
 		$sql = $this->buildSearchSql($acc, $subquery, $limitStart, $limitOffset, 
-	    							$groupBy, $orderBy, $orderDesc);
+	    							$groupBy, $orderBy, $orderDesc, $mobile);
 				
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
 		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
 	}
-	
-	/**
-	 * 
-	 * 
-	 * @param int $id receipt id
-	 * 
-	 * @return array $result
-	 * 
-	 * @desc
-	 * return an array of tags of a certain receipt
-	 */
-  public function getReceiptTags($id){
-		$sql = "
-			SELECT
-				`tag`
-			FROM
-				`receipt_tag`
-			WHERE
-				`receipt_id` = ($id)
-		";
-
-		$this->db->select($sql);
-		$results = $this->db->fetchAssoc();
-  		return $results;
-  }
 
   /**
    * @param array(int) receipt ids
