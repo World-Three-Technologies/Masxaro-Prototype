@@ -1,6 +1,7 @@
 <?php
+
 /*
- *  SqlConEntity.php -- sql condition entity 
+ *  FileCtrl.class.php -- file system control 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -22,12 +23,9 @@
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
  * 
  */
-class SqlConEntity{
-	private $sql = array();
+
+class FileCtrl{
 	
-	public function getSql(){
-		return $this->sql;
-	}
 	
 }
 
