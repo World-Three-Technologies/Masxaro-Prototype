@@ -8,7 +8,7 @@ include_once '../../config.php';
 //die();
 
 $path = "http://localhost/w3t/proj/php/login.php";
-$param = "acc=new&pwd=123&type=user";
+$param = "acc=w3tAcc&pwd=123&type=user";
 
 $ch = curl_init($path);
 curl_setopt($ch, CURLOPT_POST, 1);

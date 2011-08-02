@@ -47,7 +47,6 @@ switch($type){
 		die('wrong parameters');
 }
 
-
 $result = $ctrl->find($acc, $pwd);
 
 if($result < 0){
@@ -60,5 +59,19 @@ if($result == 0){
 
 echo Tool::login($acc, $type);
 
+updateEmailReceipts($acc);
+
 ob_end_flush();
+
+function updateEmailReceipts($acc){
+	$path = "receiptOperation.php";
+	$param = "acc=$acc&opcode=grab_email_receipts";
+	
+	$ch = curl_init($path);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
+	
+	$result = curl_exec($ch);
+}
 ?>
