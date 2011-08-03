@@ -203,11 +203,11 @@ class Tool{
   }
 
   public static function redirectToPortal(){
-    Tool::redirect("/php/index.php");
+    Tool::redirect("/index.php");
   }
 
   public static function redirectToProduct(){
-    Tool::redirect("/php/product.php");
+    Tool::redirect("/product.php");
   }
 
   /**
