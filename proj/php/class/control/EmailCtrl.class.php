@@ -274,6 +274,9 @@ class EmailCtrl extends Ctrl{
 	 * 			);
 	 * 
 	 * @param string $userAcc user account
+	 * 
+	 * @desc
+	 * save grabbed email receipts to files
 	 */
 	public function saveEmails($emails, $userAcc){
 		try{
@@ -304,7 +307,6 @@ class EmailCtrl extends Ctrl{
 		}catch(Exception $e){
 			return $e->getMessage();
 		}
-		
 	}
 }
 

@@ -64,7 +64,7 @@ updateEmailReceipts($acc);
 ob_end_flush();
 
 function updateEmailReceipts($acc){
-	$path = "receiptOperation.php";
+	$path = "50.19.213.157/masxaro/proj/php/receiptOperation.php";
 	$param = "acc=$acc&opcode=grab_email_receipts";
 	
 	$ch = curl_init($path);
