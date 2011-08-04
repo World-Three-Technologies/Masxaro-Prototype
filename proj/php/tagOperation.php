@@ -27,7 +27,6 @@ include_once '../config.php';
 include_once 'header.php';
 
 $opcode = $post['opcode'];
-$opcode = 'get_user_tags';
 /*
  * array, 
  * eg: array(
@@ -89,7 +88,7 @@ switch($opcode){
 		//add multi tags to a certain receipt
 		foreach($tags as $tag){
 			$info = array(
-				'tag'=>$tag['tag'],
+				'tag'=>$tag,
 				'user_account'=>$user,
 				'receipt_id'=>$receipt
 			);
@@ -106,7 +105,7 @@ switch($opcode){
 				'AND'=>array(
 							'=' => array(
 										'field'=>'tag',
-										'value'=>$tag['tag']	
+										'value'=>$tag	
 									),
 							'='.CON_DELIMITER.'1' => array(
 										'field'=>'user_account',

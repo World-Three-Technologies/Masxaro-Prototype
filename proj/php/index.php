@@ -37,7 +37,7 @@
       </nav>
       <div id="content">
         <div id="receipts">
-          <div id="search-bar">
+          <div id="search-bar" class="clearfix">
             <div>
               <input id="search-query" type="text" placeholder="search"/>
             </div>
