@@ -10,9 +10,8 @@
     case "test":
       runTest();
       break;
-    case "deploy":
+    case "build":
       buildJavascripts();
-      system("cp -rf ./ /Library/WebServer/Documents/");
       break;
     case "seed":
       seed();
