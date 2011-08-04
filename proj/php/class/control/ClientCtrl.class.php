@@ -138,6 +138,8 @@ abstract class ClientCtrl extends Ctrl{
 				`{$this->clientType}_account`='$acc'
 			AND
 				`pwd`='$pwd'
+			AND 
+				`verified`=1
 		";
 		
 		$this->db->select($sql);
@@ -237,6 +239,8 @@ abstract class ClientCtrl extends Ctrl{
 				`$this->clientType`
 			WHERE 
 				`{$this->clientType}_account`='$acc'
+			AND 
+				`verified`=1
 		";
 		
 		$this->db->select($sql);
