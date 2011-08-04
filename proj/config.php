@@ -78,7 +78,13 @@ define('CON_DELIMITER', ':');//delimiter to for operator and operator tag in que
  * db config
  */
 //AWS db
-define('DB_HOST', '46.51.255.119');
+//define('DB_HOST', '46.51.255.119');
+//define('DB_USER', 'w3t');
+//define('DB_PWD', 'w3t');
+//define('DB_DBNAME', 'w3tdb');
+
+//AWS db - free
+define('DB_HOST', '50.19.213.157');
 define('DB_USER', 'w3t');
 define('DB_PWD', 'w3t');
 define('DB_DBNAME', 'w3tdb');
