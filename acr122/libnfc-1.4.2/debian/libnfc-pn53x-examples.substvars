@@ -1,0 +1,2 @@
+shlibs:Depends=libc6 (>= 2.7), libnfc0, libreadline6 (>= 6.0)
+misc:Depends=

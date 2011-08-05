@@ -1,0 +1,9 @@
+da1f647e9092947f5e5a203f46734bb5  usr/bin/nfc-list
+c1ab23cfe8c20ec193361ad8686bc69c  usr/bin/nfc-mfclassic
+fd103589a2fdb20d3d6bdd6cb442ac78  usr/bin/nfc-mfultralight
+3273ac114219caae1c97855c17f05a9f  usr/share/doc/libnfc-bin/changelog.Debian.gz
+38bf0f1024f3a5da986fbd212b98802d  usr/share/doc/libnfc-bin/changelog.gz
+325e7326d0a2ecd1bc866c9a97731399  usr/share/doc/libnfc-bin/copyright
+b440c043a35ca46079c219869bdf3964  usr/share/man/man1/nfc-list.1.gz
+c5092ab075bf4e331dcfb1cd1a2283c1  usr/share/man/man1/nfc-mfclassic.1.gz
+deb54a0d6702824fcc4fc4bdd1f2f04a  usr/share/man/man1/nfc-mfultralight.1.gz

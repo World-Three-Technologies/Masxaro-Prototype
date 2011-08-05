@@ -1,0 +1,24 @@
+K 10
+svn:ignore
+V 386
+files
+libnfc-bin
+libnfc-bin.debhelper.log
+libnfc-bin.substvars
+libnfc-dev
+libnfc-dev.debhelper.log
+libnfc-dev.substvars
+libnfc-examples
+libnfc-examples.debhelper.log
+libnfc-examples.substvars
+libnfc-pn53x-examples
+libnfc-pn53x-examples.debhelper.log
+libnfc-pn53x-examples.substvars
+libnfc0
+libnfc0.debhelper.log
+libnfc0.postinst.debhelper
+libnfc0.postrm.debhelper
+libnfc0.substvars
+tmp
+
+END

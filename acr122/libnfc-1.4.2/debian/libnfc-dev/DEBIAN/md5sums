@@ -1,0 +1,9 @@
+4ab296b5038b25d7b7669428e4de0961  usr/include/nfc/nfc-messages.h
+4dd84624379a23682118892b042cbffa  usr/include/nfc/nfc-types.h
+97bfe0c105fad567c22834d70167b39b  usr/include/nfc/nfc.h
+eab8fb712a479e319d62902fb1c65fd0  usr/lib/libnfc.a
+5fa12eb0321d75f81ee15f93e58b1bd9  usr/lib/libnfc.la
+67eb08b100c73c796e32f9e208ffb9fe  usr/lib/pkgconfig/libnfc.pc
+3273ac114219caae1c97855c17f05a9f  usr/share/doc/libnfc-dev/changelog.Debian.gz
+38bf0f1024f3a5da986fbd212b98802d  usr/share/doc/libnfc-dev/changelog.gz
+325e7326d0a2ecd1bc866c9a97731399  usr/share/doc/libnfc-dev/copyright
