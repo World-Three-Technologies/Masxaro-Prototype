@@ -351,10 +351,9 @@ function searchingConHandler($keys, $tags, $timeStart, $timeEnd){
 	
 	$con = array();
 	
-		//keys
+  //keys
 	if(!is_array($keys)){
 		$keys = "%$keys%";
-		
 		// 'item_name LIKE %keys% OR store_name LIKE %$keys%'
 		$con['OR'] = array(
 				'LIKE:0'=>array(

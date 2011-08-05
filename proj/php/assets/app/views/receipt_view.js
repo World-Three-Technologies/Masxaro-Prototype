@@ -23,7 +23,6 @@ var ReceiptView = Backbone.View.extend({
   },
 
   render:function(){
-    console.log("rendering...");
     var view = $(this.el);
     view.html(this.template(this.model.toJSON()));
 

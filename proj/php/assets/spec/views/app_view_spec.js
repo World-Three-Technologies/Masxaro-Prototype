@@ -23,4 +23,18 @@ describe("app view",function(){
     expect(this.view.end).toEqual(2);
   });
 
+  describe("search",function(){
+    it("should receive keys array",function(){
+      this.view.model.search = sinon.stub();
+      this.view.search("test test2");
+      expect(this.view.model.search.called).toBeTruthy();
+    });
+
+    it("should split keys array to model",function(){
+      this.view.model.search = sinon.stub();
+      this.view.search("test test2");
+      expect(this.view.model.search.calledWith(["test","test2"]));
+    });
+  });
+
 });

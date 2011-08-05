@@ -21,8 +21,20 @@ window.AppView = Backbone.View.extend({
   },
 
   search:function(query){
+    if(query == "" || query == "undefined"){
+      return;
+    }
+    var keys = query.split(" "); 
     this.before();
-    this.model.search(query,this.after);
+    if($("#search-type :checked").val() == "name"){
+      this.model.searchByKeys(keys,this.after);
+    }else{
+      this.model.searchByTags(keys,this.after);
+    }
+  },
+
+  searchByForm:function(){
+    this.search($('#search-query').val());
   },
 
   submitSearch:function(event){
@@ -42,9 +54,6 @@ window.AppView = Backbone.View.extend({
     $('.receipts-stat').show();
   },
 
-  searchByForm:function(){
-    this.search($('#search-query').val());
-  },
 
   updateStatus:function(){
     this.$(".stat").text(this.start + " to "+ this.end +" in "+this.model.length);

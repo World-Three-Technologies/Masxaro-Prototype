@@ -694,14 +694,14 @@ class ReceiptCtrl extends Ctrl{
 	      			WHERE
 	      				$con
 	      			AND
-	      				`receipt_item`.`receipt_id`=`id`
+	      				`receipt_item`.`receipt_id`=`receipt`.`id`
 	      			AND
 	      				`receipt`.`store_account`=`store`.`store_account`
 		";
 
 	    $sql = $this->buildSearchSql($acc, $subquery, $limitStart, $limitOffset, 
 	    							$groupBy, $orderBy, $orderDesc, $mobile);
-	    							
+
 		$this->db->select($sql);
 		$receipts = $this->db->fetchAssoc();
 		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));

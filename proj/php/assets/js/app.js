@@ -85,7 +85,7 @@ var Receipts = Backbone.Collection.extend({
   url: 'receiptOperation.php',
 
   initialize:function(){
-    _.bindAll(this,"sync","search","searchTag");
+    _.bindAll(this,"sync","search","searchTag","searchByKeys","searchByTags");
   },
 
   sync:function(method,model,options){
@@ -99,15 +99,29 @@ var Receipts = Backbone.Collection.extend({
     $.post(this.url,data,options.success).error(options.error);
   },
 
-  search:function(query,success){
+  searchByKeys:function(keys,success){
+    this.search({
+      opcode: "search",
+      acc: account ,
+      keys:keys
+    });
+  },
+
+  searchByTags:function(tags,success){
+    this.search({
+      opcode: "search",
+      acc: account ,
+      tags:tags
+    });
+  },
+
+  search:function(data,success){
     var model = this;
-    $.post(this.url,{
-      opcode : "key_search",
-      acc: account,
-      keys : query
-    }).success(function(data){
+    $.post(this.url,data).success(function(data){
       model.reset(data);
-      success();
+      if(success != null && success != "undefined"){
+        success();
+      }
     });
   },
 
@@ -193,8 +207,20 @@ window.AppView = Backbone.View.extend({
   },
 
   search:function(query){
+    if(query == "" || query == "undefined"){
+      return;
+    }
+    var keys = query.split(" "); 
     this.before();
-    this.model.search(query,this.after);
+    if($("#search-type :checked").val() == "name"){
+      this.model.searchByKeys(keys,this.after);
+    }else{
+      this.model.searchByTags(keys,this.after);
+    }
+  },
+
+  searchByForm:function(){
+    this.search($('#search-query').val());
   },
 
   submitSearch:function(event){
@@ -214,9 +240,6 @@ window.AppView = Backbone.View.extend({
     $('.receipts-stat').show();
   },
 
-  searchByForm:function(){
-    this.search($('#search-query').val());
-  },
 
   updateStatus:function(){
     this.$(".stat").text(this.start + " to "+ this.end +" in "+this.model.length);
@@ -303,7 +326,6 @@ var ReceiptView = Backbone.View.extend({
   },
 
   render:function(){
-    console.log("rendering...");
     var view = $(this.el);
     view.html(this.template(this.model.toJSON()));
 

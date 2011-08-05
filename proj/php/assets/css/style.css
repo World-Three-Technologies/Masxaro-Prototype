@@ -79,7 +79,7 @@ header {
 #search-bar {
   margin: 0 5px;
   padding: 0 5px; }
-  #search-bar input {
+  #search-bar #search-query {
     font-size: 18px;
     border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -95,7 +95,7 @@ header {
     border: 0;
     padding: 0;
     margin: 0; }
-  #search-bar div {
+  #search-bar div, #search-bar button {
     float: left;
     padding: 5px; }
 

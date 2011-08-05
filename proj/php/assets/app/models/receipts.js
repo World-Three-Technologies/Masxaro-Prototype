@@ -4,7 +4,7 @@ var Receipts = Backbone.Collection.extend({
   url: 'receiptOperation.php',
 
   initialize:function(){
-    _.bindAll(this,"sync","search","searchTag");
+    _.bindAll(this,"sync","search","searchTag","searchByKeys","searchByTags");
   },
 
   sync:function(method,model,options){
@@ -18,15 +18,29 @@ var Receipts = Backbone.Collection.extend({
     $.post(this.url,data,options.success).error(options.error);
   },
 
-  search:function(query,success){
+  searchByKeys:function(keys,success){
+    this.search({
+      opcode: "search",
+      acc: account ,
+      keys:keys
+    });
+  },
+
+  searchByTags:function(tags,success){
+    this.search({
+      opcode: "search",
+      acc: account ,
+      tags:tags
+    });
+  },
+
+  search:function(data,success){
     var model = this;
-    $.post(this.url,{
-      opcode : "key_search",
-      acc: account,
-      keys : query
-    }).success(function(data){
+    $.post(this.url,data).success(function(data){
       model.reset(data);
-      success();
+      if(success != null && success != "undefined"){
+        success();
+      }
     });
   },
 

@@ -19,7 +19,7 @@ describe("receipts model", function(){
   
   });
 
-  describe("send request to fetch data from backend",function(){
+  describe("fetch",function(){
 
     beforeEach(function(){
       this.xhr = sinon.useFakeXMLHttpRequest();
@@ -70,6 +70,47 @@ describe("receipts model", function(){
       expect(this.receipts.size()).toEqual(2);
       expect(this.receipts.at(0).get("receipt_id")).toEqual(2);
       expect(reset.calledOnce).toBeTruthy();
+    });
+
+  });
+
+  describe("search",function(){
+
+    beforeEach(function(){
+      this.xhr = sinon.useFakeXMLHttpRequest();
+      var requests = this.requests = [];
+
+      this.xhr.onCreate = function(xhr){
+        requests.push(xhr);
+      }
+
+      this.receipts = new Receipts();
+      this.receipts.account = "test";
+    });
+
+    afterEach(function(){
+      this.xhr.restore();
+    });
+
+    it("should send post request with keys",function(){
+    
+      this.receipts.searchByKeys(["test","test2"]);
+
+      expect(this.requests[0].method).toEqual("POST");
+      expect(this.requests[0].url).toEqual(this.receipts.url);
+      expect(this.requests[0].requestBody).toEqual(
+        "opcode=search&keys%5B%5D=test&keys%5B%5D=test2");
+
+    });
+
+    it("should send post request with tags",function(){
+    
+      this.receipts.searchByTags(["test","test2"]);
+
+      expect(this.requests[0].method).toEqual("POST");
+      expect(this.requests[0].url).toEqual(this.receipts.url);
+      expect(this.requests[0].requestBody).toEqual(
+        "opcode=search&tags%5B%5D=test&tags%5B%5D=test2");
     });
   });
 });

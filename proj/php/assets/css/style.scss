@@ -126,7 +126,7 @@ header{
 #search-bar{
   margin:0 5px;
   padding:0 5px;
-  input{
+  #search-query{
     font-size:18px;
     @include round(5px);
     width:250px;
@@ -142,14 +142,13 @@ header{
     padding:0;
     margin:0;
   }
-  div{
+  div,button{
     float:left;
     padding:5px;
   }
 }
 
 //receipt module
-
 
 #receipts-table{
   width:100%;
