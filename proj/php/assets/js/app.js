@@ -290,7 +290,7 @@ var ReceiptView = Backbone.View.extend({
 
   initialize:function(){
     _.bindAll(this,'render','showReceipt','getItemText',
-              'editTags','getTags');
+              'editTags','getTags','setDate');
     this.model.bind('change',this.showReceipt);
   },
 
@@ -307,11 +307,10 @@ var ReceiptView = Backbone.View.extend({
     var view = $(this.el);
     view.html(this.template(this.model.toJSON()));
 
+    this.setDate(this.model.get("receipt_time"));
+
     var text = this.getItemText(this.model.get("items"));
     view.find(".items").html(text);
-    var receipt_time = this.model.get("receipt_time").replace(/-/g,"/"); 
-    view.find(".date").html(new Date(receipt_time).format());
-    console.log(this.model.get("receipt_time"));
     return this;
   },
 
@@ -366,7 +365,7 @@ var ReceiptView = Backbone.View.extend({
     window.lastOpen = this;
 
     $(this.el).html(this.fullTemplate(this.model.toJSON()));
-    $(this.el).find(".date").html(new Date(this.model.get("receipt_time")).format());
+    this.setDate(this.model.get("receipt_time"));
 
     var items = $(this.el).find(".items"),
         self = this;
@@ -385,6 +384,11 @@ var ReceiptView = Backbone.View.extend({
     return _.reduce(items,function(memo,item){
       return memo + item.item_name + ", ";
     },"").slice(0,-2);
+  },
+
+  setDate:function(date){
+    var receipt_time = date.replace(/-/g,"/"); 
+    $(this.el).find(".date").html(new Date(receipt_time).format());
   }
 });
 var UserView = Backbone.View.extend({

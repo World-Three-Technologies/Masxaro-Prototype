@@ -20,43 +20,44 @@
   <script src="assets/js/vendor/jquery.validate.js"></script>
 <script>
 
-$(function(){
-  $("#login").validate({
+var bindAjax = function(el){
+  var target = $(el),
+      action = target.attr("action"),
+      data = {},
+      attrs = target.find("input"),
+      dest = target.attr("dest"),
+      message = target.attr("message");
+
+  target.validate({
     submitHandler:function(form){
-      $.post("login.php",{
-        acc:$("#login .acc").val(),
-        pwd:$("#login .pwd").val(),
-        type:"user"
-      }).success(function(data){
-        if(data == "1"){
-          location.href = "index.php";
-        }else{
+
+      $.each(attrs,function(i,v){
+        var el = $(v)
+        data[el.attr("name")] = el.val();
+      });
+
+      $.post(action,data).success(function(data){
+        if(data != "1"){
           alert(data);
+          return;
+        }
+        if(message){
+          alert(message);
+        }
+        if(dest){
+          location.href = dest;
         }
       });
     }
   });
+}
 
-  $("#register").validate({
-    submitHandler:function(){
-      $.post("register.php",{
-        userAccount: $("#register .user-account").val(),
-        firstName: $("#register .first-name").val(),
-        email : $("#register .email").val(),
-        pwd : $("#register .pwd").val(),
-        type:"user"
-      }).success(function(data){
-        if(data == "1"){
-          alert("Thank you for register, please check your email for activating");
-        }else{
-          alert(data);
-        }
-      });
-    }
+$(function(){
+  $.each($("[ajaxian]"),function(k,v){
+    bindAjax(v);
   });
 });
   </script>
-
 </head>
 
 <body>
@@ -69,7 +70,7 @@ $(function(){
             <h2>Masxaro</h2>
           </div>
           <div id="header-user">
-            <form id="login">
+            <form id="login" action="login.php" dest="index.php" ajaxian>
               <input type="hidden" name="type" value="user"/>
               <label for="acc" title="Username">Username</label>
               <input class="required acc" type="text" name="acc"></input>
@@ -84,7 +85,7 @@ $(function(){
     <div id="main" role="main">
       <div class="clearfix">
         <div>
-          <form id="register">
+          <form id="register" message="Thank you for register, please check your email for activating" action="register.php" ajaxian>
             <table>
               <tr>
                 <td><label for="userAccount" title="Username">Username</label></td>

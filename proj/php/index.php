@@ -64,6 +64,5 @@
     include_once "layout/template.php"; 
     include_once "layout/scripts.php";
   ?>
-
 </body>
 </html>
