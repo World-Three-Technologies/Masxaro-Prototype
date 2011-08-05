@@ -134,33 +134,32 @@ class EmailCtrl extends Ctrl{
 				
 		$emails = imap_search($inbox, 'ALL');
 		
+		$emails_file = array();
+		
 		if($emails) {
-  
-			  $output = '';
-			  rsort($emails);
-			  foreach($emails as $email_number) {
-			  	
-			  	$message = imap_fetchbody($inbox,$email_number,2);
-			  	echo $message;
-			  	die();
-			    
-			    $overview = imap_fetch_overview($inbox,$email_number,0);
-			    $message = imap_fetchbody($inbox,$email_number,2);
-			    
-			    $output.= '<div class="toggler '.($overview[0]->seen ? 'read' : 'unread').'">';
-			    $output.= '<span class="subject">'.$overview[0]->subject.'</span> ';
-			    $output.= '<span class="from">'.$overview[0]->from.'</span>';
-			    $output.= '<span class="date">on '.$overview[0]->date.'</span>';
-			    $output.= '</div>';
-			    
-			    $output.= '<div class="body">'.$message.'</div>';
-		      }
-			  
-			  echo $output;
+			$output = '';
+			rsort($emails);
+			foreach($emails as $email_number) {
+				$message = imap_fetchbody($inbox,$email_number,2);
+				$header = imap_headerinfo($inbox, $email_number);
+				$from = "{$header->from[0]->mailbox}@{$header->from[0]->host}";
+				array_push($emails_file, array('from'=>$from, 'message'=>$message));
+				
+				//$overview = imap_fetch_overview($inbox,$email_number);
+//				$output.= '<div class="toggler '.($overview[0]->seen ? 'read' : 'unread').'">';
+//				$output.= '<span class="subject">'.$overview[0]->subject.'</span> ';
+//				$output.= '<span class="from">'.$overview[0]->from.'</span>';
+//				$output.= '<span class="date">on '.$overview[0]->date.'</span>';
+//				$output.= '</div>';
+//				
+//				$output.= '<div class="body">'.$message.'</div>';
 			}
-			else{
-				echo 'no email';
-			}
+			
+			return $this->saveEmails($emails_file, $acc);
+		}
+		else{
+			return 'no email';
+		}
 		
 	}
 	
@@ -180,13 +179,13 @@ class EmailCtrl extends Ctrl{
 	 * @desc
 	 * create a masxaro email account for a new user.
 	 */
-	public function createUserAcc($username, $password, $givenName = 'N/A', $familyName = 'N/A'){
+	public function createUserAcc($username, $givenName = 'N/A', $familyName = 'N/A'){
 		try{
 			$this->service->createUser(
 									$username, 
 									$givenName, 
 									$familyName, 
-									$password, 
+									Tool::getEmailPwd($username), 
 									$passwordHashFunction=null, 
 									$quota=null
 								);
@@ -262,6 +261,52 @@ class EmailCtrl extends Ctrl{
 	
 	public function retrieveUser($acc){
 		return $this->service->retrieveUser($acc);
+	}
+	
+	
+	/**
+	 * 
+	 * 
+	 * @param array emails array of emails, each line is an email, containing 'from' & 'message'
+	 * @example array(
+	 * 				array('from'=>'gmail team', 'message'=>'test'), 
+	 * 				array()...
+	 * 			);
+	 * 
+	 * @param string $userAcc user account
+	 * 
+	 * @desc
+	 * save grabbed email receipts to files
+	 */
+	public function saveEmails($emails, $userAcc){
+		try{
+			$curDir = EMAIL_DIR."/$userAcc";
+			if(!is_dir($curDir)){
+				mkdir($curDir);
+			}
+			
+			$dir = opendir($curDir);
+			
+			foreach($emails as $email){
+				$curFile = null;
+				for($i = 0; $i < 1000 ; $i ++){
+					$tmpName = $curDir."/{$email['from']}:::$i";
+					if(is_file($tmpName)){
+						continue;
+					}
+					else{
+						$curFile = fopen($tmpName, 'w');
+						break;
+					}
+				}
+				fputs($curFile, "{$email['message']}");
+				fclose($curFile);
+			}
+			closedir($dir);
+			return true;
+		}catch(Exception $e){
+			return $e->getMessage();
+		}
 	}
 }
 

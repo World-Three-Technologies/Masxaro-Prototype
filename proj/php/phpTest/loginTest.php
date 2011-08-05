@@ -7,8 +7,8 @@ include_once '../../config.php';
 //ob_end_flush();
 //die();
 
-$path = "http://localhost/w3t/proj/php/login.php";
-$param = "acc=new&pwd=123&type=user";
+$path = "50.19.213.157/masxaro_backend/proj/php/login.php";
+$param = "acc=w3tAcc&pwd=123&type=user";
 
 $ch = curl_init($path);
 curl_setopt($ch, CURLOPT_POST, 1);
@@ -44,5 +44,4 @@ function authenticate($acc){
 				break;
 		}
 	}
-
 ?>

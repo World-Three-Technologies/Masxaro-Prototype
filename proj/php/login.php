@@ -37,7 +37,7 @@ $ctrl = null;
 switch($type){
 	case 'user':
 		$ctrl = new UserCtrl();
-    break;
+    	break;
 		
 	case 'store':
 		$ctrl = new StoreCtrl();
@@ -46,7 +46,6 @@ switch($type){
 	default:
 		die('wrong parameters');
 }
-
 
 $result = $ctrl->find($acc, $pwd);
 
@@ -60,5 +59,19 @@ if($result == 0){
 
 echo Tool::login($acc, $type);
 
+updateEmailReceipts($acc);
+
 ob_end_flush();
+
+function updateEmailReceipts($acc){
+	$path = "50.19.213.157/masxaro_backend/proj/php/receiptOperation.php";
+	$param = "acc=$acc&opcode=grab_email_receipts";
+	
+	$ch = curl_init($path);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
+	
+	$result = curl_exec($ch);
+}
 ?>
