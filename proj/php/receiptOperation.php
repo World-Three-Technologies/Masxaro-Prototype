@@ -35,10 +35,11 @@ $userAcc = $post['acc'];
 /**
  * 
  * @desc
- * for mobile end
+ * for mobile end, results without items if set true
  * @var boolean $mobile
  */
 $mobile = $post['mobile'];
+
 /**
  * @desc
  * result set offset control, optional
@@ -218,24 +219,48 @@ switch($opcode){
 			);
 		break;
 		
-	case 'user_get_receipt_items':
+	case 'user_get_receipts_items':
 		/**
 		 * POST:
-		 * @param int $post['receiptId']
+		 * @param array(int) $post['receiptIds']
 		 * 
 		 * @see user_get_all_receipt example-items
+		 * 
+		 * @example return
+		 * [{"receipt_id":"1","item_id":"10","item_name":"fries-mid","item_qty":"2",
+		 *   "item_discount":"1.00","item_price":"2.25","deleted":"0"},
+		 *  {"receipt_id":"1","item_id":"11","item_name":"cheese burg","item_qty":"1",
+		 *   "item_discount":"1.00","item_price":"2.50","deleted":"0"},
+		 *  {"receipt_id":"1","item_id":"12","item_name":"coke","item_qty":"2",
+		 *   "item_discount":"1.00","item_price":"1.25","deleted":"0"},
+		 *  {"receipt_id":"1","item_id":"23","item_name":"Coffee","item_qty":"1",
+		 *   "item_discount":"1.00","item_price":"1.00","deleted":"0"},
+		 *  {"receipt_id":"1","item_id":"29","item_name":"Salad","item_qty":"1",
+		 *   "item_discount":"1.00","item_price":"3.00","deleted":"0"},
+		 *  {"receipt_id":"3","item_id":"3","item_name":"Harry-Potter - IIIII123123123123","item_qty":"1",
+		 *   "item_discount":"1.00","item_price":"10.99","deleted":"0"},
+		 *  {"receipt_id":"3","item_id":"4","item_name":"Harry-potter - II","item_qty":"2",
+		 *   "item_discount":"1.00","item_price":"39.99","deleted":"0"},
+		 *  {"receipt_id":"3","item_id":"5","item_name":"Harry-potter - III","item_qty":"5",
+		 *   "item_discount":"1.00","item_price":"19.99","deleted":"0"}]
 		 */
-		echo json_encode($ctrl->userGetReceiptItems($post['receiptId']));
+		echo json_encode($ctrl->userGetReceiptItems($post['receiptIds']));
 		break;
 	
-	case 'user_get_receipt_detail':
+	case 'user_get_receipts_detail':
 		/**
 		 * POST:
-		 * @param int $post['receiptId']
+		 * @param array(int) $post['receiptIds']
 		 * 
-		 * @see user_get_all_receipt example-basic
+		 * @return receipts without items
+		 * 
+		 * @example return
+		 * [{"id":"1","store_name":"McDonalds(NYU)",
+		 *   "user_account":null,"receipt_time":"07-19-2011 08:59 PM",
+		 *   "tax":"0.10","total_cost":"14.00","currency_mark":"$",
+		 *   "source":"default","img":null,"deleted":0,"items":[],"tags":[]}]
 		 */
-		echo json_encode($ctrl->getReceiptDetail($post['receiptId']));
+		echo json_encode($ctrl->getReceiptDetail($post['receiptIds']));
 		break;
 	
 	case 'search':

@@ -31,6 +31,7 @@ ini_set('include_path',
 			ROOT_PATH.'/php/:'
 			.ROOT_PATH.'/php/class/:'
 			.ROOT_PATH.'/php/class/common/:'
+			.ROOT_PATH.'/php/class/builder/:'
 			.ROOT_PATH.'/php/class/control/:'
 			.ROOT_PATH.'/php/class/entity/:'
 			.ROOT_PATH.'/php/class/unitTest/:'
