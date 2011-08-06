@@ -10,12 +10,12 @@ var ReceiptView = Backbone.View.extend({
 
   initialize:function(){
     _.bindAll(this,'render','showReceipt','getItemText',
-              'editTags','getTags','setDate');
+              'editTags','getTags','setDate','animateReceipt');
     this.model.bind('change',this.showReceipt);
   },
 
   events:{
-    "click .receipt-row" : "showReceipt",
+    "click .receipt-row" : "animateReceipt",
     "click .close" :"render",
     "click .add-button" : "newTag",
     "click .edit-button" : "editTags",
@@ -24,6 +24,7 @@ var ReceiptView = Backbone.View.extend({
 
   render:function(){
     var view = $(this.el);
+    view.css({height:70});
     view.html(this.template(this.model.toJSON()));
 
     this.setDate(this.model.get("receipt_time"));
@@ -76,14 +77,19 @@ var ReceiptView = Backbone.View.extend({
     this.model.set({tags: _.without(tags,tag)});
   },
 
-  showReceipt:function(){
-
+  animateReceipt:function(){
+          
+    $(this.el).css({height:169,opacity:0});
     if(window.lastOpen && window.lastOpen != this){
       window.lastOpen.render();
     }
     window.lastOpen = this;
+    setTimeout(this.showReceipt,300);
+  },
 
-    $(this.el).html(this.fullTemplate(this.model.toJSON()));
+  showReceipt:function(){
+
+    $(this.el).html(this.fullTemplate(this.model.toJSON())).css({opacity:1});
     this.setDate(this.model.get("receipt_time"));
 
     var items = $(this.el).find(".items"),

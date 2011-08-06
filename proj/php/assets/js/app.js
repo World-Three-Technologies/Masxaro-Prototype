@@ -100,23 +100,17 @@ var Receipts = Backbone.Collection.extend({
   },
 
   searchByKeys:function(keys,success){
-    this.search({
-      opcode: "search",
-      acc: account ,
-      keys:keys
-    });
+    this.search({ keys:keys });
   },
 
   searchByTags:function(tags,success){
-    this.search({
-      opcode: "search",
-      acc: account ,
-      tags:tags
-    });
+    this.search({ tags:tags });
   },
 
   search:function(data,success){
     var model = this;
+    data["opcode"] = "search";
+    data["acc"] = account;
     $.post(this.url,data).success(function(data){
       model.reset(data);
       if(success != null && success != "undefined"){
@@ -206,13 +200,13 @@ window.AppView = Backbone.View.extend({
     "keyup #search-query": "submitSearch"
   },
 
-  search:function(query){
+  search:function(query,type){
     if(query == "" || query == "undefined"){
       return;
     }
     var keys = query.split(" "); 
     this.before();
-    if($("#search-type :checked").val() == "name"){
+    if(type=="keys"){
       this.model.searchByKeys(keys,this.after);
     }else{
       this.model.searchByTags(keys,this.after);
@@ -220,7 +214,8 @@ window.AppView = Backbone.View.extend({
   },
 
   searchByForm:function(){
-    this.search($('#search-query').val());
+    var type = $("#search-type :checked").val()
+    this.search($('#search-query').val(),type);
   },
 
   submitSearch:function(event){
@@ -313,12 +308,12 @@ var ReceiptView = Backbone.View.extend({
 
   initialize:function(){
     _.bindAll(this,'render','showReceipt','getItemText',
-              'editTags','getTags','setDate');
+              'editTags','getTags','setDate','animateReceipt');
     this.model.bind('change',this.showReceipt);
   },
 
   events:{
-    "click .receipt-row" : "showReceipt",
+    "click .receipt-row" : "animateReceipt",
     "click .close" :"render",
     "click .add-button" : "newTag",
     "click .edit-button" : "editTags",
@@ -327,6 +322,7 @@ var ReceiptView = Backbone.View.extend({
 
   render:function(){
     var view = $(this.el);
+    view.css({height:70});
     view.html(this.template(this.model.toJSON()));
 
     this.setDate(this.model.get("receipt_time"));
@@ -379,14 +375,19 @@ var ReceiptView = Backbone.View.extend({
     this.model.set({tags: _.without(tags,tag)});
   },
 
-  showReceipt:function(){
-
+  animateReceipt:function(){
+          
+    $(this.el).css({height:169,opacity:0});
     if(window.lastOpen && window.lastOpen != this){
       window.lastOpen.render();
     }
     window.lastOpen = this;
+    setTimeout(this.showReceipt,300);
+  },
 
-    $(this.el).html(this.fullTemplate(this.model.toJSON()));
+  showReceipt:function(){
+
+    $(this.el).html(this.fullTemplate(this.model.toJSON())).css({opacity:1});
     this.setDate(this.model.get("receipt_time"));
 
     var items = $(this.el).find(".items"),
@@ -464,7 +465,7 @@ var AppRouter = Backbone.Router.extend({
 
   searchTag: function(tag){
     actionView.setTags(tag);
-    appView.searchTag(tag);           
+    appView.search(tag,"tags");           
   }
 });
 $(function(){

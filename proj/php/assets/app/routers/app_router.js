@@ -36,6 +36,6 @@ var AppRouter = Backbone.Router.extend({
 
   searchTag: function(tag){
     actionView.setTags(tag);
-    appView.searchTag(tag);           
+    appView.search(tag,"tags");           
   }
 });

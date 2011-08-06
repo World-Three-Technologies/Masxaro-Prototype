@@ -44,7 +44,7 @@
             <div>
               <button id="search-button" type="submit" title="search"></button>
               <div id="search-type">
-                <input type="radio" name="type" value="name" checked/>Name
+                <input type="radio" name="type" value="keys" checked/>Name
                 <input type="radio" name="type" value="tags"/>Tags
               </div>
             </div>

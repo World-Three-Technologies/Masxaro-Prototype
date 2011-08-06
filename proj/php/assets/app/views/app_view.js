@@ -20,13 +20,13 @@ window.AppView = Backbone.View.extend({
     "keyup #search-query": "submitSearch"
   },
 
-  search:function(query){
+  search:function(query,type){
     if(query == "" || query == "undefined"){
       return;
     }
     var keys = query.split(" "); 
     this.before();
-    if($("#search-type :checked").val() == "name"){
+    if(type=="keys"){
       this.model.searchByKeys(keys,this.after);
     }else{
       this.model.searchByTags(keys,this.after);
@@ -34,7 +34,8 @@ window.AppView = Backbone.View.extend({
   },
 
   searchByForm:function(){
-    this.search($('#search-query').val());
+    var type = $("#search-type :checked").val()
+    this.search($('#search-query').val(),type);
   },
 
   submitSearch:function(event){

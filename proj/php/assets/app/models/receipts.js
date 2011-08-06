@@ -19,23 +19,17 @@ var Receipts = Backbone.Collection.extend({
   },
 
   searchByKeys:function(keys,success){
-    this.search({
-      opcode: "search",
-      acc: account ,
-      keys:keys
-    });
+    this.search({ keys:keys });
   },
 
   searchByTags:function(tags,success){
-    this.search({
-      opcode: "search",
-      acc: account ,
-      tags:tags
-    });
+    this.search({ tags:tags });
   },
 
   search:function(data,success){
     var model = this;
+    data["opcode"] = "search";
+    data["acc"] = account;
     $.post(this.url,data).success(function(data){
       model.reset(data);
       if(success != null && success != "undefined"){
