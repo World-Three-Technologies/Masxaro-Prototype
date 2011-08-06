@@ -224,9 +224,21 @@ header{
         cursor:pointer;
       }
       .close{
+        background:url(../img/close-icon.png) top no-repeat;
+        width:34px;
+        height:34px;
+        background-position:0 0;
         position:absolute;
         top:0;
         right:0;
+      }
+      .delete-button{
+        background:url(../img/tag-close-icon.png) top no-repeat;
+        background-position:0 0;
+        display:inline-block;
+        width:20px;
+        height:15px;
+
       }
       .editing .edit{
         display: inline-block;

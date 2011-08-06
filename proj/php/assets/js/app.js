@@ -365,7 +365,7 @@ var ReceiptView = Backbone.View.extend({
   },
 
   newTag:function(){
-    var tag = $("<input type='text' size='10' class='edit-tag'/><span class='delete-btn'>[X]</span>");
+    var tag = $("<input type='text' size='10' class='edit-tag'/><span class='delete-button'/>");
     this.$('.edit-area').append(tag);     
   },
 

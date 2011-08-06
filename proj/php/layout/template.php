@@ -19,7 +19,7 @@
 
 <script type="text/template" id="receipt-full-template">
   <div class="receipt clearfix">
-    <div class="toolbar close">close[x]</div>
+    <div class="toolbar close"></div>
     <div class="date"></div>
     <div class="content">
       <div class="store">
@@ -37,7 +37,7 @@
         <% _.each(tags,function(tag){ %>
           <span>
           <input type="text" class="edit-tag" value="<%= tag%>" size="10"></input>
-          <span class="delete-button">[X]</span>
+          <span class="delete-button"/>
           </span>
         <% }); %>
         </span>
