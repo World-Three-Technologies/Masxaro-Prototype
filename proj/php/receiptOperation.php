@@ -30,8 +30,8 @@ include_once 'header.php';
 $opcode = $post['opcode'];
 $userAcc = $post['acc'];
 
-$opcode = 'user_get_all_receipt';
-$userAcc = 'new';
+//$opcode = 'user_get_all_receipt';
+//$userAcc = 'new';
 
 //following parameters are optional
 
