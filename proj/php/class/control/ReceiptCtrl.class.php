@@ -495,15 +495,20 @@ UPD;
 		                  OR
 		                    `receipt_item`.`deleted` IS NULL
                 		)
+                	GROUP BY
+	      				$groupBy
                 	ORDER BY
                 		$orderBy
                 	DESC
-	      			GROUP BY
-	      				$groupBy
 	      			LIMIT
 	      				$limitStart, $limitOffset
 SEL;
 		$this->db->select($sql);
+		
+		if($this->db->numRows() == 0){
+			return null;
+		}
+		
 		$results = $this->db->fetchAssoc();
 		
 		if(!$mobile) {

@@ -224,25 +224,7 @@ switch($opcode){
 		 * POST:
 		 * @param array(int) $post['receiptIds']
 		 * 
-		 * @see user_get_all_receipt example-items
-		 * 
-		 * @example return
-		 * [{"receipt_id":"1","item_id":"10","item_name":"fries-mid","item_qty":"2",
-		 *   "item_discount":"1.00","item_price":"2.25","deleted":"0"},
-		 *  {"receipt_id":"1","item_id":"11","item_name":"cheese burg","item_qty":"1",
-		 *   "item_discount":"1.00","item_price":"2.50","deleted":"0"},
-		 *  {"receipt_id":"1","item_id":"12","item_name":"coke","item_qty":"2",
-		 *   "item_discount":"1.00","item_price":"1.25","deleted":"0"},
-		 *  {"receipt_id":"1","item_id":"23","item_name":"Coffee","item_qty":"1",
-		 *   "item_discount":"1.00","item_price":"1.00","deleted":"0"},
-		 *  {"receipt_id":"1","item_id":"29","item_name":"Salad","item_qty":"1",
-		 *   "item_discount":"1.00","item_price":"3.00","deleted":"0"},
-		 *  {"receipt_id":"3","item_id":"3","item_name":"Harry-Potter - IIIII123123123123","item_qty":"1",
-		 *   "item_discount":"1.00","item_price":"10.99","deleted":"0"},
-		 *  {"receipt_id":"3","item_id":"4","item_name":"Harry-potter - II","item_qty":"2",
-		 *   "item_discount":"1.00","item_price":"39.99","deleted":"0"},
-		 *  {"receipt_id":"3","item_id":"5","item_name":"Harry-potter - III","item_qty":"5",
-		 *   "item_discount":"1.00","item_price":"19.99","deleted":"0"}]
+		 * @see ReceiptBuilder::getReceiptsItems
 		 */
 		echo json_encode($ctrl->userGetReceiptItems($post['receiptIds']));
 		break;

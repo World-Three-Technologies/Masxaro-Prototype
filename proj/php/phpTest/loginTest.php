@@ -7,7 +7,7 @@ include_once '../../config.php';
 //ob_end_flush();
 //die();
 
-$path = "http://50.19.213.157/masxaro/proj/php/login.php";
+$path = "http://localhost/masxaro/proj/php/login.php";
 $param = "acc=new&pwd=123&type=user";
 
 $ch = curl_init($path);

@@ -172,20 +172,11 @@ class ReceiptBuilder {
 	protected function fetchReceiptItems($receipts) {
 		$ids = $this->explodeIds($receipts);
 	    $items = $this->getReceiptsItems($ids);
-	    
-	    $i = 0;
 	    foreach($receipts as $receipt) {
-	    	for(; $i < count($items);) {
-	    		if($items[$i]['receipt_id'] == $receipt->id){
-	    			array_push($receipt->items, $items[$i]);
-	    			$i ++;
-	    		}
-	    		else{
-	    			break;
-	    		}
+	    	if(isset($items[$receipt->id])) {
+	    		$receipt->items = $items[$receipt->id];
 	    	}
 	    }
-	    
 	    return $receipts;
 	}
 	
@@ -263,6 +254,34 @@ SEL;
 	 * @return 2-d-array() items
 	 * 
 	 * return all items of a list of receipts
+	 * 
+	 * @example
+	 * Array(
+	 * [105] => Array
+     *   (
+     *       [0] => Array
+     *          (
+     *               [receipt_id] => 105
+     *               [item_id] => 23
+     *               [item_name] => Coffee
+     *               [item_qty] => 1
+     *               [item_discount] => 0.00
+     *               [item_price] => 1.00
+     *               [deleted] => 0
+     *           )
+     *
+     *       [1] => Array
+     *           (
+     *               [receipt_id] => 105
+     *               [item_id] => 29
+     *               [item_name] => Salad
+     *               [item_qty] => 1
+     *               [item_discount] => 30.00
+     *               [item_price] => 3.00
+     *               [deleted] => 0
+     *           )
+     *	)
+     *)
 	 */
 	public function getReceiptsItems($receiptIds){
 		
@@ -287,9 +306,21 @@ SEL;
 			return "";
 		}
 		
-		else{
+		else {
 			$result = $this->db->fetchAssoc();
-			return $result;
+			$items = array();
+			foreach($result as $item) {
+				if(!isset($items[$item['receipt_id']])) {
+					$new = array();
+					array_push($new, $item);
+					$items[$item['receipt_id']] = $new;
+				}
+				else {
+					array_push($items[$item['receipt_id']], $item);
+				}
+			}
+			
+			return $items;
 		}
 		
 	}
