@@ -467,6 +467,7 @@ class ReceiptCtrl extends Ctrl{
                 		)
                 	ORDER BY
                 		$orderBy
+                	DESC
 	      			GROUP BY
 	      				$groupBy
 	      			LIMIT

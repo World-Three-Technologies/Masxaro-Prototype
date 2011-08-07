@@ -25,6 +25,12 @@
  */
 include_once '../config.php';
 
+	$test = "[{\"json\":{\"receipt_id\":\"105\",\"user_account\":\"new\",\"items\":[{\"receipt_id\":\"105\",\"item_price\":\"5\",\"item_name\":\"coke\",\"item_id\":\"12\",\"item_qty\":\"1\"},{\"receipt_id\":\"105\",\"item_price\":\"2\",\"item_name\":\"fries-mid\",\"item_id\":\"10\",\"item_qty\":\"1\"}],\"acc\":\"new\",\"receipt\":{\"receipt_id\":\"105\",\"store_name\":\"McD\", \"user_account\":\"new\"}}]";
+	$post = str_replace("\\", "", $test);
+	$post = json_decode($post, true);
+	$post = $post['json'];
+	echo $test;
+	die();
 $post = null;
 
 if(isset($_POST['json'])){
