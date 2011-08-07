@@ -49,6 +49,7 @@ class ReceiptUnitTest extends UnitTest{
 		$item = array(
 						"item_id"=>23,
 						"item_name"=>"Coffee",
+						"item_discount"=>0,
 						"item_qty"=>1,
 						"item_price"=>1,
 					);

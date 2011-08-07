@@ -28,6 +28,7 @@ include_once '../../config.php';
 $test = new ReceiptUnitTest();
 
 $test->insertReceipt_Full_Test();
+die();
 
 $test->insertReceipt_Empty_Test();
 
