@@ -115,23 +115,20 @@ class ReceiptBuilder {
 	protected function fetchReceiptBasic($receipts) {
 		$ids = $this->explodeIds($receipts);
 		$basics = $this->getReceiptsBasic($ids);
+		
 		$i = 0;
 		foreach($receipts as $receipt) {
-			for(; $i < count($basics); ) {
-				if($receipt->id == $basics[$i]['id']) {
-					$ref = new ReflectionClass('ReceiptEntity');
-					$memObjs = $ref->getProperties();
-					foreach($memObjs as $memObj){
-						$mem = $memObj->name;
-						if(isset($basics[$i][$mem])){
-							$receipt->$mem = $basics[$i][$mem];
-						}
+			$basic = $basics[$receipt->id];
+			if(isset($basic)) {
+				$ref = new ReflectionClass('ReceiptEntity');
+				$memObjs = $ref->getProperties();
+				foreach($memObjs as $memObj){
+					$mem = $memObj->name;
+					if(isset($basic[$mem])){
+						$receipt->$mem = $basic[$mem];
 					}
-					$i ++;
 				}
-				else{
-					break;
-				}
+				$i ++;
 			}
 		}
 		return $receipts;
@@ -213,7 +210,13 @@ class ReceiptBuilder {
 SEL;
 		$this->db->select($sql);
 		$result = $this->db->fetchAssoc();
-		return $result;
+		
+		$receipts = array();
+		foreach($result as $receipt) {
+			$receipts[$receipt['id']] = $receipt;
+		}
+		
+		return $receipts;
 	}
 	
 	/**
