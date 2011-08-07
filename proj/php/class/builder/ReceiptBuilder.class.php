@@ -182,7 +182,7 @@ class ReceiptBuilder {
   	 *
   	 * @return array $receipts
   	 *
-   	 * @desc return receipts basic info array
+   	 * @desc return receipts basic info array, indexed by receipt ID
      */
 	public function getReceiptsBasic($receiptIds) {
 		$ids = implode(',', $receiptIds);

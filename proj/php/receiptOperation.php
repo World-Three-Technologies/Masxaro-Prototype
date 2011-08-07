@@ -30,9 +30,6 @@ include_once 'header.php';
 $opcode = $post['opcode'];
 $userAcc = $post['acc'];
 
-//$opcode = 'user_get_all_receipt';
-//$userAcc = 'new';
-
 //following parameters are optional
 
 /**
@@ -234,6 +231,8 @@ switch($opcode){
 	
 	case 'user_get_receipts_detail':
 		/**
+		 * @see ReceiptBuilder::getReceiptsBasic
+		 * 
 		 * POST:
 		 * @param array(int) $post['receiptIds']
 		 * 
