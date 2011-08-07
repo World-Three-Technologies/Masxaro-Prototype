@@ -43,7 +43,7 @@
     <string name="search_by_prompt">Search By</string><string name="search_range_prompt">Search Range</string>
     <string name="receipt_list_merchant">Merchant</string>
     <string name="receipt_list_date">Date/Time</string>
-    <string name="receipt_list_title">Lastest 7 Receipts</string>
+    <string name="receipt_list_title">Lastest Receipts</string>
     
     
     

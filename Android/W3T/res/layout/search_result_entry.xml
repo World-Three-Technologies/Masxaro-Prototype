@@ -42,10 +42,17 @@
         android:layout_width="150dip" android:layout_height="fill_parent"
         android:gravity="center"
     />
+    
+    <TextView android:textSize="13sp"
+        android:id="@+id/list_search_currency"
+        android:layout_toRightOf="@id/list_search_time"
+        android:layout_width="15dip" android:layout_height="fill_parent"
+        android:gravity="center"
+    />
 
     <TextView android:textSize="15sp"
         android:id="@+id/list_search_total"
-        android:layout_toRightOf="@id/list_search_time"
+        android:layout_toRightOf="@id/list_search_currency"
         android:layout_width="fill_parent" android:layout_height="fill_parent"
         android:gravity="center"
     />

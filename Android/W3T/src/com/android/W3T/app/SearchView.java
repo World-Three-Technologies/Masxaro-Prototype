@@ -44,21 +44,23 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class SearchView extends Activity implements OnClickListener {
 	public static final String TAG = "SearchViewActivity";
 
-	private static final String RECEIVE_RECEIPT_DETAIL = "user_get_receipt_detail";
-	private static final String RECEIVE_RECEIPT_ITEMS = "user_get_receipt_items";
+	private static final String RECEIVE_RECEIPT_DETAIL = "user_get_receipts_detail";
+	private static final String RECEIVE_RECEIPT_ITEMS = "user_get_receipts_items";
 	
 	public static final String TITLE_TEXT = "entry_title";
 	public static final String TIME_TEXT = "entry_time";
 	public static final String TOTAL_TEXT = "entry_total";
+	public static final String CURRENCY_TEXT = "entry_currency";
 	
 	public static final int STORE_ITEM = 0;
 	public static final int TAG_NAME = 1;
-	public static final int DATE = 2;
+//	public static final int DATE = 2;
 	
 	private static final int SEVEN_DAYS = 7;
 	private static final int FOURTEEN_DAYS = 14;
 	private static final int ONE_MONTH = 1;
 	private static final int THREE_MONTHS = 3;
+	private static final int CUSTOM = 0;
 	
 	private static final int START_DATE_DIALOG_ID = 1;
 	private static final int END_DATE_DIALOG_ID = 2;
@@ -89,43 +91,46 @@ public class SearchView extends Activity implements OnClickListener {
 			String result = new String();
 			String text = mSearchTerms.getText().toString();
 			String[] terms;
-//            NetworkUtil.syncUnsentReceipts();
+            NetworkUtil.syncUnsentReceipts();
 			switch (mSearchBy) {
 			case STORE_ITEM:
-				Log.i(TAG, "search the terms by key word");
-				
-				if (!text.equals("")) {
-					terms = text.split(" ");
-					result = NetworkUtil.attemptSearch("key_search", 0-mSearchRange, terms);
+				if (mSearchRange == CUSTOM) {
+					Log.i(TAG, "search the terms by key word and custom date");
+					if (!mStartDate.equals("") && !mEndDate.equals("")) {
+						text = text + " " + mStartDate + " " + mEndDate;
+						terms = text.split(" ");
+						result = NetworkUtil.attemptSearch("key_date_search", 0, terms);
+						// Get the basic info of the hit receipts from the result
+						// Create the result list.
+						searchResultDecode(result);
+						createSearchResultList();
+					}
+					else {
+						Toast.makeText(SearchView.this, "Pleae select date", Toast.LENGTH_SHORT).show();
+					}
 				}
 				else {
-					result = NetworkUtil.attemptSearch("key_search", 0-mSearchRange, null);
+					Log.i(TAG, "search the terms by key word");
+					if (!text.equals("")) {
+						terms = text.split(" ");
+						result = NetworkUtil.attemptSearch("key_search", 0-mSearchRange, terms);
+					}
+					else {
+						result = NetworkUtil.attemptSearch("key_search", 0-mSearchRange, null);
+					}
+					searchResultDecode(result);
+					createSearchResultList();
 				}
-				createSearchResultList(searchResultDecode(result));
+				
+				
 				break;
 			case TAG_NAME:
 				Log.i(TAG, "search the terms by tag");
 				
 				break;
-			case DATE:
-				Log.i(TAG, "search the terms by date");
-				if (!mStartDate.equals("") && !mEndDate.equals("")) {
-					text = text + " " + mStartDate + " " + mEndDate;
-					terms = text.split(" ");
-					result = NetworkUtil.attemptSearch("time_search", 0-mSearchRange, terms);
-					// Get the basic info of the hit receipts from the result
-					// Create the result list.
-					createSearchResultList(searchResultDecode(result));
-				}
-				else {
-					Toast.makeText(SearchView.this, "Pleae select date", Toast.LENGTH_SHORT).show();
-				}
-				
-				break;
 			default:
 				break;
 			}
-			
 			mSearchProgress.dismiss();
 		}
 	};
@@ -140,11 +145,9 @@ public class SearchView extends Activity implements OnClickListener {
 			Log.i(TAG, "retrieve receipts from database");
 			
 			String detailstr = null;
-			detailstr = NetworkUtil.attemptGetReceipt(RECEIVE_RECEIPT_DETAIL,
-					UserProfile.getUsername(), mId);
+			detailstr = NetworkUtil.attemptGetReceipt(RECEIVE_RECEIPT_DETAIL, mId);
 			String itemsstr = null;
-			itemsstr = NetworkUtil.attemptGetReceipt(RECEIVE_RECEIPT_ITEMS,
-					UserProfile.getUsername(), mId);
+			itemsstr = NetworkUtil.attemptGetReceipt(RECEIVE_RECEIPT_ITEMS, mId);
 			mDownloadProgress.dismiss();
 			if (detailstr != null && itemsstr != null) {
 				Log.i(TAG, "add new receipts basic");
@@ -194,8 +197,6 @@ public class SearchView extends Activity implements OnClickListener {
 	}
 	
 	private void setSearchSpinner() {
-		LayoutInflater l = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		final View spinner = l.inflate(R.layout.search_range_spinner, null);
 		// Set Search By spinner, which is not in the search_range_spinner.xml
 		mSearchBySpinner = (Spinner) findViewById(R.id.search_by_spinner);
 	    ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(
@@ -207,29 +208,6 @@ public class SearchView extends Activity implements OnClickListener {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 				mSearchBy = pos;
-				if (pos == DATE) {
-					mDynamicSearchRange.removeAllViews();
-					View range =((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.search_range_view, null);
-					mStartText = (EditText) range.findViewById(R.id.start_date);
-					mStartText.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							showDialog(START_DATE_DIALOG_ID);
-						}
-					});
-					mEndText = (EditText) range.findViewById(R.id.end_date);
-					mEndText.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							showDialog(END_DATE_DIALOG_ID);
-						}
-					});
-					mDynamicSearchRange.addView(range);
-				}
-				else {
-					mDynamicSearchRange.removeAllViews();
-					mDynamicSearchRange.addView(spinner);
-				}
 				Toast.makeText(parent.getContext(), "Search By " + parent.getItemAtPosition(pos).toString()
 						, Toast.LENGTH_SHORT).show();
 			}
@@ -241,7 +219,7 @@ public class SearchView extends Activity implements OnClickListener {
 	    });
 	    
 	    // Set Search Range spinner
-	    mSearchRangeSpinner = (Spinner) spinner.findViewById(R.id.search_range_spinner);
+	    mSearchRangeSpinner = (Spinner) findViewById(R.id.search_range_spinner);
 	    ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
 	            this, R.array.search_range, android.R.layout.simple_spinner_item);
 	    adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -251,6 +229,28 @@ public class SearchView extends Activity implements OnClickListener {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 				setDateRange(pos);
+				if (pos < 4) {
+					mDynamicSearchRange.removeAllViews();
+				}
+				else if (pos == 4) { // Custom
+						View range =((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.search_range_view, null);
+						mStartText = (EditText) range.findViewById(R.id.start_date);
+						mStartText.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								showDialog(START_DATE_DIALOG_ID);
+							}
+						});
+						mEndText = (EditText) range.findViewById(R.id.end_date);
+						mEndText.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								showDialog(END_DATE_DIALOG_ID);
+							}
+						});
+						mDynamicSearchRange.addView(range);
+						
+				}
 				Toast.makeText(parent.getContext(), "Search Range " + parent.getItemAtPosition(pos).toString()
 						, Toast.LENGTH_SHORT).show();
 			}
@@ -260,7 +260,7 @@ public class SearchView extends Activity implements OnClickListener {
 				
 			}
 	    });
-	    mDynamicSearchRange.addView(spinner);
+//	    mDynamicSearchRange.addView(spinner);
 	}
 	
 	private void setDateRange(int pos) {
@@ -277,53 +277,61 @@ public class SearchView extends Activity implements OnClickListener {
 		case 3:
 			mSearchRange = THREE_MONTHS;
 			break;
+		case 4:
+			mSearchRange = CUSTOM;
+			break;
 		default:
 			break;
 		}
     }
 	
-	private ArrayList<BasicInfo> searchResultDecode(String r) {
+	private void searchResultDecode(String r) {
 		// Clear the basics history.
 		basics.clear();
 		try {
-			JSONArray result = new JSONArray(r);
-			int num = result.length();
-			for (int i=0;i<num;i++) {
-				JSONObject b = result.getJSONObject(i);
-				basics.add(new BasicInfo(b));
+			if (!r.equals("null")) {
+				JSONArray result = new JSONArray(r);
+				int num = result.length();
+				for (int i=0;i<num;i++) {
+					JSONObject b = result.getJSONObject(i);
+					basics.add(new BasicInfo(b));
+				}
 			}
-			return basics;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
 		}
 		
 	}
 	
-	private void createSearchResultList(ArrayList<BasicInfo> b) {
+	private void createSearchResultList() {
 		Log.i(TAG, "add category entry");
-		if (b.size() == 0) {
+		if (basics.size() == 0) {
 			Toast.makeText(SearchView.this, "No results returned", Toast.LENGTH_SHORT).show();
 			mResultList.setAdapter(null);
 		}
 		else {
+			
+			mResultList.setVisibility(View.VISIBLE);
+//			mResultList.postInvalidate();
 			ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
 	        
 	        // First, add the category line.
 	        HashMap<String, Object> category = new HashMap<String, Object>();
 	        category.put(TITLE_TEXT, "Merchant");
 	        category.put(TIME_TEXT, "Date");
-	        category.put(TOTAL_TEXT, "Total ($)");
+	        category.put(CURRENCY_TEXT, " ");
+	        category.put(TOTAL_TEXT, "Total");
 	        listItem.add(category);
 	        
 	        // Secondly, add the result lines.
-	        int num_result = b.size();
+	        int num_result = basics.size();
 	        for(int i=0;i<num_result;i++) {
 		        HashMap<String, Object> map = new HashMap<String, Object>();
-		        map.put(TITLE_TEXT, b.get(i).getStoreName());
-		        map.put(TIME_TEXT, b.get(i).getTime().split(" ")[0]);
-		        map.put(TOTAL_TEXT, b.get(i).getTotal());
+		        map.put(TITLE_TEXT, basics.get(i).getStoreName());
+		        map.put(TIME_TEXT, basics.get(i).getTime().split(" ")[0]);
+		        map.put(CURRENCY_TEXT, basics.get(i).getCurrency());
+		        map.put(TOTAL_TEXT, basics.get(i).getTotal());
 		        listItem.add(map);
 	        }  
 	        
@@ -331,8 +339,8 @@ public class SearchView extends Activity implements OnClickListener {
 	        // above dynamic array.  
 	        ResultListAdapter listAdapter = new ResultListAdapter(this, listItem, 
 	            R.layout.search_result_entry,
-	            new String[] {TITLE_TEXT, TIME_TEXT, TOTAL_TEXT},   
-	            new int[] {R.id.list_search_title,R.id.list_search_time, R.id.list_search_total}
+	            new String[] {TITLE_TEXT, TIME_TEXT, CURRENCY_TEXT, TOTAL_TEXT},   
+	            new int[] {R.id.list_search_title,R.id.list_search_time, R.id.list_search_currency, R.id.list_search_total}
 	        );
 	        
 	        mResultList.setAdapter(listAdapter);

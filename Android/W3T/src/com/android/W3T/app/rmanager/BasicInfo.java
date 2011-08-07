@@ -39,12 +39,14 @@ public class BasicInfo {
 	public static final String PARAM_RECEIPT_TAX = "tax";
 	public static final String PARAM_RECEIPT_TOTAL = "total_cost";
 	public static final String PARAM_RECEIPT_STORE_NAME = "store_name";
+	public static final String PARAM_RECEIPT_CURRENCY = "currency_mark";
 	
 	private String mId;
 	private String mTime;
 	private String mStoreName;
 	private String mTax;
 	private String mTotal;
+	private String mCurrency;
 	
 	public BasicInfo() {
 		mId = null;
@@ -52,6 +54,7 @@ public class BasicInfo {
 		mStoreName = null;
 		mTax = null;
 		mTotal = null;
+		mCurrency = null;
 	}
 	
 	public BasicInfo(JSONObject basic) {
@@ -67,6 +70,8 @@ public class BasicInfo {
 			Log.i(TAG, "get total"+mTotal);
 			mTax = basic.get(PARAM_RECEIPT_TAX).toString();
 			Log.i(TAG, "get tax"+mTax);
+			mCurrency = basic.get(PARAM_RECEIPT_CURRENCY).toString();
+			Log.i(TAG, "get currency"+mCurrency);
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -114,4 +119,11 @@ public class BasicInfo {
 		return mTax;
 	}
 	
+	public void setCurrency(String currency) {
+		mCurrency = currency;
+	}
+	
+	public String getCurrency() {
+		return mCurrency;
+	}
 }

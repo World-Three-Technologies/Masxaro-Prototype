@@ -43,6 +43,9 @@ public class Receipt implements Serializable{
 	public static final int ENTRY_STORE_NAME = 0;
 	public static final int ENTRY_TIME = 1;
 	public static final int ENTRY_ID = 2;
+	public static final int ENTRY_TAX = 3;
+	public static final int ENTRY_TOTAL = 4;
+	public static final int ENTRY_CURRENCY = 5;
 	
 	// JSON names of Receipt entries
 	public static final String PARAM_RECEIPT_ID = "receipt_id";
@@ -61,14 +64,6 @@ public class Receipt implements Serializable{
 	public static final String PARAM_ITEM_QTY = "item_qty";
 	public static final String PARAM_ITEM_PRICE = "item_price";
 	
-//	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
-//	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
-	
-//	private String mReceiptId;
-//	private	String mStoreName;
-//	private String mTime;
-//	private String mTax;
-//	private String mTotal;
 	private BasicInfo basic;
 //	private String img;
 //	private String delete;
@@ -79,11 +74,6 @@ public class Receipt implements Serializable{
 									// The receipt retrieved from database sets true.
 									// The receipt retrieved from nfc tag sets false
 	public Receipt() {
-//		mReceiptId = new String("ID@0000");
-//		mStoreName = new String("N/A");
-//		mTime = new String("N/A");
-//		mTotal = new String("N/A");
-//		mTax = new String("N/A");
 		basic = new BasicInfo();
 //		img = new String("N/A");
 //		delete = new String();
@@ -116,11 +106,14 @@ public class Receipt implements Serializable{
 		case ENTRY_ID:
 			result = getId();
 			break;
-		case 3:
+		case ENTRY_TAX:
 			result = getTax();
 			break;
-		case 4:
+		case ENTRY_TOTAL:
 			result = getTotal();
+			break;
+		case ENTRY_CURRENCY:
+			result = getCurrency();
 			break;
 		default:
 			result = null;
@@ -131,6 +124,26 @@ public class Receipt implements Serializable{
 	
 	public ReceiptItem getItem(int i) {
 		return mItems.get(i);
+	}
+	
+	public JSONArray getItemsJsonArray() {
+		JSONArray items = new JSONArray();
+		for (int i=0;i<mNumItems;i++) {
+			ReceiptItem item = mItems.get(i);
+			JSONObject itemstr = new JSONObject();
+			try {
+				itemstr.put("item_id", item.getItemId());
+				itemstr.put("item_name", item.getName());
+				itemstr.put("item_qty", item.getQty());
+				itemstr.put("item_price", item.getPrice());	
+				items.put(i, itemstr);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return items;
 	}
 	
 	// Called when there is a need to add items to a receipt, r.
@@ -171,6 +184,10 @@ public class Receipt implements Serializable{
 	
 	private String getTax() {
 		return basic.getTax();
+	}
+	
+	private String getCurrency() {
+		return basic.getCurrency();
 	}
 	
 	public boolean getWhere() {

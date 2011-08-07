@@ -44,6 +44,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,9 +62,9 @@ public class MainPage extends Activity {
 	private static final boolean OFF_LINE = UserProfile.OFFLINE;
 	private static final boolean ON_LINE = UserProfile.ONLINE;
 	
-//	private LinearLayout mMainPage;
+	private LinearLayout mMainPage;
 	private TextView mUname;
-//	private ImageView mFractalImg;
+	private ImageView mFractalImg;
 	
 	// Screen touch event holding time
 	private long mUptime;
@@ -90,9 +92,9 @@ public class MainPage extends Activity {
         setContentView(R.layout.main_page);
         
         Log.i(TAG, "Get FrontPage elements");
-//        mMainPage = (LinearLayout) findViewById(R.id.main_page);
+        mMainPage = (LinearLayout) findViewById(R.id.main_page);
         mUname = (TextView) findViewById(R.id.Username);
-//        mFractalImg = (ImageView) findViewById(R.id.FractalFern);
+        mFractalImg = (ImageView) findViewById(R.id.FractalFern);
         mLogProgress = new ProgressDialog(MainPage.this);
 	}
 	
@@ -100,6 +102,7 @@ public class MainPage extends Activity {
 	public void onResume() {
 		super.onResume();
 		Log.i(TAG, "onResume" + "Set FrontPage elements");
+		
 		if (UserProfile.getStatus() == ON_LINE) {
 			setMainPage(UserProfile.getUsername()+getResources().getString(R.string.masxaro_email), 0);
 		}

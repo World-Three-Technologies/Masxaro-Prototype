@@ -56,7 +56,7 @@ public class ReceiptsManager {
 	public static final int PARAM_RECEIPT_ID = 2;
 	
 	public final static int[] ReceiptViewElements = {
-		R.id.store_name_txt, R.id.time_txt, R.id.id_txt, R.id.tax_txt ,R.id.total_cost_txt
+		R.id.store_name_txt, R.id.time_txt, R.id.id_txt, R.id.tax_txt ,R.id.total_cost_txt, R.id.currency_txt
 	};
 	
 	// This array stores all receipts in mobile app.
@@ -113,6 +113,7 @@ public class ReceiptsManager {
 				if (addNewReceipt(r) == RECEIPT_NEW) {
 					r.addItems(items[i]);
 				}
+				
 			}
 			if (Log.isLoggable(TAG, Log.VERBOSE)) {
 	            Log.v(TAG, "adding receipts is done");
@@ -133,9 +134,11 @@ public class ReceiptsManager {
             Log.v(TAG, "add a new receipt into Receipt pool");
         }
 		int id = Integer.parseInt(r.getEntry(PARAM_RECEIPT_ID));
+		// should check the database whether the receipt is already in the database.
 		for (int i=0;i<NUM_RECEIPT;i++) {
 			if (sReceiptId[i] == id) {
 				get = true;
+//				if (getNumValid() == 7)
 				break;
 			}
 		}

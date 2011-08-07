@@ -74,9 +74,9 @@ public class TagView extends Activity {
 			public void onClick(View v) {
 				// TODO: Temporarily put here
 				String jsonstr = 
-					new String("[{\"store_account\":null,\"receipt_id\":\"105\",\"user_account\":null,\"receipt_time\":\"2011-06-29 10:45:32\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"hamburger\",\"item_id\":\"1010\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"img\":null,\"deleted\":0,\"store_name\":\"McD\"}]");
+					new String("[{\"store_account\":null,\"id\":\"105\",\"user_account\":null,\"receipt_time\":\"2011-06-29 10:45:32\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"coke\",\"item_id\":\"12\",\"item_qty\":\"1\"},{\"item_price\":\"2\",\"item_name\":\"fries-mid\",\"item_id\":\"10\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"img\":null,\"deleted\":0,\"store_name\":\"McD\", \"currency_mark\":\"$\"}]");
 	            ReceiptsManager.add(jsonstr, FROM_NFC);
-//	            NetworkUtil.syncUnsentReceipts();
+	            NetworkUtil.syncUnsentReceipts();
 				setBackIntent();
 				finish();
 			}
@@ -104,7 +104,7 @@ public class TagView extends Activity {
 		Toast.makeText(this, "TagView onNewIntent", Toast.LENGTH_SHORT).show();
         setIntent(intent);
         String action = intent.getAction();
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
 	        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_TAG);
 	        if (rawMsgs != null)
 	        	Toast.makeText(this, "Is a nfc tag.", Toast.LENGTH_SHORT).show();

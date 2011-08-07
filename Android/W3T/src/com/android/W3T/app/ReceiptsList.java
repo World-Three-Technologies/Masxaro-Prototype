@@ -63,7 +63,7 @@ public class ReceiptsList extends Activity implements OnClickListener {
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 //	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
-	private static final String RECEIVE_ALL_BASIC = NetworkUtil.METHOD_RECEIVE_ALL_BASIC;
+	private static final String RECEIVE_ALL = NetworkUtil.METHOD_RECEIVE_ALL;
 	
 	private static final int ENTRY_STORE_NAME = Receipt.ENTRY_STORE_NAME;
 	private static final int ENTRY_TIME = Receipt.ENTRY_TIME;
@@ -79,14 +79,14 @@ public class ReceiptsList extends Activity implements OnClickListener {
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
 			// TODO: upload the receipt with FROM_NFC flag
-            NetworkUtil.syncUnsentReceipts();
+//            NetworkUtil.syncUnsentReceiptss();
 			// Download latest 7 receipts from database and upload non-uploaded receipts
 			// to the database.
-			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL_BASIC, UserProfile.getUsername(), null);
+			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL, null);
 			if (jsonstr != null) {
 				Log.i(TAG, "add new receipts");
 				// TODO: pick up the basic info of the latest 7 receipts and list them here.
-//				System.out.println(jsonstr);
+				System.out.println(jsonstr);
 				// Set the IsUpload true
 //				ReceiptsManager.add(jsonstr, FROM_DB);
 				Log.i(TAG, "finished new receipts");
@@ -211,6 +211,8 @@ public class ReceiptsList extends Activity implements OnClickListener {
 				View row = super.getView(position, convertView, parent);
 		        TextView title = (TextView) row.findViewById(R.id.list_receipt_title);
 		        title.setTextColor(getResources().getColor(R.color.white));
+		        TextView time = (TextView) row.findViewById(R.id.list_receipt_time);
+		        time.setTextColor(getResources().getColor(R.color.white));
 		        return super.getView(position, convertView, parent);
 			}
 			return super.getView(position, convertView, parent);

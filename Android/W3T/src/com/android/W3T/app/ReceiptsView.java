@@ -50,7 +50,7 @@ import com.android.W3T.app.user.UserProfile;
 public class ReceiptsView extends Activity implements OnClickListener {
 	public static final String TAG = "ReceiptsViewActivity";
 	
-	private static final String RECEIVE_ALL_BASIC = NetworkUtil.METHOD_RECEIVE_ALL_BASIC;
+	private static final String RECEIVE_ALL = NetworkUtil.METHOD_RECEIVE_ALL;
 	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
@@ -69,7 +69,7 @@ public class ReceiptsView extends Activity implements OnClickListener {
 			// Upload non-uploaded receipts and download latest 7 receipts from database. 
 			// to the database.
 //            NetworkUtil.syncUnsentReceipts();
-			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL_BASIC, UserProfile.getUsername(), null);
+			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL, null);
 			if (jsonstr != null) {
 				Log.i(TAG, "add new receipts basic");
 				System.out.println(jsonstr);

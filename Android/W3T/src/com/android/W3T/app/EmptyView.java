@@ -25,9 +25,7 @@
 package com.android.W3T.app;
 
 import com.android.W3T.app.network.NetworkUtil;
-import com.android.W3T.app.rmanager.Receipt;
 import com.android.W3T.app.rmanager.ReceiptsManager;
-import com.android.W3T.app.user.UserProfile;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -35,28 +33,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class EmptyView extends Activity implements OnClickListener{
 public static final String TAG = "EmptyViewActivity";
 	
-	private static final String RECEIVE_ALL_BASIC = NetworkUtil.METHOD_RECEIVE_ALL_BASIC;
+	private static final String RECEIVE_ALL = NetworkUtil.METHOD_RECEIVE_ALL;
 	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
 	private Button mSyncBtn;
-	private Button mBackListBtn;
 	private Button mBackMainBtn;
 	
 	private ProgressDialog mRefreshProgress;
@@ -69,11 +59,11 @@ public static final String TAG = "EmptyViewActivity";
 //            NetworkUtil.syncUnsentReceipts();
 			// Download latest 7 receipts from database and upload non-uploaded receipts
 			// to the database.
-			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL_BASIC, UserProfile.getUsername(), null);
+			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL, null);
 			if (jsonstr != null) {
 				System.out.println(jsonstr);
 				// Set the IsUpload true
-//				ReceiptsManager.add(jsonstr, FROM_DB);
+				ReceiptsManager.add(jsonstr, FROM_DB);
 				mRefreshProgress.dismiss();
 				
 				if (ReceiptsManager.getNumValid() != 0) {
