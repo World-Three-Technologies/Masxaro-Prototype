@@ -146,8 +146,8 @@ main (int argc, char *argv[])
 //= RATS, FSD=48
 //Actually PN532 already sent back the ATS so nothing to send now
   receive_bytes();
-//Receiving data: 00  a4  04  00  07  d2  76  00  00  85  01  01 00
-//= App Select by name "D2760000850101"
+//Receiving data: 00  a4  04  00  07  d2  76  00  00  85  01  00
+//= App Select by name "D2760000850100"
   send_bytes((const byte_t*)"\x90\x00",2);
   receive_bytes();
 //Receiving data: 00  a4  00  00  02  e1  03
@@ -157,7 +157,7 @@ main (int argc, char *argv[])
 //Receiving data: 00  b0  00  00  0f
 //= ReadBinary CC
 //We send CC + OK
-  send_bytes((const byte_t*)"\x00\x0f\x20\x00\x3b\x00\x34\x04\x06\xe1\x04\x00\x32\x00\xff\x90\x00",17);
+  send_bytes((const byte_t*)"\x00\x0f\x20\x00\x3b\x00\x34\x04\x06\xe1\x04\x0e\xe0\x00\x00\x90\x00",17);
   receive_bytes();
 //Receiving data: 00  a4  00  00  02  e1  04
 //= Select NDEF
@@ -166,17 +166,19 @@ main (int argc, char *argv[])
 //Receiving data: 00  b0  00  00  02
 //=  Read first 2 NDEF bytes
 //Sent NDEF Length=0x21
-  send_bytes((const byte_t*)"\x00\x23\x90\x00",4);
+  send_bytes((const byte_t*)"\x00\x20\x90\x00",4);
   receive_bytes();
-  // should no have this according to Type 4 Tag Specs, but the Nexus S gives such response.
   send_bytes((const byte_t*)"\x90\x00",2);
   receive_bytes();
+//Receiving data: 00  b0  00  00  02
+//=  Read first 2 NDEF bytes
+//Sent NDEF Length=0x21
+  
+  
 //Receiving data: 00  b0  00  02  21
 //= Read remaining of NDEF file
-  send_bytes((const byte_t*)"\x00\x23\xd1\x02\x1c\x53\x70\x91\x01\x09\x54\x02\x65\x6e\x4c\x69\x62\x6e\x66\x63\x51\x01\x0b\x55\x03\x6c\x69\x62\x6e\x66\x63\x2e\x6f\x72\x67\x90\x00",37);
-  // The Nexus S cannot recognize the tag. Try to get more APDUs from Nexus S.
-  receive_bytes();
-printf("finished\n");
+  send_bytes((const byte_t*)"\xd1\x01\x1c\x54\x02\x65\x6e\x53\x6f\x6d\x65\x20\x72\x61\x6e\x64\x6f\x6d\x20\x65\x6e\x67\x6c\x69\x73\x68\x20\x74\x65\x78\x74\x2e\x90\x00",34);
+
   nfc_disconnect(pnd);
   exit (EXIT_SUCCESS);
 }
