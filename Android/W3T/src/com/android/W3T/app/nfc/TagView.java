@@ -25,6 +25,8 @@
 
 package com.android.W3T.app.nfc;
 
+import java.io.IOException;
+
 import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
 import com.android.W3T.app.ReceiptsList;
@@ -33,7 +35,11 @@ import com.android.W3T.app.rmanager.*;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.nfc.FormatException;
+import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.KeyEvent;
@@ -47,6 +53,7 @@ public class TagView extends Activity {
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
 //	private Receipt mReceipt;
+	private NfcAdapter mAdapter;
 	
 	private Button mRejectBtn;
 	private Button mConfirmBtn;
@@ -89,6 +96,24 @@ public class TagView extends Activity {
 			}
         });
         // -------------- fake tag receive ---------------- //
+        mAdapter = NfcAdapter.getDefaultAdapter(this);
+        Tag t = (Tag) this.getIntent().getExtras().get(NfcAdapter.EXTRA_TAG);
+        System.out.println(t.getId()[0]);
+        System.out.println(t.getId()[1]);
+        System.out.println(t.getId()[2]);
+        System.out.println(t.getId()[3]);
+        System.out.println(t.getTechList()[0]);
+        System.out.println(t.getTechList()[1]);
+        System.out.println(t.getTechList()[2]);
+        Ndef n = Ndef.get(t);
+        
+        System.out.println(t.describeContents()+":");
+        NdefMessage nm = n.getCachedNdefMessage();
+        byte[] b = nm.getRecords()[0].getId();
+		for (int i=0;i<b.length;i++) {
+			System.out.println(b[i]);
+		}
+        
 	}
 	
 	@Override
