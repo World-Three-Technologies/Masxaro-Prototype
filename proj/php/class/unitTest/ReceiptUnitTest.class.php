@@ -41,7 +41,7 @@ class ReceiptUnitTest extends UnitTest{
 		$basicInfo = array(
 							"store_account"=>"Mc_NYU",
 							"user_account"=>"new",
-							"tax"=>15
+							"tax"=>'15'
 						);
 						
 		$items = array();
