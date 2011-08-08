@@ -44,7 +44,6 @@ public static final String TAG = "EmptyViewActivity";
 	private static final String RECEIVE_ALL = NetworkUtil.METHOD_RECEIVE_ALL;
 	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
-	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
 	private Button mSyncBtn;
 	private Button mBackMainBtn;
@@ -55,15 +54,15 @@ public static final String TAG = "EmptyViewActivity";
 		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
-			// TODO: upload the receipt with FROM_NFC flag
-//            NetworkUtil.syncUnsentReceipts();
 			// Download latest 7 receipts from database and upload non-uploaded receipts
 			// to the database.
 			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL, null);
 			if (jsonstr != null) {
-				System.out.println(jsonstr);
+//				System.out.println(jsonstr);
 				// Set the IsUpload true
-				ReceiptsManager.add(jsonstr, FROM_DB);
+				if (!ReceiptsManager.add(jsonstr, FROM_DB)) {
+					Toast.makeText(EmptyView.this, "cannot add more receipts into the pool", Toast.LENGTH_SHORT);
+				}
 				mRefreshProgress.dismiss();
 				
 				if (ReceiptsManager.getNumValid() != 0) {

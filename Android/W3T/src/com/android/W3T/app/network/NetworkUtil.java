@@ -94,10 +94,14 @@ public class NetworkUtil {
 		ArrayList<Receipt> receipts = ReceiptsManager.getUnSentReceipts();
         int num = receipts.size();
         for (int i=0;i<num;i++) {
-        	NetworkUtil.attemptSendReceipt(METHOD_SEND_RECEIPT, receipts.get(i));
-        	// if the transit succeeded, set the flag.
-//        	receipts.get(i).setWhere(FROM_DB);
+        	if (NetworkUtil.attemptSendReceipt(METHOD_SEND_RECEIPT, receipts.get(i))) {
+        		receipts.get(i).setWhere(FROM_DB);
+        	}
+        	else {
+        		return false;
+        	}
         }
+        // TODO: return due to no unsent receipts.
         return true;
 	}
 	
@@ -120,7 +124,6 @@ public class NetworkUtil {
         HttpPost request;
         
         try {
-        	
             request = new HttpPost();
         	if (op == LOGIN) {
         		request.setURI(new URI(LOGIN_URL));
@@ -182,7 +185,7 @@ public class NetworkUtil {
 				param.put("acc", UserProfile.getUsername());
 				if (op.equals(METHOD_RECEIVE_ALL)) {
 			        // Add your data
-			        param.put("limitStart", "1");
+			        param.put("limitStart", "0");
 			        param.put("limitOffset", "7");
 				}
 				else if (op.equals(METHOD_RECEIVE_RECEIPT_DETAIL)) {
@@ -206,7 +209,6 @@ public class NetworkUtil {
 			URL url = new URL(RECEIPT_OP_URL);
         	URLConnection connection = url.openConnection();
         	connection.setDoOutput(true);
-        	System.out.println(jsonstr.toString());
         	OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
         	// Must put "json=" here for server to decoding the data
         	String data = "json=" + jsonstr.toString();
@@ -216,7 +218,7 @@ public class NetworkUtil {
 
         	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
         	String s = in.readLine();
-        	System.out.println(s);
+//        	System.out.println(s);
         	return s;
             
 		} catch (UnsupportedEncodingException e) {
@@ -241,11 +243,8 @@ public class NetworkUtil {
         	if (op.equals(METHOD_SEND_RECEIPT)) {
         		// Add your data
             	JSONObject basicInfo = new JSONObject();
-            	basicInfo.put("store_account", r.getEntry(0));		// store name
+            	basicInfo.put("store_account", r.getEntry(6));		// store name
             	basicInfo.put("tax", r.getEntry(3));				// tax
-//            	basicInfo.put("receipt_time", r.getEntry(1));		// receipt time
-//            	basicInfo.put("receipt_id", r.getEntry(2));
-//            	basicInfo.put("total_cost", r.getEntry(4));			// total cost
             	basicInfo.put("user_account", UserProfile.getUsername());
             	JSONObject receipt = new JSONObject();
             	receipt.put("receipt", basicInfo);
@@ -254,8 +253,6 @@ public class NetworkUtil {
             	receipt.put("acc", UserProfile.getUsername());
             	jsonstr.put("json", receipt);
         	}
-            System.out.println(jsonstr.toString());
-            System.out.println((((JSONObject)jsonstr.get("json")).get("opcode")).toString());
         	URL url = new URL(RECEIPT_OP_URL);
         	URLConnection connection = url.openConnection();
         	connection.setDoOutput(true);
@@ -268,8 +265,12 @@ public class NetworkUtil {
         	out.close();
         	
         	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-        	System.out.println(in.readLine());
-        	return true;
+        	String s = in.readLine();
+        	System.out.println(s);
+        	if (Integer.valueOf(s) > 0) {
+        		return true;
+        	}
+        	else return false;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -324,8 +325,6 @@ public class NetworkUtil {
         		JSONObject timeRange = new JSONObject();
         		timeRange.put("start", timeStart);
         		timeRange.put("end", timeEnd);
-        		System.out.println(timeStart);
-        		System.out.println(timeEnd);
         		param.put("timeRange", timeRange);
             	
             	jsonstr.put("json", param);
@@ -350,8 +349,6 @@ public class NetworkUtil {
         		JSONObject timeRange = new JSONObject();
         		timeRange.put("start", terms[terms.length - 2]);
         		timeRange.put("end", terms[terms.length - 1]);
-        		System.out.println(terms[terms.length - 2]);
-        		System.out.println(terms[terms.length - 1]);
         		param.put("timeRange", timeRange);
             	
             	jsonstr.put("json", param);
@@ -369,10 +366,10 @@ public class NetworkUtil {
         	out.close();
 
         	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-//        	return in.readLine();
-        	String s = in.readLine();
-        	System.out.println(s);
-        	return s;
+        	return in.readLine();
+//        	String s = in.readLine();
+//        	System.out.println(s);
+//        	return s;
         } catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

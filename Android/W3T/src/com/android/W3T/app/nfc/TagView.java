@@ -25,14 +25,11 @@
 
 package com.android.W3T.app.nfc;
 
-import java.util.ArrayList;
-
 import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
 import com.android.W3T.app.ReceiptsList;
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
-import com.android.W3T.app.user.UserProfile;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -72,13 +69,23 @@ public class TagView extends Activity {
         mConfirmBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO: Temporarily put here
+				// TODO: Temporarily put here. get nfc tag from real world
 				String jsonstr = 
-					new String("[{\"store_account\":null,\"id\":\"105\",\"user_account\":null,\"receipt_time\":\"2011-06-29 10:45:32\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"coke\",\"item_id\":\"12\",\"item_qty\":\"1\"},{\"item_price\":\"2\",\"item_name\":\"fries-mid\",\"item_id\":\"10\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"img\":null,\"deleted\":0,\"store_name\":\"McD\", \"currency_mark\":\"$\"}]");
-	            ReceiptsManager.add(jsonstr, FROM_NFC);
-	            NetworkUtil.syncUnsentReceipts();
-				setBackIntent();
-				finish();
+					new String("[{\"store_account\":\"Mc_NYU\",\"id\":\"105\",\"user_account\":null,\"receipt_time\":\"2011-06-29 10:45:32\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"coke\",\"item_id\":\"12\",\"item_qty\":\"1\"},{\"item_price\":\"2\",\"item_name\":\"fries-mid\",\"item_id\":\"10\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"img\":null,\"deleted\":0,\"store_name\":\"McDonalds(NYU)\", \"currency_mark\":\"$\"}]");
+	            if (ReceiptsManager.getNumValid() == ReceiptsManager.NUM_RECEIPT) {
+	            	ReceiptsManager.deleteReceipt(6);
+	            }
+				if (!ReceiptsManager.add(jsonstr, FROM_NFC)) {
+					Toast.makeText(TagView.this, "cannot add more receipts into the pool", Toast.LENGTH_SHORT);
+				}
+	            if (!NetworkUtil.syncUnsentReceipts()) {
+	            	Toast.makeText(TagView.this, "Sending receipts occurred error", Toast.LENGTH_SHORT);
+	            }
+	            else {
+	            	setBackIntent();
+	            	finish();
+	            }
+				
 			}
         });
         // -------------- fake tag receive ---------------- //

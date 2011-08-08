@@ -42,10 +42,10 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
-import com.android.W3T.app.user.UserProfile;
 
 public class ReceiptsView extends Activity implements OnClickListener {
 	public static final String TAG = "ReceiptsViewActivity";
@@ -65,16 +65,20 @@ public class ReceiptsView extends Activity implements OnClickListener {
 		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
-			// TODO: upload the receipt with FROM_NFC flag
-			// Upload non-uploaded receipts and download latest 7 receipts from database. 
+			// Download latest 7 receipts from database and upload non-uploaded receipts
 			// to the database.
-//            NetworkUtil.syncUnsentReceipts();
+			if (!NetworkUtil.syncUnsentReceipts()) {
+            	Toast.makeText(ReceiptsView.this, "Sending receipts occurred error", Toast.LENGTH_SHORT);
+            }
+			ReceiptsManager.initReceiptsManager();
 			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL, null);
 			if (jsonstr != null) {
 				Log.i(TAG, "add new receipts basic");
 				System.out.println(jsonstr);
 				// Set the IsUpload true
-//				ReceiptsManager.add(jsonstr, FROM_DB);
+				if (!ReceiptsManager.add(jsonstr, FROM_DB)) {
+					Toast.makeText(ReceiptsView.this, "cannot add more receipts into the pool", Toast.LENGTH_SHORT);
+				}
 				Log.i(TAG, "finished new receipts");
 				Log.i(TAG, "update receipt view");
 				mRefreshProgress.dismiss();
@@ -97,7 +101,7 @@ public class ReceiptsView extends Activity implements OnClickListener {
 	public void onResume() {
 		Log.i(TAG, "onResume()");
 		super.onResume();
-		int id = this.getIntent().getIntExtra("num", 0);
+		int id = this.getIntent().getIntExtra("pos", 0);
 		fillReceiptView(id);
 	}
 	
@@ -217,6 +221,8 @@ public class ReceiptsView extends Activity implements OnClickListener {
 		// Set all item rows in the Items Table: id, name, qty, price. (no discount for now)
 		int numItems = ReceiptsManager.getReceipt(num).getNumItem();
 		int pos = 1;
+		System.out.println(numItems);
+		System.out.println(ReceiptsManager.getReceipt(num).getEntry(2));
 		TableLayout t = (TableLayout) findViewById(R.id.items_table);
 		for (int i=0;i<numItems;i++) {
 			TableRow row1 = new TableRow(this);
@@ -258,5 +264,6 @@ public class ReceiptsView extends Activity implements OnClickListener {
 		Intent receipt_list_intent = new Intent(ReceiptsView.this, ReceiptsList.class);
 		receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 		startActivity(receipt_list_intent);
+		finish();
 	}
 }

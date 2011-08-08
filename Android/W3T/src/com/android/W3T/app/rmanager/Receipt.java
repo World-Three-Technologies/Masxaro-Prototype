@@ -46,14 +46,9 @@ public class Receipt implements Serializable{
 	public static final int ENTRY_TAX = 3;
 	public static final int ENTRY_TOTAL = 4;
 	public static final int ENTRY_CURRENCY = 5;
+	public static final int ENTRY_STORE_ACC = 6;
 	
 	// JSON names of Receipt entries
-	public static final String PARAM_RECEIPT_ID = "receipt_id";
-	public static final String PARAM_RECEIPT_TIME = "receipt_time";
-	public static final String PARAM_RECEIPT_TAX = "tax";
-	public static final String PARAM_RECEIPT_TOTAL = "total_cost";
-	public static final String PARAM_RECEIPT_STORE_NAME = "store_name";
-//	public static final String PARAM_RECEIPT_STORE_ACC = "store_account";
 //	public static final String PARAM_RECEIPT_USER_ACC = "user_account";
 	public static final String PARAM_RECEIPT_IMAGE = "img";
 	public static final String PARAM_RECEIPT_DELETE = "delete";
@@ -115,6 +110,9 @@ public class Receipt implements Serializable{
 		case ENTRY_CURRENCY:
 			result = getCurrency();
 			break;
+		case ENTRY_STORE_ACC:
+			result = getStoreAcc();
+			break;
 		default:
 			result = null;
 			break;
@@ -149,7 +147,6 @@ public class Receipt implements Serializable{
 	// Called when there is a need to add items to a receipt, r.
 	public void addItems(JSONArray items) {
 		mNumItems = items.length();
-		
 		try {
 			for (int i=0;i<mNumItems;i++) {
 				JSONObject item = (JSONObject) items.get(i);
@@ -196,6 +193,10 @@ public class Receipt implements Serializable{
 	
 	private String getTotal() {
 		return basic.getTotal();
+	}
+	
+	private String getStoreAcc() {
+		return basic.getStoreAcc();
 	}
 	
 //	private void setId(String id) {

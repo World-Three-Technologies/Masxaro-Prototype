@@ -11,7 +11,6 @@ import org.json.JSONObject;
 
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.BasicInfo;
-import com.android.W3T.app.user.UserProfile;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -86,12 +85,13 @@ public class SearchView extends Activity implements OnClickListener {
 	private Runnable mSearchThread = new Runnable() {
 		@Override
 		public void run() {
-			// TODO: upload the receipt with FROM_NFC flag
-			// Upload non-uploaded receipts
 			String result = new String();
 			String text = mSearchTerms.getText().toString();
 			String[] terms;
-            NetworkUtil.syncUnsentReceipts();
+			// Upload non-uploaded receipts
+			if (!NetworkUtil.syncUnsentReceipts()) {
+            	Toast.makeText(SearchView.this, "Sending receipts occurred error", Toast.LENGTH_SHORT);
+            }
 			switch (mSearchBy) {
 			case STORE_ITEM:
 				if (mSearchRange == CUSTOM) {
@@ -150,9 +150,15 @@ public class SearchView extends Activity implements OnClickListener {
 			itemsstr = NetworkUtil.attemptGetReceipt(RECEIVE_RECEIPT_ITEMS, mId);
 			mDownloadProgress.dismiss();
 			if (detailstr != null && itemsstr != null) {
+				try {
+					JSONObject it = new JSONObject(itemsstr);
+					mReceiptBundle.putSerializable("items", it.get(mId).toString());
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				Log.i(TAG, "add new receipts basic");
 				mReceiptBundle.putSerializable("detail", detailstr);
-				mReceiptBundle.putSerializable("items", itemsstr);
 				final Intent search_result_intent = new Intent(SearchView.this, SearchResultView.class);
 				search_result_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 				search_result_intent.putExtras(mReceiptBundle);

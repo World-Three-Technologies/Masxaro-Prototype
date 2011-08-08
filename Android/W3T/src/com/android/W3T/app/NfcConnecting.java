@@ -40,9 +40,9 @@ import android.nfc.NfcAdapter;
 import com.android.W3T.app.nfc.*;
 
 public class NfcConnecting extends Activity {
-//	private NfcAdapter mAdapter;
-//    private PendingIntent mPendingIntent;
-//    private IntentFilter[] mFilters;
+	private NfcAdapter mAdapter;
+    private PendingIntent mPendingIntent;
+    private IntentFilter[] mFilters;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class NfcConnecting extends Activity {
 	
 	@Override
     public void onResume() {
-        super.onResume();
+		super.onResume();
 //        mAdapter.enableForegroundDispatch(new TagView(), mPendingIntent, mFilters, null);
         // Set filters as null. According to reference, that will make the system receive a 
         // TAG_DISCOVERED for all tags.
@@ -98,7 +98,7 @@ public class NfcConnecting extends Activity {
 	// Deal with any key press event
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
-		case KeyEvent.KEYCODE_DPAD_CENTER:
+		case KeyEvent.KEYCODE_MENU:
 			final Intent tag_intent = new Intent(NfcConnecting.this, TagView.class);
 			// Every tag view activity should be called only once.
 			tag_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

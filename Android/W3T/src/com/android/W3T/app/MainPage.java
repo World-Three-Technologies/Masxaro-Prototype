@@ -376,7 +376,7 @@ public class MainPage extends Activity {
 		    		Log.i(TAG, "reset front page");
 		    		setMainPage("Not Login", 0);
 			    	Log.i(TAG, "reset receipt manager");
-			    	ReceiptsManager.clearReceiptPool();
+			    	ReceiptsManager.initReceiptsManager();
 			    	Log.i(TAG, "log out succeeded");
 			    	Toast.makeText(MainPage.this, "Logout succeeded!", Toast.LENGTH_SHORT).show();
 		    	}
