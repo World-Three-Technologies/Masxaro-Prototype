@@ -101,18 +101,35 @@ class EmailCtrl extends Ctrl{
 	 * 
 	 * @param string $personalEmail client email address
 	 * 
-	 * @param string $code register code
+	 * @param array(string) $codeParam parameters for code generation
+	 * include:
+	 * 	{
+	 * 		registerType,
+	 *		account,
+	 *		password,
+	 *		personEmail
+	 *	}
 	 * 
 	 * @desc
 	 * send register confirmation email
 	 * 
 	 * @return
 	 * boolean
+	 * 
+	 * @example
+	 * $codeParam = array(
+	 *		registerType=>'user',
+	 *		account=>'newAccount',
+	 *		pwd=>'123456',
+	 *		personalEmail=>'user@eg.com'
+	 *	); 
 	 */
-	public function sendRegisterEmail($personalEmail, $code){
+	public function sendRegisterEmail($personalEmail, $codeParam){
+		$code = Tool::verifyCodeGen($codeParam);
+		
 		$subject = "Please verify your registration on Masxaro.com";
 		return $this->mail(
-						$personalEmail, 
+						$codeParam['personalEmail'], 
 						$subject, 
 						$this->registerEmailGen(REGISTER_V_URL."?code=$code")
 				);

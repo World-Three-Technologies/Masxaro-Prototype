@@ -113,17 +113,13 @@ if($ctrl->insert($param)){
 		$personEmail
 	); 
 	
-	$code = Tool::verifyCodeGen($codeParam);
+	//$code = Tool::verifyCodeGen($codeParam);
 	
-	if($ctrlEmail->sendRegisterEmail($personEmail, $code)){
+	if($ctrlEmail->sendRegisterEmail($personEmail, $codeParam)){
 		echo "Register Success, please check your mailbox for authenticate";
 	}
 	else{
-		echo "System error, register failed";
-		
-		//roll back
-		$ctrlCon->deleteAccContact($account);
-		$ctrl->delete($account);
+		echo "Email send failed.";
 	}
 }
 
