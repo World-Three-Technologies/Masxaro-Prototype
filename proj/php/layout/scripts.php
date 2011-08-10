@@ -4,4 +4,3 @@
   <script src="assets/js/vendor/underscore-min.js"></script>
   <script src="assets/js/vendor/backbone.js"></script>
   <script src="assets/js/util.js"></script>
-  <script src="assets/js/app.js"></script>

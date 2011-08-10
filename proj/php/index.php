@@ -66,5 +66,6 @@
     include_once "layout/template.php"; 
     include_once "layout/scripts.php";
   ?>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
