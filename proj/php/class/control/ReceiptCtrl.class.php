@@ -118,11 +118,11 @@ class ReceiptCtrl extends Ctrl{
 			if(($totalCost = $this->insertItems($receiptId, $items)) == false){
 				return false;
 			}
-			$totalCost += $totalCost * $basicInfo['tax'] * 0.01;
+//			$totalCost += $totalCost * $basicInfo['tax'] * 0.01;
 
-			if(!$this->updateTotalCost($receiptId, $totalCost)){
-				return false;
-			}
+//			if(!$this->updateTotalCost($receiptId, $totalCost)){
+//				return false;
+//			}
 		}
 		
 		return $receiptId;
