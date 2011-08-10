@@ -344,5 +344,33 @@ class ContactCtrl extends Ctrl{
 		return $this->db->fetchAssoc();
 	}
 	
+	/**
+	 * 
+	 * based on contact value get account
+	 * @param string $contact
+	 * @param string $who user/store
+	 */
+	public function getContactAccount($contact){
+		$who .= '_account';
+		
+		$sql = "
+			SELECT 
+				`$who`
+			FROM 
+				`contact`
+			WHERE
+				`value`='$contact'
+		";
+		
+		$this->db->select($sql);
+		
+		if($this->db->numRows() == 0){
+			return null;
+		}
+		
+		$result = $this->db->fetchAssoc();
+		return $result[0]["$who"];
+	}
+	
 }
 ?>

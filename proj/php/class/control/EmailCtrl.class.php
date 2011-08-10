@@ -157,10 +157,24 @@ class EmailCtrl extends Ctrl{
 			$output = '';
 			rsort($emails);
 			foreach($emails as $email_number) {
+				$overview = imap_fetch_overview($inbox,$email_number);
+				
+				$subject = $overview[0]->subject;
+				if(!preg_match("/.*receipt.*/i", $subject) && !preg_match("/.*order.*/i", $subject)){
+					continue;
+				}
+				
 				$message = html_entity_decode(imap_fetchbody($inbox,$email_number,2));
 				$header = imap_headerinfo($inbox, $email_number);
 				$from = "{$header->from[0]->mailbox}@{$header->from[0]->host}";
-				array_push($emails_file, array('from'=>$from, 'message'=>$message));
+				
+				$contactCtrl = new ContactCtrl();
+				$storeAcc = null;
+				if(($storeAcc = $contactCtrl->getContactAccount($from)) == null){
+					continue;
+				}
+				
+				array_push($emails_file, array('from'=>$storeAcc, 'message'=>$message));
 				
 				//$overview = imap_fetch_overview($inbox,$email_number);
 //				$output.= '<div class="toggler '.($overview[0]->seen ? 'read' : 'unread').'">';
@@ -168,8 +182,6 @@ class EmailCtrl extends Ctrl{
 //				$output.= '<span class="from">'.$overview[0]->from.'</span>';
 //				$output.= '<span class="date">on '.$overview[0]->date.'</span>';
 //				$output.= '</div>';
-//				
-//				$output.= '<div class="body">'.$message.'</div>';
 			}
 			
 			return $this->saveEmails($emails_file, $acc);
