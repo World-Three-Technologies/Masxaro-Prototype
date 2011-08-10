@@ -1,6 +1,7 @@
 <?php
+
 /*
- *  registerUnitTest.php -- unit test for register  
+ *  FileCtrl.class.php -- file system control 
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -20,22 +21,12 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *  Written by Yaxing Chen <Yaxing@masxaro.com>
- *  
+ * 
  */
 
-include_once '../../config.php';
-
-$path = "http://50.19.213.157/masxaro/proj/php/register.php";
-
-$param = "userAccount=yaxingc&firstName=NA&pwd=w3t&email=175357341@qq.com&type=user";
-
-$ch = curl_init($path);
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
-
-$result = curl_exec($ch);
-
-echo $result;
+class FileCtrl{
+	
+	
+}
 
 ?>

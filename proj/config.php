@@ -103,6 +103,11 @@ define('DOMADMIN_EMAIL', 'bws@masxaro.net');
 define('DOMADMIN_PWD', 'Masxaro2011!');
 define('DOMAIN', 'masxaro.net');
 define('IMAP_HOST', '{imap.gmail.com:993/imap/ssl/novalidate-cert}INBOX');
+define('EMAIL_DIR', ROOT_PATH.'/masxaro_email_tmp');
+
+if(!is_dir(EMAIL_DIR)){
+	mkdir(EMAIL_DIR);
+}
 
 /*
  * register config

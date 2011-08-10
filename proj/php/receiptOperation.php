@@ -322,6 +322,11 @@ switch($opcode){
 						);
 		break;
 		
+	case 'grab_email_receipts':
+		$emailCtrl = new EmailCtrl();
+		$emailCtrl->grabEmails($userAcc);
+		break;
+		
 	default:
 		die('wrong parameter');
 }

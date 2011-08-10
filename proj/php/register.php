@@ -70,7 +70,7 @@ switch($registerType){
 }
 
 
-$personEmail = $post['email'];
+$personalEmail = $post['email'];
 
 if($ctrl->insert($param)){
 
@@ -88,7 +88,7 @@ if($ctrl->insert($param)){
 	);
 				
 	//personal email
-	$email = $personEmail;
+	$email = $personalEmail;
 	array_push($contacts, array(
 							$accType=>$account,
 							'contact_type'=>'email',
@@ -107,15 +107,15 @@ if($ctrl->insert($param)){
 	}
 	
 	$codeParam = array(
-		$registerType,
-		$account,
-		$param['pwd'],
-		$personEmail
+		registerType=>$registerType,
+		account=>$account,
+		pwd=>$param['pwd'],
+		personalEmail=>$personalEmail
 	); 
 	
 	//$code = Tool::verifyCodeGen($codeParam);
 	
-	if($ctrlEmail->sendRegisterEmail($personEmail, $codeParam)){
+	if($ctrlEmail->sendRegisterEmail($personalEmail, $codeParam)){
 		echo "Register Success, please check your mailbox for authenticate";
 	}
 	else{
