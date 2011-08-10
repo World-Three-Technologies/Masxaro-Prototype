@@ -157,7 +157,7 @@ class EmailCtrl extends Ctrl{
 			$output = '';
 			rsort($emails);
 			foreach($emails as $email_number) {
-				$message = imap_fetchbody($inbox,$email_number,2);
+				$message = html_entity_decode(imap_fetchbody($inbox,$email_number,2));
 				$header = imap_headerinfo($inbox, $email_number);
 				$from = "{$header->from[0]->mailbox}@{$header->from[0]->host}";
 				array_push($emails_file, array('from'=>$from, 'message'=>$message));
