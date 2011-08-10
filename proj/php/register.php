@@ -78,14 +78,16 @@ if($ctrl->insert($param)){
 	
 	$account = $param[$accType];
 	
-	//masxaro email
-	$email = "$account@".DOMAIN;
-	array_push($contacts, array(
-							$accType=>$account,
-							'contact_type'=>'email',
-							'value'=>$email
-						)
-	);
+	if($registerType == 'user'){
+		//masxaro email
+		$email = "$account@".DOMAIN;
+		array_push($contacts, array(
+								$accType=>$account,
+								'contact_type'=>'email',
+								'value'=>$email
+							)
+		);
+	}
 				
 	//personal email
 	$email = $personalEmail;
@@ -111,9 +113,7 @@ if($ctrl->insert($param)){
 		account=>$account,
 		pwd=>$param['pwd'],
 		personalEmail=>$personalEmail
-	); 
-	
-	//$code = Tool::verifyCodeGen($codeParam);
+	);
 	
 	if($ctrlEmail->sendRegisterEmail($personalEmail, $codeParam)){
 		echo "Register Success, please check your mailbox for authenticate";
