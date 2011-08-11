@@ -164,7 +164,7 @@ class EmailCtrl extends Ctrl{
 //					continue;
 //				}
 				
-				$message = html_entity_decode(imap_fetchbody($inbox,$email_number,2));
+				$message = html_entity_decode($subject . imap_fetchbody($inbox,$email_number,2));
 				$header = imap_headerinfo($inbox, $email_number);
 				$from = "{$header->from[0]->mailbox}@{$header->from[0]->host}";
 				$contactCtrl = new ContactCtrl();
@@ -244,7 +244,7 @@ class EmailCtrl extends Ctrl{
 		return true;
 	}
 	
-/**
+	/**
 	 * 
 	 * 
 	 * @param string $username
