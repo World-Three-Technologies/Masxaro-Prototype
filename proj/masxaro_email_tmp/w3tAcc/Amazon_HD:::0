@@ -54,16 +54,16 @@ Yaxing Chen &lt;Yaxing@masxaro.com&gt;
 <table width=100% cellpadding=12 cellspacing=0 border=0> 
 <tr> 
 <td> 
-<font size=-1><br><div class="gmail_quote"><div class="gmail_quote"> 
+<font size=-1><br><div class="gmail_quote"><div class="gmail_quote"><div> 
 <br> 
 <u></u> 
-<div bgcolor="#FFFFFF" link="#0066CC"> 
+</div><div bgcolor="#FFFFFF" link="#0066CC"> 
 <table cellpadding="0" cellspacing="0" border="0" width="100%"> 
 <tbody><tr bgcolor="#FFFFFF"> 
 <td align="left"> 
 <a href="http://www.amazon.com/exec/obidos/subst/home/home.html" target="_blank"><img alt="Amazon.com Logo" border="0" height="42" width="155"></a></td> 
-<td align="right"><img usemap="#1313eab8298ba48e_1313ea420f2a49c5_130f9f55f1146fea_right_top_nav_map" border="0" height="22" width="300"> 
-<map name="1313eab8298ba48e_1313ea420f2a49c5_130f9f55f1146fea_right_top_nav_map"> 
+<td align="right"><img usemap="#1313eabd069fdb3b_1313ea48cec0cf40_130cce5211ebcf18_right_top_nav_map" border="0" height="22" width="300"> 
+<map name="1313eabd069fdb3b_1313ea48cec0cf40_130cce5211ebcf18_right_top_nav_map"> 
 <area shape="rect" href="http://www.amazon.com/gp/cart/view.html/ref=cs_ae_cart" coords="0,0,80,21" target="_blank"> 
 <area shape="rect" href="http://www.amazon.com/exec/obidos/registry/wishlist/ref=cs_ae_wl" coords="85,0,151,21" target="_blank"> 
 <area shape="rect" href="http://www.amazon.com/exec/obidos/account-access-login/ref=cs_ae_yr" coords="155,0,256,21" target="_blank"> 
@@ -77,14 +77,14 @@ Yaxing Chen &lt;Yaxing@masxaro.com&gt;
 <td> 
 <table align="center" cellpadding="5" cellspacing="0" border="0" width="100%"> 
 <tbody><tr valign="top"> 
-<td bgcolor="#FFFFFF"> 
+<td bgcolor="#FFFFFF"><font color=#550055><div> 
 <font face="verdana,arial,helvetica" size="-1"> 
 <p><b>Thanks for your order, greg pryzby!</b></p> 
 <p><b>Want to manage your order online?</b><br> 
 If you need to check the status of your order or make changes, please visit our home page at Amazon.com and click on Your Account at the top of any page.<br> 
-</p> 
+/p> 
 </font> 
-<table cellpadding="4" cellspacing="0" border="0" width="100%"> 
+</div></font><table cellpadding="4" cellspacing="0" border="0" width="100%"> 
 <tbody><tr> 
 <td colspan="2" bgcolor="#006699"> 
 <font color="#ffffff" face="verdana,arial,helvetica" size="-1"><b>Purchasing Information:</b></font> 
@@ -137,20 +137,27 @@ Get the <b><a href="http://www.amazon.com/InstantRewards?ref_=pe_120430_17456570
 </td> 
 </tr> 
 <tr> 
-<td colspan="2"><font face="verdana,arial,helvetica" size="-1"> Your purchase has been divided into 3 orders. </font></td> 
-</tr> 
-<tr> 
 <td bgcolor="#EEEEEE"> 
 <font color="#CC6600" face="verdana,arial,helvetica" size="-1"><b> 
-Order #1
-: (order will arrive in 1 shipment)
+Shipping Details
+: (orders will arrive in 2 shipments)
 </b></font> 
 </td> 
 </tr> 
 <tr> 
 <td> 
 <table cellpadding="1" cellspacing="0" border="0" width="100%"> 
-<tbody><tr> 
+<tbody><tr><td> </td></tr> 
+<tr> 
+<td colspan="2"> 
+<font face="verdana,arial,helvetica" size="-1"> 
+<b>Please note: Pre-order Price Guarantee</b> covers one or more item(s) in this order. If the Amazon.com price decreases between your order time and the release date, you&#39;ll receive the lowest price.
+<a href="http://www.amazon.com/exec/obidos/tg/browse/-/468502/ref=ox_oce_popp" target="_blank">See details</a>.
+</font> 
+</td> 
+</tr> 
+<tr><td> </td></tr> 
+<tr> 
 <td nowrap> 
 <font face="verdana,arial,helvetica" size="-1"> 
 <b>Order #:</b> 
@@ -158,7 +165,7 @@ Order #1
 </td> 
 <td width="98%"> 
 <font face="verdana,arial,helvetica" size="-1"> 
-<a href="https://www.amazon.com/gp/css/history/view.html/ref=ox_oce_order_history" target="_blank">002-3676670-6325803</a> 
+<a href="https://www.amazon.com/gp/css/history/view.html/ref=ox_oce_order_history" target="_blank">002-6205140-2949039</a> 
 </font> 
 </td> 
 </tr> 
@@ -170,7 +177,7 @@ Order #1
 </td> 
 <td width="98%"> 
 <font face="verdana,arial,helvetica" size="-1"> 
-Standard Shipping
+FREE Super Saver Shipping
 </font> 
 </td> 
 </tr> 
@@ -189,7 +196,7 @@ Subtotal of Items:
 <td> 
 <span> 
 <font face="verdana,arial,helvetica" size="-1"> 
-$1,051.48
+$81.55
 </font> 
 </span> 
 </td> 
@@ -205,7 +212,55 @@ Shipping &amp; Handling:
 <td> 
 <span> 
 <font face="verdana,arial,helvetica" size="-1"> 
-$11.48
+$6.94
+</font> 
+</span> 
+</td> 
+</tr> 
+<tr> 
+<td nowrap> 
+<span> 
+<font face="verdana,arial,helvetica" size="-1"> 
+Super Saver Discount:  
+</font> 
+</span> 
+</td> 
+<td> 
+<span> 
+<font face="verdana,arial,helvetica" size="-1"> 
+-$6.94
+</font> 
+</span> 
+</td> 
+</tr> 
+<tr> 
+<td nowrap> 
+<span> 
+<font face="verdana,arial,helvetica" size="-1"> 
+Pre-order Guarantee:  
+</font> 
+</span> 
+</td> 
+<td> 
+<span> 
+<font face="verdana,arial,helvetica" size="-1"> 
+-$0.00
+</font> 
+</span> 
+</td> 
+</tr> 
+<tr> 
+<td nowrap> 
+<span> 
+<font face="verdana,arial,helvetica" size="-1"> 
+Promotion Applied:  
+</font> 
+</span> 
+</td> 
+<td> 
+<span> 
+<font face="verdana,arial,helvetica" size="-1"> 
+-$0.00
 </font> 
 </span> 
 </td> 
@@ -229,7 +284,7 @@ Total:
 <td> 
 <span> 
 <font face="verdana,arial,helvetica" size="-1"> 
-$1,062.96
+$81.55
 </font> 
 </span> 
 </td> 
@@ -245,7 +300,7 @@ Gift Cards:
 <td> 
 <span> 
 <font face="verdana,arial,helvetica" size="-1"> 
--$1,062.96
+-$81.55
 </font> 
 </span> 
 </td> 
@@ -282,7 +337,7 @@ $0.00
 <td colspan="2"> 
 <font face="verdana,arial,helvetica" size="-1"> 
 <br> <br> 
-<b>Delivery estimate: </b>July 8, 2011
+<b>Delivery estimate: </b>July 8, 2011 - July 16, 2011
 </font> 
 <table> 
 <tbody><tr valign="top"> 
@@ -291,26 +346,13 @@ $0.00
 <td><font face="verdana,arial,helvetica" size="-1"><b>1</b></font></td> 
 <td> 
 <font face="verdana,arial,helvetica" size="-1"> 
-<b>&quot;CowboyStudio Shoulder Support Pad for Video Camcorder Camera DV / DC&quot;</b><br> 
-Electronics;
-<span>$36.33</span><br> 
+<b>&quot;In The Aeroplane Over The Sea [Vinyl]&quot;</b><br> 
+Neutral Milk Hotel;
+Vinyl;
+<span>$16.34</span><font color=#550055><div><br> 
 In Stock<br>  
 Sold by: <a href="http://www.amazon.com/gp/help/seller/home.html/ref=ox_oce_seller_home?ie=UTF8&amp;seller=ATVPDKIKX0DER" target="_blank">Amazon.com, LLC</a> 
-</font> 
-</td> 
-</tr> 
-<tr valign="top"> 
-<td> 
-</td> 
-<td><font face="verdana,arial,helvetica" size="-1"><b>2</b></font></td> 
-<td> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<b>&quot;Transcend 32 GB Class 10 SDHC Flash Memory Card TS32GSDHC10E&quot;</b><br> 
-Electronics;
-<span>$50.83</span><br> 
-In Stock<br>  
-Sold by: <a href="http://www.amazon.com/gp/help/seller/home.html/ref=ox_oce_seller_home?ie=UTF8&amp;seller=ATVPDKIKX0DER" target="_blank">Amazon.com, LLC</a> 
-</font> 
+</div></font></font> 
 </td> 
 </tr> 
 <tr valign="top"> 
@@ -319,12 +361,13 @@ Sold by: <a href="http://www.amazon.com/gp/help/seller/home.html/ref=ox_oce_sell
 <td><font face="verdana,arial,helvetica" size="-1"><b>1</b></font></td> 
 <td> 
 <font face="verdana,arial,helvetica" size="-1"> 
-<b>&quot;Canon EOS 60D 18 MP CMOS Digital SLR Camera with 3.0-Inch LCD (Body Only)&quot;</b><br> 
-Electronics;
-<span>$899.00</span><br> 
+<b>&quot;Are You Experienced (Vinyl)&quot;</b><br> 
+Jimi Hendrix;
+Vinyl;
+<span>$16.66</span><font color=#550055><div><br> 
 In Stock<br>  
 Sold by: <a href="http://www.amazon.com/gp/help/seller/home.html/ref=ox_oce_seller_home?ie=UTF8&amp;seller=ATVPDKIKX0DER" target="_blank">Amazon.com, LLC</a> 
-</font> 
+</div></font></font> 
 </td> 
 </tr> 
 <tr valign="top"> 
@@ -333,164 +376,36 @@ Sold by: <a href="http://www.amazon.com/gp/help/seller/home.html/ref=ox_oce_sell
 <td><font face="verdana,arial,helvetica" size="-1"><b>1</b></font></td> 
 <td> 
 <font face="verdana,arial,helvetica" size="-1"> 
-<b>&quot;Cowboystudio Heavy duty Photography Video L bracket with 2 Standard Flash hot Shoe Mounts&quot;</b><br> 
-Electronics;
-<span>$14.49</span><br> 
+<b>&quot;White Blood Cells (180 Gram LP)&quot;</b><br> 
+The White Stripes;
+Vinyl;
+<span>$23.27</span><br> 
+Usually ships in 6 to 11 days<font color=#550055><div><br>  
+Sold by: <a href="http://www.amazon.com/gp/help/seller/home.html/ref=ox_oce_seller_home?ie=UTF8&amp;seller=ATVPDKIKX0DER" target="_blank">Amazon.com, LLC</a> 
+</div></font></font> 
+</td> 
+</tr> 
+<tr valign="top"> 
+<td> 
+</td> 
+<td><font face="verdana,arial,helvetica" size="-1"><b>1</b></font></td> 
+<td> 
+<font face="verdana,arial,helvetica" size="-1"> 
+<b>&quot;Torches&quot;</b><br> 
+Foster the People;
+Vinyl;
+<span>$12.27</span><font color=#550055><div><br> 
 In Stock<br>  
 Sold by: <a href="http://www.amazon.com/gp/help/seller/home.html/ref=ox_oce_seller_home?ie=UTF8&amp;seller=ATVPDKIKX0DER" target="_blank">Amazon.com, LLC</a> 
-</font> 
+</div></font></font> 
 </td> 
 </tr> 
 </tbody></table> 
-</td> 
-</tr> 
-</tbody></table> 
-</td> 
-</tr> 
-<tr> 
-<td bgcolor="#EEEEEE"> 
-<font color="#CC6600" face="verdana,arial,helvetica" size="-1"><b> 
-Order #2
-: Focus Camera
-</b></font> 
-</td> 
-</tr> 
-<tr> 
-<td> 
-<table cellpadding="1" cellspacing="0" border="0" width="100%"> 
-<tbody><tr> 
-<td nowrap> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<b>Order #:</b> 
-</font> 
-</td> 
-<td width="98%"> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<a href="https://www.amazon.com/gp/css/history/view.html/ref=ox_oce_order_history" target="_blank">002-8436320-2402639</a> 
-</font> 
-</td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<b>Shipping Method:</b> 
-</font> 
-</td> 
-<td width="98%"> 
-<font face="verdana,arial,helvetica" size="-1"> 
-Standard
-</font> 
-</td> 
-</tr> 
-<tr> 
-<td nowrap><font face="verdana,arial,helvetica" size="-1"><b>Shipping Preference:</b></font></td> 
-<td width="98%"><font face="verdana,arial,helvetica" size="-1">Group my items into as few shipments as possible</font></td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-Subtotal of Items:  
-</font> 
-</span> 
-</td> 
-<td> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-$129.95
-</font> 
-</span> 
-</td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-Shipping &amp; Handling:  
-</font> 
-</span> 
-</td> 
-<td> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-$0.00
-</font> 
-</span> 
-</td> 
-</tr> 
-<tr> 
-<td> 
- 
-</td> 
-<td> 
-------
-</td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-Total:  
-</font> 
-</span> 
-</td> 
-<td> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-$129.95
-</font> 
-</span> 
-</td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-Gift Cards:  
-</font> 
-</span> 
-</td> 
-<td> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
--$129.95
-</font> 
-</span> 
-</td> 
-</tr> 
-<tr> 
-<td> 
- 
-</td> 
-<td> 
-------
-</td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<b> 
-Total for this Order:  
-</b> 
-</font> 
-</span> 
-</td> 
-<td> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<b> 
-$0.00
-</b> 
-</font> 
-</span> 
-</td> 
-</tr> 
-<tr> 
+</td></tr><tr> 
 <td colspan="2"> 
 <font face="verdana,arial,helvetica" size="-1"> 
 <br> <br> 
-<b>Delivery estimate: </b>July 11, 2011 - July 14, 2011
+<b>Delivery estimate: </b>Aug. 1, 2011 - Aug. 5, 2011
 </font> 
 <table> 
 <tbody><tr valign="top"> 
@@ -499,11 +414,17 @@ $0.00
 <td><font face="verdana,arial,helvetica" size="-1"><b>1</b></font></td> 
 <td> 
 <font face="verdana,arial,helvetica" size="-1"> 
-<b>&quot;Zoom H1 Pak Portable Digital Recorder With Accessories Bundle and Headphones&quot;</b><br> 
-Electronics;
-<span>$129.95</span><br> 
-In Stock<br>  
-Sold by: <a href="http://www.amazon.com/gp/help/seller/home.html/ref=ox_oce_seller_home?ie=UTF8&amp;seller=AXCB29L39I26U" target="_blank">Focus Camera</a> 
+<b>&quot;Alpocalypse (Vinyl)&quot;</b><br> 
+Weird Al Yankovic;
+Vinyl;
+<span>$13.01</span><br> 
+Available for Pre-order<font color=#550055><div><br>  
+Sold by: <a href="http://www.amazon.com/gp/help/seller/home.html/ref=ox_oce_seller_home?ie=UTF8&amp;seller=ATVPDKIKX0DER" target="_blank">Amazon.com, LLC</a> 
+</div></font></font></td> 
+<td align="right" width="50%"> 
+<font face="verdana,arial,helvetica" size="-1"> 
+Because of Pre-order Price Guarantee, you might pay less. 
+<a href="http://www.amazon.com/exec/obidos/tg/browse/-/468502/ref=ox_oce_item_popp" target="_blank">Why?</a> 
 </font> 
 </td> 
 </tr> 
@@ -514,174 +435,15 @@ Sold by: <a href="http://www.amazon.com/gp/help/seller/home.html/ref=ox_oce_sell
 </td> 
 </tr> 
 <tr> 
-<td bgcolor="#EEEEEE"> 
-<font color="#CC6600" face="verdana,arial,helvetica" size="-1"><b> 
-Order #3
-: BestDealUSA
-</b></font> 
-</td> 
-</tr> 
-<tr> 
-<td> 
-<table cellpadding="1" cellspacing="0" border="0" width="100%"> 
-<tbody><tr> 
-<td nowrap> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<b>Order #:</b> 
-</font> 
-</td> 
-<td width="98%"> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<a href="https://www.amazon.com/gp/css/history/view.html/ref=ox_oce_order_history" target="_blank">002-2552700-7841029</a> 
-</font> 
-</td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<b>Shipping Method:</b> 
-</font> 
-</td> 
-<td width="98%"> 
-<font face="verdana,arial,helvetica" size="-1"> 
-Standard
-</font> 
-</td> 
-</tr> 
-<tr> 
-<td nowrap><font face="verdana,arial,helvetica" size="-1"><b>Shipping Preference:</b></font></td> 
-<td width="98%"><font face="verdana,arial,helvetica" size="-1">Group my items into as few shipments as possible</font></td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-Subtotal of Items:  
-</font> 
-</span> 
-</td> 
-<td> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-$49.53
-</font> 
-</span> 
-</td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-Shipping &amp; Handling:  
-</font> 
-</span> 
-</td> 
-<td> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-$0.50
-</font> 
-</span> 
-</td> 
-</tr> 
-<tr> 
-<td> 
- 
-</td> 
-<td> 
-------
-</td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-Total:  
-</font> 
-</span> 
-</td> 
-<td> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-$50.03
-</font> 
-</span> 
-</td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-Gift Cards:  
-</font> 
-</span> 
-</td> 
-<td> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
--$50.03
-</font> 
-</span> 
-</td> 
-</tr> 
-<tr> 
-<td> 
- 
-</td> 
-<td> 
-------
-</td> 
-</tr> 
-<tr> 
-<td nowrap> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<b> 
-Total for this Order:  
-</b> 
-</font> 
-</span> 
-</td> 
-<td> 
-<span> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<b> 
-$0.00
-</b> 
-</font> 
-</span> 
-</td> 
-</tr> 
-<tr> 
-<td colspan="2"> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<br> <br> 
-<b>Delivery estimate: </b>July 11, 2011 - July 14, 2011
-</font> 
-<table> 
-<tbody><tr valign="top"> 
-<td> 
-</td> 
-<td><font face="verdana,arial,helvetica" size="-1"><b>1</b></font></td> 
-<td> 
-<font face="verdana,arial,helvetica" size="-1"> 
-<b>&quot;NEEWER 160 LED CN-160 Dimmable Ultra High Power Panel Digital Camera / Camcorder Video Light, LED Light for Canon, Nikon, Pentax, Panasonic,SONY, Samsung and Olympus Digital SLR Cameras&quot;</b><br> 
-<span>$49.53</span><br> 
-In Stock<br>  
-Sold by: <a href="http://www.amazon.com/gp/help/seller/home.html/ref=ox_oce_seller_home?ie=UTF8&amp;seller=AL7LHK6Q9LVTS" target="_blank">BestDealUSA</a> 
-</font> 
-</td> 
-</tr> 
-</tbody></table> 
-</td> 
-</tr> 
-</tbody></table> 
-</td> 
-</tr> 
-<tr> 
-<td> 
+<td><font color=#550055><div> 
 <hr noshade size="1"> 
 <a href="https://www.amazon.com/gp/gc/ref=gc_orderconfirm_email_hol" target="_blank"><img alt="Amazon.com Gift Cards" border="0" height="84" width="600"></a> 
+</div></font><font face="verdana,arial,helvetica" size="-1"> 
+<p> 
+Our Pre-order Price Guarantee covers one or more item(s) in this order. If the Amazon.com price decreases between the time you place your order and the end of the day of the release date, you&#39;ll receive the lowest price.<br> 
+Upon order of your purchased qualifying music item, you will receive an email indicating that the $1 credit for Amazon MP3 music downloads has been applied to your account automatically. The credit may be used only for Amazon MP3 downloads available at <a href="http://www.amazon.com" target="_blank">www.amazon.com</a>. You must redeem your credit (in one or more transactions) for Amazon MP3 downloads by July 30, 2011. Customers may only become eligible for the $1 MP3 offer once during the April 1, 2011 to June 30, 2011 11:59pm PST promotional period.<br> 
+</p> 
+</font><font color=#550055><div> 
 <p> 
 <font face="verdana,arial,helvetica" size="-1"> 
  
@@ -728,7 +490,7 @@ Prefer not to receive HTML mail?
 <a href="https://www.amazon.com/gp/gss/ccp/ref=ox_oce_email_preference" target="_blank">Click here</a> 
 </font> 
 </p> 
-</td> 
+</div></font></td> 
 </tr> 
 </tbody></table> 
 </td> 
@@ -738,7 +500,7 @@ Prefer not to receive HTML mail?
 </tr> 
 </tbody></table> 
 </div> 
-</div><br></div> 
+</div><div><div></div><br></div></div> 
 </font> 
 </table> 
 </table> 

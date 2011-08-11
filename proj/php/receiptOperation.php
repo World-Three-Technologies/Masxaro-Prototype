@@ -325,6 +325,10 @@ switch($opcode){
 	case 'grab_email_receipts':
 		$emailCtrl = new EmailCtrl();
 		$emailCtrl->grabEmails($userAcc);
+		exec('java -jar '
+			.ROOT_PATH.'/parser.jar w3tAcc '
+			.ROOT_PATH.'/masxaro_email_tmp '
+			.ROOT_PATH.'/masxaro_email_tmp');
 		break;
 		
 	default:

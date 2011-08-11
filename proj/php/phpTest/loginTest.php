@@ -7,13 +7,8 @@ include_once '../../config.php';
 //ob_end_flush();
 //die();
 
-<<<<<<< HEAD
-$path = "http://localhost/masxaro/proj/php/login.php";
-$param = "acc=new&pwd=123&type=user";
-=======
-$path = "50.19.213.157/masxaro_backend/proj/php/login.php";
+$path = "50.19.213.157/masxaro/proj/php/login.php";
 $param = "acc=w3tAcc&pwd=123&type=user";
->>>>>>> backend_email
 
 $ch = curl_init($path);
 curl_setopt($ch, CURLOPT_POST, 1);

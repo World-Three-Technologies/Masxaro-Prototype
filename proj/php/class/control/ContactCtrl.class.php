@@ -350,7 +350,7 @@ class ContactCtrl extends Ctrl{
 	 * @param string $contact
 	 * @param string $who user/store
 	 */
-	public function getContactAccount($contact){
+	public function getContactAccount($contact, $who){
 		$who .= '_account';
 		
 		$sql = "
