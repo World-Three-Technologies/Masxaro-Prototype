@@ -160,17 +160,16 @@ class EmailCtrl extends Ctrl{
 				$overview = imap_fetch_overview($inbox,$email_number);
 				
 				$subject = $overview[0]->subject;
-				if(!preg_match("/.*receipt.*/i", $subject) && !preg_match("/.*order.*/i", $subject)){
-					continue;
-				}
+//				if(!preg_match("/.*receipt.*/i", $subject) && !preg_match("/.*order.*/i", $subject)){
+//					continue;
+//				}
 				
 				$message = html_entity_decode(imap_fetchbody($inbox,$email_number,2));
 				$header = imap_headerinfo($inbox, $email_number);
 				$from = "{$header->from[0]->mailbox}@{$header->from[0]->host}";
-				
 				$contactCtrl = new ContactCtrl();
 				$storeAcc = null;
-				if(($storeAcc = $contactCtrl->getContactAccount($from)) == null){
+				if(($storeAcc = $contactCtrl->getContactAccount($from, 'store')) == null){
 					continue;
 				}
 				
@@ -319,7 +318,7 @@ class EmailCtrl extends Ctrl{
 			foreach($emails as $email){
 				$curFile = null;
 				for($i = 0; $i < 1000 ; $i ++){
-					$tmpName = $curDir."/{$email['from']}:::$i";
+					$tmpName = $curDir."/{$email['from']}---$i";
 					if(is_file($tmpName)){
 						continue;
 					}
