@@ -318,7 +318,7 @@ class EmailCtrl extends Ctrl{
 			foreach($emails as $email){
 				$curFile = null;
 				for($i = 0; $i < 1000 ; $i ++){
-					$tmpName = $curDir."/{$email['from']}---$i";
+					$tmpName = $curDir."/{$email['from']}:::$i";
 					if(is_file($tmpName)){
 						continue;
 					}
