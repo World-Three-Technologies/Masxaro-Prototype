@@ -6,7 +6,8 @@
       </div>
       <nav id="header-nav">
         <ul id="header-nav-list">
-          <li><a>Accounts</a></li>
+          <li><a>Media</a></li>
+          <li><a>Account</a></li>
           <li><a>Help</a></li>
         </ul>
       </nav>

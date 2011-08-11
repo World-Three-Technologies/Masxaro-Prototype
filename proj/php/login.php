@@ -1,4 +1,4 @@
-<?php
+u<?php
 
 /*
  *  login.php -- user/store login 

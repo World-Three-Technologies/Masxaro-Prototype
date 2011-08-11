@@ -5,6 +5,9 @@ $page-width : 960px;
 $grid : 24;
 $grid-width : $page-width / $grid;
 
+$header-color:white;
+
+
 /*
  * mixins
  */
@@ -40,10 +43,29 @@ h3 { font-size: 24px;}
 #container{
   //overflow-x:hidden;
 }
+html{
+  min-height: 100%;
+}
+
+body{
+  background-color:rgb(182,212,214);
+  background-image: -webkit-gradient(
+      linear,
+      right top,
+      right bottom,
+      color-stop(0.25, rgb(182,212,214)),
+      color-stop(0.84, rgb(123,184,179))
+  );
+  background-image: -moz-linear-gradient(
+      center top,
+      rgb(182,212,214) 25%,
+      rgb(123,184,179) 84%
+  );
+}
 
 // header module
 header{
-  background-color: rgb(94,206,116);
+  background-color: $header-color ;
   width:100%;
   min-width:960px;
   height:40px;
@@ -58,7 +80,7 @@ header{
     left:0px;
   }
   #header-logo{
-    color: #FFF;
+    color: black;
     float:left;
     margin: 2px;
     padding: 1px;
@@ -92,18 +114,27 @@ header{
 
   #main-tab{
     text-align:center;
-    text-size:22px;
+    font-size:18px;
     width:100%;
-    margin:10px;
+    margin:10px 10px 0 40px; 
     div{
-      @include grid(2);
+      @include grid(3);
       float:left;
       padding:10px 0;
-      border: 1px #AAA solid;
+      border: 1px green solid;
       border-bottom:0;
+      border-left:0;
       cursor:pointer;
+      a{
+        color:black;
+        height:100%;
+        width:100%;
+      }
+      &:first{
+        border-left: 1px green solid;
+      }
       &.active,&:hover{
-        background-color: rgb(94,206,176);
+        background-color: white;
       }
     }
   }
@@ -148,6 +179,7 @@ header{
   }
 }
 
+
 //receipt module
 
 #receipts-table{
@@ -162,7 +194,7 @@ header{
     border-bottom: 1px #EBE solid;
 
     &:hover{
-      background-color: #FEE;
+      background-color: #FFF;
       .toolbar{
         display:inline-block;
       }
@@ -178,6 +210,7 @@ header{
       font-size:18px; 
       font-weight:bold;
       text-align:center;
+      background-color: #FFF;
     }
     .total-cost{
       @include grid(1.5);
@@ -206,12 +239,10 @@ header{
 
     //css for full receipt
     .receipt{
+      background-color:white;
       position:relative;
       &:hover{
         cursor:normal;
-        span.toolbar, .toolbar{
-          display:inline-block;
-        }
       }
       .store{
         padding:10px;
@@ -220,7 +251,6 @@ header{
         @include grid(17.5);
       }
       .toolbar{
-        display:none;
         cursor:pointer;
       }
       .close{
@@ -306,23 +336,24 @@ footer{
   min-height:800px;
   border-right:1px green solid;
   .active{
-    background-color:rgb(94,206,176);
+    background-color:#FFF;
   }
   li{
     margin:0;
     padding:0;
+    cursor:pointer;
     font-size:16px;
     height:30px;
     line-height:20px;
     &:hover{
-      background-color:#CCC;
+      background-color:#FFF;
     }
     a{
+      color:black;
       padding:3px;
       display:block;
       width:100%;
       height:100%;
-      text-decoration:none;
     }
   }
 }
@@ -340,7 +371,6 @@ footer{
     background-color: rgb(94,106,56);
   }
   a{
-    text-decoration:none;
     &:link, &:visited {color: #FFF}
     &:hover{ color: #FFF; }
     color: #FFF; 
@@ -354,3 +384,33 @@ footer{
   margin:0;
 }
 
+//boards setting:
+
+#receipts-view{
+  display:none;
+}
+
+#dashboard-view{
+  display:none;
+}
+
+#boards.receipts-view #receipts-view{
+  display:block;
+}
+
+#boards.dashboard-view #dashboard-view{
+  display:block;
+}
+
+#dashboard-view{
+  width:100%;
+  margin-top:25px;
+  .launch-icon{
+    float:left;
+    width:200px;
+    height:200px;
+    border-radius:2em;
+    border:10px #FFF solid;
+    margin:10px;
+  }
+}

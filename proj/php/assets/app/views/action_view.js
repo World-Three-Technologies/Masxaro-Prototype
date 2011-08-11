@@ -3,10 +3,13 @@ window.ActionView = Backbone.View.extend({
   el:$("#action-bar"),
 
   tagTemplate : _.template("<li class='tag-<%= tag %>'>"+
-                           "<a href='#tag/<%= tag %>'><%= tag %></a></li>"),
+                           "<a href='#receipts/tag/<%= tag %>'><%= tag %></a></li>"),
 
   initialize:function(){
     _.bindAll(this,"setTags","setActive");   
+
+    this.$(".action").html('<li class="tag-recent"><a href="#receipts">Recent</a></li>');
+    this.setTags("recent");
   },
 
   tagsIsLoaded:false,

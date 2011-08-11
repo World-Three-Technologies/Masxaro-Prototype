@@ -22,41 +22,10 @@
   <?php include_once "layout/header-bar.php" ?>
   <div id="container">
     <div id="main" role="main">
-      <nav id="main-tab" class="clearfix">
-        <div class="tab active">Receipt</div>
-        <div class="tab">Overview</div>
-        <div class="tab">Analysis</div>
-      </nav>
-      <nav id="action-bar">
-        <div id="action-bar-inner">
-          <h4>tags</h4>
-          <ul class="action">
-            <li class="tag-recent"><a href="#index">Recent</a></li>
-          </ul>
-        <div>
-      </nav>
-      <div id="content">
-        <div id="receipts">
-          <div id="search-bar" class="clearfix">
-            <div>
-              <input id="search-query" type="text" placeholder="search"/>
-            </div>
-            <div>
-              <button id="search-button" type="submit" title="search"></button>
-              <div id="search-type">
-                <input type="radio" name="type" value="keys" checked/>Name
-                <input type="radio" name="type" value="tags"/>Tags
-              </div>
-            </div>
-          </div>
-          <table id="receipts-table">
-            <td id="ajax-loader" colspan="4"><img src="assets/img/ajax-loader.gif"/></td>
-          </table>
-          <div class="receipts-stat">
-            <span class="stat"></span>
-            <button class="more">more</button>
-          </div>
-        </div>
+      <?php include_once "layout/tabs.php" ?>
+      <div id="boards">
+        <?php include_once "pages/receipts.php" ?>
+        <?php include_once "pages/dashboard.php" ?>
       </div>
     </div>
   </div> <!-- eo #container -->

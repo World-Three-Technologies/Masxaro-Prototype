@@ -13,8 +13,16 @@ h2 {
 h3 {
   font-size: 24px; }
 
+html {
+  min-height: 100%; }
+
+body {
+  background-color: #b6d4d6;
+  background-image: -webkit-gradient(linear, right top, right bottom, color-stop(0.25, #b6d4d6), color-stop(0.84, #7bb8b3));
+  background-image: -moz-linear-gradient(center top, #b6d4d6 25%, #7bb8b3 84%); }
+
 header {
-  background-color: #5ece74;
+  background-color: white;
   width: 100%;
   min-width: 960px;
   height: 40px;
@@ -27,7 +35,7 @@ header {
   header #header-bar-inner {
     left: 0px; }
   header #header-logo {
-    color: #FFF;
+    color: black;
     float: left;
     margin: 2px;
     padding: 1px; }
@@ -53,18 +61,25 @@ header {
   text-align: center; }
   #main #main-tab {
     text-align: center;
-    text-size: 22px;
+    font-size: 18px;
     width: 100%;
-    margin: 10px; }
+    margin: 10px 10px 0 40px; }
     #main #main-tab div {
-      width: 80px;
+      width: 120px;
       float: left;
       padding: 10px 0;
-      border: 1px #AAA solid;
+      border: 1px green solid;
       border-bottom: 0;
+      border-left: 0;
       cursor: pointer; }
+      #main #main-tab div a {
+        color: black;
+        height: 100%;
+        width: 100%; }
+      #main #main-tab div:first {
+        border-left: 1px green solid; }
       #main #main-tab div.active, #main #main-tab div:hover {
-        background-color: #5eceb0; }
+        background-color: white; }
   #main #content {
     margin: 10px;
     text-align: left;
@@ -114,7 +129,7 @@ header {
     border-top: 1px #EBE solid;
     border-bottom: 1px #EBE solid; }
     #receipts-table tr.row:hover {
-      background-color: #FEE; }
+      background-color: #FFF; }
       #receipts-table tr.row:hover .toolbar {
         display: inline-block; }
     #receipts-table tr.row .date {
@@ -128,7 +143,8 @@ header {
       padding: 3px;
       font-size: 18px;
       font-weight: bold;
-      text-align: center; }
+      text-align: center;
+      background-color: #FFF; }
     #receipts-table tr.row .total-cost {
       width: 60px;
       float: right;
@@ -149,17 +165,15 @@ header {
         padding: 5px;
         color: green; }
     #receipts-table tr.row .receipt {
+      background-color: white;
       position: relative; }
       #receipts-table tr.row .receipt:hover {
         cursor: normal; }
-        #receipts-table tr.row .receipt:hover span.toolbar, #receipts-table tr.row .receipt:hover .toolbar {
-          display: inline-block; }
       #receipts-table tr.row .receipt .store {
         padding: 10px; }
       #receipts-table tr.row .receipt .content {
         width: 700px; }
       #receipts-table tr.row .receipt .toolbar {
-        display: none;
         cursor: pointer; }
       #receipts-table tr.row .receipt .close {
         background: url(../img/close-icon.png) top no-repeat;
@@ -222,21 +236,22 @@ footer {
   min-height: 800px;
   border-right: 1px green solid; }
   #action-bar .active {
-    background-color: #5eceb0; }
+    background-color: #FFF; }
   #action-bar li {
     margin: 0;
     padding: 0;
+    cursor: pointer;
     font-size: 16px;
     height: 30px;
     line-height: 20px; }
     #action-bar li:hover {
-      background-color: #CCC; }
+      background-color: #FFF; }
     #action-bar li a {
+      color: black;
       padding: 3px;
       display: block;
       width: 100%;
-      height: 100%;
-      text-decoration: none; }
+      height: 100%; }
 
 .tags .tag {
   border-radius: 5px;
@@ -252,7 +267,6 @@ footer {
   .tags .tag:hover {
     background-color: #5e6a38; }
   .tags .tag a {
-    text-decoration: none;
     color: #FFF; }
     .tags .tag a:link, .tags .tag a:visited {
       color: #FFF; }
@@ -265,3 +279,26 @@ footer {
 .separator {
   border-top: 1px black solid;
   margin: 0; }
+
+#receipts-view {
+  display: none; }
+
+#dashboard-view {
+  display: none; }
+
+#boards.receipts-view #receipts-view {
+  display: block; }
+
+#boards.dashboard-view #dashboard-view {
+  display: block; }
+
+#dashboard-view {
+  width: 100%;
+  margin-top: 25px; }
+  #dashboard-view .launch-icon {
+    float: left;
+    width: 200px;
+    height: 200px;
+    border-radius: 2em;
+    border: 10px #FFF solid;
+    margin: 10px; }

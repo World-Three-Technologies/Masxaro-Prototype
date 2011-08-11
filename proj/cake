@@ -22,7 +22,7 @@
       break;
     case "watch":
       $css_path = $path."/php/assets/css";
-      system("sass --watch $css_path/style.scss:$css_path/style.css");
+      system("sass --watch $css_path:$css_path");
       break;
     case "db":
       $host = DB_HOST;

@@ -1,41 +1,55 @@
 var AppRouter = Backbone.Router.extend({
 
   initialize: function(){
-    _.bindAll(this,"index","search","searchTag");
+    _.bindAll(this,"dashboard","receipts","search","searchTag","getReceiptsView");
     var user = this.user = new User({
       account:readCookie("user_acc"),
     });
 
     var receipts = this.receipts = new Receipts();
     window.account = receipts.account = user.get("account");
-    window.appView = new AppView({model:receipts });
     window.userView = new UserView({model:user});
-    window.actionView = new ActionView();
+  },
+
+  getReceiptsView:function(){
+    if(!this.receiptsView){
+      return new ReceiptsView({model:this.receipts});
+    }else{
+      return this.receiptsView;
+    }                 
   },
 
   routes: {
-    "" : "index",
-    "index" : "index",      
-    "search/:query" : "search",
-    "tag/:tag" : "searchTag"
+    "" : "receipts",
+    "dashboard" : "dashboard",
+    "receipts" : "receipts",      
+    "receipts/search/:query" : "search",
+    "receipts/tag/:tag" : "searchTag"
   },
 
-  index: function(){
-    var options = {
-      error: function(){
-        $("#ajax-loader").html("<h3>error in model request</h3>");
-      }
-    }
-    appView.fetch(options);
-    actionView.setTags("recent");
+  setView:function(name){
+    $("#boards").removeClass().addClass(name);
+  },
+
+  dashboard:function(){
+    this.setView("dashboard-view");
+    this.dashboardView = new DashboardView();
+  },
+
+  receipts: function(){
+    this.setView("receipts-view");
+    this.getReceiptsView().fetch({tag:"recent"});
   },
 
   search: function(query){
-    appView.search(query);      
+    this.setView("receipts-view");
+    this.getReceiptsView().search(query);
   },
 
   searchTag: function(tag){
-    actionView.setTags(tag);
-    appView.search(tag,"tags");           
+    this.setView("receipts-view");
+    this.receiptsView = this.getReceiptsView();
+    this.receiptsView.search(tag,"tags");           
+    this.receiptsView.actionView.setActive(tag);
   }
 });

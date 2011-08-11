@@ -1,4 +1,4 @@
-window.AppView = Backbone.View.extend({
+window.ReceiptsView = Backbone.View.extend({
   el:$("#receipts"),
 
   pageSize:10,
@@ -7,11 +7,13 @@ window.AppView = Backbone.View.extend({
 
   end:1,
 
+
   initialize:function(){
     _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
-                  "setEnd","search","after","fetch");
+                  "setEnd","search","after","fetch","error");
     this.model.bind("sync",this.before);
     this.model.bind("reset",this.render);
+    this.actionView = new ActionView();
   },
 
   events:{
@@ -109,10 +111,15 @@ window.AppView = Backbone.View.extend({
   searchTag:function(tags){
     this.before();
     this.model.searchTag(tags.split("-"),this.after);
+    console.log(tags);
   },
 
   fetch:function(options){
     this.before();
-    this.model.fetch({success:this.after,error:options.error});      
+    this.model.fetch({success:this.after,error:this.error});      
+  },
+
+  error:function(){
+    $("#ajax-loader").html("<h3>error in model request</h3>");
   }
 });

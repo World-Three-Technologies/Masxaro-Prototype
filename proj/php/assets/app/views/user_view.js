@@ -7,7 +7,7 @@ var UserView = Backbone.View.extend({
   },
 
   render:function(){
-    $("#username").text(this.model.get("account")); 
+    $("#username").text("Hello, " + this.model.get("account")); 
     return this;
   }
 });

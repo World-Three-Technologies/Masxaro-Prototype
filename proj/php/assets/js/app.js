@@ -137,10 +137,13 @@ window.ActionView = Backbone.View.extend({
   el:$("#action-bar"),
 
   tagTemplate : _.template("<li class='tag-<%= tag %>'>"+
-                           "<a href='#tag/<%= tag %>'><%= tag %></a></li>"),
+                           "<a href='#receipts/tag/<%= tag %>'><%= tag %></a></li>"),
 
   initialize:function(){
     _.bindAll(this,"setTags","setActive");   
+
+    this.$(".action").html('<li class="tag-recent"><a href="#receipts">Recent</a></li>');
+    this.setTags("recent");
   },
 
   tagsIsLoaded:false,
@@ -178,123 +181,14 @@ window.ActionView = Backbone.View.extend({
     target.addClass("active");
   }
 });
-window.AppView = Backbone.View.extend({
-  el:$("#receipts"),
+window.DashboardView = Backbone.View.extend({
 
-  pageSize:10,
-
-  start:1,
-
-  end:1,
-
+  el:$("#dashboard-view"),
+  
   initialize:function(){
-    _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
-                  "setEnd","search","after","fetch");
-    this.model.bind("sync",this.before);
-    this.model.bind("reset",this.render);
-  },
 
-  events:{
-    "click .more": "renderMore",
-    "click #search-button": "searchByForm",
-    "keyup #search-query": "submitSearch"
-  },
-
-  search:function(query,type){
-    if(query == "" || query == "undefined"){
-      return;
-    }
-    var keys = query.split(" "); 
-    this.before();
-    if(type=="keys"){
-      this.model.searchByKeys(keys,this.after);
-    }else{
-      this.model.searchByTags(keys,this.after);
-    }
-  },
-
-  searchByForm:function(){
-    var type = $("#search-type :checked").val()
-    this.search($('#search-query').val(),type);
-  },
-
-  submitSearch:function(event){
-    if(event.which == 13){
-      this.searchByForm();
-    }
-  },
-
-  before:function(){
-    this.cleanResults();
-    $('.receipts-stat').hide();
-    $('#ajax-loader').show();
-  },
-
-  after:function(){
-    $('#ajax-loader').hide();
-    $('.receipts-stat').show();
-  },
-
-
-  updateStatus:function(){
-    this.$(".stat").text(this.start + " to "+ this.end +" in "+this.model.length);
-  },
-
-  render:function(){
-    this.cleanResults();
-    this.setEnd();
-
-    this.$('#ajax-loader').hide();
-
-    _.each(this.model.models.slice(0,this.end),this.renderReceipt);
-    this.updateStatus();
-
-    if(this.end >= this.model.length ){
-      this.$(".more").hide();
-    }else{
-      this.$(".more").show();
-    }
-    return this;
-  },
-
-  cleanResults:function(){
-    this.$('.row').remove();
-  },
-
-  renderMore:function(){
-    var pageLength = (this.end + this.pageSize <= this.model.length) 
-                     ? this.end + this.pageSize : this.model.length;
-    _.each(this.model.models.slice(this.end,pageLength),this.renderReceipt);
-
-    this.end = pageLength;
-
-    this.updateStatus();
-
-    if(this.end === this.model.length){
-      this.$(".more").hide();
-    }else{
-      this.$(".more").show();
-    }
-  },
-
-  renderReceipt:function(receipt){
-    var view = new ReceiptView({model:receipt});
-    this.el.children("table").append(view.render().el);
-  },
-
-  setEnd:function(){
-    this.end = (this.model.length > 10) ? 10 : this.model.length;       
-  },
-
-  searchTag:function(tags){
-    this.before();
-    this.model.searchTag(tags.split("-"),this.after);
-  },
-
-  fetch:function(options){
-    this.before();
-    this.model.fetch({success:this.after,error:options.error});      
   }
+
 });
 var ReceiptView = Backbone.View.extend({
 
@@ -414,6 +308,131 @@ var ReceiptView = Backbone.View.extend({
     $(this.el).find(".date").html(new Date(receipt_time).format());
   }
 });
+window.ReceiptsView = Backbone.View.extend({
+  el:$("#receipts"),
+
+  pageSize:10,
+
+  start:1,
+
+  end:1,
+
+
+  initialize:function(){
+    _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
+                  "setEnd","search","after","fetch","error");
+    this.model.bind("sync",this.before);
+    this.model.bind("reset",this.render);
+    this.actionView = new ActionView();
+  },
+
+  events:{
+    "click .more": "renderMore",
+    "click #search-button": "searchByForm",
+    "keyup #search-query": "submitSearch"
+  },
+
+  search:function(query,type){
+    if(query == "" || query == "undefined"){
+      return;
+    }
+    var keys = query.split(" "); 
+    this.before();
+    if(type=="keys"){
+      this.model.searchByKeys(keys,this.after);
+    }else{
+      this.model.searchByTags(keys,this.after);
+    }
+  },
+
+  searchByForm:function(){
+    var type = $("#search-type :checked").val()
+    this.search($('#search-query').val(),type);
+  },
+
+  submitSearch:function(event){
+    if(event.which == 13){
+      this.searchByForm();
+    }
+  },
+
+  before:function(){
+    this.cleanResults();
+    $('.receipts-stat').hide();
+    $('#ajax-loader').show();
+  },
+
+  after:function(){
+    $('#ajax-loader').hide();
+    $('.receipts-stat').show();
+  },
+
+
+  updateStatus:function(){
+    this.$(".stat").text(this.start + " to "+ this.end +" in "+this.model.length);
+  },
+
+  render:function(){
+    this.cleanResults();
+    this.setEnd();
+
+    this.$('#ajax-loader').hide();
+
+    _.each(this.model.models.slice(0,this.end),this.renderReceipt);
+    this.updateStatus();
+
+    if(this.end >= this.model.length ){
+      this.$(".more").hide();
+    }else{
+      this.$(".more").show();
+    }
+    return this;
+  },
+
+  cleanResults:function(){
+    this.$('.row').remove();
+  },
+
+  renderMore:function(){
+    var pageLength = (this.end + this.pageSize <= this.model.length) 
+                     ? this.end + this.pageSize : this.model.length;
+    _.each(this.model.models.slice(this.end,pageLength),this.renderReceipt);
+
+    this.end = pageLength;
+
+    this.updateStatus();
+
+    if(this.end === this.model.length){
+      this.$(".more").hide();
+    }else{
+      this.$(".more").show();
+    }
+  },
+
+  renderReceipt:function(receipt){
+    var view = new ReceiptView({model:receipt});
+    this.el.children("table").append(view.render().el);
+  },
+
+  setEnd:function(){
+    this.end = (this.model.length > 10) ? 10 : this.model.length;       
+  },
+
+  searchTag:function(tags){
+    this.before();
+    this.model.searchTag(tags.split("-"),this.after);
+    console.log(tags);
+  },
+
+  fetch:function(options){
+    this.before();
+    this.model.fetch({success:this.after,error:this.error});      
+  },
+
+  error:function(){
+    $("#ajax-loader").html("<h3>error in model request</h3>");
+  }
+});
 var UserView = Backbone.View.extend({
 
   initialize:function(){
@@ -423,49 +442,63 @@ var UserView = Backbone.View.extend({
   },
 
   render:function(){
-    $("#username").text(this.model.get("account")); 
+    $("#username").text("Hello, " + this.model.get("account")); 
     return this;
   }
 });
 var AppRouter = Backbone.Router.extend({
 
   initialize: function(){
-    _.bindAll(this,"index","search","searchTag");
+    _.bindAll(this,"dashboard","receipts","search","searchTag","getReceiptsView");
     var user = this.user = new User({
       account:readCookie("user_acc"),
     });
 
     var receipts = this.receipts = new Receipts();
     window.account = receipts.account = user.get("account");
-    window.appView = new AppView({model:receipts });
     window.userView = new UserView({model:user});
-    window.actionView = new ActionView();
+  },
+
+  getReceiptsView:function(){
+    if(!this.receiptsView){
+      return new ReceiptsView({model:this.receipts});
+    }else{
+      return this.receiptsView;
+    }                 
   },
 
   routes: {
-    "" : "index",
-    "index" : "index",      
-    "search/:query" : "search",
-    "tag/:tag" : "searchTag"
+    "" : "receipts",
+    "dashboard" : "dashboard",
+    "receipts" : "receipts",      
+    "receipts/search/:query" : "search",
+    "receipts/tag/:tag" : "searchTag"
   },
 
-  index: function(){
-    var options = {
-      error: function(){
-        $("#ajax-loader").html("<h3>error in model request</h3>");
-      }
-    }
-    appView.fetch(options);
-    actionView.setTags("recent");
+  setView:function(name){
+    $("#boards").removeClass().addClass(name);
+  },
+
+  dashboard:function(){
+    this.setView("dashboard-view");
+    this.dashboardView = new DashboardView();
+  },
+
+  receipts: function(){
+    this.setView("receipts-view");
+    this.getReceiptsView().fetch({tag:"recent"});
   },
 
   search: function(query){
-    appView.search(query);      
+    this.setView("receipts-view");
+    this.getReceiptsView().search(query);
   },
 
   searchTag: function(tag){
-    actionView.setTags(tag);
-    appView.search(tag,"tags");           
+    this.setView("receipts-view");
+    this.receiptsView = this.getReceiptsView();
+    this.receiptsView.search(tag,"tags");           
+    this.receiptsView.actionView.setActive(tag);
   }
 });
 $(function(){
