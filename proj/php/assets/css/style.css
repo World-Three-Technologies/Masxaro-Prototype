@@ -99,6 +99,8 @@ header {
     margin: 10px;
     padding: 10px;
     text-align: left; }
+    #main #feature div h2 {
+      padding: 10px 0; }
     #main #feature div p {
       font-size: 18px; }
     #main #feature div img {
