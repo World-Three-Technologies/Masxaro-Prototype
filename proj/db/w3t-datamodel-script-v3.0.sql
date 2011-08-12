@@ -101,6 +101,7 @@ CREATE  TABLE IF NOT EXISTS `w3tdb`.`receipt` (
   `receipt_time` TIMESTAMP NOT NULL ,
   `extra_cost` DECIMAL(10,2) NOT NULL ,
   `cut_down_cost` DECIMAL(10,2) NOT NULL ,
+  `sub_total_cost` DECIMAL(10,2) NULL ,
   `tax` DECIMAL(10,2) NOT NULL ,
   `total_cost` DECIMAL(10,2) NOT NULL ,
   `currency_mark` VARCHAR(5) NOT NULL DEFAULT '$' ,
