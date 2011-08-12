@@ -113,7 +113,10 @@ if(!is_dir(EMAIL_DIR)){
  * register config
  */
 $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-$url = substr($url, 0, strripos($url, "/") + 1).'verifyRegister.php';
-define('REGISTER_V_URL', $url);
+$reg_v_url = substr($url, 0, strripos($url, "/") + 1).'verifyRegister.php';
+$receipt_url = substr($url, 0, strripos($url, "/") + 1).'receiptOperation.php';
+
+define('REGISTER_V_URL', $reg_v_url);
+define('RECEIPT_URL', $receipt_url);
 
 ?>
