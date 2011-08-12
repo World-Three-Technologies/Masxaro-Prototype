@@ -95,7 +95,7 @@ DROP TABLE IF EXISTS `w3tdb`.`receipt` ;
 
 CREATE  TABLE IF NOT EXISTS `w3tdb`.`receipt` (
   `id` INT NOT NULL AUTO_INCREMENT ,
-  `receipt_number` VARCHAR(50) NULL ,
+  `store_define_id` VARCHAR(50) NULL ,
   `store_account` VARCHAR(50) NOT NULL ,
   `user_account` VARCHAR(50) NOT NULL ,
   `receipt_time` TIMESTAMP NOT NULL ,
