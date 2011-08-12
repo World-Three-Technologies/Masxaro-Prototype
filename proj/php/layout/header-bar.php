@@ -2,7 +2,7 @@
   <div id="header-bar">
     <div id="header-bar-inner" class="clearfix">
       <div id="header-logo">
-        <h2>Masxaro</h2>
+        <a href="/"><h2>Masxaro</h2></a>
       </div>
       <nav id="header-nav">
         <ul id="header-nav-list">

@@ -39,6 +39,7 @@ $header-color:white;
 h1 { font-size: 32px;}
 h2 { font-size: 28px;}
 h3 { font-size: 24px;}
+h4 { font-size: 20px;}
 
 #container{
   //overflow-x:hidden;
@@ -80,7 +81,7 @@ header{
     left:0px;
   }
   #header-logo{
-    color: black;
+    a{color:black;}
     float:left;
     margin: 2px;
     padding: 1px;
@@ -325,7 +326,7 @@ div.receipt-item{
 }
 
 footer{
-  margin:0 auto;
+  margin:30px auto;
   text-align:center;
 }
 
@@ -404,7 +405,9 @@ footer{
 
 #dashboard-view{
   width:100%;
-  margin-top:25px;
+  a{color:black;}
+  padding-top:25px;
+  border-top:1px solid green;
   .launch-icon{
     float:left;
     width:200px;
@@ -413,4 +416,5 @@ footer{
     border:10px #FFF solid;
     margin:10px;
   }
+  img{margin:3px;}
 }

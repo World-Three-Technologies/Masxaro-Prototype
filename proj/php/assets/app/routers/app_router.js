@@ -20,7 +20,7 @@ var AppRouter = Backbone.Router.extend({
   },
 
   routes: {
-    "" : "receipts",
+    "" : "dashboard",
     "dashboard" : "dashboard",
     "receipts" : "receipts",      
     "receipts/search/:query" : "search",

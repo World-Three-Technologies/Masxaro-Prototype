@@ -13,6 +13,9 @@ h2 {
 h3 {
   font-size: 24px; }
 
+h4 {
+  font-size: 20px; }
+
 html {
   min-height: 100%; }
 
@@ -39,6 +42,8 @@ header {
     float: left;
     margin: 2px;
     padding: 1px; }
+    header #header-logo a {
+      color: black; }
   header #header-nav {
     margin-left: 500px;
     float: left; }
@@ -226,7 +231,7 @@ div.receipt-item {
   padding: 5px; }
 
 footer {
-  margin: 0 auto;
+  margin: 30px auto;
   text-align: center; }
 
 #action-bar {
@@ -294,7 +299,10 @@ footer {
 
 #dashboard-view {
   width: 100%;
-  margin-top: 25px; }
+  padding-top: 25px;
+  border-top: 1px solid green; }
+  #dashboard-view a {
+    color: black; }
   #dashboard-view .launch-icon {
     float: left;
     width: 200px;
@@ -302,3 +310,5 @@ footer {
     border-radius: 2em;
     border: 10px #FFF solid;
     margin: 10px; }
+  #dashboard-view img {
+    margin: 3px; }
