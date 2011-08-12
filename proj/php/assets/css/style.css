@@ -60,8 +60,15 @@ header {
     right: 0; }
   header #header-user #login {
     display: none; }
+    header #header-user #login span {
+      position: relative; }
     header #header-user #login label {
       padding: 5px; }
+    header #header-user #login label.error {
+      color: red;
+      position: absolute;
+      left: 90px;
+      top: 20px; }
 
 #main {
   width: 960px;
@@ -234,6 +241,7 @@ div.receipt-item {
   width: 450px;
   line-height: 22px; }
   #main #register td {
+    position: relative;
     padding: 5px;
     text-align: left; }
   #main #register input {
@@ -244,6 +252,11 @@ div.receipt-item {
   float: left;
   margin-top: 110px;
   padding: 5px; }
+#main label.error {
+  color: red;
+  position: absolute;
+  left: 7px;
+  top: 18px; }
 
 footer {
   text-align: center;

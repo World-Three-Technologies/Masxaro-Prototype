@@ -46,10 +46,14 @@
             <span id="sign-in">Already in the network? <a id="sign-in-button" href="#">Sign In</a></span>
             <form id="login" action="login.php" dest="index.php" ajaxian>
               <input type="hidden" name="type" value="user"/>
-              <label for="acc" title="Username">Username</label>
-              <input class="required acc" type="text" name="acc"></input>
-              <label for="pwd" title="password">Password</label>
-              <input class="required pwd" type="password" name="pwd"></input>
+              <span>
+                <label for="acc" title="Username">Username</label>
+                <input class="required acc" type="text" name="acc"></input>
+              </span>
+              <span>
+                <label for="pwd" title="password">Password</label>
+                <input class="required pwd" type="password" name="pwd"></input>
+              </span>
               <button>Login</button>
             </form>
           </div>
@@ -63,7 +67,7 @@
             <table>
               <tr>
                 <td><label for="userAccount" title="Username">Username</label></td>
-                <td><input class="required user-account" type="text" name="userAccount">@masxaro.com</input></td>
+                <td><input class="required user-account" type="text" name="userAccount"></input>@masxaro.com</td>
                 <td></td>
               </tr>
               <tr>

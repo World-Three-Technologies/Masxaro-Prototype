@@ -106,11 +106,19 @@ header{
   }
   #header-user #login {
     display:none;
+    span{position:relative;}
     label{
       padding:5px;
     }
+    label.error{
+      color:red;
+      position:absolute;
+      left:90px;
+      top:20px;
+    }
   }
 }
+
 
 #main{
   width: $page-width;
@@ -331,6 +339,7 @@ div.receipt-item{
     width:450px;
     line-height:22px;
     td{
+      position:relative;
       padding:5px;
       text-align:left;
     }
@@ -344,6 +353,12 @@ div.receipt-item{
     float:left;
     margin-top:110px;
     padding:5px;
+  }
+  label.error{
+    color:red;
+    position:absolute;
+    left:7px;
+    top:18px;
   }
 }
 
@@ -446,3 +461,4 @@ footer{
   }
   img{margin:3px;}
 }
+
