@@ -49,6 +49,7 @@ html{
 }
 
 body{
+  color:black;
   background-color:rgb(182,212,214);
   background-image: -webkit-gradient(
       linear,
@@ -73,6 +74,7 @@ header{
   display:block;
   text-align:center;
   position:relative;
+  font-size:16px;
   #header-bar{
     margin: 0 auto;
     max-width:1000px; 
@@ -87,7 +89,7 @@ header{
     padding: 1px;
   }
   #header-nav{
-    margin-left:500px;
+    margin-left:450px;
     float:left;
   }
   #header-nav-list li{
@@ -102,9 +104,11 @@ header{
     float:right;
     right:0;
   }
-
-  #header-user #login label{
-    padding:5px;
+  #header-user #login {
+    display:none;
+    label{
+      padding:5px;
+    }
   }
 }
 
@@ -125,8 +129,8 @@ header{
       border: 1px green solid;
       border-bottom:0;
       border-left:0;
-      cursor:pointer;
       a{
+        display:block;
         color:black;
         height:100%;
         width:100%;
@@ -147,11 +151,20 @@ header{
     @include grid(19);
   }
 
+  #product-description{
+    h1{font-size:60px;}
+  }
+
   #feature div{
-    float:left;
-    width:28%;
     margin:10px;
     padding:10px;
+    text-align:left;
+    p{
+      font-size:18px;
+    }
+    img{
+      float:right;
+    }
   }
 }
 
@@ -307,27 +320,39 @@ div.receipt-item{
 //product.php page
 #main{
   #register{
+    font-size:18px;
     margin:10px;
     margin-top:100px;
     padding:5px;
     float:left;
-    width:400px;
+    width:450px;
+    line-height:22px;
     td{
       padding:5px;
       text-align:left;
     }
+    input{
+      border:0;
+      border-radius:10px;
+      height:22px;
+    }
   }
   #product-description{
     float:left;
-    margin:10px;
-    margin-top:100px;
+    margin-top:110px;
     padding:5px;
   }
 }
 
 footer{
-  margin:30px auto;
   text-align:center;
+  display:block;
+  margin:30px auto;
+  width:400px;
+  .footer-content div{
+    float:left;
+    padding:10px;
+  }
 }
 
 #action-bar{

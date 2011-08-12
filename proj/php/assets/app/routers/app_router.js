@@ -28,7 +28,13 @@ var AppRouter = Backbone.Router.extend({
   },
 
   setView:function(name){
+    this.setMainTab(name.split("-")[0]);
     $("#boards").removeClass().addClass(name);
+  },
+
+  setMainTab:function(tab){
+    $("#main-tab > .active").removeClass("active");           
+    $("#main-tab > ."+tab).addClass("active");
   },
 
   dashboard:function(){

@@ -20,6 +20,7 @@ html {
   min-height: 100%; }
 
 body {
+  color: black;
   background-color: #b6d4d6;
   background-image: -webkit-gradient(linear, right top, right bottom, color-stop(0.25, #b6d4d6), color-stop(0.84, #7bb8b3));
   background-image: -moz-linear-gradient(center top, #b6d4d6 25%, #7bb8b3 84%); }
@@ -31,21 +32,21 @@ header {
   height: 40px;
   display: block;
   text-align: center;
-  position: relative; }
+  position: relative;
+  font-size: 16px; }
   header #header-bar {
     margin: 0 auto;
     max-width: 1000px; }
   header #header-bar-inner {
     left: 0px; }
   header #header-logo {
-    color: black;
     float: left;
     margin: 2px;
     padding: 1px; }
     header #header-logo a {
       color: black; }
   header #header-nav {
-    margin-left: 500px;
+    margin-left: 450px;
     float: left; }
   header #header-nav-list li {
     float: left;
@@ -57,8 +58,10 @@ header {
     padding: 8px 5px;
     float: right;
     right: 0; }
-  header #header-user #login label {
-    padding: 5px; }
+  header #header-user #login {
+    display: none; }
+    header #header-user #login label {
+      padding: 5px; }
 
 #main {
   width: 960px;
@@ -75,9 +78,9 @@ header {
       padding: 10px 0;
       border: 1px green solid;
       border-bottom: 0;
-      border-left: 0;
-      cursor: pointer; }
+      border-left: 0; }
       #main #main-tab div a {
+        display: block;
         color: black;
         height: 100%;
         width: 100%; }
@@ -90,11 +93,16 @@ header {
     text-align: left;
     float: left;
     width: 760px; }
+  #main #product-description h1 {
+    font-size: 60px; }
   #main #feature div {
-    float: left;
-    width: 28%;
     margin: 10px;
-    padding: 10px; }
+    padding: 10px;
+    text-align: left; }
+    #main #feature div p {
+      font-size: 18px; }
+    #main #feature div img {
+      float: right; }
 
 #search-bar {
   margin: 0 5px;
@@ -216,23 +224,33 @@ div.receipt-item {
     font-weight: bold; }
 
 #main #register {
+  font-size: 18px;
   margin: 10px;
   margin-top: 100px;
   padding: 5px;
   float: left;
-  width: 400px; }
+  width: 450px;
+  line-height: 22px; }
   #main #register td {
     padding: 5px;
     text-align: left; }
+  #main #register input {
+    border: 0;
+    border-radius: 10px;
+    height: 22px; }
 #main #product-description {
   float: left;
-  margin: 10px;
-  margin-top: 100px;
+  margin-top: 110px;
   padding: 5px; }
 
 footer {
+  text-align: center;
+  display: block;
   margin: 30px auto;
-  text-align: center; }
+  width: 400px; }
+  footer .footer-content div {
+    float: left;
+    padding: 10px; }
 
 #action-bar {
   width: 160px;

@@ -18,50 +18,23 @@
   <?php include_once "layout/header.php" ?>
   <script src="assets/js/vendor/jquery.js"></script>
   <script src="assets/js/vendor/jquery.validate.js"></script>
-<script>
-
-var bindAjax = function(el){
-  var target = $(el),
-      action = target.attr("action"),
-      data = {},
-      attrs = target.find("input"),
-      dest = target.attr("dest"),
-      message = target.attr("message");
-
-  target.validate({
-    submitHandler:function(form){
-
-      $.each(attrs,function(i,v){
-        var el = $(v)
-        data[el.attr("name")] = el.val();
-      });
-
-      $.post(action,data).success(function(data){
-        if(data != "1"){
-          alert(data);
-          return;
-        }
-        if(message){
-          alert(message);
-        }
-        if(dest){
-          location.href = dest;
-        }
-      });
-    }
+  <script src="assets/js/util.js"></script>
+  <script>
+  $(function(){
+    $.each($("[ajaxian]"),function(k,v){
+      bindAjax(v);
+    });
+    $("#sign-in-button").click(function(e){
+      e.preventDefault();
+      $.Deferred(function(def){
+        def.pipe(function(){ $("#sign-in").hide(); })
+           .pipe(function(){ $("#login").fadeIn();});
+      }).resolve();
+    })
   });
-}
-
-$(function(){
-  $.each($("[ajaxian]"),function(k,v){
-    bindAjax(v);
-  });
-});
   </script>
 </head>
-
 <body>
-
   <div id="container">
     <header>
       <div id="header-bar">
@@ -70,6 +43,7 @@ $(function(){
             <h2>Masxaro</h2>
           </div>
           <div id="header-user">
+            <span id="sign-in">Already in the network? <a id="sign-in-button" href="#">Sign In</a></span>
             <form id="login" action="login.php" dest="index.php" ajaxian>
               <input type="hidden" name="type" value="user"/>
               <label for="acc" title="Username">Username</label>
@@ -89,7 +63,7 @@ $(function(){
             <table>
               <tr>
                 <td><label for="userAccount" title="Username">Username</label></td>
-                <td><input class="required user-account" type="text" name="userAccount"></input></td>
+                <td><input class="required user-account" type="text" name="userAccount">@masxaro.com</input></td>
                 <td></td>
               </tr>
               <tr>
@@ -110,13 +84,47 @@ $(function(){
           </form>
         </div>
         <div id="product-description">
-          <h2>Project Masxaro</h2>
+          <h1>Masxaro</h1>
+          <h3>where you are<br /> the center of a global Network </h3>
         </div>
       </div>
       <div id="feature">
-        <div><h3>Lorem ipsum</h3> <p>Lorem ipsum dolor sit amet, per paulo tritani mentitum an, justo maiorum constituam ius ut, mel ei solum iudico quaestio. Solet nonumy mea ne, suas vidit vim ad. Duo nostrud atomorum suavitate an. Ea sea eius omnium periculis, mea essent impetus epicuri ei. </p></div>
-        <div><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, per paulo tritani mentitum an, justo maiorum constituam ius ut, mel ei solum iudico quaestio. Solet nonumy mea ne, suas vidit vim ad. Duo nostrud atomorum suavitate an. Ea sea eius omnium periculis, mea essent impetus epicuri ei.</p></div>
-        <div><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, per paulo tritani mentitum an, justo maiorum constituam ius ut, mel ei solum iudico quaestio. Solet nonumy mea ne, suas vidit vim ad. Duo nostrud atomorum suavitate an. Ea sea eius omnium periculis, mea essent impetus epicuri ei.</p></div>
+        <div class="clearfix">
+<img src="assets/img/masxaro_icon.png"  alt="Masxaro" />
+<h2>Masxaro</h2> 
+<p>
+What is it? Masxaro is the international word for network; It is a network for everyone - where you are centered and in control. As an open source platform, it is contributed by engineers & designers world-wide with total transparency to provide collaboration & privacy at the same time. All on your terms. It is the ultimate connection.
+</p>
+</div>
+        <div class="clearfix">
+<img src="assets/img/receipts_icon.png" alt="Capture" />
+<h2>Capture</h2><p>
+Nearly everything in our world comes with a receipt; They trail our choices. often we don’t need them, but
+with masxaro, you can elegantly capture & store them to document, recall, learn and save money.
+</p></div>
+        <div class="clearfix">
+<img src="assets/img/report_icon.png" alt="Expense" />
+<h2>Expense</h2><p>
+Use our tools to create user-friendly expense reports and workflows. From receipt capture to report creation to approval, the expense module will streamline your life from purchase to accounting.
+</p></div>
+        <div class="clearfix">
+<img src="assets/img/analysis_icon.png" alt="Learn" />
+<h2>Learn</h2><p>
+Find out about what and where you spend. Even
+better, discover where you might save more. You can
+even collaborate with others in the network to find,
+review products & services you care about.
+</p></div>
+        <div class="clearfix">
+<img src="assets/img/deals_icon.png" alt="Save" />
+<h2>Save</h2><p>
+Knowledge is power using masxaro, you will quickly discover who is offering the best value, receive discounts on products you usually buy, and learn about new offerings that can save you money & time. Start saving immediately - Our price is free!
+</p></div>
+        <div class="clearfix">
+<img src="assets/img/protect_icon.png" alt="Protect" />
+<h2>Protect</h2><p>
+Privacy & security are extremely important to all of us. We created masxaro from the ground up with security in mind. Over two million open source coders can contribute vigilantly to protecting your information.
+</p></div>
       </div>
     </div>
   </div> <!-- eo #container -->
