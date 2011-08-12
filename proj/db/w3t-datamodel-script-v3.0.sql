@@ -120,7 +120,7 @@ DROP TABLE IF EXISTS `w3tdb`.`receipt_item` ;
 CREATE  TABLE IF NOT EXISTS `w3tdb`.`receipt_item` (
   `item_id` INT NULL ,
   `receipt_id` INT NOT NULL ,
-  `item_name` VARCHAR(45) NOT NULL ,
+  `item_name` VARCHAR(300) NOT NULL ,
   `item_qty` INT NOT NULL ,
   `item_discount` DECIMAL(10,2) NOT NULL ,
   `item_price` DECIMAL(10,2) NOT NULL ,
