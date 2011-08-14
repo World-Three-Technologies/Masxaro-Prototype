@@ -65,7 +65,12 @@
 #include <nfc/nfc-messages.h>
 #include "nfc-utils.h"
 
-#define MAX_FRAME_LEN 264
+#define MAX_FRAME_LEN 		264
+#define NDEF_DESC_LEN 		7    // 1+1+4+1 header+typelen+payloadlen+type
+#define NDEF_NLEN     		2    // NLEN of the NDEF msg
+#define MAX_SEND_PAYLOAD   	0xfb
+#define HIGH_BYTE_FLAG     	1
+#define LOW_BYTE_FLAG      	2
 
 static byte_t abtRx[MAX_FRAME_LEN];
 static size_t szRx;
@@ -107,9 +112,143 @@ bool receive_bytes (void)
   return true;
 }
 
+char* get_hi_lo(char *num, int flag) {
+  char *result = (char *) malloc(2*sizeof(char));
+  if (flag == 1) {
+    strncpy(result, num, 2);
+  }
+  else {
+	strncpy(result, num+2, 2);
+  }
+  return result;
+}
+
+void send_ndef_msg_header(int record, int msg, char *data) {
+  byte_t *send_data;
+  int i;
+    
+  if (record > MAX_SEND_PAYLOAD) {
+    send_data = (byte_t *) malloc(MAX_SEND_PAYLOAD*sizeof(byte_t));
+    send_data[0] = (byte_t) ((0xff00 & msg) >> 8);					// NLEN high byte
+    send_data[1] = (byte_t) (0xff & msg);	    					// NLEN low byte
+    send_data[2] = 0xc1;											// Mb, Mc etc.
+    send_data[3] = 0x01;											// type length
+    send_data[4] = 0x00;											// payload 3
+    send_data[5] = 0x00;											// payload 2
+    send_data[6] = (byte_t) ((0xff00 & (msg-NDEF_DESC_LEN)) >> 8);	// payload 1
+    send_data[7] = (byte_t) (0xff & (msg-NDEF_DESC_LEN));			// payload 0
+    send_data[8] = 0x54;											// type 't'
+    send_data[9] = 0x02;											// start of text
+    for (i = 10;i<MAX_SEND_PAYLOAD;i++) {
+	  send_data[i] = (byte_t) data[i-10];
+      //printf("%02x ", send_data[i]);
+    }
+    send_data[i++] = 0x90;
+    send_data[i] = 0x00;
+//    printf("send data:\n");
+    send_bytes(send_data,MAX_SEND_PAYLOAD+2);
+    free(send_data);
+  }
+  else {
+	/*
+	send_data = (byte_t *) malloc(MAX_SEND_PAYLOAD*sizeof(byte_t));
+    send_data[0] = 0x00;						// NLEN high byte
+    send_data[1] = (byte_t) (0xff & msg);	    // NLEN low byte
+    send_data[2] = 0xc1;						// Mb, Mc etc.
+    send_data[3] = 0x01;						// type length
+    send_data[4] = 0x00;						// payload 3
+    send_data[5] = 0x00;						// payload 2
+    send_data[6] = 0x00;						// payload 1
+    send_data[7] = (byte_t) (0xff & (msg-NDEF_DESC_LEN));	// payload 0
+    send_data[8] = 0x54;						// type 't'
+    for (i = 9;i<MAX_SEND_PAYLOAD-9;i++) {
+	  send_data[i] = (byte_t) data[i-9];
+      //printf("%02x ", send_data[i]);
+    }
+    send_data[i++] = 0x90;
+    send_data[i] = 0x00;
+    printf("send data:\n");
+    send_bytes(send_data,MAX_SEND_PAYLOAD+2);
+    free(send_data);
+	
+	*/
+  }
+}
+
+void send_ndef_rest_msg(int file_sz, char *data) {
+  char *send_data = (char *) malloc((MAX_SEND_PAYLOAD+2)*sizeof(char));
+  // Calculate the bytes of the file that has been sent and 
+  // the rest of the file to ready be sent.
+  int start = MAX_SEND_PAYLOAD - NDEF_DESC_LEN - NDEF_NLEN;
+  int rest = file_sz - start;
+  int i;
+  
+  while (rest > 0) {
+	receive_bytes();
+	if (rest > MAX_SEND_PAYLOAD) {
+      for (i = 0;i<MAX_SEND_PAYLOAD;i++) {
+	    send_data[i] = (byte_t) data[i+start];
+        //printf("%02x", send_data[i]);
+      }
+      send_data[i++] = 0x90;
+      send_data[i] = 0x00;
+      send_bytes(send_data,MAX_SEND_PAYLOAD+2);
+	  rest -= MAX_SEND_PAYLOAD;
+	  start += MAX_SEND_PAYLOAD;
+	}
+	else {
+	  for (i = 0;i<rest;i++) {
+	    send_data[i] = (byte_t) data[i+start];
+        //printf("%02x", send_data[i]);
+      }
+      send_data[i++] = 0x90;
+      send_data[i] = 0x00;
+	  send_bytes(send_data,rest+2);
+	  rest = 0;
+	}
+  }
+}
+
 int
 main (int argc, char *argv[])
 {
+  int ndef_record_sz, ndef_file_sz, ndef_msg_sz;
+  char num[5], *high, *low;
+  int fsz;
+  char *jsonstr, *str;
+  FILE *fp;
+  char *filename;
+  char c;
+  
+  fflush(stdin);
+  printf("Please load receipt:\n");
+//  scanf("%s", filename);
+  
+  if ((fp = fopen("receipt1", "r")) == NULL) {
+	printf("can not open this file\n");
+	exit(0);
+  }
+  ndef_file_sz = 0;
+  
+  fseek(fp, 0L, SEEK_END);
+  fsz = ftell(fp);
+  fseek(fp, 0L, SEEK_SET);
+  
+  str = (char *) malloc((fsz-1)*sizeof(char)); // last char is EOF.
+  jsonstr = str;
+  
+  while (!feof(fp)) {
+	c = fgetc(fp);
+	if (c < 0x20)	// no \r and \n and all other unprintable symbol
+	  break;
+	*str = c;
+	str++;
+	ndef_file_sz++;
+  }
+  fclose(fp);
+  
+  ndef_record_sz = ndef_file_sz + NDEF_NLEN + NDEF_DESC_LEN;
+  ndef_msg_sz = ndef_file_sz + NDEF_DESC_LEN;
   // Try to open the NFC reader
   pnd = nfc_connect (NULL);
 
@@ -141,7 +280,7 @@ main (int argc, char *argv[])
     printf ("Received data: ");
     print_hex (abtRx, szRx);
   }
-
+  
 //Receiving data: e0  40
 //= RATS, FSD=48
 //Actually PN532 already sent back the ATS so nothing to send now
@@ -157,7 +296,8 @@ main (int argc, char *argv[])
 //Receiving data: 00  b0  00  00  0f
 //= ReadBinary CC
 //We send CC + OK
-  send_bytes((const byte_t*)"\x00\x0f\x20\x00\x3b\x00\x34\x04\x06\xe1\x04\x0e\xe0\x00\x00\x90\x00",17);
+//The possible NDEF msg size is 0x0ffe.
+  send_bytes((const byte_t*)"\x00\x0f\x20\x0f\xfe\x00\x34\x04\x06\xe1\x04\x0f\xfe\x00\xff\x90\x00",17);
   receive_bytes();
 //Receiving data: 00  a4  00  00  02  e1  04
 //= Select NDEF
@@ -165,20 +305,25 @@ main (int argc, char *argv[])
   receive_bytes();
 //Receiving data: 00  b0  00  00  02
 //=  Read first 2 NDEF bytes
-//Sent NDEF Length=0x21
-  send_bytes((const byte_t*)"\x00\x20\x90\x00",4);
+//Sent NDEF file Length, the length includes the NLEN and NDEF msg
+//The NLEN is the real NDEF msg, not the whole file.
+  byte_t t[4];
+  t[0] = (byte_t) ((0xff00 & ndef_record_sz) >> 8);
+  t[1] = (byte_t) (0xff & ndef_record_sz);
+  t[2] = 0x90;
+  t[3] = 0x00;
+  send_bytes(t,4);
   receive_bytes();
+//Receiving data: 00  a4  00  00  02  e1  04
+//=  select the NDEF file again  
   send_bytes((const byte_t*)"\x90\x00",2);
   receive_bytes();
-//Receiving data: 00  b0  00  00  02
-//=  Read first 2 NDEF bytes
-//Sent NDEF Length=0x21
-  
-  
-//Receiving data: 00  b0  00  02  21
-//= Read remaining of NDEF file
-  send_bytes((const byte_t*)"\xd1\x01\x1c\x54\x02\x65\x6e\x53\x6f\x6d\x65\x20\x72\x61\x6e\x64\x6f\x6d\x20\x65\x6e\x67\x6c\x69\x73\x68\x20\x74\x65\x78\x74\x2e\x90\x00",34);
-
+//Receiving data: 00  b0  00  00  xx (NDEF file length)
+//= Read whole of NDEF file
+  send_ndef_msg_header(ndef_record_sz, ndef_msg_sz, jsonstr);
+  //send_bytes((const byte_t*)"\x00\x15\xd1\x01\x11\x54\x02\x65\x6e\x5b\x7b\x22\x69\x64\x22\x3a\x22\x31\x30\x30\x22\x7d\x5d\x90\x00",25);
+  //receive_bytes();
+  send_ndef_rest_msg(ndef_file_sz, jsonstr);
   nfc_disconnect(pnd);
   exit (EXIT_SUCCESS);
 }
