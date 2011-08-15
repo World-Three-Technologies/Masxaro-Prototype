@@ -59,9 +59,9 @@ if($result == 0){
 
 echo Tool::login($acc, $type);
 
-updateEmailReceipts($acc);
-
 ob_end_flush();
+
+updateEmailReceipts($acc);
 
 function updateEmailReceipts($acc){
 	//$path = "50.19.213.157/masxaro/proj/php/receiptOperation.php";

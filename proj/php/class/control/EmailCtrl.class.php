@@ -159,13 +159,14 @@ class EmailCtrl extends Ctrl{
 	 * @return 
 	 */
 	public function grabEmails($acc) {
-		$username = "$acc@".DOMAIN;
-		$password = Tool::getEmailPwd($acc);
+		$username = BASE_ACC.'@'.DOMAIN;
+		//$password = Tool::getEmailPwd($acc);
+		$password = BASE_ACC_PWD;
 		
 		$inbox = imap_open(IMAP_HOST, $username, $password) 
 				or die('Cannot connect to mailbox'.imap_last_error());
 				
-		$emails = imap_search($inbox, 'ALL');
+		$emails = imap_search($inbox, 'UNSEEN');
 		
 		$emails_file = array();
 		
@@ -175,7 +176,15 @@ class EmailCtrl extends Ctrl{
 			foreach($emails as $email_number) {
 				$overview = imap_fetch_overview($inbox,$email_number);
 				
+				if($overview[0]->to != $this->aliasMailAccGen($acc)) {
+					continue;
+				}
+				
 				$subject = $overview[0]->subject;
+
+				/**
+				 * @todo check subject
+				 **/
 //				if(!preg_match("/.*receipt.*/i", $subject) && !preg_match("/.*order.*/i", $subject)) {
 //					continue;
 //				}

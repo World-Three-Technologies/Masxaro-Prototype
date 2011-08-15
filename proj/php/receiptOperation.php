@@ -326,7 +326,8 @@ switch($opcode){
 		$emailCtrl = new EmailCtrl();
 		$emailCtrl->grabEmails($userAcc);
 		exec('java -jar '
-			.ROOT_PATH.'/parser.jar w3tAcc '
+			.ROOT_PATH.'/parser.jar '
+			.$userAcc.' '
 			.ROOT_PATH.'/masxaro_email_tmp '
 			.ROOT_PATH.'/masxaro_email_tmp');
 		break;

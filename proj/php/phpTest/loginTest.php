@@ -8,7 +8,7 @@ include_once '../../config.php';
 //die();
 
 $path = "50.19.213.157/masxaro/proj/php/login.php";
-$param = "acc=w3tAcc&pwd=123&type=user";
+$param = "acc=yaxingc&pwd=w3t&type=user";
 
 $ch = curl_init($path);
 curl_setopt($ch, CURLOPT_POST, 1);
