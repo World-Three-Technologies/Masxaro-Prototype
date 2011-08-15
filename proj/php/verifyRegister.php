@@ -55,27 +55,26 @@ switch($info[0]){
 $tmp = $ctrl->find($acc, $pwd);
 
 if($tmp < 0){
-	if($info[0] == 'user'){
-		$emailCtrl = new EmailCtrl();
-		if(!$emailCtrl->createUserAcc($acc)){
-			die('verification failed. Mail account error');
-		}
-	}
+//	if($info[0] == 'user'){
+//		$emailCtrl = new EmailCtrl();
+//		if(!$emailCtrl->createUserAcc($acc)){
+//			die('verification failed. Mail account error');
+//		}
+//	}
 	if($ctrl->update($acc, array('verified'=>true))){
-		die('verification success');
+		die('Verification success');
 	}
 	else{
-		$emailCtrl->deleteAcc("$acc@".DOMAIN);
-		die('verification failed, server error.');
+		die('Verification failed.');
 	}
 }
 
 if($tmp == 0){
-	die('illegal verification');
+	die('Account doesn\'t exist');
 }
 
 else{
-	die('already verified');
+	die('Already verified');
 }
 
 ?>

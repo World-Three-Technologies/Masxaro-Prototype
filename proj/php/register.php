@@ -37,7 +37,7 @@ $verifyPage = "verifyRegister.php";
 
 $registerType = $post['type']; //user / store
 
-switch($registerType){
+switch($registerType) {
 	case 'user':
 		$param = array(
 					'user_account'=>$post['userAccount'], 
@@ -72,15 +72,18 @@ switch($registerType){
 
 $personalEmail = $post['email'];
 
-if($ctrl->insert($param)){
+if($ctrl->insert($param)) {
+	
+	$ctrlCon = new ContactCtrl();
+	$ctrlEmail = new EmailCtrl();
 
 	$contacts = array();
 	
 	$account = $param[$accType];
 	
-	if($registerType == 'user'){
+	if($registerType == 'user') {
 		//masxaro email
-		$email = "$account@".DOMAIN;
+		$email = $ctrlEmail->aliasMailAccGen($account);
 		array_push($contacts, array(
 								$accType=>$account,
 								'contact_type'=>'email',
@@ -98,10 +101,7 @@ if($ctrl->insert($param)){
 						)
 	);
 	
-	$ctrlCon = new ContactCtrl();
-	$ctrlEmail = new EmailCtrl();
-	
-	if(!$ctrlCon->insertContact($contacts)){
+	if(!$ctrlCon->insertContact($contacts)) {
 		//rollback
 		$ctrlCon->deleteAccContact($account);
 		$ctrl->delete($account);
@@ -115,7 +115,7 @@ if($ctrl->insert($param)){
 		personalEmail=>$personalEmail
 	);
 	
-	if($ctrlEmail->sendRegisterEmail($personalEmail, $codeParam)){
+	if($ctrlEmail->sendRegisterEmail($personalEmail, $codeParam)) {
 		echo "Register Success, please check your mailbox for authenticate";
 	}
 	else{
