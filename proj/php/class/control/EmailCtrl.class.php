@@ -175,8 +175,7 @@ class EmailCtrl extends Ctrl{
 			rsort($emails);
 			foreach($emails as $email_number) {
 				$overview = imap_fetch_overview($inbox,$email_number);
-				
-				if($overview[0]->to != $this->aliasMailAccGen($acc)) {
+				if(strcasecmp($overview[0]->to, $this->aliasMailAccGen($acc)) != 0) {
 					continue;
 				}
 				
