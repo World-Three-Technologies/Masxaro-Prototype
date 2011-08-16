@@ -490,7 +490,7 @@ UPD;
 	      			AND
 	      				`receipt`.`deleted` = false
 	      			AND
-	      				`receipt`.`user_account` = $acc
+	      				`receipt`.`user_account` = '$acc'
 	      			AND
 	      				(
 		                    `receipt_item`.`deleted` = false
