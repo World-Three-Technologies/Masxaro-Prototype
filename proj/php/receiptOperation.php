@@ -207,14 +207,8 @@ switch($opcode){
 		 *             "item_qty":"5","item_discount":"1.00","item_price":"19.99"}],
 		 *   "tags":["book","food"]}]
 		 */
-		$con = array(
-				'='=>array(
-						'field'=>'receipt.user_account',
-						'value'=>$userAcc
-					)
-		);
 		echo json_encode(
-					$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
+					$ctrl->searchReceipt(null,$userAcc, $limitStart, $limitOffset, 
 											  	$groupBy, $orderBy, $orderDesc)
 			);
 		break;
