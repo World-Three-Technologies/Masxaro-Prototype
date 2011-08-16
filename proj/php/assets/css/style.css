@@ -78,7 +78,7 @@ header {
     text-align: center;
     font-size: 18px;
     width: 100%;
-    margin: 10px 10px 0 40px; }
+    margin: 10px 10px 0 39px; }
     #main #main-tab div {
       width: 120px;
       float: left;
@@ -91,7 +91,7 @@ header {
         color: black;
         height: 100%;
         width: 100%; }
-      #main #main-tab div:first {
+      #main #main-tab div:first-child {
         border-left: 1px green solid; }
       #main #main-tab div.active, #main #main-tab div:hover {
         background-color: white; }
@@ -105,7 +105,8 @@ header {
   #main #feature div {
     margin: 10px;
     padding: 10px;
-    text-align: left; }
+    text-align: left;
+    border-bottom: 1px green solid; }
     #main #feature div h2 {
       padding: 10px 0; }
     #main #feature div p {
