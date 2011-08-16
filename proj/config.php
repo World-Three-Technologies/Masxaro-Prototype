@@ -103,14 +103,14 @@ define('DB_DBNAME', 'w3tdb');
  * 
  * @todo modify correct DOMAIN parameters
  */
-define('DOMADMIN_EMAIL', 'bws@masxaro.net');
+define('DOMADMIN_EMAIL', 'Masxaro-receipts@masxaro.com');
 define('DOMADMIN_PWD', 'Masxaro2011!');
 
 
 define('DOMAIN', 'masxaro.com');
 define('IMAP_HOST', '{imap.gmail.com:993/imap/ssl/novalidate-cert}INBOX');
-define('BASE_ACC', 'yaxing');
-define('BASE_ACC_PWD', 'w3tyaxing');
+define('BASE_ACC', 'Masxaro-receipts');
+define('BASE_ACC_PWD', 'Masxaro2011!');
 define('EMAIL_DIR', ROOT_PATH.'/masxaro_email_tmp');
 
 if(!is_dir(EMAIL_DIR)){
