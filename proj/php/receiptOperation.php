@@ -79,6 +79,9 @@ switch($opcode){
 		 * 		store_account=>'Mc_NYU',
 		 * 		user_account=>'w3t',
 		 * 		tax=>10,
+		 * 		total_cost=>0,
+		 * 		currency_mark=>'$',
+		 * 		source=>'email'
 		 * );
 		 * 
 		 * @desc
@@ -99,14 +102,12 @@ switch($opcode){
 		 * $items = array(
 		 * 		array(
 		 * 			receipt_id=>1,
-		 * 			item_id=>10,
 		 * 			item_name=>'fries-mid',
 		 * 			item_qty=>2,
 		 * 			item_price=>1.99
 		 * 		),
 		 * 		array(
 		 * 			receipt_id=>1,
-		 * 			item_id=>2,
 		 * 			item_name=>'Salad',
 		 * 			item_qty=>1,
 		 * 			item_price=>1
