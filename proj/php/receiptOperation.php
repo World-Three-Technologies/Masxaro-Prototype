@@ -197,9 +197,17 @@ switch($opcode){
 		 * 
 		 * @example
 		 * return:
-		 * [{"id":"3","store_name":"McDonalds(NYU)","user_account":null,
-		 *   "receipt_time":"07-17-2011 12:32 PM","tax":"0.09","total_cost":"99.00",
-		 *   "currency_mark":"$","source":"default","img":null,"deleted":0,
+		 * [{"id":"3",
+		 * 	 "store_name":"McDonalds(NYU)",
+		 *   "user_account":null,
+		 *   "receipt_time":"07-17-2011 12:32 PM",
+		 *   "extra_cost" : "0.00",
+		 *   "sub_total_cost" : "99.00",
+		 *   "cut_down_cost" : "0.00",
+		 *   "tax":"0.09",
+		 *   "total_cost":"99.00",
+		 *   "currency_mark":"$",
+		 *   "source":"default",
 		 *   "items":[{"item_id":"3","item_name":"Harry-Potter - IIIII123123123123",
 		 *             "item_qty":"1","item_discount":"1.00","item_price":"10.99"},
 		 *            {"item_id":"4","item_name":"Harry-potter - II",
@@ -220,6 +228,7 @@ switch($opcode){
 		 * @param array(int) $post['receiptIds']
 		 * 
 		 * @see ReceiptBuilder::getReceiptsItems
+		 * @see receiptOperation.php::user_get_all_receipt
 		 */
 		echo json_encode($ctrl->userGetReceiptItems($post['receiptIds']));
 		break;
@@ -233,18 +242,28 @@ switch($opcode){
 		 * 
 		 * @return receipts without items
 		 * 
-		 * @example return
-		 * [{"id":"1","store_name":"McDonalds(NYU)",
-		 *   "user_account":null,"receipt_time":"07-19-2011 08:59 PM",
-		 *   "tax":"0.10","total_cost":"14.00","currency_mark":"$",
-		 *   "source":"default","img":null,"deleted":0,"items":[],"tags":[]}]
+		 * @example 
+		 * return
+		 * [{"id":"3",
+		 * 	 "store_name":"McDonalds(NYU)",
+		 *   "user_account":null,
+		 *   "receipt_time":"07-17-2011 12:32 PM",
+		 *   "extra_cost" : "0.00",
+		 *   "sub_total_cost" : "99.00",
+		 *   "cut_down_cost" : "0.00",
+		 *   "tax":"0.09",
+		 *   "total_cost":"99.00",
+		 *   "currency_mark":"$",
+		 *   "source":"default",
+		 *   "items":[],
+		 *   "tags":[]}]
 		 */
 		echo json_encode($ctrl->getReceiptDetail($post['receiptIds']));
 		break;
 	
 	case 'search':
 		/**
-		 * @see searchingConHandler()
+		 * @see receiptOperation.php::searchingConHandler()
 		 * 
 		 * @return @see user_get_all_receipt 
 		 * 
