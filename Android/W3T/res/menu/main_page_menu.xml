@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
 /*
- * arrays.xml - All String array const used in app  
+ * front_page_menu.xml - The layout XML file of the menu bar  
  *
  *  Copyright 2011 World Three Technologies, Inc. 
  *  All Rights Reserved.
@@ -24,16 +24,32 @@
  *
  */
  -->
-<resources>
-    <string-array name="search_by">
-        <item>Store or Item</item>
-        <item>Tag</item>
-    </string-array>
-    <string-array name="search_range">
-        <item>Last 7 days</item>
-        <item>Last 14 days</item>
-        <item>Last 1 month</item>
-        <item>Last 3 months</item>
-        <item>Custom</item>
-    </string-array>
-</resources>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<group android:id="@+id/group_login"
+		android:visible="true">
+		<item android:title="Login"
+		  	android:id="@+id/login_opt"
+		   	android:icon="@drawable/login"
+		/>
+	</group>
+	
+	<group android:id="@+id/group_logout"
+		android:visible="false">
+		<item android:title="View Receipts"
+		   	android:id="@+id/view_receipt_opt"
+			android:icon="@drawable/view"
+		/>
+		
+		<item android:title="Search Receipts"
+		   	android:id="@+id/search_opt"
+		   	android:icon="@drawable/search"
+		/>
+			    
+		<item android:title="Logout"
+		  	android:id="@+id/logout_opt"
+		   	android:icon="@drawable/logout"
+		/>
+		
+	</group>
+</menu>

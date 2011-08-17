@@ -30,7 +30,8 @@
     android:layout_marginTop="7dip" android:layout_marginBottom="7dip"
 >
     <ImageView android:id="@+id/list_receipt_sync_flag"
-	    android:layout_width="30dip" android:layout_height="wrap_content"   
+	    android:layout_width="30dip" android:layout_height="wrap_content"
+	    android:layout_centerVertical="true" 
 	    android:layout_alignParentLeft="true" 
     />
 

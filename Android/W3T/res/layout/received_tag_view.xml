@@ -72,7 +72,7 @@
         </LinearLayout>
         <!-- 35dip height per item, 5 items maximum for the emulator 
            It starts from 55 dip. -->
-        <ScrollView android:layout_width="fill_parent" android:layout_height="230dip"
+        <ScrollView android:layout_width="fill_parent" android:layout_height="240dip"
             android:scrollbars="none"
             android:layout_marginLeft="10dip"
         >

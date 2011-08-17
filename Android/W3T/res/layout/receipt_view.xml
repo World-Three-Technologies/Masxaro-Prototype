@@ -36,7 +36,7 @@
         android:background="@color/white"
     >
         <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
-            android:orientation="vertical"
+            android:orientation="vertical" 
         >
             <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -76,8 +76,8 @@
         
         <!-- 35dip height per item, 5 items maximum for the emulator 
            It starts from 55 dip. -->
-        <ScrollView android:layout_width="fill_parent" android:layout_height="230dip"
-            android:scrollbars="none"
+        <ScrollView android:layout_width="fill_parent" android:layout_height="240dip"
+            android:scrollbars="none" android:id="@+id/fling"
             android:layout_marginLeft="10dip"
         >
 	        <TableLayout android:id="@+id/items_table" 
