@@ -78,8 +78,11 @@ switch($opcode){
 		 * $receipt = array(
 		 * 		store_account=>'Mc_NYU',
 		 * 		user_account=>'w3t',
+		 * 		extra_cost=>10, (eg.,shipping fee, optional)
+		 * 		cut_down_cost=>15, (eg., gift card, optional)
+		 * 		sub_total_cost=>10, (sub_total_cost of items, optional)
 		 * 		tax=>10,
-		 * 		total_cost=>0,
+		 * 		total_cost=>10,
 		 * 		currency_mark=>'$',
 		 * 		source=>'email'
 		 * );
@@ -100,18 +103,16 @@ switch($opcode){
 		 * 
 		 * @example
 		 * $items = array(
+		 * 		id=>'123123', (receipt_id, 
+		 * 						has to be set up when inserting items independently, or else is optional)
 		 * 		array(
-		 * 			receipt_id=>1,
+		 * 			item_id=>10,(optional)
 		 * 			item_name=>'fries-mid',
 		 * 			item_qty=>2,
+		 * 			item_discount=>10,(optional, %)
 		 * 			item_price=>1.99
-		 * 		),
-		 * 		array(
-		 * 			receipt_id=>1,
-		 * 			item_name=>'Salad',
-		 * 			item_qty=>1,
-		 * 			item_price=>1
-		 * 			)
+		 * 		)
+		 * 		...
 		 * );
 		 * 
 		 * 
@@ -124,8 +125,8 @@ switch($opcode){
 		
 	case 'new_receipt':
 		/**
-		 * @see 'new_item'
-		 * @see 'new_receipt_basic'
+		 * @see receiptOperation.php::new_item
+		 * @see receiptOperation.php::new_receipt_basic
 		 * 
 		 * POST:
 		 * @param array $receipt
@@ -136,22 +137,6 @@ switch($opcode){
 		 * @desc
 		 * insert a complete receipt with items, don't have to indicate receipt id
 		 * in items
-		 * 
-		 * @example
-		 * $items = array(
-		 * 		array(
-		 * 			item_id=>10,
-		 * 			item_name=>'fries-mid',
-		 * 			item_qty=>2,
-		 * 			item_price=>1.99
-		 * 		),
-		 * 		array(
-		 * 			item_id=>2,
-		 * 			item_name=>'Salad',
-		 * 			item_qty=>1,
-		 * 			item_price=>1
-		 * 			)
-		 * );
 		 * 
 		 */
 		
