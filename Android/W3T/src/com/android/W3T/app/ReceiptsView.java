@@ -33,12 +33,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -47,16 +53,24 @@ import android.widget.Toast;
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
 
-public class ReceiptsView extends Activity implements OnClickListener {
+public class ReceiptsView extends Activity implements OnClickListener, 
+	OnTouchListener, OnGestureListener {
 	public static final String TAG = "ReceiptsViewActivity";
 	
 	private static final String RECEIVE_ALL = NetworkUtil.METHOD_RECEIVE_ALL;
+	private static final int FLING_MIN_DISTANCE = 10;
+	private static final int FLING_MIN_VELOCITY = 10;
 	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
 	private Button mSyncBtn;
 	private Button mBackListBtn;
+	
+	private GestureDetector mGestureDetector;
+	private TableLayout mItemsTable;
+	private int mNumItemsInLast;
+//	private LinearLayout mReceiptsView;
 	
 	private int mCurReceipt = 0;
 	private ProgressDialog mRefreshProgress;
@@ -74,7 +88,7 @@ public class ReceiptsView extends Activity implements OnClickListener {
 			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL, null);
 			if (jsonstr != null) {
 				Log.i(TAG, "add new receipts basic");
-				System.out.println(jsonstr);
+//				System.out.println(jsonstr);
 				// Set the IsUpload true
 				if (!ReceiptsManager.add(jsonstr, FROM_DB)) {
 					Toast.makeText(ReceiptsView.this, "cannot add more receipts into the pool", Toast.LENGTH_SHORT);
@@ -95,6 +109,15 @@ public class ReceiptsView extends Activity implements OnClickListener {
 		mSyncBtn.setOnClickListener(this);
 		mBackListBtn = (Button) findViewById(R.id.b_to_ls_btn);
 		mBackListBtn.setOnClickListener(this);
+		
+//		mReceiptsView = ((LinearLayout) findViewById(R.id.receipt_view));
+		((LinearLayout) findViewById(R.id.receipt_view)).setOnTouchListener(this);
+		((LinearLayout) findViewById(R.id.receipt_view)).setLongClickable(true);
+		((ScrollView) findViewById(R.id.fling)).setOnTouchListener(this);
+		((ScrollView) findViewById(R.id.fling)).setLongClickable(true);
+		mGestureDetector = new GestureDetector(this);
+		
+		mItemsTable = (TableLayout) findViewById(R.id.items_table);
 	}
 	
 	@Override
@@ -122,62 +145,17 @@ public class ReceiptsView extends Activity implements OnClickListener {
 		}
 	}
 	
-/*	@Override
-	// Thinking of using context menu to display the menu bar next time.
-	public boolean onCreateOptionsMenu(Menu menu) {
-        // Hold on to this
-//        mMenu = menu;
-        
-        // Inflate the currently selected menu XML resource.
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.receipt_view_menu, menu);
-
-        return true;
-    }
-	
-	@Override
-	// All Toast messages are implemented later.
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i(TAG, "onOptionsItemSelected(" + item + ")");
-		switch (item.getItemId()) {
-		case R.id.refresh_opt:
-			Log.i(TAG, "handler post a new thread");
-			// Show a progress bar and send account info to server.
-			mRefreshProgress = new ProgressDialog(ReceiptsView.this);
-			mRefreshProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			mRefreshProgress.setMessage("Refreshing...");
-			mRefreshProgress.setCancelable(true);
-			mRefreshProgress.show();
-			mUpdateHandler.post(mReceiptThread);
-			return true;
-//		case R.id.sw_receipt_opt:
-//			if (ReceiptsManager.getNumValid() != 0) {
-//				setBackIntent();
-//			}
-//			Toast.makeText(this, "Switch to anther receipt view!", Toast.LENGTH_SHORT).show();
-//			return true;
-		case R.id.b_to_ls_opt:
-			if (ReceiptsManager.getNumValid() != 0) {
-				setBackIntent();
-			}
-			break;
-		default:
-			return false;
-		}
-		return false;
-	}	
-	*/
 	@Override
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		switch (keyCode) {
-		case KeyEvent.KEYCODE_DPAD_LEFT:
-			setContentView(R.layout.receipt_view);
-			fillReceiptView(getPrevReceipt(mCurReceipt));
-			break;
-		case KeyEvent.KEYCODE_DPAD_RIGHT:
-			setContentView(R.layout.receipt_view);
-			fillReceiptView(getNextReceipt(mCurReceipt));
-			break;
+//		case KeyEvent.KEYCODE_DPAD_LEFT:
+//			setContentView(R.layout.receipt_view);
+//			fillReceiptView(getPrevReceipt(mCurReceipt));
+//			break;
+//		case KeyEvent.KEYCODE_DPAD_RIGHT:
+//			setContentView(R.layout.receipt_view);
+//			fillReceiptView(getNextReceipt(mCurReceipt));
+//			break;
 		case KeyEvent.KEYCODE_BACK:
 			setBackIntent();
 			break;
@@ -221,17 +199,18 @@ public class ReceiptsView extends Activity implements OnClickListener {
 		// Set all item rows in the Items Table: id, name, qty, price. (no discount for now)
 		int numItems = ReceiptsManager.getReceipt(num).getNumItem();
 		int pos = 1;
-		System.out.println(numItems);
-		System.out.println(ReceiptsManager.getReceipt(num).getEntry(2));
-		TableLayout t = (TableLayout) findViewById(R.id.items_table);
+		mItemsTable.removeViews(1, mNumItemsInLast * 2);
 		for (int i=0;i<numItems;i++) {
 			TableRow row1 = new TableRow(this);
 			TextView itemId = new TextView(this);
-			itemId.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getItemId()));
-			itemId.setTextColor(getResources().getColor(R.color.black));
-			itemId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-			itemId.setPadding(10, 0, 0, 0);
-			row1.addView(itemId);
+			int id = ReceiptsManager.getReceipt(num).getItem(i).getItemId();
+			if (id != -1) {
+				itemId.setText(String.valueOf(id));
+				itemId.setTextColor(getResources().getColor(R.color.black));
+				itemId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+				itemId.setPadding(10, 0, 0, 0);
+				row1.addView(itemId);
+			}
 			
 			TableRow row2 = new TableRow(this);
 			TextView itemName = new TextView(this);
@@ -254,9 +233,10 @@ public class ReceiptsView extends Activity implements OnClickListener {
 			row2.addView(itemQty);
 			row2.addView(itemPrice);
 			
-			t.addView(row2, pos++);
-			t.addView(row1, pos++);
+			mItemsTable.addView(row2, pos++);
+			mItemsTable.addView(row1, pos++);
 		}
+		mNumItemsInLast = numItems;
 	}
 	
 	private void setBackIntent() {
@@ -265,5 +245,60 @@ public class ReceiptsView extends Activity implements OnClickListener {
 		receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 		startActivity(receipt_list_intent);
 		finish();
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent e) {
+		// OnGestureListener will analyzes the given motion event
+		return mGestureDetector.onTouchEvent(e);
+	}
+
+	@Override
+	public boolean onDown(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+			float velocityY) {
+		if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE
+		        && Math.abs(velocityX) > FLING_MIN_VELOCITY) {
+		    // Fling left
+			fillReceiptView(getPrevReceipt(mCurReceipt));
+		    Toast.makeText(this, "Fling Left", Toast.LENGTH_SHORT).show();
+		} else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE
+		        && Math.abs(velocityX) > FLING_MIN_VELOCITY) {
+		    // Fling right
+			fillReceiptView(getNextReceipt(mCurReceipt));
+		    Toast.makeText(this, "Fling Right", Toast.LENGTH_SHORT).show();
+		}
+		else Toast.makeText(this, "nothing", Toast.LENGTH_SHORT).show();
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -97,11 +97,14 @@ public class SearchResultView extends Activity implements OnClickListener {
 		for (int i=0;i<numItems;i++) {
 			TableRow row1 = new TableRow(this);
 			TextView itemId = new TextView(this);
-			itemId.setText(String.valueOf(mReceipt.getItem(i).getItemId()));
-			itemId.setTextColor(getResources().getColor(R.color.black));
-			itemId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-			itemId.setPadding(10, 0, 0, 0);
-			row1.addView(itemId);
+			int id = mReceipt.getItem(i).getItemId();
+			if (id != -1) {
+				itemId.setText(String.valueOf(id));
+				itemId.setTextColor(getResources().getColor(R.color.black));
+				itemId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+				itemId.setPadding(10, 0, 0, 0);
+				row1.addView(itemId);
+			}
 			
 			TableRow row2 = new TableRow(this);
 			TextView itemName = new TextView(this);

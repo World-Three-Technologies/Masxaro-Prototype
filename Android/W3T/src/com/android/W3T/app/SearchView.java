@@ -121,8 +121,6 @@ public class SearchView extends Activity implements OnClickListener {
 					searchResultDecode(result);
 					createSearchResultList();
 				}
-				
-				
 				break;
 			case TAG_NAME:
 				Log.i(TAG, "search the terms by tag");
@@ -266,7 +264,6 @@ public class SearchView extends Activity implements OnClickListener {
 				
 			}
 	    });
-//	    mDynamicSearchRange.addView(spinner);
 	}
 	
 	private void setDateRange(int pos) {

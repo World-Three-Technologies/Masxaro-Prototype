@@ -245,6 +245,7 @@ public class NetworkUtil {
             	JSONObject basicInfo = new JSONObject();
             	basicInfo.put("store_account", r.getEntry(6));		// store name
             	basicInfo.put("tax", r.getEntry(3));				// tax
+            	basicInfo.put("total_price", r.getEntry(4));		// total price
             	basicInfo.put("user_account", UserProfile.getUsername());
             	JSONObject receipt = new JSONObject();
             	receipt.put("receipt", basicInfo);

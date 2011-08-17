@@ -27,6 +27,9 @@ package com.android.W3T.app.nfc;
 
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
 import com.android.W3T.app.ReceiptsList;
@@ -37,6 +40,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
@@ -78,7 +82,7 @@ public class TagView extends Activity {
 			public void onClick(View v) {
 				// TODO: Temporarily put here. get nfc tag from real world
 				String jsonstr = 
-					new String("[{\"store_account\":\"Mc_NYU\",\"id\":\"105\",\"user_account\":null,\"receipt_time\":\"2011-06-29 10:45:32\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"coke\",\"item_id\":\"12\",\"item_qty\":\"1\"},{\"item_price\":\"2\",\"item_name\":\"fries-mid\",\"item_id\":\"10\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"img\":null,\"deleted\":0,\"store_name\":\"McDonalds(NYU)\", \"currency_mark\":\"$\"}]");
+					new String("[{\"store_account\":\"Mc_NYU\",\"id\":\"105\",\"user_account\":null,\"receipt_time\":\"2011-08-12 10:45:32\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"coke\",\"item_id\":\"12\",\"item_qty\":\"1\"},{\"item_price\":\"2\",\"item_name\":\"fries-mid\",\"item_id\":\"10\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"img\":null,\"deleted\":0,\"total_price\":\"10.32\"\"store_name\":\"McDonalds(NYU)\", \"currency_mark\":\"$\"}]");
 	            if (ReceiptsManager.getNumValid() == ReceiptsManager.NUM_RECEIPT) {
 	            	ReceiptsManager.deleteReceipt(6);
 	            }
@@ -95,24 +99,16 @@ public class TagView extends Activity {
 				
 			}
         });
-        // -------------- fake tag receive ---------------- //
-        mAdapter = NfcAdapter.getDefaultAdapter(this);
-        Tag t = (Tag) this.getIntent().getExtras().get(NfcAdapter.EXTRA_TAG);
-        System.out.println(t.getId()[0]);
-        System.out.println(t.getId()[1]);
-        System.out.println(t.getId()[2]);
-        System.out.println(t.getId()[3]);
-        System.out.println(t.getTechList()[0]);
-        System.out.println(t.getTechList()[1]);
-        System.out.println(t.getTechList()[2]);
-        Ndef n = Ndef.get(t);
-        
-        System.out.println(t.describeContents()+":");
-        NdefMessage nm = n.getCachedNdefMessage();
-        byte[] b = nm.getRecords()[0].getId();
-		for (int i=0;i<b.length;i++) {
-			System.out.println(b[i]);
-		}
+//        mAdapter = NfcAdapter.getDefaultAdapter(this);
+//        Tag t = (Tag) this.getIntent().getExtras().get(NfcAdapter.EXTRA_TAG);
+//        Ndef n = Ndef.get(t);
+//        
+//        NdefMessage nm = n.getCachedNdefMessage();
+//        NdefRecord record = nm.getRecords()[0];
+//        String result = new String(record.getPayload()); 
+//        ReceiptsManager.add(result.substring(3), false);//skip the first three letter.
+//        System.out.println(result);
+//        System.out.println(record.getPayload()[0]);
         
 	}
 	
@@ -131,27 +127,27 @@ public class TagView extends Activity {
 		return super.onKeyUp(keyCode, event);
 	}
 	
-	@Override
-    public void onNewIntent(Intent intent) {
-		Toast.makeText(this, "TagView onNewIntent", Toast.LENGTH_SHORT).show();
-        setIntent(intent);
-        String action = intent.getAction();
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-	        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_TAG);
-	        if (rawMsgs != null)
-	        	Toast.makeText(this, "Is a nfc tag.", Toast.LENGTH_SHORT).show();
-	        else
-	        	Toast.makeText(this, "Not a nfc tag.", Toast.LENGTH_SHORT).show();
-	        rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-	        if (rawMsgs != null)
-	        	Toast.makeText(this, "Is a ndef tag.", Toast.LENGTH_SHORT).show();
-	        else
-	        	Toast.makeText(this, "Not a ndef tag.", Toast.LENGTH_SHORT).show();
-        }
-        else {
-        	Toast.makeText(this, "Not a tag intent", Toast.LENGTH_SHORT).show();
-        }
-    }
+//	@Override
+//    public void onNewIntent(Intent intent) {
+//		Toast.makeText(this, "TagView onNewIntent", Toast.LENGTH_SHORT).show();
+//        setIntent(intent);
+//        String action = intent.getAction();
+//        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+//	        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_TAG);
+//	        if (rawMsgs != null)
+//	        	Toast.makeText(this, "Is a nfc tag.", Toast.LENGTH_SHORT).show();
+//	        else
+//	        	Toast.makeText(this, "Not a nfc tag.", Toast.LENGTH_SHORT).show();
+//	        rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+//	        if (rawMsgs != null)
+//	        	Toast.makeText(this, "Is a ndef tag.", Toast.LENGTH_SHORT).show();
+//	        else
+//	        	Toast.makeText(this, "Not a ndef tag.", Toast.LENGTH_SHORT).show();
+//        }
+//        else {
+//        	Toast.makeText(this, "Not a tag intent", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 	
 	private void setBackIntent() {
 		Intent receipt_list_intent = new Intent(TagView.this, ReceiptsList.class);

@@ -151,7 +151,13 @@ public class Receipt implements Serializable{
 			for (int i=0;i<mNumItems;i++) {
 				JSONObject item = (JSONObject) items.get(i);
 				ReceiptItem newItem = new ReceiptItem();
-				newItem.setItemId(Integer.valueOf(item.getString(PARAM_ITEM_ID)));
+				// item id could be null.
+				if (item.getString(PARAM_ITEM_ID).equals(null)) {
+					newItem.setItemId(Integer.valueOf(item.getString(PARAM_ITEM_ID)));
+				}
+				else {
+					newItem.setItemId(-1);// the item id is null
+				}
 				newItem.setName(item.getString(PARAM_ITEM_NAME));
 				newItem.setQty(Integer.valueOf(item.getString(PARAM_ITEM_QTY)));
 				newItem.setPrice(Double.parseDouble(item.getString(PARAM_ITEM_PRICE)));
