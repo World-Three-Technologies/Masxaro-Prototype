@@ -33,9 +33,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.W3T.app.R;
 
@@ -43,7 +41,7 @@ public class ReceiptsManager {
 	public static final String TAG = "ReceiptManager";
 	
 	public static final int NUM_RECEIPT = 7;
-	public static final int NUM_RECEIPT_ENTRY = 5;
+	public static final int NUM_RECEIPT_BASIC = 5;
 	
 	// the flags are used in add(jsonstr, where) method
 	public static final boolean FROM_DB = true;
@@ -159,10 +157,6 @@ public class ReceiptsManager {
 			Receipts.add(sNumValidReceipt, r);
 			sReceiptId[sNumValidReceipt] = id;
 			sNumValidReceipt++;
-//			if (r.getWhere() == FROM_NFC) {
-//				sUnSentId[sNumUnSent] = id;
-//				sNumUnSent++;
-//			}
 			return RECEIPT_NEW;
 		}
 		if (Log.isLoggable(TAG, Log.VERBOSE)) {
@@ -184,17 +178,6 @@ public class ReceiptsManager {
 		}
 		return result;
 	}
-	
-//	public static void clearUnSentArray() {
-//		for (int i=0;i<sNumUnSent;i++) {
-//			sUnSentId[i] = 0;
-//		}
-//		sNumUnSent = 0;
-//	}
-	
-//	public static int getUnSentNum() {
-//		return sNumUnSent;
-//	}
 	
 	public static int getNumValid() {
 		return sNumValidReceipt;

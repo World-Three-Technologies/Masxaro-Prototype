@@ -291,6 +291,7 @@ public class SearchView extends Activity implements OnClickListener {
 	private void searchResultDecode(String r) {
 		// Clear the basics history.
 		basics.clear();
+		System.out.println(r);
 		try {
 			if (!r.equals("null")) {
 				JSONArray result = new JSONArray(r);

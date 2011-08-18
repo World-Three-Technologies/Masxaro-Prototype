@@ -167,7 +167,6 @@ public class MainPage extends Activity {
 	// All Toast messages are implemented later.
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.i(TAG, "onOptionItemSelected(" + item + ")");
-		System.out.println(item.getItemId());
 		switch (item.getItemId()) {
 		case R.id.view_receipt_opt:
 			// Start the receipt view activity

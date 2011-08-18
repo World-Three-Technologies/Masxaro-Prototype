@@ -34,11 +34,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Receipt implements Serializable{
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8704584220504619955L;
+	
+	public static final String PARAM_ITEM_ID = ReceiptItem.PARAM_ITEM_ID;
+	public static final String PARAM_ITEM_NAME = ReceiptItem.PARAM_ITEM_NAME;
+	public static final String PARAM_ITEM_QTY = ReceiptItem.PARAM_ITEM_QTY;
+	public static final String PARAM_ITEM_PRICE = ReceiptItem.PARAM_ITEM_PRICE;
+	public static final String PARAM_ITEM_DISCOUNT = ReceiptItem.PARAM_ITEM_DISCOUNT;
 	
 	public static final int ENTRY_STORE_NAME = 0;
 	public static final int ENTRY_TIME = 1;
@@ -47,21 +49,12 @@ public class Receipt implements Serializable{
 	public static final int ENTRY_TOTAL = 4;
 	public static final int ENTRY_CURRENCY = 5;
 	public static final int ENTRY_STORE_ACC = 6;
-	
-	// JSON names of Receipt entries
-//	public static final String PARAM_RECEIPT_USER_ACC = "user_account";
-	public static final String PARAM_RECEIPT_IMAGE = "img";
-	public static final String PARAM_RECEIPT_DELETE = "delete";
-	
-	// JSON names of Item entries.
-	public static final String PARAM_ITEM_ID = "item_id";
-	public static final String PARAM_ITEM_NAME = "item_name";
-	public static final String PARAM_ITEM_QTY = "item_qty";
-	public static final String PARAM_ITEM_PRICE = "item_price";
+	public static final int ENTRY_EXTRA_COST = 7;
+	public static final int ENTRY_SUB_COST = 8;
+	public static final int ENTRY_CUT_DOWN = 9;
+	public static final int ENTRY_SOURCE = 10;
 	
 	private BasicInfo basic;
-//	private String img;
-//	private String delete;
 	private ArrayList<ReceiptItem> mItems;	// Items in this receipt
 	private int mNumItems;			// Number of items
 	
@@ -70,19 +63,12 @@ public class Receipt implements Serializable{
 									// The receipt retrieved from nfc tag sets false
 	public Receipt() {
 		basic = new BasicInfo();
-//		img = new String("N/A");
-//		delete = new String();
 		mItems = new ArrayList<ReceiptItem>();
 		mNumItems = 0;
 		mWhere = false;
 	}
 	
 	public Receipt(JSONObject str, boolean w) {
-		//			mReceiptId = str.get(PARAM_RECEIPT_ID).toString();
-		//			mTime = str.get(PARAM_RECEIPT_TIME).toString();
-		//			mStoreName = str.get(PARAM_RECEIPT_STORE_NAME).toString();
-		//			mTotal = str.get(PARAM_RECEIPT_TOTAL).toString();
-		//			mTax = str.get(PARAM_RECEIPT_TAX).toString();
 		basic = new BasicInfo(str);
 		mItems = new ArrayList<ReceiptItem>();
 		mNumItems = 0;
@@ -113,6 +99,18 @@ public class Receipt implements Serializable{
 		case ENTRY_STORE_ACC:
 			result = getStoreAcc();
 			break;
+		case ENTRY_EXTRA_COST:
+			result = getExtraCost();
+			break;
+		case ENTRY_SUB_COST:
+			result = getSubCost();
+			break;
+		case ENTRY_CUT_DOWN:
+			result = getCutDown();
+			break;
+		case ENTRY_SOURCE:
+			result = getSource();
+			break;
 		default:
 			result = null;
 			break;
@@ -130,17 +128,17 @@ public class Receipt implements Serializable{
 			ReceiptItem item = mItems.get(i);
 			JSONObject itemstr = new JSONObject();
 			try {
-				itemstr.put("item_id", item.getItemId());
-				itemstr.put("item_name", item.getName());
-				itemstr.put("item_qty", item.getQty());
-				itemstr.put("item_price", item.getPrice());	
+				itemstr.put("PARAM_ITEM_ID", item.getItemId());
+				itemstr.put("PARAM_ITEM_NAME", item.getName());
+				itemstr.put("PARAM_ITEM_QTY", item.getQty());
+				itemstr.put("PARAM_ITEM_PRICE", item.getPrice());	
+				itemstr.put("PARAM_ITEM_DISCOUNT", item.getDiscount());
 				items.put(i, itemstr);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
 		return items;
 	}
 	
@@ -149,18 +147,7 @@ public class Receipt implements Serializable{
 		mNumItems = items.length();
 		try {
 			for (int i=0;i<mNumItems;i++) {
-				JSONObject item = (JSONObject) items.get(i);
-				ReceiptItem newItem = new ReceiptItem();
-				// item id could be null.
-				if (item.getString(PARAM_ITEM_ID).equals(null)) {
-					newItem.setItemId(Integer.valueOf(item.getString(PARAM_ITEM_ID)));
-				}
-				else {
-					newItem.setItemId(-1);// the item id is null
-				}
-				newItem.setName(item.getString(PARAM_ITEM_NAME));
-				newItem.setQty(Integer.valueOf(item.getString(PARAM_ITEM_QTY)));
-				newItem.setPrice(Double.parseDouble(item.getString(PARAM_ITEM_PRICE)));
+				ReceiptItem newItem = new ReceiptItem((JSONObject)items.get(i));
 				mItems.add(newItem);
 			}
 		} catch (JSONException e) {
@@ -205,27 +192,23 @@ public class Receipt implements Serializable{
 		return basic.getStoreAcc();
 	}
 	
-//	private void setId(String id) {
-//		mReceiptId = id; 
-//	}
-//
-//	private void setTime(String time) {
-//		mTime = time; 
-//	}
-//	
-//	private void setStoreName(String sn) {
-//		mStoreName = sn; 
-//	}
-//	
-//	private void setTotal(String tt) {
-//		mTotal = tt; 
-//	}
-//	
+	private String getSubCost() {
+		return basic.getSubCost();
+	}
+
+	private String getCutDown() {
+		return basic.getCutDownCost();
+	}
+	
+	private String getExtraCost() {
+		return basic.getExtraCost();
+	}
+	
+	private String getSource() {
+		return basic.getSource();
+	}
+	
 	public void setWhere(boolean w) {
 		mWhere = w;
 	}
-	
-//	private void setTax(String t) {
-//		mTax = t;
-//	}
 }

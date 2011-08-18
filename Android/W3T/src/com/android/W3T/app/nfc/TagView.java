@@ -81,8 +81,7 @@ public class TagView extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO: Temporarily put here. get nfc tag from real world
-				String jsonstr = 
-					new String("[{\"store_account\":\"Mc_NYU\",\"id\":\"105\",\"user_account\":null,\"receipt_time\":\"2011-08-12 10:45:32\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"coke\",\"item_id\":\"12\",\"item_qty\":\"1\"},{\"item_price\":\"2\",\"item_name\":\"fries-mid\",\"item_id\":\"10\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"img\":null,\"deleted\":0,\"total_price\":\"10.32\"\"store_name\":\"McDonalds(NYU)\", \"currency_mark\":\"$\"}]");
+				String jsonstr = new String("[{\"store_account\":\"Mc_NYU\",\"user_account\":\"new\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"coke\",\"item_id\":\"12\",\"item_qty\":\"1\"},{\"item_price\":\"2\",\"item_name\":\"fries-mid\",\"item_id\":\"10\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"source\":\"nfc_tag\",\"store_name\":\"McDonalds(NYU)\", \"currency_mark\":\"$\"}]");
 	            if (ReceiptsManager.getNumValid() == ReceiptsManager.NUM_RECEIPT) {
 	            	ReceiptsManager.deleteReceipt(6);
 	            }
@@ -96,7 +95,6 @@ public class TagView extends Activity {
 	            	setBackIntent();
 	            	finish();
 	            }
-				
 			}
         });
 //        mAdapter = NfcAdapter.getDefaultAdapter(this);

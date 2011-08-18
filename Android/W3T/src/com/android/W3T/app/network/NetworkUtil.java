@@ -69,22 +69,22 @@ public class NetworkUtil {
 	public static final String LOGOUT_URL = BASE_URL + "/logoff.php";
 	public static final String RECEIPT_OP_URL = BASE_URL + "/receiptOperation.php";
 	
+	// Receipt View
 	public static final String METHOD_RECEIVE_ALL = "user_get_all_receipt";
+	// Search function: search list
 	public static final String METHOD_RECEIVE_RECEIPT_DETAIL = "user_get_receipts_detail";
 	public static final String METHOD_RECEIVE_RECEIPT_ITEMS = "user_get_receipts_items";
-	
-	public static final String METHOD_SEND_RECEIPT = "new_receipt";
-	
+	// Search function: search term
 	public static final String METHOD_KEY_SEARCH = "key_search";
 	public static final String METHOD_TAG_SEARCH = "tag_search";
 	public static final String METHOD_KEY_DATE_SEARCH = "key_date_search";
+	// Send function
+	public static final String METHOD_SEND_RECEIPT = "new_receipt";
 	
 	private static final int SEVEN_DAYS = 7;
 	private static final int FOURTEEN_DAYS = 14;
 	private static final int ONE_MONTH = 1;
 	private static final int THREE_MONTHS = 3;
-	
-	private static HttpClient mClient = new DefaultHttpClient();
 	
 	private static boolean checkNetwork() {
 		return true;
@@ -121,6 +121,7 @@ public class NetworkUtil {
 		// Here we may want to check the network status.
 		checkNetwork();
 
+		HttpClient Client = new DefaultHttpClient();
         HttpPost request;
         
         try {
@@ -141,7 +142,7 @@ public class NetworkUtil {
 	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         	}
             // Execute HTTP Post Request
-            HttpResponse response = mClient.execute(request);
+            HttpResponse response = Client.execute(request);
             
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             	if (op == LOGOUT) {
@@ -218,7 +219,7 @@ public class NetworkUtil {
 
         	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
         	String s = in.readLine();
-//        	System.out.println(s);
+        	System.out.println(s);
         	return s;
             
 		} catch (UnsupportedEncodingException e) {

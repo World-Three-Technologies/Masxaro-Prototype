@@ -82,7 +82,7 @@ public class SearchResultView extends Activity implements OnClickListener {
 	
 	private void fillBasicInfo() {
 		// Set all basicInfo entries: store name, id, time, tax, total .
-		for (int i = 0;i < ReceiptsManager.NUM_RECEIPT_ENTRY;i++) {
+		for (int i = 0;i < ReceiptsManager.NUM_RECEIPT_BASIC;i++) {
 			((TextView) findViewById(ReceiptsManager.ReceiptViewElements[i]))
 				.setText(mReceipt.getEntry(i));
 		}
@@ -97,9 +97,9 @@ public class SearchResultView extends Activity implements OnClickListener {
 		for (int i=0;i<numItems;i++) {
 			TableRow row1 = new TableRow(this);
 			TextView itemId = new TextView(this);
-			int id = mReceipt.getItem(i).getItemId();
-			if (id != -1) {
-				itemId.setText(String.valueOf(id));
+			String id = mReceipt.getItem(i).getItemId();
+			if (Integer.valueOf(id) != -1) {
+				itemId.setText(id);
 				itemId.setTextColor(getResources().getColor(R.color.black));
 				itemId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 				itemId.setPadding(10, 0, 0, 0);

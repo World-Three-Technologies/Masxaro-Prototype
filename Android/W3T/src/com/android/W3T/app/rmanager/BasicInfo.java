@@ -41,6 +41,10 @@ public class BasicInfo {
 	public static final String PARAM_RECEIPT_STORE_NAME = "store_name";
 	public static final String PARAM_RECEIPT_STORE_ACC = "store_account";
 	public static final String PARAM_RECEIPT_CURRENCY = "currency_mark";
+	public static final String PARAM_RECEIPT_EXTRA_COST = "extra_cost";
+	public static final String PARAM_RECEIPT_SUBTOTAL_COST = "sub_total_cost";
+	public static final String PARAM_RECEIPT_CUTDOWN_COST = "cut_down_cost";
+	public static final String PARAM_RECEIPT_SOURCE = "source";
 	
 	private String mId;
 	private String mTime;
@@ -49,6 +53,10 @@ public class BasicInfo {
 	private String mTax;
 	private String mTotal;
 	private String mCurrency;
+	private String mExtraCost;
+	private String mSubCost;
+	private String mCutDownCost;
+	private String mSource;
 	
 	public BasicInfo() {
 		mId = null;
@@ -58,25 +66,49 @@ public class BasicInfo {
 		mTotal = null;
 		mCurrency = null;
 		mStoreAcc = null;
+		mExtraCost = null;
+		mSubCost = null;
+		mCutDownCost = null;
+		mSource = null;
 	}
 	
 	public BasicInfo(JSONObject basic) {
 		try {
 			Log.i(TAG, "basic json "+basic);
-			mId = basic.get(PARAM_RECEIPT_ID).toString();
+			
+			mId = basic.getString(PARAM_RECEIPT_ID);
 			Log.i(TAG, "get id"+mId);
-			mTime = basic.get(PARAM_RECEIPT_TIME).toString();
+			
+			mTime = basic.getString(PARAM_RECEIPT_TIME);
 			Log.i(TAG, "get time"+mTime);
-			mStoreName = basic.get(PARAM_RECEIPT_STORE_NAME).toString();
+			
+			mStoreName = basic.getString(PARAM_RECEIPT_STORE_NAME);
 			Log.i(TAG, "get store name"+mStoreName);
-			mTotal = basic.get(PARAM_RECEIPT_TOTAL).toString();
+			
+			mTotal = basic.getString(PARAM_RECEIPT_TOTAL);
 			Log.i(TAG, "get total"+mTotal);
-			mTax = basic.get(PARAM_RECEIPT_TAX).toString();
+			
+			mTax = basic.getString(PARAM_RECEIPT_TAX);
 			Log.i(TAG, "get tax"+mTax);
-			mCurrency = basic.get(PARAM_RECEIPT_CURRENCY).toString();
+			
+			mCurrency = basic.getString(PARAM_RECEIPT_CURRENCY);
 			Log.i(TAG, "get currency"+mCurrency);
-			mStoreAcc = basic.get(PARAM_RECEIPT_STORE_ACC).toString();
+			
+			mStoreAcc = basic.getString(PARAM_RECEIPT_STORE_ACC);
 			Log.i(TAG, "get store acc"+mStoreAcc);
+			
+			mExtraCost = basic.getString(PARAM_RECEIPT_EXTRA_COST);
+			Log.i(TAG, "get store acc"+mExtraCost);
+			
+			mSubCost = basic.getString(PARAM_RECEIPT_SUBTOTAL_COST);
+			Log.i(TAG, "get store acc"+mSubCost);
+			
+			mCutDownCost = basic.getString(PARAM_RECEIPT_CUTDOWN_COST);
+			Log.i(TAG, "get store acc"+mCutDownCost);
+			
+			mSource = basic.getString(PARAM_RECEIPT_SOURCE);
+			Log.i(TAG, "get store acc"+mSource);
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -99,7 +131,7 @@ public class BasicInfo {
 		return mTime;
 	}
 	
-	public void StoreName(String sn) {
+	public void setStoreName(String sn) {
 		mStoreName = sn;
 	}
 	
@@ -131,7 +163,43 @@ public class BasicInfo {
 		return mCurrency;
 	}
 	
+	public void setStoreAcc(String storeacc) {
+		mStoreAcc = storeacc;
+	}
+	
 	public String getStoreAcc() {
 		return mStoreAcc;
+	}
+	
+	public void setExtraCost(String ec) {
+		mExtraCost = ec;
+	}
+	
+	public String getExtraCost() {
+		return mExtraCost;
+	}
+	
+	public void setSubCost(String sc) {
+		mSubCost = sc;
+	}
+	
+	public String getSubCost() {
+		return mSubCost;
+	}
+	
+	public void setCutDownCost(String cdc) {
+		mCutDownCost = cdc;
+	}
+	
+	public String getCutDownCost() {
+		return mCutDownCost;
+	}
+	
+	public void setSource(String source) {
+		mSource = source;
+	}
+	
+	public String getSource() {
+		return mSource;
 	}
 }
