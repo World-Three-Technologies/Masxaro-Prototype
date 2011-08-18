@@ -82,6 +82,7 @@ switch($opcode){
 		 * 		cut_down_cost=>15, (eg., gift card, optional)
 		 * 		sub_total_cost=>10, (sub_total_cost of items, optional)
 		 * 		tax=>10,
+		 * 		store_define_id=>'123-69381-91' (optional, receipt_id)
 		 * 		total_cost=>10,
 		 * 		currency_mark=>'$',
 		 * 		source=>'email'
@@ -183,8 +184,8 @@ switch($opcode){
 		 * @example
 		 * return:
 		 * [{"id":"3",
+		 * 	 "store_define_id":"123-3456-23", (null)
 		 * 	 "store_name":"McDonalds(NYU)",
-		 *   "user_account":null,
 		 *   "receipt_time":"07-17-2011 12:32 PM",
 		 *   "extra_cost" : "0.00",
 		 *   "sub_total_cost" : "99.00",
@@ -230,6 +231,7 @@ switch($opcode){
 		 * @example 
 		 * return
 		 * [{"id":"3",
+		 * 	 "store_define_id":"123-3456-23", (null)
 		 * 	 "store_name":"McDonalds(NYU)",
 		 *   "user_account":null,
 		 *   "receipt_time":"07-17-2011 12:32 PM",
