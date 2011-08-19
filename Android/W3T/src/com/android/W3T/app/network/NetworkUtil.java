@@ -62,12 +62,23 @@ public class NetworkUtil {
 	public static final int LOGOUT = MainPage.DIALOG_LOGOUT;
 	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
-//	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
 	public static final String BASE_URL = "http://50.19.213.157/masxaro/proj/php";
 	public static final String LOGIN_URL = BASE_URL + "/login.php";
 	public static final String LOGOUT_URL = BASE_URL + "/logoff.php";
 	public static final String RECEIPT_OP_URL = BASE_URL + "/receiptOperation.php";
+	
+	// basic info entry index
+	public static final int ENTRY_STORE_NAME = 0;
+	public static final int ENTRY_TIME = 1;
+	public static final int ENTRY_RECEIPT_ID = 2;
+	public static final int ENTRY_TAX = 3;
+	public static final int ENTRY_TOTAL = 4;
+	public static final int ENTRY_CURRENCY = 5;
+	public static final int ENTRY_CUT_DOWN = 6;
+	public static final int ENTRY_EXTRA_COST = 7;
+	public static final int ENTRY_SUB_COST = 8;
+	public static final int ENTRY_ID = 9;
 	
 	// Receipt View
 	public static final String METHOD_RECEIVE_ALL = "user_get_all_receipt";
@@ -219,7 +230,9 @@ public class NetworkUtil {
 
         	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
         	String s = in.readLine();
-        	System.out.println(s);
+        	
+        	System.out.println("get "+s);
+        	
         	return s;
             
 		} catch (UnsupportedEncodingException e) {

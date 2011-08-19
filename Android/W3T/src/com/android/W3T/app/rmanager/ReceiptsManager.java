@@ -51,7 +51,7 @@ public class ReceiptsManager {
 	public static final boolean RECEIPT_IN_POOL = false;
 		
 	public static final String PARAM_ITEM_LABEL = "items";
-	public static final int PARAM_RECEIPT_ID = 2;
+	public static final int PARAM_ID = 9;
 	
 	public final static int[] ReceiptViewElements = {
 		R.id.store_name_txt, R.id.time_txt, R.id.id_txt, R.id.tax_txt ,R.id.total_cost_txt, R.id.currency_txt
@@ -112,7 +112,7 @@ public class ReceiptsManager {
 					Receipt r = new Receipt(receiptsInfo[i], where);
 					items[i] = receiptsInfo[i].getJSONArray(PARAM_ITEM_LABEL);
 					if (Log.isLoggable(TAG, Log.VERBOSE)) {
-		                Log.v(TAG, "check whether receipt "+r.getEntry(PARAM_RECEIPT_ID)+" in the pool");
+		                Log.v(TAG, "check whether receipt "+r.getEntry(PARAM_ID)+" in the pool");
 		            }
 					if (addNewReceipt(r) == RECEIPT_NEW) {
 						r.addItems(items[i]);
@@ -141,7 +141,7 @@ public class ReceiptsManager {
 		if (Log.isLoggable(TAG, Log.VERBOSE)) {
             Log.v(TAG, "add a new receipt into Receipt pool");
         }
-		int id = Integer.parseInt(r.getEntry(PARAM_RECEIPT_ID));
+		int id = Integer.parseInt(r.getEntry(PARAM_ID));
 		// should check the database whether the receipt is already in the database.
 		for (int i=0;i<NUM_RECEIPT;i++) {
 			if (sReceiptId[i] == id) {

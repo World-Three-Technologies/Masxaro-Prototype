@@ -96,8 +96,6 @@ public class MainPage extends Activity {
         mUname = (TextView) findViewById(R.id.Username);
         mFractalImg = (ImageView) findViewById(R.id.FractalFern);
         mLogProgress = new ProgressDialog(MainPage.this);
-//        System.out.println(getResources().getDisplayMetrics().widthPixels);
-//        System.out.println(getResources().getDisplayMetrics().heightPixels);
 	}
 	
 	@Override
@@ -230,9 +228,9 @@ public class MainPage extends Activity {
 				startActivity(nfc_intent);
 			}
 		}
-		else if(action == MotionEvent.ACTION_DOWN)
+		else if (action == MotionEvent.ACTION_DOWN) {
 			mDowntime = event.getEventTime();
-				
+		}
 		return true;
 	}
 	
@@ -389,5 +387,4 @@ public class MainPage extends Activity {
 	    	}
 	    }
 	}
-
 }

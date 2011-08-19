@@ -32,6 +32,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,11 +46,23 @@ public static final String TAG = "EmptyViewActivity";
 	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	
+	private static final int SYNC_MESSAGE = 1;
+	
 	private Button mSyncBtn;
 	private Button mBackMainBtn;
 	
-	private ProgressDialog mRefreshProgress;
-	private Handler mUpdateHandler = new Handler();
+	private ProgressDialog mSyncProgress;
+	private Handler mUpdateHandler = new Handler() {
+        public void handleMessage(Message msg) {  
+            super.handleMessage(msg);  
+            switch (msg.what) {  
+            case SYNC_MESSAGE:  
+                Thread thread = new Thread(mReceiptThread);
+                thread.start();  
+                break;
+            }  
+        }  
+	};
 	private Runnable mReceiptThread = new Runnable() {
 		@Override
 		public void run() {
@@ -63,8 +76,7 @@ public static final String TAG = "EmptyViewActivity";
 				if (!ReceiptsManager.add(jsonstr, FROM_DB)) {
 					Toast.makeText(EmptyView.this, "cannot add more receipts into the pool", Toast.LENGTH_SHORT);
 				}
-				mRefreshProgress.dismiss();
-				
+				mSyncProgress.dismiss();
 				if (ReceiptsManager.getNumValid() != 0) {
 					Intent receipt_list_intent = new Intent(EmptyView.this, ReceiptsList.class);
 					receipt_list_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -98,12 +110,14 @@ public static final String TAG = "EmptyViewActivity";
 		if (v == mSyncBtn) {
 			Log.i(TAG, "handler post a new thread");
 			// Show a progress bar and send account info to server.
-			mRefreshProgress = new ProgressDialog(EmptyView.this);
-			mRefreshProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			mRefreshProgress.setMessage("Refreshing...");
-			mRefreshProgress.setCancelable(true);
-			mRefreshProgress.show();
-			mUpdateHandler.post(mReceiptThread);
+			mSyncProgress = new ProgressDialog(EmptyView.this);
+			mSyncProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mSyncProgress.setMessage("Syncing...");
+			mSyncProgress.setCancelable(true);
+			mSyncProgress.show();
+			Message msg = new Message();
+			msg.what = SYNC_MESSAGE;
+			mUpdateHandler.sendMessage(msg);
 		}
 		else if (v == mBackMainBtn) {
 			Intent front_page_intent = new Intent(EmptyView.this, MainPage.class);

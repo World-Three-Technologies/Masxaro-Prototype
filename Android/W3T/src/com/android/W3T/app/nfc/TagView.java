@@ -37,6 +37,7 @@ import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
@@ -45,6 +46,8 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
 import android.view.KeyEvent;
 import android.view.View;
@@ -56,8 +59,46 @@ public class TagView extends Activity {
 //	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
+	private static final int UPLOAD_MESSAGE = 1;
+	
 //	private Receipt mReceipt;
 	private NfcAdapter mAdapter;
+	
+	private ProgressDialog mUploadProgress;
+	private Handler mUploadHandler = new Handler() {
+		public void handleMessage(Message msg) {  
+            super.handleMessage(msg);  
+            switch (msg.what) {  
+            case UPLOAD_MESSAGE:  
+                Thread thread = new Thread(mUploadThread);
+                thread.start();  
+                break;
+            }
+        }
+	};
+	
+	private Thread mUploadThread = new Thread() {
+		@Override
+		public void run() {
+			// TODO: Temporarily put here. get nfc tag from real world
+			String jsonstr = new String("[{\"store_account\":\"Mc_NYU\",\"user_account\":\"new\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"coke\",\"item_id\":\"12\",\"item_qty\":\"1\"},{\"item_price\":\"2\",\"item_name\":\"fries-mid\",\"item_id\":\"10\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"source\":\"nfc_tag\",\"store_name\":\"McDonalds(NYU)\", \"currency_mark\":\"$\"}]");
+            if (ReceiptsManager.getNumValid() == ReceiptsManager.NUM_RECEIPT) {
+            	ReceiptsManager.deleteReceipt(6);
+            }
+			if (!ReceiptsManager.add(jsonstr, FROM_NFC)) {
+				Toast.makeText(TagView.this, "cannot add more receipts into the pool", Toast.LENGTH_SHORT);
+			}
+            if (!NetworkUtil.syncUnsentReceipts()) {
+            	mUploadProgress.dismiss();
+            	Toast.makeText(TagView.this, "Sending receipts occurred error", Toast.LENGTH_SHORT);
+            }
+            else {
+            	mUploadProgress.dismiss();
+            	setBackIntent();
+            	finish();
+            }
+		}
+	};
 	
 	private Button mRejectBtn;
 	private Button mConfirmBtn;
@@ -80,21 +121,14 @@ public class TagView extends Activity {
         mConfirmBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO: Temporarily put here. get nfc tag from real world
-				String jsonstr = new String("[{\"store_account\":\"Mc_NYU\",\"user_account\":\"new\",\"tax\":\"1\",\"items\":[{\"item_price\":\"5\",\"item_name\":\"coke\",\"item_id\":\"12\",\"item_qty\":\"1\"},{\"item_price\":\"2\",\"item_name\":\"fries-mid\",\"item_id\":\"10\",\"item_qty\":\"1\"}],\"total_cost\":\"10\",\"source\":\"nfc_tag\",\"store_name\":\"McDonalds(NYU)\", \"currency_mark\":\"$\"}]");
-	            if (ReceiptsManager.getNumValid() == ReceiptsManager.NUM_RECEIPT) {
-	            	ReceiptsManager.deleteReceipt(6);
-	            }
-				if (!ReceiptsManager.add(jsonstr, FROM_NFC)) {
-					Toast.makeText(TagView.this, "cannot add more receipts into the pool", Toast.LENGTH_SHORT);
-				}
-	            if (!NetworkUtil.syncUnsentReceipts()) {
-	            	Toast.makeText(TagView.this, "Sending receipts occurred error", Toast.LENGTH_SHORT);
-	            }
-	            else {
-	            	setBackIntent();
-	            	finish();
-	            }
+				mUploadProgress = new ProgressDialog(TagView.this);
+				mUploadProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				mUploadProgress.setMessage("Uploading to server...");
+				mUploadProgress.setCancelable(true);
+				mUploadProgress.show();
+				Message msg = new Message();
+				msg.what = UPLOAD_MESSAGE;
+				mUploadHandler.sendMessage(msg);
 			}
         });
 //        mAdapter = NfcAdapter.getDefaultAdapter(this);

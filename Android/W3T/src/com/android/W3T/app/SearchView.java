@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -64,6 +64,10 @@ public class SearchView extends Activity implements OnClickListener {
 	private static final int START_DATE_DIALOG_ID = 1;
 	private static final int END_DATE_DIALOG_ID = 2;
 	
+	private static final int SEARCH_MESSAGE = 1;
+	private static final int DOWNLOAD_MESSAGE = 2;
+	private static final int SEARCH_COMPLETE = 3;
+	
 	private ArrayList<BasicInfo> basics = new ArrayList<BasicInfo>();
 	private int mSearchBy = 0;
 	private int mSearchRange = SEVEN_DAYS;
@@ -81,11 +85,36 @@ public class SearchView extends Activity implements OnClickListener {
 	
 	private ListView mResultList;
 	private ProgressDialog mSearchProgress;
-	private Handler mSearchHandler = new Handler();
+	Bundle mReceiptBundle = new Bundle();
+	private String mId = new String();
+	private String mResult = new String();
+	private ProgressDialog mDownloadProgress;
+	
+	private Handler mSearchHandler = new Handler() {
+		public void handleMessage(Message msg) {  
+            super.handleMessage(msg);  
+            switch (msg.what) {  
+            case SEARCH_MESSAGE:  
+                Thread searchthread = new Thread(mSearchThread);
+                searchthread.start();  
+                break;
+            case DOWNLOAD_MESSAGE:
+            	Thread downloadthread = new Thread(mDownloadThread);
+            	downloadthread.start();  
+                break;
+            case SEARCH_COMPLETE:
+            	// Get the basic info of the hit receipts from the result
+				// Create the result list.
+            	searchResultDecode(mResult);
+				createSearchResultList();
+            	break;
+            }  
+        }  
+	};
 	private Runnable mSearchThread = new Runnable() {
 		@Override
 		public void run() {
-			String result = new String();
+			
 			String text = mSearchTerms.getText().toString();
 			String[] terms;
 			// Upload non-uploaded receipts
@@ -99,11 +128,11 @@ public class SearchView extends Activity implements OnClickListener {
 					if (!mStartDate.equals("") && !mEndDate.equals("")) {
 						text = text + " " + mStartDate + " " + mEndDate;
 						terms = text.split(" ");
-						result = NetworkUtil.attemptSearch("key_date_search", 0, terms);
-						// Get the basic info of the hit receipts from the result
-						// Create the result list.
-						searchResultDecode(result);
-						createSearchResultList();
+						mResult = NetworkUtil.attemptSearch("key_date_search", 0, terms);
+						mSearchProgress.dismiss();
+						Message msg = new Message();
+						msg.what = SEARCH_COMPLETE;
+						mSearchHandler.sendMessage(msg);
 					}
 					else {
 						Toast.makeText(SearchView.this, "Pleae select date", Toast.LENGTH_SHORT).show();
@@ -113,13 +142,17 @@ public class SearchView extends Activity implements OnClickListener {
 					Log.i(TAG, "search the terms by key word");
 					if (!text.equals("")) {
 						terms = text.split(" ");
-						result = NetworkUtil.attemptSearch("key_search", 0-mSearchRange, terms);
+						mResult = NetworkUtil.attemptSearch("key_search", 0-mSearchRange, terms);
 					}
 					else {
-						result = NetworkUtil.attemptSearch("key_search", 0-mSearchRange, null);
+						mResult = NetworkUtil.attemptSearch("key_search", 0-mSearchRange, null);
 					}
-					searchResultDecode(result);
-					createSearchResultList();
+					mSearchProgress.dismiss();
+					// this is a non-UI thread, so notify the UI thread that result is ready
+					// by the message of the handlder.
+					Message msg = new Message();
+					msg.what = SEARCH_COMPLETE;
+					mSearchHandler.sendMessage(msg);
 				}
 				break;
 			case TAG_NAME:
@@ -129,33 +162,29 @@ public class SearchView extends Activity implements OnClickListener {
 			default:
 				break;
 			}
-			mSearchProgress.dismiss();
+			
 		}
 	};
-	
-	Bundle mReceiptBundle = new Bundle();
-	private String mId = new String();
-	private ProgressDialog mDownloadProgress;
-	private Handler mDownloadHandler = new Handler();
 	private Runnable mDownloadThread = new Runnable() {
 		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
-			
 			String detailstr = null;
 			detailstr = NetworkUtil.attemptGetReceipt(RECEIVE_RECEIPT_DETAIL, mId);
 			String itemsstr = null;
 			itemsstr = NetworkUtil.attemptGetReceipt(RECEIVE_RECEIPT_ITEMS, mId);
+			// dismiss() must be before the UI update or finish(), otherwise, it will
+			// cause window leak.
 			mDownloadProgress.dismiss();
 			if (detailstr != null && itemsstr != null) {
 				try {
 					JSONObject it = new JSONObject(itemsstr);
 					mReceiptBundle.putSerializable("items", it.get(mId).toString());
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				Log.i(TAG, "add new receipts basic");
+				// No need to notify the UI thread, because later another activity will be called.
 				mReceiptBundle.putSerializable("detail", detailstr);
 				final Intent search_result_intent = new Intent(SearchView.this, SearchResultView.class);
 				search_result_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -193,10 +222,12 @@ public class SearchView extends Activity implements OnClickListener {
 			// Show a progress bar and do the search.
 			mSearchProgress = new ProgressDialog(SearchView.this);
 			mSearchProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			mSearchProgress.setMessage("Syncing...");
+			mSearchProgress.setMessage("Searching...");
 			mSearchProgress.setCancelable(true);
 			mSearchProgress.show();
-			mSearchHandler.post(mSearchThread);
+			Message msg = new Message();
+			msg.what = SEARCH_MESSAGE;
+			mSearchHandler.sendMessage(msg);
 		}
 	}
 	
@@ -291,7 +322,6 @@ public class SearchView extends Activity implements OnClickListener {
 	private void searchResultDecode(String r) {
 		// Clear the basics history.
 		basics.clear();
-		System.out.println(r);
 		try {
 			if (!r.equals("null")) {
 				JSONArray result = new JSONArray(r);
@@ -302,7 +332,6 @@ public class SearchView extends Activity implements OnClickListener {
 				}
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -317,7 +346,6 @@ public class SearchView extends Activity implements OnClickListener {
 		else {
 			
 			mResultList.setVisibility(View.VISIBLE);
-//			mResultList.postInvalidate();
 			ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
 	        
 	        // First, add the category line.
@@ -359,7 +387,9 @@ public class SearchView extends Activity implements OnClickListener {
 	  				mDownloadProgress.setMessage("Downloading...");
 	  				mDownloadProgress.setCancelable(true);
 	  				mDownloadProgress.show();
-	  				mDownloadHandler.post(mDownloadThread);
+	  				Message msg = new Message();
+	  				msg.what = DOWNLOAD_MESSAGE;
+	  				mSearchHandler.sendMessage(msg);
 				}  
 	        });	
 		}
@@ -396,6 +426,7 @@ public class SearchView extends Activity implements OnClickListener {
 			                    // Month is 0 based so add 1
 			                    .append(monthOfYear + 1).append("-")
 			                    .append(dayOfMonth).toString();
+								// TODO: need add one dayofMonth due to backend issue.
 								mEndText.setText(mEndDate);
 							}
 						},
@@ -414,16 +445,16 @@ public class SearchView extends Activity implements OnClickListener {
 		}
 		
 		public View getView(int position, View convertView, ViewGroup parent) {
-			if (position == 0) {
-				View row = super.getView(position, convertView, parent);
-		        TextView title = (TextView) row.findViewById(R.id.list_search_title);
-		        title.setTextColor(getResources().getColor(R.color.white));
-		        TextView date = (TextView) row.findViewById(R.id.list_search_time);
-		        date.setTextColor(getResources().getColor(R.color.white));
-		        TextView total = (TextView) row.findViewById(R.id.list_search_total);
-		        total.setTextColor(getResources().getColor(R.color.white));
-		        return super.getView(position, convertView, parent);
-			}
+//			if (position == 0) {
+//				View row = super.getView(position, convertView, parent);
+//		        TextView title = (TextView) row.findViewById(R.id.list_search_title);
+//		        title.setTextColor(getResources().getColor(R.color.white));
+//		        TextView date = (TextView) row.findViewById(R.id.list_search_time);
+//		        date.setTextColor(getResources().getColor(R.color.white));
+//		        TextView total = (TextView) row.findViewById(R.id.list_search_total);
+//		        total.setTextColor(getResources().getColor(R.color.white));
+//		        return super.getView(position, convertView, parent);
+//			}
 			return super.getView(position, convertView, parent);
 	    }
 	}

@@ -28,7 +28,7 @@ public class ReceiptItem {
 	public ReceiptItem(JSONObject item) {
 		// item id could be null.
 		try {
-			if (item.getString(PARAM_ITEM_ID).equals(null)) {
+			if (!item.isNull(PARAM_ITEM_ID)) {
 				mItemId = item.getString(PARAM_ITEM_ID);
 			}
 			else {

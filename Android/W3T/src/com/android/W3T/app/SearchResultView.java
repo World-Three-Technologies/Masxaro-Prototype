@@ -24,6 +24,8 @@ import android.widget.TextView;
 public class SearchResultView extends Activity implements OnClickListener {
 	public static final String TAG = "SearchResultViewActivity";
 	
+	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+	
 	private Button mBackListBtn;
 	
 	private Receipt mReceipt;
@@ -40,10 +42,12 @@ public class SearchResultView extends Activity implements OnClickListener {
 		String detailstr = (String) getIntent().getSerializableExtra("detail");
 		String itemsstr = (String) getIntent().getSerializableExtra("items");
 		try {
-			mReceipt = new Receipt((new JSONArray(detailstr)).getJSONObject(0), true);
-			mReceipt.addItems(new JSONArray(itemsstr));
+			mReceipt = new Receipt((new JSONArray(detailstr)).getJSONObject(0), FROM_DB);
+			// if the items are empty.
+			if (itemsstr != null) {
+				mReceipt.addItems(new JSONArray(itemsstr));
+			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

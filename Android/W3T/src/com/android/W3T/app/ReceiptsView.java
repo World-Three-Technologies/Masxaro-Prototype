@@ -31,6 +31,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -63,6 +64,8 @@ public class ReceiptsView extends Activity implements OnClickListener,
 	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
+
+	private static final int SYNC_MESSAGE = 1;
 	
 	private Button mSyncBtn;
 	private Button mBackListBtn;
@@ -73,8 +76,19 @@ public class ReceiptsView extends Activity implements OnClickListener,
 //	private LinearLayout mReceiptsView;
 	
 	private int mCurReceipt = 0;
-	private ProgressDialog mRefreshProgress;
-	private Handler mUpdateHandler = new Handler();
+	private ProgressDialog mSyncProgress;
+	private Handler mUpdateHandler = new Handler() {
+        public void handleMessage(Message msg)  
+        {  
+            super.handleMessage(msg);  
+            switch (msg.what) {  
+            case SYNC_MESSAGE:  
+                Thread thread = new Thread(mReceiptThread);
+                thread.start();  
+                break;
+            }  
+        }  
+	};
 	private Runnable mReceiptThread = new Runnable() {
 		@Override
 		public void run() {
@@ -95,7 +109,7 @@ public class ReceiptsView extends Activity implements OnClickListener,
 				}
 				Log.i(TAG, "finished new receipts");
 				Log.i(TAG, "update receipt view");
-				mRefreshProgress.dismiss();
+				mSyncProgress.dismiss();
 			}
 		}
 	};
@@ -110,7 +124,6 @@ public class ReceiptsView extends Activity implements OnClickListener,
 		mBackListBtn = (Button) findViewById(R.id.b_to_ls_btn);
 		mBackListBtn.setOnClickListener(this);
 		
-//		mReceiptsView = ((LinearLayout) findViewById(R.id.receipt_view));
 		((LinearLayout) findViewById(R.id.receipt_view)).setOnTouchListener(this);
 		((LinearLayout) findViewById(R.id.receipt_view)).setLongClickable(true);
 		((ScrollView) findViewById(R.id.fling)).setOnTouchListener(this);
@@ -133,12 +146,14 @@ public class ReceiptsView extends Activity implements OnClickListener,
 		if (v == mSyncBtn) {
 			Log.i(TAG, "handler post a new thread");
 			// Show a progress bar and send account info to server.
-			mRefreshProgress = new ProgressDialog(ReceiptsView.this);
-			mRefreshProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			mRefreshProgress.setMessage("Refreshing...");
-			mRefreshProgress.setCancelable(true);
-			mRefreshProgress.show();
-			mUpdateHandler.post(mReceiptThread);
+			mSyncProgress = new ProgressDialog(ReceiptsView.this);
+			mSyncProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mSyncProgress.setMessage("Syncing...");
+			mSyncProgress.setCancelable(true);
+			mSyncProgress.show();
+			Message msg = new Message();
+			msg.what = SYNC_MESSAGE;
+			mUpdateHandler.sendMessage(msg);
 		}
 		else if (v == mBackListBtn) {
 			setBackIntent();

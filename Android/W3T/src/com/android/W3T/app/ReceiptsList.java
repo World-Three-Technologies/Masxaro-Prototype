@@ -41,6 +41,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,12 +69,24 @@ public class ReceiptsList extends Activity implements OnClickListener {
 	private static final int ENTRY_STORE_NAME = Receipt.ENTRY_STORE_NAME;
 	private static final int ENTRY_TIME = Receipt.ENTRY_TIME;
 	
+	private static final int SYNC_MESSAGE = 1;
+	
 	private ListView mList;
 	private Button mSyncBtn;
 	private Button mBackFrontBtn;
 	
 	private ProgressDialog mSyncProgress;
-	private Handler mUpdateHandler = new Handler();
+	private Handler mUpdateHandler = new Handler() {
+        public void handleMessage(Message msg) {  
+            super.handleMessage(msg);  
+            switch (msg.what) {  
+            case SYNC_MESSAGE:  
+                Thread thread = new Thread(mReceiptThread);
+                thread.start();  
+                break;
+            }  
+        }
+	};
 	private Runnable mReceiptThread = new Runnable() {
 		@Override
 		public void run() {
@@ -84,12 +97,10 @@ public class ReceiptsList extends Activity implements OnClickListener {
             	Toast.makeText(ReceiptsList.this, "Sending receipts occurred error", Toast.LENGTH_SHORT);
             }
 			ReceiptsManager.initReceiptsManager();
-			
 			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL, null);
 			if (jsonstr != null) {
 				Log.i(TAG, "add new receipts");
-				// TODO: pick up the basic info of the latest 7 receipts and list them here.
-				System.out.println(jsonstr);
+//				System.out.println(jsonstr);
 				// Set the IsUpload true
 				if (!ReceiptsManager.add(jsonstr, FROM_DB)){
 					Toast.makeText(ReceiptsList.this, "cannot add more receipts into the pool", Toast.LENGTH_SHORT);
@@ -189,7 +200,9 @@ public class ReceiptsList extends Activity implements OnClickListener {
 			mSyncProgress.setMessage("Syncing...");
 			mSyncProgress.setCancelable(true);
 			mSyncProgress.show();
-			mUpdateHandler.post(mReceiptThread);
+			Message msg = new Message();
+			msg.what = SYNC_MESSAGE;
+			mUpdateHandler.sendMessage(msg);
 		}
 		else if (v == mBackFrontBtn) {
 			// Back to Front Page when there is no reciept

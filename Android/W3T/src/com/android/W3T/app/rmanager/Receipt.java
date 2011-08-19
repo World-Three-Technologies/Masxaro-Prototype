@@ -42,17 +42,19 @@ public class Receipt implements Serializable{
 	public static final String PARAM_ITEM_PRICE = ReceiptItem.PARAM_ITEM_PRICE;
 	public static final String PARAM_ITEM_DISCOUNT = ReceiptItem.PARAM_ITEM_DISCOUNT;
 	
+	// Receipt basic info entries which will be displayed on receipts.
 	public static final int ENTRY_STORE_NAME = 0;
 	public static final int ENTRY_TIME = 1;
-	public static final int ENTRY_ID = 2;
+	public static final int ENTRY_RECEIPT_ID = 2;
 	public static final int ENTRY_TAX = 3;
 	public static final int ENTRY_TOTAL = 4;
 	public static final int ENTRY_CURRENCY = 5;
-	public static final int ENTRY_STORE_ACC = 6;
+	public static final int ENTRY_CUT_DOWN = 6;
 	public static final int ENTRY_EXTRA_COST = 7;
 	public static final int ENTRY_SUB_COST = 8;
-	public static final int ENTRY_CUT_DOWN = 9;
-	public static final int ENTRY_SOURCE = 10;
+	public static final int ENTRY_ID = 9;
+	public static final int ENTRY_STORE_ACC = 10;
+	public static final int ENTRY_SOURCE = 11;
 	
 	private BasicInfo basic;
 	private ArrayList<ReceiptItem> mItems;	// Items in this receipt
@@ -84,8 +86,8 @@ public class Receipt implements Serializable{
 		case ENTRY_TIME:
 			result = getTime();
 			break;
-		case ENTRY_ID:
-			result = getId();
+		case ENTRY_RECEIPT_ID:
+			result = getReceiptId();
 			break;
 		case ENTRY_TAX:
 			result = getTax();
@@ -107,6 +109,9 @@ public class Receipt implements Serializable{
 			break;
 		case ENTRY_CUT_DOWN:
 			result = getCutDown();
+			break;
+		case ENTRY_ID:
+			result = getId();
 			break;
 		case ENTRY_SOURCE:
 			result = getSource();
@@ -162,6 +167,10 @@ public class Receipt implements Serializable{
 	
 	private String getId() {
 		return basic.getId();
+	}
+	
+	private String getReceiptId() {
+		return basic.getReceiptId();
 	}
 	
 	private String getStoreName() {
