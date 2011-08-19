@@ -30,6 +30,9 @@ public class SearchResultView extends Activity implements OnClickListener {
 	
 	private Receipt mReceipt;
 	
+	private boolean mSet;		// whether the view is already set, prevent from repeatedly
+								// add item entries for some situation, like press standby button.
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.i(TAG, "onCreate(" + savedInstanceState +")");
@@ -50,6 +53,8 @@ public class SearchResultView extends Activity implements OnClickListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		
+		mSet = false;
 	}
 	
 	@Override
@@ -57,7 +62,10 @@ public class SearchResultView extends Activity implements OnClickListener {
 		Log.i(TAG, "onResume()");
 		super.onResume();
 		Log.i(TAG, "handler post a new thread");
-		fillReceiptView();
+		if (mSet == false) {
+			fillReceiptView();
+			mSet = true; 			// the item entries are listed.
+		}
 	}
 	
 	@Override
