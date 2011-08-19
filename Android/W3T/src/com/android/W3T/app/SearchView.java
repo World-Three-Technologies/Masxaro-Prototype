@@ -1,6 +1,7 @@
 package com.android.W3T.app;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -421,13 +422,21 @@ public class SearchView extends Activity implements OnClickListener {
 							@Override
 							public void onDateSet(DatePicker view, int year,
 									int monthOfYear, int dayOfMonth) {
+								Calendar c = Calendar.getInstance();
+								c.set(year, monthOfYear, dayOfMonth);
+								c.add(Calendar.DAY_OF_MONTH, 1);
 								mEndDate = new StringBuilder()
-								.append(year).append("-")
+								.append(String.valueOf(c.get(Calendar.YEAR))).append("-")
 			                    // Month is 0 based so add 1
-			                    .append(monthOfYear + 1).append("-")
-			                    .append(dayOfMonth).toString();
-								// TODO: need add one dayofMonth due to backend issue.
-								mEndText.setText(mEndDate);
+			                    .append(String.valueOf(c.get(Calendar.MONTH)+1)).append("-")
+			                    .append(String.valueOf(c.get(Calendar.DAY_OF_MONTH))).toString();
+								
+								String date = new StringBuilder()
+								.append(year).append("-")
+								// Month is 0 based so add 1
+								.append(monthOfYear+1).append("-")
+								.append(dayOfMonth).toString();
+								mEndText.setText(date);
 							}
 						},
 		                2011, 0, 1);

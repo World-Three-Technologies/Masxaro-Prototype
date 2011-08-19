@@ -48,16 +48,16 @@ public class BasicInfo {
 	public static final String PARAM_RECEIPT_RECEIPT_ID = "store_define_id";
 	
 	private String mId;
-	private String mReceiptId;
+	private String mReceiptId;		// optional when null, it's N/A
 	private String mTime;
 	private String mStoreName;
-	private String mStoreAcc;
+	private String mStoreAcc;		// optional. not null when
 	private String mTax;
 	private String mTotal;
 	private String mCurrency;
-	private String mExtraCost;
-	private String mSubCost;
-	private String mCutDownCost;
+	private String mExtraCost;		// optional
+	private String mSubCost;		// optional
+	private String mCutDownCost;	// optional
 	private String mSource;
 	
 	public BasicInfo() {
@@ -97,6 +97,9 @@ public class BasicInfo {
 			mCurrency = basic.getString(PARAM_RECEIPT_CURRENCY);
 			Log.i(TAG, "get currency"+mCurrency);
 			
+			mSource = basic.getString(PARAM_RECEIPT_SOURCE);
+			Log.i(TAG, "get source"+mSource);
+			
 			if (!basic.isNull(PARAM_RECEIPT_EXTRA_COST)) {
 				mExtraCost = basic.getString(PARAM_RECEIPT_EXTRA_COST);
 				Log.i(TAG, "get extra cost"+mExtraCost);
@@ -104,9 +107,6 @@ public class BasicInfo {
 			
 			if (!basic.isNull(PARAM_RECEIPT_RECEIPT_ID)) {
 				mReceiptId = basic.getString(PARAM_RECEIPT_RECEIPT_ID);
-//				if (mReceiptId == null) {
-//					mReceiptId = "N/A";
-//				}
 				Log.i(TAG, "get store define id"+mReceiptId);
 			}
 			else {
@@ -124,16 +124,12 @@ public class BasicInfo {
 				Log.i(TAG, "get cut down cost"+mCutDownCost);
 			}
 			
-			mSource = basic.getString(PARAM_RECEIPT_SOURCE);
-			Log.i(TAG, "get source"+mSource);
-			
 			if (!basic.isNull(PARAM_RECEIPT_STORE_ACC)) {
 				mStoreAcc = basic.getString(PARAM_RECEIPT_STORE_ACC);
 				Log.i(TAG, "get store acc"+mStoreAcc);
 			}
 			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
