@@ -138,8 +138,6 @@ abstract class ClientCtrl extends Ctrl{
 				`{$this->clientType}_account`='$acc'
 			AND
 				`pwd`='$pwd'
-			AND 
-				`verified`=1
 		";
 		
 		$this->db->select($sql);

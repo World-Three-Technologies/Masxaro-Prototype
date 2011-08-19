@@ -25,10 +25,11 @@
  */
 class ContactCtrl extends Ctrl{
 	
-	public $regex = "(^.*@masxaro)";
+	public $regex;
 	
 	function __construct(){
 		parent::__construct();
+		$this->regex = "(@".DOMAIN.")";
 	}
 	
 	/**
@@ -165,13 +166,13 @@ class ContactCtrl extends Ctrl{
 			
 			$acc = isset($info[$i]['user_account']) ? $info[$i]['user_account'] : $info[$i]['store_account'];
 			
-			$masxaroMailChkPreg = "(^$acc)";
+			$masxaroMailChkPreg = "(^".BASE_ACC."+$acc)";
 			
 			//only one masxaro mail box is allowed, $acc@masxaro.com
-			if(preg_match($this->regex, $info[$i]['value']) 
-			   && !preg_match($masxaroMailChkPreg, $info[$i]['value'])){
-				return false;
-			}
+//			if(preg_match($this->regex, $info[$i]['value']) 
+//			   && !preg_match($masxaroMailChkPreg, $info[$i]['value'])){
+//				return false;
+//			}
 			
 			$cur = Tool::infoArray2SQL($info[$i]);
 			
@@ -342,6 +343,34 @@ class ContactCtrl extends Ctrl{
 		$this->db->select($sql);
 		
 		return $this->db->fetchAssoc();
+	}
+	
+	/**
+	 * 
+	 * based on contact value get account
+	 * @param string $contact
+	 * @param string $who user/store
+	 */
+	public function getContactAccount($contact, $who){
+		$who .= '_account';
+		
+		$sql = "
+			SELECT 
+				`$who`
+			FROM 
+				`contact`
+			WHERE
+				`value`='$contact'
+		";
+		
+		$this->db->select($sql);
+		
+		if($this->db->numRows() == 0){
+			return null;
+		}
+		
+		$result = $this->db->fetchAssoc();
+		return $result[0]["$who"];
 	}
 	
 }

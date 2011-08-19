@@ -44,7 +44,7 @@ switch($info[0]){
 		$ctrl = new UserCtrl();
 		break;
 		
-	case 'user':
+	case 'store':
 		$ctrl = new StoreCtrl();
 		break;
 		
@@ -55,27 +55,26 @@ switch($info[0]){
 $tmp = $ctrl->find($acc, $pwd);
 
 if($tmp < 0){
-	$emailCtrl = new EmailCtrl();
-	if($emailCtrl->createUserAcc($acc)){
-		if($ctrl->update($acc, array('verified'=>true))){
-			die('verification success');
-		}
-		else{
-			$emailCtrl->deleteAcc("$acc@".DOMAIN);
-			die('verification failed, server error.');
-		}
-	} 
+//	if($info[0] == 'user'){
+//		$emailCtrl = new EmailCtrl();
+//		if(!$emailCtrl->createUserAcc($acc)){
+//			die('verification failed. Mail account error');
+//		}
+//	}
+	if($ctrl->update($acc, array('verified'=>true))){
+		die('Verification success');
+	}
 	else{
-		die('verification failed.');
+		die('Verification failed.');
 	}
 }
 
 if($tmp == 0){
-	die('illegal verification');
+	die('Account doesn\'t exist');
 }
 
 else{
-	die('already verified');
+	die('Already verified');
 }
 
 ?>

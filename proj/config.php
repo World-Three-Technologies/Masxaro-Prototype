@@ -31,6 +31,7 @@ ini_set('include_path',
 			ROOT_PATH.'/php/:'
 			.ROOT_PATH.'/php/class/:'
 			.ROOT_PATH.'/php/class/common/:'
+			.ROOT_PATH.'/php/class/builder/:'
 			.ROOT_PATH.'/php/class/control/:'
 			.ROOT_PATH.'/php/class/entity/:'
 			.ROOT_PATH.'/php/class/unitTest/:'
@@ -98,10 +99,18 @@ define('DB_DBNAME', 'w3tdb');
 /*
  * email config
  */
-define('DOMADMIN_EMAIL', 'bws@masxaro.net');
+/**
+ * 
+ * @todo modify correct DOMAIN parameters
+ */
+define('DOMADMIN_EMAIL', 'Masxaro-receipts@masxaro.com');
 define('DOMADMIN_PWD', 'Masxaro2011!');
-define('DOMAIN', 'masxaro.net');
+
+
+define('DOMAIN', 'masxaro.com');
 define('IMAP_HOST', '{imap.gmail.com:993/imap/ssl/novalidate-cert}INBOX');
+define('BASE_ACC', 'Masxaro-receipts');
+define('BASE_ACC_PWD', 'Masxaro2011!');
 define('EMAIL_DIR', ROOT_PATH.'/masxaro_email_tmp');
 
 if(!is_dir(EMAIL_DIR)){
@@ -112,7 +121,10 @@ if(!is_dir(EMAIL_DIR)){
  * register config
  */
 $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-$url = substr($url, 0, strripos($url, "/") + 1).'verifyRegister.php';
-define('REGISTER_V_URL', $url);
+$reg_v_url = substr($url, 0, strripos($url, "/") + 1).'verifyRegister.php';
+$receipt_url = substr($url, 0, strripos($url, "/") + 1).'receiptOperation.php';
+
+define('REGISTER_V_URL', $reg_v_url);
+define('RECEIPT_URL', $receipt_url);
 
 ?>
