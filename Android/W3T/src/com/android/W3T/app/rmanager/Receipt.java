@@ -71,7 +71,7 @@ public class Receipt implements Serializable{
 	}
 	
 	public Receipt(JSONObject str, boolean w) {
-		basic = new BasicInfo(str);
+		basic = new BasicInfo(str, w);
 		mItems = new ArrayList<ReceiptItem>();
 		mNumItems = 0;
 		mWhere = w;
@@ -133,11 +133,11 @@ public class Receipt implements Serializable{
 			ReceiptItem item = mItems.get(i);
 			JSONObject itemstr = new JSONObject();
 			try {
-				itemstr.put("PARAM_ITEM_ID", item.getItemId());
-				itemstr.put("PARAM_ITEM_NAME", item.getName());
-				itemstr.put("PARAM_ITEM_QTY", item.getQty());
-				itemstr.put("PARAM_ITEM_PRICE", item.getPrice());	
-				itemstr.put("PARAM_ITEM_DISCOUNT", item.getDiscount());
+				itemstr.put(PARAM_ITEM_ID, item.getItemId());
+				itemstr.put(PARAM_ITEM_NAME, item.getName());
+				itemstr.put(PARAM_ITEM_QTY, item.getQty());
+				itemstr.put(PARAM_ITEM_PRICE, item.getPrice());	
+				itemstr.put(PARAM_ITEM_DISCOUNT, item.getDiscount());
 				items.put(i, itemstr);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block

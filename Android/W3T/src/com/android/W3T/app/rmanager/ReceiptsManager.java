@@ -144,9 +144,8 @@ public class ReceiptsManager {
 		int id = Integer.parseInt(r.getEntry(PARAM_ID));
 		// should check the database whether the receipt is already in the database.
 		for (int i=0;i<NUM_RECEIPT;i++) {
-			if (sReceiptId[i] == id) {
+			if (id != -1 && sReceiptId[i] == id) {
 				get = true;
-//				if (getNumValid() == 7)
 				break;
 			}
 		}

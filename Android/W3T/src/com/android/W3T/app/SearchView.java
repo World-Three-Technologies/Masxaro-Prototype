@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.BasicInfo;
+import com.android.W3T.app.rmanager.ReceiptsManager;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -44,6 +45,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class SearchView extends Activity implements OnClickListener {
 	public static final String TAG = "SearchViewActivity";
 
+	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+	
 	private static final String RECEIVE_RECEIPT_DETAIL = "user_get_receipts_detail";
 	private static final String RECEIVE_RECEIPT_ITEMS = "user_get_receipts_items";
 	
@@ -54,7 +57,6 @@ public class SearchView extends Activity implements OnClickListener {
 	
 	public static final int STORE_ITEM = 0;
 	public static final int TAG_NAME = 1;
-//	public static final int DATE = 2;
 	
 	private static final int SEVEN_DAYS = 7;
 	private static final int FOURTEEN_DAYS = 14;
@@ -68,6 +70,7 @@ public class SearchView extends Activity implements OnClickListener {
 	private static final int SEARCH_MESSAGE = 1;
 	private static final int DOWNLOAD_MESSAGE = 2;
 	private static final int SEARCH_COMPLETE = 3;
+	private static final int DATE_MISSING = 4;
 	
 	private ArrayList<BasicInfo> basics = new ArrayList<BasicInfo>();
 	private int mSearchBy = 0;
@@ -109,13 +112,15 @@ public class SearchView extends Activity implements OnClickListener {
             	searchResultDecode(mResult);
 				createSearchResultList();
             	break;
+            case DATE_MISSING:
+				Toast.makeText(SearchView.this, "Pleae select date first.", Toast.LENGTH_SHORT).show();
+            	break;
             }  
         }  
 	};
 	private Runnable mSearchThread = new Runnable() {
 		@Override
 		public void run() {
-			
 			String text = mSearchTerms.getText().toString();
 			String[] terms;
 			// Upload non-uploaded receipts
@@ -136,7 +141,10 @@ public class SearchView extends Activity implements OnClickListener {
 						mSearchHandler.sendMessage(msg);
 					}
 					else {
-						Toast.makeText(SearchView.this, "Pleae select date", Toast.LENGTH_SHORT).show();
+						mSearchProgress.dismiss();
+						Message msg = new Message();
+						msg.what = DATE_MISSING;
+						mSearchHandler.sendMessage(msg);
 					}
 				}
 				else {
@@ -213,8 +221,6 @@ public class SearchView extends Activity implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mStartDate = "";
-	    mEndDate = "";
 	}
 	
 	@Override
@@ -299,6 +305,8 @@ public class SearchView extends Activity implements OnClickListener {
 	}
 	
 	private void setDateRange(int pos) {
+		mStartDate = "";
+		mEndDate = "";
     	switch (pos) {
 		case 0:
 			mSearchRange = SEVEN_DAYS;
@@ -329,13 +337,12 @@ public class SearchView extends Activity implements OnClickListener {
 				int num = result.length();
 				for (int i=0;i<num;i++) {
 					JSONObject b = result.getJSONObject(i);
-					basics.add(new BasicInfo(b));
+					basics.add(new BasicInfo(b, FROM_DB));
 				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	private void createSearchResultList() {
@@ -345,7 +352,6 @@ public class SearchView extends Activity implements OnClickListener {
 			mResultList.setAdapter(null);
 		}
 		else {
-			
 			mResultList.setVisibility(View.VISIBLE);
 			ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
 	        
@@ -425,12 +431,13 @@ public class SearchView extends Activity implements OnClickListener {
 								Calendar c = Calendar.getInstance();
 								c.set(year, monthOfYear, dayOfMonth);
 								c.add(Calendar.DAY_OF_MONTH, 1);
+								// This date is for search param.
 								mEndDate = new StringBuilder()
 								.append(String.valueOf(c.get(Calendar.YEAR))).append("-")
 			                    // Month is 0 based so add 1
 			                    .append(String.valueOf(c.get(Calendar.MONTH)+1)).append("-")
 			                    .append(String.valueOf(c.get(Calendar.DAY_OF_MONTH))).toString();
-								
+								// This date is going to be shown on display. 
 								String date = new StringBuilder()
 								.append(year).append("-")
 								// Month is 0 based so add 1

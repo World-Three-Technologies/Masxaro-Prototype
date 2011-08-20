@@ -34,6 +34,8 @@ import android.util.Log;
 public class BasicInfo {
 	public static final String TAG = "BasicInfo";
 	
+	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+	
 	public static final String PARAM_RECEIPT_ID = "id";
 	public static final String PARAM_RECEIPT_TIME = "receipt_time";
 	public static final String PARAM_RECEIPT_TAX = "tax";
@@ -75,14 +77,25 @@ public class BasicInfo {
 		mSource = null;
 	}
 	
-	public BasicInfo(JSONObject basic) {
+	public BasicInfo(JSONObject basic, boolean where) {
 		try {
 			Log.i(TAG, "basic json "+basic);
 			
-			mId = basic.getString(PARAM_RECEIPT_ID);
+			// the receipts from nfc device have no id.
+			if (where == FROM_DB) {
+				mId = basic.getString(PARAM_RECEIPT_ID);
+			}
+			else {
+				mId = "-1";		// -1 means the receipt is from NFC and not synced yet.
+			}
 			Log.i(TAG, "get id"+mId);
 			
-			mTime = basic.getString(PARAM_RECEIPT_TIME);
+			if (where == FROM_DB) {
+				mTime = basic.getString(PARAM_RECEIPT_TIME);
+			}
+			else {
+				mTime = "not synced yet";
+			}
 			Log.i(TAG, "get time"+mTime);
 			
 			mStoreName = basic.getString(PARAM_RECEIPT_STORE_NAME);

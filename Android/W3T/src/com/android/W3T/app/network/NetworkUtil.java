@@ -79,6 +79,8 @@ public class NetworkUtil {
 	public static final int ENTRY_EXTRA_COST = 7;
 	public static final int ENTRY_SUB_COST = 8;
 	public static final int ENTRY_ID = 9;
+	public static final int ENTRY_STORE_ACC = 10;
+	public static final int ENTRY_SOURCE = 11;
 	
 	// Receipt View
 	public static final String METHOD_RECEIVE_ALL = "user_get_all_receipt";
@@ -254,14 +256,17 @@ public class NetworkUtil {
         	if (op.equals(METHOD_SEND_RECEIPT)) {
         		// Add your data
             	JSONObject basicInfo = new JSONObject();
-            	basicInfo.put("store_account", r.getEntry(6));		// store name
-            	basicInfo.put("tax", r.getEntry(3));				// tax
-            	basicInfo.put("total_price", r.getEntry(4));		// total price
+            	basicInfo.put("store_account", r.getEntry(ENTRY_STORE_ACC));// store name
+            	basicInfo.put("currency_mark", r.getEntry(ENTRY_CURRENCY));
+            	basicInfo.put("store_define_id", r.getEntry(ENTRY_RECEIPT_ID));
+            	basicInfo.put("source", r.getEntry(ENTRY_SOURCE));
+            	basicInfo.put("tax", r.getEntry(ENTRY_TAX));				// tax
+            	basicInfo.put("total_cost", r.getEntry(ENTRY_TOTAL));		// total price
             	basicInfo.put("user_account", UserProfile.getUsername());
             	JSONObject receipt = new JSONObject();
             	receipt.put("receipt", basicInfo);
             	receipt.put("items", r.getItemsJsonArray());
-            	receipt.put("opcode", METHOD_SEND_RECEIPT);
+            	receipt.put("opcode", op);
             	receipt.put("acc", UserProfile.getUsername());
             	jsonstr.put("json", receipt);
         	}
@@ -355,16 +360,14 @@ public class NetworkUtil {
                 	param.put("keys", keys);
         		}
         		else if (terms.length < 2) {
-        			System.out.println("Wrong terms");
+        			System.out.println("Wrong terms: no start or end date.");
         			return null;
         		}
         		JSONObject timeRange = new JSONObject();
         		timeRange.put("start", terms[terms.length - 2]);
         		timeRange.put("end", terms[terms.length - 1]);
         		param.put("timeRange", timeRange);
-            	
             	jsonstr.put("json", param);
-
         	}
         	URL url = new URL(RECEIPT_OP_URL);
         	URLConnection connection = url.openConnection();
@@ -397,5 +400,4 @@ public class NetworkUtil {
 		}
 		return null;
     }
-
 }
