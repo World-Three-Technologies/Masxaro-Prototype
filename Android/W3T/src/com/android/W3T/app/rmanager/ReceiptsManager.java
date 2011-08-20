@@ -41,7 +41,7 @@ public class ReceiptsManager {
 	public static final String TAG = "ReceiptManager";
 	
 	public static final int NUM_RECEIPT = 7;
-	public static final int NUM_RECEIPT_BASIC = 5;
+	public static final int NUM_RECEIPT_BASIC = 6;
 	
 	// the flags are used in add(jsonstr, where) method
 	public static final boolean FROM_DB = true;

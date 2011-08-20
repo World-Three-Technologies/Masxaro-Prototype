@@ -118,7 +118,6 @@ public class NetworkUtil {
 				try {
 					time = (new JSONArray(detailstr)).getJSONObject(0).getString("receipt_time");
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
     			receipts.get(i).getBasicInfo().setTime(time);
@@ -130,7 +129,6 @@ public class NetworkUtil {
         		return false;
         	}
         }
-        // TODO: return due to no unsent receipts.
         return true;
 	}
 	
