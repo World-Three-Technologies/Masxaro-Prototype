@@ -165,6 +165,10 @@ public class Receipt implements Serializable{
 		return mNumItems;
 	}
 	
+	public BasicInfo getBasicInfo() {
+		return basic;
+	}
+	
 	private String getId() {
 		return basic.getId();
 	}

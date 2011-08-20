@@ -53,6 +53,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.*;
 
 import com.android.W3T.app.MainPage;
+import com.android.W3T.app.rmanager.BasicInfo;
 import com.android.W3T.app.rmanager.Receipt;
 import com.android.W3T.app.rmanager.ReceiptsManager;
 import com.android.W3T.app.user.UserProfile;
@@ -107,7 +108,22 @@ public class NetworkUtil {
 		ArrayList<Receipt> receipts = ReceiptsManager.getUnSentReceipts();
         int num = receipts.size();
         for (int i=0;i<num;i++) {
-        	if (NetworkUtil.attemptSendReceipt(METHOD_SEND_RECEIPT, receipts.get(i))) {
+        	int ret = NetworkUtil.attemptSendReceipt(METHOD_SEND_RECEIPT, receipts.get(i));
+        	if (ret > 0) {
+        		String detailstr = null;
+    			detailstr = NetworkUtil.attemptGetReceipt(METHOD_RECEIVE_RECEIPT_DETAIL, String.valueOf(ret));
+//    			String itemsstr = null;
+//    			itemsstr = NetworkUtil.attemptGetReceipt(METHOD_RECEIVE_RECEIPT_ITEMS, String.valueOf(ret));
+    			String time = null;
+				try {
+					time = (new JSONArray(detailstr)).getJSONObject(0).getString("receipt_time");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    			receipts.get(i).getBasicInfo().setTime(time);
+    			receipts.get(i).getBasicInfo().setId(String.valueOf(ret));
+    			
         		receipts.get(i).setWhere(FROM_DB);
         	}
         	else {
@@ -247,7 +263,7 @@ public class NetworkUtil {
 		return null;
 	}
 	
-	public static boolean attemptSendReceipt(String op, Receipt r) {
+	public static int attemptSendReceipt(String op, Receipt r) {
 		// Here we may want to check the network status.
 		checkNetwork();
         try {
@@ -285,9 +301,9 @@ public class NetworkUtil {
         	String s = in.readLine();
         	System.out.println(s);
         	if (Integer.valueOf(s) > 0) {
-        		return true;
+        		return Integer.valueOf(s);
         	}
-        	else return false;
+        	else return 0;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -295,7 +311,7 @@ public class NetworkUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;
+		return 0;
 	}
 	
 	public static String attemptSearch(String op, int range, String[] terms) {   
