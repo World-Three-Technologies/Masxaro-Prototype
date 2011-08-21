@@ -9,7 +9,7 @@ var Receipt = Backbone.Model.extend({
 
   sync:function(method,model,options){
     model.set({"user_account":account});
-    var data;
+    var data = {};
     if(method == "read"){
       data = {
         opcode : "user_get_receipt_detail",

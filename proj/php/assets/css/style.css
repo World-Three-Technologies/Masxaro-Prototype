@@ -346,3 +346,17 @@ footer {
     margin: 10px; }
   #dashboard-view img {
     margin: 3px; }
+
+.accounts-view nav {
+  width: 320px;
+  display: block;
+  float: left;
+  margin-top: 40px; }
+.accounts-view .boards {
+  width: 640px;
+  float: left;
+  text-align: left; }
+  .accounts-view .boards .content {
+    padding: 40px; }
+  .accounts-view .boards .admin, .accounts-view .boards .preference, .accounts-view .boards .credit, .accounts-view .boards .email {
+    display: none; }

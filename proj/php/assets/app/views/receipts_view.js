@@ -7,7 +7,6 @@ window.ReceiptsView = Backbone.View.extend({
 
   end:1,
 
-
   initialize:function(){
     _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
                   "setEnd","search","after","fetch","error");

@@ -463,3 +463,23 @@ footer{
   img{margin:3px;}
 }
 
+//account page
+.accounts-view{
+  nav{
+    @include grid(8);
+    display:block;
+    float:left;
+    margin-top:40px;
+  }
+  .boards{
+    @include grid(16);
+    float:left;
+    text-align:left;
+    .content{
+      padding:40px;
+    }
+    .admin,.preference,.credit,.email{
+      display:none;
+    }
+  }
+} 
