@@ -219,12 +219,14 @@ main (int argc, char *argv[])
   FILE *fp;
   char *filename;
   char c;
+  int i = 0;
   
+  filename = (char *) malloc(10*sizeof(char));
   fflush(stdin);
   printf("Please load receipt:\n");
-//  scanf("%s", filename);
+  gets(filename);
   
-  if ((fp = fopen("receipt1", "r")) == NULL) {
+  if ((fp = fopen(filename, "r")) == NULL) {
 	printf("can not open this file\n");
 	exit(0);
   }
