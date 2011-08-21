@@ -347,16 +347,31 @@ footer {
   #dashboard-view img {
     margin: 3px; }
 
-.accounts-view nav {
-  width: 320px;
-  display: block;
-  float: left;
-  margin-top: 40px; }
-.accounts-view .boards {
-  width: 640px;
-  float: left;
+.accounts-view h2 {
+  margin: 20px;
   text-align: left; }
+.accounts-view nav {
+  text-align: left;
+  width: 240px;
+  display: block;
+  float: left; }
+  .accounts-view nav li {
+    font-size: 28px;
+    padding: 5px; }
+  .accounts-view nav .active {
+    background: white; }
+.accounts-view .boards {
+  min-height: 400px;
+  background: white;
+  padding: 10px 20px;
+  text-align: left;
+  width: 640px;
+  float: left; }
   .accounts-view .boards .content {
-    padding: 40px; }
+    width: 480px;
+    float: left; }
+  .accounts-view .boards aside {
+    width: 160px;
+    float: left; }
   .accounts-view .boards .admin, .accounts-view .boards .preference, .accounts-view .boards .credit, .accounts-view .boards .email {
     display: none; }

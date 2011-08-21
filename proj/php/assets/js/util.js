@@ -28,14 +28,21 @@ var bindAjax = function(el){
 
   target.validate({
     submitHandler:function(form){
-
       $.each(attrs,function(i,v){
-        var el = $(v)
-        data[el.attr("name")] = el.val();
+        var el = $(v);
+        var name = el.attr("name");
+        if(name.indexOf("-") > -1){
+          var field = name.split("-");
+          if(typeof data[field[0]] == "undefined" || data[field[0]] == null){
+            data[field[0]] = {};
+          }
+          data[field[0]][field[1]] = el.val();
+        }else{
+          data[name] = el.val();
+        }
       });
-
       $.post(action,data).success(function(data){
-        if(data != "u1"){
+        if(data != "1" && data != ""){
           alert(data);
           return;
         }

@@ -22,7 +22,7 @@ window.ReceiptsView = Backbone.View.extend({
   },
 
   search:function(query,type){
-    if(query == "" || query == "undefined"){
+    if(typeof query == "undefined" || query == ""){
       return;
     }
     var keys = query.split(" "); 
@@ -47,15 +47,14 @@ window.ReceiptsView = Backbone.View.extend({
 
   before:function(){
     this.cleanResults();
-    $('.receipts-stat').hide();
-    $('#ajax-loader').show();
+    this.$('.receipts-stat').hide();
+    this.$('#ajax-loader').show();
   },
 
   after:function(){
-    $('#ajax-loader').hide();
-    $('.receipts-stat').show();
+    this.$('#ajax-loader').hide();
+    this.$('.receipts-stat').show();
   },
-
 
   updateStatus:function(){
     this.$(".stat").text(this.start + " to "+ this.end +" in "+this.model.length);
@@ -105,12 +104,6 @@ window.ReceiptsView = Backbone.View.extend({
 
   setEnd:function(){
     this.end = (this.model.length > 10) ? 10 : this.model.length;       
-  },
-
-  searchTag:function(tags){
-    this.before();
-    this.model.searchTag(tags.split("-"),this.after);
-    console.log(tags);
   },
 
   fetch:function(options){

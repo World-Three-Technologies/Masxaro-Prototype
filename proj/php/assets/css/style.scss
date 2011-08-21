@@ -465,18 +465,37 @@ footer{
 
 //account page
 .accounts-view{
+  h2{
+    margin:20px;
+    text-align:left;
+  }
   nav{
-    @include grid(8);
+    text-align:left;
+    @include grid(6);
     display:block;
     float:left;
-    margin-top:40px;
+    li{
+      font-size:28px;
+      padding:5px;
+    }
+    .active{
+      background:white;
+    }
   }
   .boards{
+    min-height:400px;
+    background:white;
+    padding: 10px 20px;
+    text-align:left;
     @include grid(16);
     float:left;
-    text-align:left;
     .content{
-      padding:40px;
+      @include grid(12);
+      float:left;
+    }
+    aside{
+      @include grid(4);
+      float:left;
     }
     .admin,.preference,.credit,.email{
       display:none;

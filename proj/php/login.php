@@ -1,4 +1,4 @@
-u<?php
+<?php
 
 /*
  *  login.php -- user/store login 
@@ -26,7 +26,6 @@ u<?php
  */
 include_once '../config.php';
 include_once 'header.php';
-
 $acc = $post['acc'];
 $pwd = $post['pwd'];
 $type = $post['type']; // string, 'user' or 'store'

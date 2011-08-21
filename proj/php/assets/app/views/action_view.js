@@ -39,7 +39,7 @@ window.ActionView = Backbone.View.extend({
 
   setActive:function(target){
     this.$(".active").removeClass("active");
-    if(target == "undefined"){
+    if(typeof target == "undefined"){
       target = this.$(event.target).parent();
     }else{
       target = this.$(".tag-"+target).addClass("active");

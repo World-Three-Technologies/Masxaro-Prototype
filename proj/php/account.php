@@ -1,6 +1,6 @@
 <?php 
   include_once "../config.php";
-  $acc = $_COOKIE["acc"];
+  $acc = $_COOKIE["user_acc"];
   if(!Tool::authenticate($acc)){
     Tool::redirectToProduct();
   }
@@ -24,34 +24,42 @@
     <?php 
 
     $control = new UserCtrl();
-    $profile = $control->getProfile("w3tAcc");
+    $profile = $control->getProfile($acc);
     $contactControl = new contactCtrl(); 
-    $contacts = $contactControl->getContacts("w3tAcc","user");
+    $contacts = $contactControl->getContacts($acc,"user");
     
     ?>
     <div id="main" class="accounts-view" role="main">
-      <nav>
-      <h3 class="account-nav">
-      	<a href="#!profile">Profile</a>
-      </h3>
-      <h3 class="account-nav">
-      	<a href="#!admin">Account Admin</a>
-      </h3>
-      <h3 class="account-nav">
-      	<a href="#!preference">Preference</a>
-      </h3>
-      <h3 class="account-nav">
-      	<a href="#!email">Email Address</a>
-      </h3>
-      <h3 class="account-nav">
-      	<a href="#!credit">Credit Card</a>
-      </h3>
+      <h2>Account Settings</h2>
+      <nav id="account-nav">
+        <ul>
+          <li class="profile active">
+            <a href="#!profile">Profile</a>
+          </li>
+          <li class="admin">
+            <a href="#!admin">Account Admin</a>
+          </li>
+          <li class="preference">
+            <a href="#!preference">Preference</a>
+          </li>
+          <li class="email">
+            <a href="#!email">Email Address</a>
+          </li>
+          <li class="credit">
+            <a href="#!credit">Credit Card</a>
+          </li>
+        </ul>
       </nav>
       <div class="boards">
         <div class="profile">
           <div class="content">
-            Account name : <input type="text" value="<?php echo $profile["user_account"]?>"/><br />
-            Name : <input type="text" value="<?php echo $profile["first_name"]?>"/><br />
+            <form action="userOperation.php" message="update successful" ajaxian>
+              <input type="hidden" name="opcode" value="update_profile"/>
+              <input type="hidden" name="acc" value="<?php echo $profile["user_account"]?>"/>
+            Account name : <label><?php echo $profile["user_account"]?></label><br />
+            Name : <input type="text" class="required info-first_name" name="info-first_name" value="<?php echo $profile["first_name"]?>"/><br />
+            <button>Update</button>
+            </form>
 
             <h4>Privacy Information</h4>
             Company : <input type="text"/><br />
@@ -120,27 +128,15 @@
   ?>
   <script src="assets/app/models/user.js"></script>
   <script src="assets/app/views/user_view.js"></script>
+  <script src="assets/app/routers/account_router.js"></script>
   <script>
-  var AccountRouter = Backbone.Router.extend({
-    initialize:function(){
-      _.bindAll(this,"showPage");
-      var user = this.user = new User({
-        account:readCookie("user_acc"),
-      });
-      var userView = new UserView({model:user});
-    },
-    routes: {
-      "!:page" : "showPage"
-    },
-    showPage:function(page){
-      $(".boards > div").hide();
-      $("."+page).show();
-    }
-  });
-
   $(function(){
     new AccountRouter();
     Backbone.history.start({pushState:false});
+
+    $.each($("[ajaxian]"),function(k,v){
+      bindAjax(v);
+    });
   });
   </script>
 </body>
