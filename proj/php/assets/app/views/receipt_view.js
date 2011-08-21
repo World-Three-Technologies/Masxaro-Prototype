@@ -78,8 +78,10 @@ var ReceiptView = Backbone.View.extend({
   },
 
   animateReceipt:function(){
+
+    var itemLength = this.model.get("items").length * 26 + 106;
           
-    $(this.el).css({height:169,opacity:0});
+    $(this.el).css({height:itemLength,opacity:0});
     if(window.lastOpen && window.lastOpen != this){
       window.lastOpen.render();
     }

@@ -116,7 +116,7 @@ window.ReceiptsView = Backbone.View.extend({
 
   fetch:function(options){
     this.before();
-  class  this.model.fetch({success:this.after,error:this.error});      
+    this.model.fetch({success:this.after,error:this.error});      
   },
 
   error:function(){
