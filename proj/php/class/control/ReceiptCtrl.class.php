@@ -28,212 +28,24 @@ class ReceiptCtrl extends Ctrl{
 	
 	function __construct(){
 		parent::__construct();
+		$this->builder = new ReceiptBuilder();
 	}
 	
 	/**
+	 * @param array() $receiptIds result set of fetchAssoc()
 	 * 
-	 * 
-	 * 
-	 * @param string $acc user/store account
-	 * 
-	 * @param string $subquery subquery statement, should return a set of receipt id
-	 * 
-	 * @param string $groupBy (optional) set group by field
-	 * 
-	 * @param string $orderBy (optional) set order by field, default as 'receipt_time'
-	 * 
-	 * @param boolean $orderDesc
-	 * 
-	 * @param int $limitStart (optional) limit start offset(optional)
-	 * 
-	 * @param int $limitOffset (optional) limit offset(optional)
+	 * @return array(int) $receiptIds 1-d array of receipt ids
 	 * 
 	 * @desc
-	 * build the basic sql statement for receipt searching, return receipt full entities with all information
-	 */
-	protected function buildSearchSql($acc, $subquery, $limitStart=0, $limitOffset=999999, 
-									$groupBy=null, $orderBy='receipt_time', $orderDesc=true, $mobile=false){
-										   	
-		$limitStart = isset($limitStart) ? $limitStart : 0;
-		$limitOffset = isset($limitOffset) ? $limitOffset : 999999;
-		$orderBy = isset($orderBy) ? $orderBy : 'receipt_time';
-		$orderDesc = isset($orderDesc) ? $orderDesc : true;
-		$mobile = isset($mobile) ? $mobile : false;
-		
-		$sql = "";
-		if(!$mobile){
-			$sql = "
-			SELECT 
-				r.`id`,
-				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
-				r.`tax`,
-				r.`total_cost`,
-				r.`source`,
-				s.`store_name`,
-				ri.`item_id`,
-		        ri.`item_name`, 
-		        ri.`item_qty`, 
-		        ri.`item_discount`,
-		        ri.`item_price`
-			FROM 
-				`receipt` 
-			AS 
-				r 
-			LEFT JOIN
-				`receipt_item` 
-			AS 
-				ri
-			ON
-				r.`id`=ri.`receipt_id`
-			LEFT JOIN
-				`store` as s
-			ON
-				r.`store_account`=s.`store_account`
-			WHERE
-				r.`user_account`='$acc'
-			AND 
-				r.`deleted`=false
-      		AND
-				ri.`deleted`=false
-			AND
-				r.`id`
-      		IN
-      			(
-	      			$subquery
-      			)";
-		}
-		else{
-			$sql = "
-			SELECT 
-				r.`id`,
-				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
-				r.`tax`,
-				r.`total_cost`,
-				r.`source`,
-				s.`store_name`
-			FROM 
-				`receipt` 
-			AS 
-				r
-			LEFT JOIN
-				`store` as s
-			ON
-				r.`store_account`=s.`store_account`
-			WHERE
-				r.`user_account`='$acc'
-			AND 
-				r.`deleted`=false
-			AND
-				r.`id`
-      		IN
-      			(
-	      			$subquery
-      			)";
-		}
-	      			
-	    if(isset($groupBy)){
-	    	$sql .= "
-	    		GROUP BY
-	    			$groupBy
-	    	";
-	    }
-	    
-	    $sql .= "
-	    	ORDER BY
-	    		$orderBy
-	    ";
-	    
-	    if($orderDesc){
-	    	$sql .= "DESC";
-	    }
-	    			
-	    $sql .= "
-	    	LIMIT
-	    		$limitStart, $limitOffset
-	    ";
-	    			
-	    return $sql;
-	}
-	
-	/**
-	 * @see ReceiptEntity
-	 * 
-	 * @param array() $receipts 
-	 * 	associate array, 
-	 *  the result set selected by joining `receipt` & `receipt_item` with certain conditions
-	 * 
-	 * @return array() $result
-	 *  object array, each receipt is an object including basic info and items.
-	 *  
-	 * @desc
-	 *  accept the result set (assoc array) from joining `receipt`&`receipt_item`,
-	 *  encapsulate basic info & items of a certain receipt into an object,
-	 *  organize all receipt objects into an indexed array, return.
-	 */
-	protected function buildReceiptObj($receipts){
-		$result = array();
-		
-		if(count($receipts) > 0){
-			$curRecId = 0;
-			$curRec = null;
-			$curItems = null;
-			$itemRegex = "(^item)";
-			
-			foreach($receipts as $cur){
-				
-				$curItems = array();
-				$newRecFlag = false;
-				
-				if($cur['id'] != $curRecId){
-					$curRec = new ReceiptEntity();
-					$newRecFlag = true;
-				} 
-				
-				foreach($cur as $key=>$value){
-					if(!preg_match($itemRegex, $key)){
-						$curRec->$key = $value;
-					}
-					else if(!empty($value)){
-						$curItems["$key"] = $value;
-					}
-				}
-				
-				if(!empty($curItems) && isset($curRec->items)){
-					array_push($curRec->items, $curItems);
-				}
-				
-				if($newRecFlag){
-					if(!empty($curRec)){
-						array_push($result, $curRec);
-					}
-					$curRecId = $cur['id'];
-				}
-			}
-		}
-		
-		return $result;
-	}
-	
-	/**
-	 * @see ReceiptCtrl::buildReceiptObj
-	 * @see ReceiptEntity
-	 * 
-	 * @param array $receiptObjs
-	 * receipt object array, the result of ReceiptCtrl::buildReceiptObj($receipts)
-	 * 
-	 * @return array $result
-	 * receipt object array with tags fetched
+	 * convert fetchAssoc result set of receipt ids into 1-d int array
 	 * 
 	 */
-	protected function fetchReceiptTags($receipts){
-	    foreach($receipts as $receipt){
-	      $ids[] = $receipt->id;
-	    }
-	    $tags = $this->getReceiptsTags($ids);
-	    foreach($receipts as $receipt){
-	      $receipt->tags = $tags[$receipt->id];
-	    }
-	    return $receipts;
+	protected function nomarlizeReceiptIdArray($receiptIds) {
+		$ids = array();
+		foreach($receiptIds as $id) {
+			array_push($ids, $id['id']);
+		}
+		return $ids;
 	}
 	
 	
@@ -246,9 +58,9 @@ class ReceiptCtrl extends Ctrl{
 	 * 
 	 * insert(null, $items);
 	 * 
-	 * @param array() $basicInfo
+	 * @param array() $basicInfo[optional]
 	 * 
-	 * @param array(array(), array()...) $items
+	 * @param array(array(), array()...) $items[optional]
 	 * 
 	 * @return boolean
 	 * 
@@ -297,126 +109,156 @@ class ReceiptCtrl extends Ctrl{
 		}
 		
 		if(!$basicInfoNull){
-			
-			$info = "";
-			
-			$info = Tool::infoArray2SQL($basicInfo);
-			
-			if(!Tool::securityChk($info)){
+			if(($receiptId = $this->insertReceiptBasic($basicInfo)) == false) {
 				return false;
 			}
-			
-			$sql = "
-				INSERT INTO 
-					`receipt` 
-				SET 
-					$info
-			";
-
-			$receiptId = $this->db->insert($sql);
-				
-			if($receiptId < 0){
-				return false;
-			}
-			
 		}
 
 		if(!$itemsNull){
-			
-			if($receiptId == null || strlen($receiptId) == 0 || $receiptId == 0){
-				$receiptId = $items['id']; // if current receipt id is not set, items[0] should be the receipt id.
-			}
-		
-			$sql = "
-				SELECT 
-					`total_cost`
-				FROM 	
-					`receipt`
-				WHERE
-					`id`=$receiptId
-				AND 
-					`deleted`=false
-			";
-			$this->db->select($sql);
-				
-			if($this->db->numRows() > 0){
-				$result = $this->db->fetchObject();
-				$totalCost = $result[0]->total_cost;
-			}
-			else{
-				//$this->realDelete($receiptId);
+			if(($totalCost = $this->insertItems($receiptId, $items)) == false){
 				return false;
 			}
+//			$totalCost += $totalCost * $basicInfo['tax'] * 0.01;
 
-			$n = count($items);
-			
-			$sqlColumns = "";
-			$sqlValues = "";
-			for($i = 0; $i < $n; $i ++){
-				
-				if(empty($items[$i])){
-					continue;
-				}
-				
-				if(empty($items[$i]['item_discount'])){
-					$items[$i]['item_discount'] = 0;
-				}
-				
-				$curCost =  
-					$items[$i]['item_price'] * 
-					$items[$i]['item_qty'] * 
-					((100 - $items[$i]['item_discount']) * 0.01);
-				
-				$totalCost += $curCost;
-				$items[$i]['receipt_id'] = $receiptId;	
-				
-				//$info = Tool::infoArray2SQL($items[$i]);
-				$info = Tool::infoArray2ValueSQL($items[$i]);
-				
-				if(!Tool::securityChk($info['values'])){
-					return false;
-				}
-				
-				$sqlColumns = "({$info['columns']})";
-
-				$sqlValues .= "({$info['values']}),";
-			}
-			
-			$sqlValues = substr($sqlValues, 0, -1);
-			$sql = "
-				INSERT INTO
-					`receipt_item`
-					$sqlColumns
-				VALUES
-					$sqlValues
-			";
-					
-			if($this->db->insert($sql) < 0){
-				return false;
-			}
-			
-			$totalCost += $totalCost * $basicInfo['tax'] * 0.01;
-
-			$sql = "
-				UPDATE 
-					`receipt`
-				SET
-					`total_cost`=$totalCost
-				WHERE
-					`id`=$receiptId
-				AND 
-					`deleted`=false
-			";
-			
-			if($this->db->update($sql) <= 0){
-				$this->realDelete($receiptId);
-				return false;
-			}
+//			if(!$this->updateTotalCost($receiptId, $totalCost)){
+//				return false;
+//			}
 		}
 		
 		return $receiptId;
 	}
 	
+	/**
+	 * 
+	 * insert receipt basic info
+	 * @param assoc-array() $basicInfo
+	 * 
+	 * @return int receiptId/boolean false
+	 */
+	protected function insertReceiptBasic($basicInfo) {
+		$info = "";
+			
+		$info = Tool::infoArray2SQL($basicInfo);
+			
+		if(!Tool::securityChk($info)){
+			return false;
+		}
+		
+		$sql = <<<INS
+			INSERT INTO 
+				`receipt` 
+			SET 
+				$info
+INS;
+		$receiptId = $this->db->insert($sql);
+			
+		if($receiptId < 0){
+			return false;
+		}
+		return $receiptId;
+	}
+	
+	/**
+	 * 
+	 * insert receipt items, calculate total cost
+	 * @param int $receiptId
+	 * @param assoc-array() $items
+	 * 
+	 * @return decimal totalCost/boolean false
+	 */
+	protected function insertItems($receiptId, $items) {
+		if($receiptId == null || strlen($receiptId) == 0 || $receiptId == 0){
+				$receiptId = $items['id']; // if current receipt id is not set, items['id'] should be the receipt id.
+		}
+		
+		$sql = <<<SEL
+			SELECT 
+				`total_cost`
+			FROM 	
+				`receipt`
+			WHERE
+				`id`=$receiptId
+			AND 
+				`deleted`=false
+SEL;
+		$this->db->select($sql);
+			
+		if($this->db->numRows() > 0){
+			$result = $this->db->fetchObject();
+			$totalCost = $result[0]->total_cost;
+		}
+		else{
+			//$this->realDelete($receiptId);
+			return false;
+		}
+		$n = count($items);
+		
+		$sqlColumns = "";
+		$sqlValues = "";
+		for($i = 0; $i < $n; $i ++){
+			
+			if(empty($items[$i])){
+				continue;
+			}
+			
+			if(empty($items[$i]['item_discount'])){
+				$items[$i]['item_discount'] = 0;
+			}
+			
+			$curCost =  
+				$items[$i]['item_price'] * 
+				$items[$i]['item_qty'] * 
+				((100 - $items[$i]['item_discount']) * 0.01);
+			
+			$totalCost += $curCost;
+			$items[$i]['receipt_id'] = $receiptId;	
+			
+			$info = Tool::infoArray2SQL($items[$i]);
+			//$info = Tool::infoArray2ValueSQL($items[$i]);
+			
+			if(!Tool::securityChk($info)) {
+				return false;
+			}
+			
+			$sql = <<<INS
+				INSERT INTO
+					`receipt_item`
+				SET
+					$info
+INS;
+			if($this->db->insert($sql) < 0){
+				return false;
+			}
+		}
+		return $totalCost;
+	}
+	
+	/**
+	 * 
+	 * update total cost
+	 * @param int $receiptId
+	 * @param decimal $totalCost
+	 * 
+	 * @return boolean 
+	 */
+	protected function updateTotalCost($receiptId, $totalCost) {
+		$sql = <<<UPD
+			UPDATE 
+				`receipt`
+			SET
+				`total_cost`=$totalCost
+			WHERE
+				`id`=$receiptId
+			AND 
+				`deleted`=false
+UPD;
+			
+		if($this->db->update($sql) <= 0){
+			$this->realDelete($receiptId);
+			return false;
+		}
+		return true;
+	}
 	
 	/**
 	 * @param string $receiptId
@@ -574,77 +416,20 @@ class ReceiptCtrl extends Ctrl{
 		return true;
 	}
 	
+	
+	
 	/**
 	 * 
+	 * @param array(int) receiptIds
 	 * 
-	 * @param string $receiptId
-	 * 
-	 * @return 2-d-array() items
-	 * 
-	 * return all items of a receipt
-	 */
-	public function userGetReceiptItems($receiptId){
-		
-		$sql = "
-			SELECT
-				*
-			FROM 
-				`receipt_item`
-			WHERE
-				`receipt_id`=$receiptId
-			AND
-				`deleted`=false
-		";
-		
-		$this->db->select($sql);
-		
-		if($this->db->numRows() == 0){
-			return "";
-		}
-		
-		else{
-			$result = $this->db->fetchAssoc();
-			return $result;
-		}
-		
-	}
-	
-/**
-	 * 
-	 * @param string receiptId
-	 * 
-	 * @return object receipt or img blob
+	 * @return object receipt 
 	 * 
 	 * @desc
 	 * 
-	 * return detail information of a certain receipt, without items
+	 * return detail information of certain receipts, without items
 	 */
-	public function getReceiptDetail($receiptId){
-		$sql = "
-			SELECT 
-				r.`id`,
-				r.`user_account`,
-				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time,
-				r.`tax`, 
-				r.`total_cost`,
-				r.`source`, 
-				s.`store_name`
-			FROM 
-				`receipt` as r 
-			JOIN
-				`store` as s
-			ON
-				r.`store_account`=s.`store_account`
-			AND
-				`id`=$receiptId
-			AND 
-				`deleted`=false
-		";
-		
-		$this->db->select($sql);
-		
-		$receipts = $this->db->fetchAssoc();
-		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
+	public function getReceiptDetail($receiptIds){
+		return $this->builder->build_modile($receiptIds);
 	}
 	
 	/**
@@ -674,86 +459,68 @@ class ReceiptCtrl extends Ctrl{
 	public function searchReceipt($con, $acc, $limitStart = 0, $limitOffset = 999999,
 									$groupBy=null, $orderBy='receipt_time', $orderDesc=true, $mobile=false){
 
-		if(!isset($mobile)){
-			$mobile = false;
-		}
+		$limitStart = isset($limitStart) ? $limitStart : 0;
+		$limitOffset = isset($limitOffset) ? $limitOffset : 999999;
+		$orderBy = isset($orderBy) ? $orderBy : 'receipt_time';
+		$orderDesc = isset($orderDesc) ? $orderDesc : true;
+		$mobile = isset($mobile) ? $mobile : false;
+		$groupBy = isset($groupBy) ? $groupBy : '`receipt`.`id`';
+		
 		$con = Tool::condArray2SQL($con);
 		
 		if(!Tool::securityChk($con)){
 			return false;
 		}
 		
-		$subquery = "
-					SELECT DISTINCT
+		$sql = <<<SEL
+					SELECT
 	      				`receipt`.`id`
 	      			FROM
-	      				`receipt`,
-	      				`receipt_item`,
+	      				`receipt`
+	      			LEFT OUTER JOIN
+	      				`receipt_item`
+	      			ON
+	      				`receipt_item`.`receipt_id`=`id`,
 	      				`store`,
 	      				`receipt_tag`
 	      			WHERE
 	      				$con
 	      			AND
-	      				`receipt_item`.`receipt_id`=`receipt`.`id`
-	      			AND
 	      				`receipt`.`store_account`=`store`.`store_account`
-		";
-
-	    $sql = $this->buildSearchSql($acc, $subquery, $limitStart, $limitOffset, 
-	    							$groupBy, $orderBy, $orderDesc, $mobile);
-
+	      			AND
+	      				`receipt`.`deleted` = false
+	      			AND
+	      				`receipt`.`user_account` = '$acc'
+	      			AND
+	      				(
+		                    `receipt_item`.`deleted` = false
+		                  OR
+		                    `receipt_item`.`deleted` IS NULL
+                		)
+                	GROUP BY
+	      				$groupBy
+                	ORDER BY
+                		$orderBy
+                	DESC
+	      			LIMIT
+	      				$limitStart, $limitOffset
+SEL;
 		$this->db->select($sql);
-		$receipts = $this->db->fetchAssoc();
-		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
+		
+		if($this->db->numRows() == 0){
+			return null;
+		}
+		
+		$results = $this->db->fetchAssoc();
+		
+		if(!$mobile) {
+			return $this->builder->build($this->nomarlizeReceiptIdArray($results));
+		}
+		else{
+			return $this->builder->build_modile($this->nomarlizeReceiptIdArray($results));
+		}
 	}
 	
-	/**
-	 * 
-	 * @see sample/conArraySample.class.php
-	 * @see php/receiptOperation.php: tag_search
-	 * 
-	 * @param condition-array $con 
-	 * here the $con array should be an 'OR' statement only includes tags
-	 * 
-	 * @param string $acc
-	 * 
-	 * @param int $limitStart limit start offset(optional)
-	 * 
-	 * @param int $limitOffset limit end offset(optional)
-	 * 
-	 * @param string $groupBy (optional) set group by field
-	 * 
-	 * @param string $orderBy (optional) set order by field, default as 'receipt_time'
-	 * 
-	 * @param boolean $orderDesc
-	 * 
-	 * @desc
-	 * search receipts with certain tags
-	 */
-	public function searchTagReceipt($con, $acc, $limitStart = 0, $limitOffset = 999999,
-									$groupBy=null, $orderBy='receipt_time', $orderDesc=true, $mobile=false){
-		$con = Tool::condArray2SQL($con);
-		
-		$subquery = "
-			SELECT
-				`receipt_id`
-			FROM
-				`receipt_tag`
-			WHERE
-				$con
-			AND
-				`user_account`='$acc'
-			ORDER BY
-				`receipt_id`
-		";
-		
-		$sql = $this->buildSearchSql($acc, $subquery, $limitStart, $limitOffset, 
-	    							$groupBy, $orderBy, $orderDesc, $mobile);
-				
-		$this->db->select($sql);
-		$receipts = $this->db->fetchAssoc();
-		return $this->fetchReceiptTags($this->buildReceiptObj($receipts));
-	}
 
   /**
    * @param array(int) receipt ids
@@ -761,26 +528,24 @@ class ReceiptCtrl extends Ctrl{
    * @return array $tags
    *
    * @desc return tags array for each receipt, indexed with receipt id
+   * 
+   * @author Jimmy Chao
    */
 	public function getReceiptsTags($ids){
-	    if(!isset($ids) || !is_array($ids)) return false;
-	    $idList = implode(',',$ids);
-			$sql = "
-				SELECT
-					`receipt_id`, `tag`
-				FROM
-					`receipt_tag`
-				WHERE
-					`receipt_id` IN ($idList)
-			";
-			
-			$this->db->select($sql);
-			$results = $this->db->fetchAssoc();
-	
-	    foreach($results as $result){
-	      $tags[$result['receipt_id']][] = $result['tag'];
-	    }
-    	return $tags;
+	    $this->builder->getReceiptsTags($ids);
 	}	
+	
+	/**
+	 * 
+	 * 
+	 * @param array(int) $receiptIds
+	 * 
+	 * @return 2-d-array() items
+	 * 
+	 * return all items of a list of receipts
+	 */
+	public function userGetReceiptItems($receiptIds){
+		return $this->builder->getReceiptsItems($receiptIds);
+	}
 }
 ?>

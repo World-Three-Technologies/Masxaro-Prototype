@@ -27,6 +27,7 @@
 
 abstract class Ctrl {
 	protected $db;
+	protected $builder;
 	
 	function __construct(){
 		$this->db = new Database();

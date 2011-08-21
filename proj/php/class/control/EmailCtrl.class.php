@@ -30,12 +30,16 @@ class EmailCtrl extends Ctrl{
 	private $client;
 	private $service;
 
-	function __construct(){
+	function __construct() {
 		parent::__construct();
-		$this->initGdata();
+		
+		/*
+		 * Zend Gmail API init
+		 */
+		//$this->initGdata();
 	}
 	
-	private function initGdata(){
+	protected function initGdata() {
 		try{
 			$this->client = Zend_Gdata_ClientLogin::getHttpClient(
 																DOMADMIN_EMAIL, 
@@ -43,9 +47,21 @@ class EmailCtrl extends Ctrl{
 																Zend_Gdata_Gapps::AUTH_SERVICE_NAME
 															);
 			$this->service = new Zend_Gdata_Gapps($this->client, DOMAIN);
-		}catch(Exception $e){
+		}catch(Exception $e) {
 			die('Zend error');
 		}
+	}
+	
+	/**
+	 * 
+	 * @desc
+	 * generate alias email account for new user
+	 * 
+	 * @param string $userAcc
+	 * @return string $emailAcc user email address of masxaro.net
+	 */
+	public function aliasMailAccGen($userAcc) {
+		return BASE_ACC."+$userAcc@".DOMAIN;
 	}
 	
 	/**
@@ -56,7 +72,7 @@ class EmailCtrl extends Ctrl{
 	 * @desc
 	 * generate registration confirmation email content
 	 */
-	public function registerEmailGen($url){
+	public function registerEmailGen($url) {
 		$email = "
 				<html>
 					<head>
@@ -86,7 +102,7 @@ class EmailCtrl extends Ctrl{
 	 * @desc
 	 * send email
 	 */
-	public function mail($to, $subject, $message, $addHeaders = ""){
+	public function mail($to, $subject, $message, $addHeaders = "") {
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
 		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 		// Additional headers
@@ -101,15 +117,32 @@ class EmailCtrl extends Ctrl{
 	 * 
 	 * @param string $personalEmail client email address
 	 * 
-	 * @param string $code register code
+	 * @param array(string) $codeParam parameters for code generation
+	 * include:
+	 * 	{
+	 * 		registerType,
+	 *		account,
+	 *		password,
+	 *		personEmail
+	 *	}
 	 * 
 	 * @desc
 	 * send register confirmation email
 	 * 
 	 * @return
 	 * boolean
+	 * 
+	 * @example
+	 * $codeParam = array(
+	 *		registerType=>'user',
+	 *		account=>'newAccount',
+	 *		pwd=>'123456',
+	 *		personalEmail=>'user@eg.com'
+	 *	); 
 	 */
-	public function sendRegisterEmail($personalEmail, $code){
+	public function sendRegisterEmail($personalEmail, $codeParam) {
+		$code = Tool::verifyCodeGen($codeParam);
+		
 		$subject = "Please verify your registration on Masxaro.com";
 		return $this->mail(
 						$personalEmail, 
@@ -125,14 +158,15 @@ class EmailCtrl extends Ctrl{
 	 * 
 	 * @return 
 	 */
-	public function grabEmails($acc){
-		$username = "$acc@".DOMAIN;
-		$password = Tool::getEmailPwd($acc);
+	public function grabEmails($acc) {
+		$username = BASE_ACC.'@'.DOMAIN;
+		//$password = Tool::getEmailPwd($acc);
+		$password = BASE_ACC_PWD;
 		
 		$inbox = imap_open(IMAP_HOST, $username, $password) 
 				or die('Cannot connect to mailbox'.imap_last_error());
 				
-		$emails = imap_search($inbox, 'ALL');
+		$emails = imap_search($inbox, 'UNSEEN');
 		
 		$emails_file = array();
 		
@@ -140,10 +174,30 @@ class EmailCtrl extends Ctrl{
 			$output = '';
 			rsort($emails);
 			foreach($emails as $email_number) {
-				$message = imap_fetchbody($inbox,$email_number,2);
+				$overview = imap_fetch_overview($inbox,$email_number);
+				if(strcasecmp($overview[0]->to, $this->aliasMailAccGen($acc)) != 0) {
+					continue;
+				}
+				
+				$subject = $overview[0]->subject;
+
+				/**
+				 * @todo check subject
+				 **/
+//				if(!preg_match("/.*receipt.*/i", $subject) && !preg_match("/.*order.*/i", $subject)) {
+//					continue;
+//				}
+				
+				$message = html_entity_decode($subject . imap_fetchbody($inbox,$email_number,2));
 				$header = imap_headerinfo($inbox, $email_number);
 				$from = "{$header->from[0]->mailbox}@{$header->from[0]->host}";
-				array_push($emails_file, array('from'=>$from, 'message'=>$message));
+				$contactCtrl = new ContactCtrl();
+				$storeAcc = null;
+				if(($storeAcc = $contactCtrl->getContactAccount($from, 'store')) == null) {
+					continue;
+				}
+				
+				array_push($emails_file, array('from'=>$storeAcc, 'message'=>$message));
 				
 				//$overview = imap_fetch_overview($inbox,$email_number);
 //				$output.= '<div class="toggler '.($overview[0]->seen ? 'read' : 'unread').'">';
@@ -151,8 +205,6 @@ class EmailCtrl extends Ctrl{
 //				$output.= '<span class="from">'.$overview[0]->from.'</span>';
 //				$output.= '<span class="date">on '.$overview[0]->date.'</span>';
 //				$output.= '</div>';
-//				
-//				$output.= '<div class="body">'.$message.'</div>';
 			}
 			
 			return $this->saveEmails($emails_file, $acc);
@@ -179,7 +231,7 @@ class EmailCtrl extends Ctrl{
 	 * @desc
 	 * create a masxaro email account for a new user.
 	 */
-	public function createUserAcc($username, $givenName = 'N/A', $familyName = 'N/A'){
+	public function createUserAcc($username, $givenName = 'N/A', $familyName = 'N/A') {
 		try{
 			$this->service->createUser(
 									$username, 
@@ -189,7 +241,7 @@ class EmailCtrl extends Ctrl{
 									$passwordHashFunction=null, 
 									$quota=null
 								);
-		}catch(Exception $e){
+		}catch(Exception $e) {
 			echo $e;
 			die();
 			//return false;
@@ -207,16 +259,16 @@ class EmailCtrl extends Ctrl{
 	 * @desc
 	 * suspend an account
 	 */
-	public function suspendAcc($username){
+	public function suspendAcc($username) {
 		try{
 			$this->service->suspendUser($username);
-		}catch(Exception $e){
+		}catch(Exception $e) {
 			return false;
 		}
 		return true;
 	}
 	
-/**
+	/**
 	 * 
 	 * 
 	 * @param string $username
@@ -226,10 +278,10 @@ class EmailCtrl extends Ctrl{
 	 * @desc
 	 * delete an account
 	 */
-	public function deleteAcc($username){
+	public function deleteAcc($username) {
 		try{
 			$this->service->deleteUser($username);
-		}catch(Exception $e){
+		}catch(Exception $e) {
 			return false;
 		}
 		return true;
@@ -245,21 +297,21 @@ class EmailCtrl extends Ctrl{
 	 * @desc
 	 * restore a suspended account
 	 */
-	public function restoreAcc($username){
+	public function restoreAcc($username) {
 		try{
 			$this->service->restoreUser($username);
-		}catch(Exception $e){
+		}catch(Exception $e) {
 			return false;
 		}
 		return true;
 	}
 	
 	
-	public function retrieveAllUser(){
+	public function retrieveAllUser() {
 		return $this->service->retrieveAllUsers();
 	}
 	
-	public function retrieveUser($acc){
+	public function retrieveUser($acc) {
 		return $this->service->retrieveUser($acc);
 	}
 	
@@ -278,20 +330,20 @@ class EmailCtrl extends Ctrl{
 	 * @desc
 	 * save grabbed email receipts to files
 	 */
-	public function saveEmails($emails, $userAcc){
+	public function saveEmails($emails, $userAcc) {
 		try{
 			$curDir = EMAIL_DIR."/$userAcc";
-			if(!is_dir($curDir)){
+			if(!is_dir($curDir)) {
 				mkdir($curDir);
 			}
 			
 			$dir = opendir($curDir);
 			
-			foreach($emails as $email){
+			foreach($emails as $email) {
 				$curFile = null;
-				for($i = 0; $i < 1000 ; $i ++){
+				for($i = 0; $i < 1000 ; $i ++) {
 					$tmpName = $curDir."/{$email['from']}:::$i";
-					if(is_file($tmpName)){
+					if(is_file($tmpName)) {
 						continue;
 					}
 					else{
@@ -304,7 +356,7 @@ class EmailCtrl extends Ctrl{
 			}
 			closedir($dir);
 			return true;
-		}catch(Exception $e){
+		}catch(Exception $e) {
 			return $e->getMessage();
 		}
 	}

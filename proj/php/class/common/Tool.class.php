@@ -110,6 +110,9 @@ class Tool{
 	 * transfer sql condition array into string sql statement  
 	 */
 	public static function condArray2SQL($con, $curOperator = ''){
+		if(!isset($con)){
+			return 1;
+		}
 		
 		if(!is_array($con)){
 			if(preg_match("(^field)", $curOperator) || preg_match("(^formula)", $curOperator)){

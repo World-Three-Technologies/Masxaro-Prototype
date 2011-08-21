@@ -37,7 +37,7 @@ $verifyPage = "verifyRegister.php";
 
 $registerType = $post['type']; //user / store
 
-switch($registerType){
+switch($registerType) {
 	case 'user':
 		$param = array(
 					'user_account'=>$post['userAccount'], 
@@ -70,25 +70,30 @@ switch($registerType){
 }
 
 
-$personEmail = $post['email'];
+$personalEmail = $post['email'];
 
-if($ctrl->insert($param)){
+if($ctrl->insert($param)) {
+	
+	$ctrlCon = new ContactCtrl();
+	$ctrlEmail = new EmailCtrl();
 
 	$contacts = array();
 	
 	$account = $param[$accType];
 	
-	//masxaro email
-	$email = "$account@".DOMAIN;
-	array_push($contacts, array(
-							$accType=>$account,
-							'contact_type'=>'email',
-							'value'=>$email
-						)
-	);
+	if($registerType == 'user') {
+		//masxaro email
+		$email = $ctrlEmail->aliasMailAccGen($account);
+		array_push($contacts, array(
+								$accType=>$account,
+								'contact_type'=>'email',
+								'value'=>$email
+							)
+		);
+	}
 				
 	//personal email
-	$email = $personEmail;
+	$email = $personalEmail;
 	array_push($contacts, array(
 							$accType=>$account,
 							'contact_type'=>'email',
@@ -96,10 +101,7 @@ if($ctrl->insert($param)){
 						)
 	);
 	
-	$ctrlCon = new ContactCtrl();
-	$ctrlEmail = new EmailCtrl();
-	
-	if(!$ctrlCon->insertContact($contacts)){
+	if(!$ctrlCon->insertContact($contacts)) {
 		//rollback
 		$ctrlCon->deleteAccContact($account);
 		$ctrl->delete($account);
@@ -107,23 +109,17 @@ if($ctrl->insert($param)){
 	}
 	
 	$codeParam = array(
-		$registerType,
-		$account,
-		$param['pwd'],
-		$personEmail
-	); 
+		registerType=>$registerType,
+		account=>$account,
+		pwd=>$param['pwd'],
+		personalEmail=>$personalEmail
+	);
 	
-	$code = Tool::verifyCodeGen($codeParam);
-	
-	if($ctrlEmail->sendRegisterEmail($personEmail, $code)){
+	if($ctrlEmail->sendRegisterEmail($personalEmail, $codeParam)) {
 		echo "Register Success, please check your mailbox for authenticate";
 	}
 	else{
-		echo "System error, register failed";
-		
-		//roll back
-		$ctrlCon->deleteAccContact($account);
-		$ctrl->delete($account);
+		echo "Email send failed.";
 	}
 }
 

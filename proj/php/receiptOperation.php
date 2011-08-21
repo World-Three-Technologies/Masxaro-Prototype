@@ -35,10 +35,11 @@ $userAcc = $post['acc'];
 /**
  * 
  * @desc
- * for mobile end
+ * for mobile end, results without items if set true
  * @var boolean $mobile
  */
 $mobile = $post['mobile'];
+
 /**
  * @desc
  * result set offset control, optional
@@ -206,36 +207,38 @@ switch($opcode){
 		 *             "item_qty":"5","item_discount":"1.00","item_price":"19.99"}],
 		 *   "tags":["book","food"]}]
 		 */
-		$con = array(
-				'='=>array(
-						'field'=>'receipt.user_account',
-						'value'=>$userAcc
-					)
-		);
 		echo json_encode(
-					$ctrl->searchReceipt($con,$userAcc, $limitStart, $limitOffset, 
+					$ctrl->searchReceipt(null,$userAcc, $limitStart, $limitOffset, 
 											  	$groupBy, $orderBy, $orderDesc)
 			);
 		break;
 		
-	case 'user_get_receipt_items':
+	case 'user_get_receipts_items':
 		/**
 		 * POST:
-		 * @param int $post['receiptId']
+		 * @param array(int) $post['receiptIds']
 		 * 
-		 * @see user_get_all_receipt example-items
+		 * @see ReceiptBuilder::getReceiptsItems
 		 */
-		echo json_encode($ctrl->userGetReceiptItems($post['receiptId']));
+		echo json_encode($ctrl->userGetReceiptItems($post['receiptIds']));
 		break;
 	
-	case 'user_get_receipt_detail':
+	case 'user_get_receipts_detail':
 		/**
-		 * POST:
-		 * @param int $post['receiptId']
+		 * @see ReceiptBuilder::getReceiptsBasic
 		 * 
-		 * @see user_get_all_receipt example-basic
+		 * POST:
+		 * @param array(int) $post['receiptIds']
+		 * 
+		 * @return receipts without items
+		 * 
+		 * @example return
+		 * [{"id":"1","store_name":"McDonalds(NYU)",
+		 *   "user_account":null,"receipt_time":"07-19-2011 08:59 PM",
+		 *   "tax":"0.10","total_cost":"14.00","currency_mark":"$",
+		 *   "source":"default","img":null,"deleted":0,"items":[],"tags":[]}]
 		 */
-		echo json_encode($ctrl->getReceiptDetail($post['receiptId']));
+		echo json_encode($ctrl->getReceiptDetail($post['receiptIds']));
 		break;
 	
 	case 'search':
@@ -316,6 +319,11 @@ switch($opcode){
 	case 'grab_email_receipts':
 		$emailCtrl = new EmailCtrl();
 		$emailCtrl->grabEmails($userAcc);
+		exec('java -jar '
+			.ROOT_PATH.'/parser.jar '
+			.$userAcc.' '
+			.ROOT_PATH.'/masxaro_email_tmp '
+			.ROOT_PATH.'/masxaro_email_tmp');
 		break;
 		
 	default:

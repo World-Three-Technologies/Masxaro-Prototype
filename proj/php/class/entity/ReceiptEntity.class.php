@@ -30,6 +30,10 @@ class ReceiptEntity{
 	public $store_name = NULL;
 	public $user_account = NULL;
 	public $receipt_time = NULL;
+	public $store_define_id = NULL;
+	public $sub_total_cost = 0;
+	public $cut_down_cost = 0;
+	public $extra_cost = 0;
 	public $tax = 1;
 	public $total_cost = 0;
 	public $currency_mark = '$';

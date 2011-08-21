@@ -24,7 +24,6 @@
  *  
  */
 include_once '../config.php';
-
 $post = null;
 
 if(isset($_POST['json'])){
