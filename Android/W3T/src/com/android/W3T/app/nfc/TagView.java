@@ -25,8 +25,6 @@
 
 package com.android.W3T.app.nfc;
 
-import java.io.IOException;
-
 import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
 import com.android.W3T.app.ReceiptsList;
@@ -42,7 +40,6 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
-import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -145,29 +142,11 @@ public class TagView extends Activity {
 	        });
         
 	        mAdapter = NfcAdapter.getDefaultAdapter(this);
-        }
-        else {
-        	Toast.makeText(this, "Please log in first.", Toast.LENGTH_SHORT).show();
-        }
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-//		mAdapter.enableForegroundDispatch(this, null, null, new String[][] { new String[] { Ndef.class.getName() } });
-		if (UserProfile.getStatus() == false){
-        	Toast.makeText(this, "Please log in first.", Toast.LENGTH_SHORT).show();
-        }
-		else {
-			Tag t = (Tag) this.getIntent().getExtras().get(NfcAdapter.EXTRA_TAG);
+	        
+	        Tag t = (Tag) this.getIntent().getExtras().get(NfcAdapter.EXTRA_TAG);
 	        Ndef n = Ndef.get(t);
 	        
 	        NdefMessage nm = n.getCachedNdefMessage();
-	        try {
-				n.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 	        NdefRecord record = nm.getRecords()[0];
 	        String result = new String(record.getPayload());
 	        
@@ -178,14 +157,24 @@ public class TagView extends Activity {
 	        	mReceipt = ReceiptsManager.getReceipt(ReceiptsManager.getNumValid()-1);
 	        }
 	        fillReceiptView();
-		}
+        }
+        else {
+        	Toast.makeText(this, "Please log in first.", Toast.LENGTH_SHORT).show();
+        }
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (UserProfile.getStatus() == false){
+        	Toast.makeText(this, "Please log in first.", Toast.LENGTH_SHORT).show();
+        }
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
 		finish();
-//		mAdapter.disableForegroundDispatch(this);
 	}
 	
 	@Override
