@@ -72,6 +72,11 @@ switch($registerType) {
 
 $personalEmail = $post['email'];
 
+//check account existed
+if(!$ctrl->chkAccount($param[$accType])){
+  die("Account name already in used, please change your account name.");
+};
+
 if($ctrl->insert($param)) {
 	
 	$ctrlCon = new ContactCtrl();
@@ -105,7 +110,7 @@ if($ctrl->insert($param)) {
 		//rollback
 		$ctrlCon->deleteAccContact($account);
 		$ctrl->delete($account);
-		die("insert contacts information failed");
+		die("Your Email address already in use, please change your email address.");
 	}
 	
 	$codeParam = array(
