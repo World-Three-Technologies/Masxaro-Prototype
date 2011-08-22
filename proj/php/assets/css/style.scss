@@ -110,8 +110,7 @@ header{
     padding: 1px;
   }
   #header-nav{
-    margin-left:450px;
-    float:left;
+    float:right;
   }
   #header-nav-list li{
     float:left;
@@ -483,12 +482,37 @@ footer{
 
 #analysis-view{
   .account-info{
+    h4{margin:5px 30px;}
+    border-top:1px green solid;
+    border-bottom:1px green solid;
+    text-align:left;
     padding:5px;
+    .account-list{
+      list-style:none;
+      li{
+        float:left; 
+        padding:5px;
+        margin:0 5px;
+        @include round(10px);
+        background:white;
+      }
+      li:first-child{background:green;}
+    }
   }
   .month{
+    text-align:left;
     padding:5px;
     float:left;
     @include grid(3);
+    margin-top:40px;
+    ul{
+      list-style:none;
+      li{
+        font-size:20px;
+        padding-top:10px;
+        border-bottom:1px #666 solid;
+      }
+    }
   }
   .content{
     padding:7px;
@@ -496,16 +520,19 @@ footer{
     .chart{
       padding:3px;
       float:left;
+      text-align:left;
     }
     .chart-data{
+      margin-top:40px;
       table{
         background:white;
         width:200px;
         border-collapse:collapse;
         box-shadow:0 0 1em rgba(0,0,0,0.5);
         th,td{
+          text-align:left;
           border:1px green dotted;
-          padding:3px;
+          padding:5px 10px;
         }
       }
       padding:3px;

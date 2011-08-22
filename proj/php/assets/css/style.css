@@ -61,8 +61,7 @@ header {
     header #header-logo a {
       color: black; }
   header #header-nav {
-    margin-left: 450px;
-    float: left; }
+    float: right; }
   header #header-nav-list li {
     float: left;
     margin: 5px 0;
@@ -362,18 +361,45 @@ footer {
     margin: 3px; }
 
 #analysis-view .account-info {
+  border-top: 1px green solid;
+  border-bottom: 1px green solid;
+  text-align: left;
   padding: 5px; }
+  #analysis-view .account-info h4 {
+    margin: 5px 30px; }
+  #analysis-view .account-info .account-list {
+    list-style: none; }
+    #analysis-view .account-info .account-list li {
+      float: left;
+      padding: 5px;
+      margin: 0 5px;
+      border-radius: 10px;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      background: white; }
+    #analysis-view .account-info .account-list li:first-child {
+      background: green; }
 #analysis-view .month {
+  text-align: left;
   padding: 5px;
   float: left;
-  width: 120px; }
+  width: 120px;
+  margin-top: 40px; }
+  #analysis-view .month ul {
+    list-style: none; }
+    #analysis-view .month ul li {
+      font-size: 20px;
+      padding-top: 10px;
+      border-bottom: 1px #666 solid; }
 #analysis-view .content {
   padding: 7px;
   float: left; }
   #analysis-view .content .chart {
     padding: 3px;
-    float: left; }
+    float: left;
+    text-align: left; }
   #analysis-view .content .chart-data {
+    margin-top: 40px;
     padding: 3px;
     margin-left: 40px;
     float: left; }
@@ -383,8 +409,9 @@ footer {
       border-collapse: collapse;
       box-shadow: 0 0 1em rgba(0, 0, 0, 0.5); }
       #analysis-view .content .chart-data table th, #analysis-view .content .chart-data table td {
+        text-align: left;
         border: 1px green dotted;
-        padding: 3px; }
+        padding: 5px 10px; }
 
 .accounts-view h2 {
   margin: 20px;

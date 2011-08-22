@@ -193,10 +193,11 @@ window.AnalysisView = Backbone.View.extend({
   el:$("#analysis-view"),
 
   colors:["#FF0","#FFF","#356","#A23","#F2A","#0E0","#AC5","0F0"],
+  colorIndex:0,
 
   initialize:function(){
     _.bindAll(this,"drawChart","drawSlice","setTable",
-                   "initCanvas","fetchModel","fetchStore");
+                   "initCanvas","fetchModel","fetchStore","fetchTag");
 
     this.model = new Analysis();
 
@@ -206,11 +207,16 @@ window.AnalysisView = Backbone.View.extend({
   },
 
   events:{
-    "click .store":"fetchStore"
+    "click .store":"fetchStore",
+    "click .tag":"fetchTag"
   },
 
   fetchStore:function(){
     this.fetchModel("store");
+  },
+
+  fetchTag:function(){
+    this.fetchModel("tag");
   },
 
   fetchModel:function(type){
@@ -249,8 +255,9 @@ window.AnalysisView = Backbone.View.extend({
 
   setTable:function(model){
     var table = this.$("#data-table");
+    table.find("td").remove();
     _.each(model.attributes,function(v,k){
-      table.append($("<tr><td>"+v['category']+"</td><td>"+v['value']+"$</td></tr>"));
+      table.append($("<tr><td>"+v['category']+"</td><td>$"+v['value']+"</td></tr>"));
     });
   },
 
@@ -289,7 +296,7 @@ window.AnalysisView = Backbone.View.extend({
     ctx.arc(centerX,centerY,this.radius,startAngle,endAngle);
     ctx.lineTo(centerX,centerY);    
     ctx.closePath();
-    ctx.fillStyle = this.colors.pop()//this.params.sliceGradientColour; 
+    ctx.fillStyle = this.colors[(this.colorIndex++ % this.colors.length)];//this.params.sliceGradientColour; 
     ctx.fill();
 
     ctx.fillStyle = this.params.fontColor;
