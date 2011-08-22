@@ -175,6 +175,7 @@ window.ActionView = Backbone.View.extend({
     target.addClass("active");
   }
 });
+window.AnalysisView = Backbone.View.extend({});
 window.DashboardView = Backbone.View.extend({
 
   el:$("#dashboard-view"),
@@ -184,6 +185,8 @@ window.DashboardView = Backbone.View.extend({
   }
 
 });
+window.DealsView = Backbone.View.extend({});
+window.MediaView = Backbone.View.extend({});
 var ReceiptView = Backbone.View.extend({
 
   tagName:"tr",
@@ -421,6 +424,7 @@ window.ReceiptsView = Backbone.View.extend({
     $("#ajax-loader").html("<h3>error in model request</h3>");
   }
 });
+window.ReportsView = Backbone.View.extend({});
 var UserView = Backbone.View.extend({
 
   initialize:function(){
@@ -445,7 +449,6 @@ var UserView = Backbone.View.extend({
   }
 });
 var AccountRouter = Backbone.Router.extend({
-  el:$(".accounts-view"),
 
   initialize:function(){
     _.bindAll(this,"showPage","clearActive","showPage");
@@ -463,11 +466,10 @@ var AccountRouter = Backbone.Router.extend({
     this.clearActive();
     $(".boards > div").hide();
     $("."+page).show();
-    $(event.target).addClass("active");
+    $("#account-nav ."+page).addClass("active");
   },
-
   clearActive:function(){
-    this.$(".active").removeClass();
+    $(".active").removeClass("active");
   }
 });
 var AppRouter = Backbone.Router.extend({
@@ -495,6 +497,10 @@ var AppRouter = Backbone.Router.extend({
     "" : "dashboard",
     "dashboard" : "dashboard",
     "receipts" : "receipts",      
+    "analysis" : "analysis",      
+    "reports" : "reports",      
+    "deals" : "deals",      
+    "media" : "media",      
     "receipts/search/:query" : "search",
     "receipts/tag/:tag" : "searchTag"
   },
@@ -512,6 +518,26 @@ var AppRouter = Backbone.Router.extend({
   dashboard:function(){
     this.setView("dashboard-view");
     this.dashboardView = new DashboardView();
+  },
+
+  analysis:function(){
+    this.setView("analysis-view");
+    this.analysisView = new AnalysisView();
+  },
+
+  reports:function(){
+    this.setView("reports-view");
+    this.reportsView = new ReportsView();
+  },
+
+  media:function(){
+    this.setView("media-view");
+    this.MediaView = new MediaView();
+  },
+
+  deals:function(){
+    this.setView("deals-view");
+    this.dealsView = new DealsView();
   },
 
   receipts: function(){

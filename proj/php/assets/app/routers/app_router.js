@@ -23,6 +23,10 @@ var AppRouter = Backbone.Router.extend({
     "" : "dashboard",
     "dashboard" : "dashboard",
     "receipts" : "receipts",      
+    "analysis" : "analysis",      
+    "reports" : "reports",      
+    "deals" : "deals",      
+    "media" : "media",      
     "receipts/search/:query" : "search",
     "receipts/tag/:tag" : "searchTag"
   },
@@ -40,6 +44,26 @@ var AppRouter = Backbone.Router.extend({
   dashboard:function(){
     this.setView("dashboard-view");
     this.dashboardView = new DashboardView();
+  },
+
+  analysis:function(){
+    this.setView("analysis-view");
+    this.analysisView = new AnalysisView();
+  },
+
+  reports:function(){
+    this.setView("reports-view");
+    this.reportsView = new ReportsView();
+  },
+
+  media:function(){
+    this.setView("media-view");
+    this.MediaView = new MediaView();
+  },
+
+  deals:function(){
+    this.setView("deals-view");
+    this.dealsView = new DealsView();
   },
 
   receipts: function(){

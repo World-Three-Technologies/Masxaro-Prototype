@@ -452,19 +452,16 @@ footer{
 
 //boards setting:
 
-#receipts-view{
+#receipts-view,#dashboard-view,#analysis-view,#media-view,#reports-view,#deals-view{
   display:none;
 }
-
-#dashboard-view{
-  display:none;
-}
-
-#boards.receipts-view #receipts-view{
-  display:block;
-}
-
-#boards.dashboard-view #dashboard-view{
+#boards.receipts-view #receipts-view,
+#boards.dashboard-view #dashboard-view,
+#boards.analysis-view #analysis-view,
+#boards.media-view #media-view,
+#boards.reports-view #reports-view,
+#boards.deals-view #deals-view,
+{
   display:block;
 }
 

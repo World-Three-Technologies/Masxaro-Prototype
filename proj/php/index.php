@@ -26,6 +26,10 @@
       <div id="boards">
         <?php include_once "pages/receipts.php" ?>
         <?php include_once "pages/dashboard.php" ?>
+        <?php include_once "pages/analysis.php" ?>
+        <?php include_once "pages/reports.php" ?>
+        <?php include_once "pages/media.php" ?>
+        <?php include_once "pages/deals.php" ?>
       </div>
     </div>
   </div> <!-- eo #container -->
