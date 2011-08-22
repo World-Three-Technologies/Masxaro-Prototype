@@ -79,7 +79,7 @@ class ReceiptBuilder {
 	 * 
 	 * fetch mobile receipts, no items
 	 */
-	public function build_modile($receiptIds) {
+	public function build_mobile($receiptIds) {
 		$receipts = $this->initObjs($receiptIds);
 		$receipts = $this->fetchReceiptBasic($receipts);
 		$receipts = $this->fetchReceiptTags($receipts);

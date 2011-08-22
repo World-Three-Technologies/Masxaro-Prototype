@@ -1,7 +1,7 @@
 var AppRouter = Backbone.Router.extend({
 
   initialize: function(){
-    _.bindAll(this,"dashboard","receipts","search","searchTag","getReceiptsView");
+    _.bindAll(this,"dashboard","receipts","search","searchTag","getReceiptsView","getAnalysisView");
     var user = this.user = new User({
       account:readCookie("user_acc"),
     });
@@ -12,11 +12,11 @@ var AppRouter = Backbone.Router.extend({
   },
 
   getReceiptsView:function(){
-    if(!this.receiptsView){
-      return new ReceiptsView({model:this.receipts});
-    }else{
-      return this.receiptsView;
-    }                 
+    return !this.receiptsView ? new ReceiptsView({model:this.receipts}): this.receiptsView
+  },
+
+  getAnalysisView:function(){
+    return !this.analysisView ? new AnalysisView(): this.analysisView
   },
 
   routes: {
@@ -25,7 +25,7 @@ var AppRouter = Backbone.Router.extend({
     "receipts" : "receipts",      
     "analysis" : "analysis",      
     "reports" : "reports",      
-    "deals" : "deals",      
+    "deals" : "deals", 
     "media" : "media",      
     "receipts/search/:query" : "search",
     "receipts/tag/:tag" : "searchTag"
@@ -48,7 +48,7 @@ var AppRouter = Backbone.Router.extend({
 
   analysis:function(){
     this.setView("analysis-view");
-    this.analysisView = new AnalysisView();
+    this.analysisView = this.getAnalysisView();
   },
 
   reports:function(){

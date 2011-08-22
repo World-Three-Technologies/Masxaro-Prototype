@@ -429,7 +429,7 @@ UPD;
 	 * return detail information of certain receipts, without items
 	 */
 	public function getReceiptDetail($receiptIds){
-		return $this->builder->build_modile($receiptIds);
+		return $this->builder->build_mobile($receiptIds);
 	}
 	
 	/**
@@ -517,7 +517,7 @@ SEL;
 			return $this->builder->build($this->nomarlizeReceiptIdArray($results));
 		}
 		else{
-			return $this->builder->build_modile($this->nomarlizeReceiptIdArray($results));
+			return $this->builder->build_mobile($this->nomarlizeReceiptIdArray($results));
 		}
 	}
 	

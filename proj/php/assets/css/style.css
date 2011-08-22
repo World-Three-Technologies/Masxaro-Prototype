@@ -361,6 +361,31 @@ footer {
   #dashboard-view img {
     margin: 3px; }
 
+#analysis-view .account-info {
+  padding: 5px; }
+#analysis-view .month {
+  padding: 5px;
+  float: left;
+  width: 120px; }
+#analysis-view .content {
+  padding: 7px;
+  float: left; }
+  #analysis-view .content .chart {
+    padding: 3px;
+    float: left; }
+  #analysis-view .content .chart-data {
+    padding: 3px;
+    margin-left: 40px;
+    float: left; }
+    #analysis-view .content .chart-data table {
+      background: white;
+      width: 200px;
+      border-collapse: collapse;
+      box-shadow: 0 0 1em rgba(0, 0, 0, 0.5); }
+      #analysis-view .content .chart-data table th, #analysis-view .content .chart-data table td {
+        border: 1px green dotted;
+        padding: 3px; }
+
 .accounts-view h2 {
   margin: 20px;
   text-align: left; }

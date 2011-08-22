@@ -91,5 +91,4 @@ class UserUnitTest extends UnitTest{
 						'pwd'=>md5('123')
 					);
 	}
-	
 }
