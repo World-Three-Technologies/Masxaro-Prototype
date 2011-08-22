@@ -44,6 +44,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,9 +62,9 @@ public class MainPage extends Activity {
 	private static final boolean OFF_LINE = UserProfile.OFFLINE;
 	private static final boolean ON_LINE = UserProfile.ONLINE;
 	
-//	private LinearLayout mMainPage;
+	private LinearLayout mMainPage;
 	private TextView mUname;
-//	private ImageView mFractalImg;
+	private ImageView mFractalImg;
 	
 	// Screen touch event holding time
 	private long mUptime;
@@ -90,9 +92,9 @@ public class MainPage extends Activity {
         setContentView(R.layout.main_page);
         
         Log.i(TAG, "Get FrontPage elements");
-//        mMainPage = (LinearLayout) findViewById(R.id.main_page);
+        mMainPage = (LinearLayout) findViewById(R.id.main_page);
         mUname = (TextView) findViewById(R.id.Username);
-//        mFractalImg = (ImageView) findViewById(R.id.FractalFern);
+        mFractalImg = (ImageView) findViewById(R.id.FractalFern);
         mLogProgress = new ProgressDialog(MainPage.this);
 	}
 	
@@ -100,6 +102,7 @@ public class MainPage extends Activity {
 	public void onResume() {
 		super.onResume();
 		Log.i(TAG, "onResume" + "Set FrontPage elements");
+		
 		if (UserProfile.getStatus() == ON_LINE) {
 			setMainPage(UserProfile.getUsername()+getResources().getString(R.string.masxaro_email), 0);
 		}
@@ -136,7 +139,7 @@ public class MainPage extends Activity {
         
         // Inflate the currently selected menu XML resource.
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.front_page_menu, mMenu);
+        inflater.inflate(R.menu.main_page_menu, mMenu);
 
         return true;
     }
@@ -183,14 +186,14 @@ public class MainPage extends Activity {
 			receipt_search_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(receipt_search_intent);
 			return true;
-		case R.id.view_coupon_opt:
-			Log.i(TAG, "View coupon option selected");
-			
-			return true;
-		case R.id.conf_opt:
-			Log.i(TAG, "Configuration option selected");
-			
-			return false;
+//		case R.id.view_coupon_opt:
+//			Log.i(TAG, "View coupon option selected");
+//			
+//			return true;
+//		case R.id.conf_opt:
+//			Log.i(TAG, "Configuration option selected");
+//			
+//			return false;
 		case R.id.login_opt:
 			Log.i(TAG, "Login option selected");
 			// Pop up the login or the logout dialog
@@ -225,9 +228,9 @@ public class MainPage extends Activity {
 				startActivity(nfc_intent);
 			}
 		}
-		else if(action == MotionEvent.ACTION_DOWN)
+		else if (action == MotionEvent.ACTION_DOWN) {
 			mDowntime = event.getEventTime();
-				
+		}
 		return true;
 	}
 	
@@ -373,7 +376,7 @@ public class MainPage extends Activity {
 		    		Log.i(TAG, "reset front page");
 		    		setMainPage("Not Login", 0);
 			    	Log.i(TAG, "reset receipt manager");
-			    	ReceiptsManager.clearReceiptPool();
+			    	ReceiptsManager.initReceiptsManager();
 			    	Log.i(TAG, "log out succeeded");
 			    	Toast.makeText(MainPage.this, "Logout succeeded!", Toast.LENGTH_SHORT).show();
 		    	}
@@ -384,5 +387,4 @@ public class MainPage extends Activity {
 	    	}
 	    }
 	}
-
 }

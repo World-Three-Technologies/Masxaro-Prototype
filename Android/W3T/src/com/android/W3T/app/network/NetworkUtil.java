@@ -53,6 +53,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.*;
 
 import com.android.W3T.app.MainPage;
+import com.android.W3T.app.rmanager.BasicInfo;
 import com.android.W3T.app.rmanager.Receipt;
 import com.android.W3T.app.rmanager.ReceiptsManager;
 import com.android.W3T.app.user.UserProfile;
@@ -62,26 +63,42 @@ public class NetworkUtil {
 	public static final int LOGOUT = MainPage.DIALOG_LOGOUT;
 	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
-//	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
-	public static final String BASE_URL = "http://sweethomeforus.com/php";
+	public static final String BASE_URL = "http://50.19.213.157/masxaro/proj/php";
 	public static final String LOGIN_URL = BASE_URL + "/login.php";
 	public static final String LOGOUT_URL = BASE_URL + "/logoff.php";
 	public static final String RECEIPT_OP_URL = BASE_URL + "/receiptOperation.php";
 	
-	public static final String METHOD_RECEIVE_ALL_BASIC = "user_get_all_receipt";
-	public static final String METHOD_RECEIVE_RECEIPT_DETAIL = "user_get_receipt_detail";
-	public static final String METHOD_RECEIVE_RECEIPT_ITEMS = "user_get_receipt_items";
+	// basic info entry index
+	public static final int ENTRY_STORE_NAME = 0;
+	public static final int ENTRY_TIME = 1;
+	public static final int ENTRY_RECEIPT_ID = 2;
+	public static final int ENTRY_TAX = 3;
+	public static final int ENTRY_TOTAL = 4;
+	public static final int ENTRY_CURRENCY = 5;
+	public static final int ENTRY_CUT_DOWN = 6;
+	public static final int ENTRY_EXTRA_COST = 7;
+	public static final int ENTRY_SUB_COST = 8;
+	public static final int ENTRY_ID = 9;
+	public static final int ENTRY_STORE_ACC = 10;
+	public static final int ENTRY_SOURCE = 11;
+	
+	// Receipt View
+	public static final String METHOD_RECEIVE_ALL = "user_get_all_receipt";
+	// Search function: search list
+	public static final String METHOD_RECEIVE_RECEIPT_DETAIL = "user_get_receipts_detail";
+	public static final String METHOD_RECEIVE_RECEIPT_ITEMS = "user_get_receipts_items";
+	// Search function: search term
 	public static final String METHOD_KEY_SEARCH = "key_search";
 	public static final String METHOD_TAG_SEARCH = "tag_search";
-	public static final String METHOD_DATE_SEARCH = "time_search";
+	public static final String METHOD_KEY_DATE_SEARCH = "key_date_search";
+	// Send function
+	public static final String METHOD_SEND_RECEIPT = "new_receipt";
 	
 	private static final int SEVEN_DAYS = 7;
 	private static final int FOURTEEN_DAYS = 14;
 	private static final int ONE_MONTH = 1;
 	private static final int THREE_MONTHS = 3;
-	
-	private static HttpClient mClient = new DefaultHttpClient();
 	
 	private static boolean checkNetwork() {
 		return true;
@@ -91,9 +108,26 @@ public class NetworkUtil {
 		ArrayList<Receipt> receipts = ReceiptsManager.getUnSentReceipts();
         int num = receipts.size();
         for (int i=0;i<num;i++) {
-        	NetworkUtil.attemptSendReceipt(UserProfile.getUsername(), receipts.get(i));
-        	// if the transit succeeded, set the flag.
-        	receipts.get(i).setWhere(FROM_DB);
+        	int ret = NetworkUtil.attemptSendReceipt(METHOD_SEND_RECEIPT, receipts.get(i));
+        	if (ret > 0) {
+        		String detailstr = null;
+    			detailstr = NetworkUtil.attemptGetReceipt(METHOD_RECEIVE_RECEIPT_DETAIL, String.valueOf(ret));
+//    			String itemsstr = null;
+//    			itemsstr = NetworkUtil.attemptGetReceipt(METHOD_RECEIVE_RECEIPT_ITEMS, String.valueOf(ret));
+    			String time = null;
+				try {
+					time = (new JSONArray(detailstr)).getJSONObject(0).getString("receipt_time");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+    			receipts.get(i).getBasicInfo().setTime(time);
+    			receipts.get(i).getBasicInfo().setId(String.valueOf(ret));
+    			
+        		receipts.get(i).setWhere(FROM_DB);
+        	}
+        	else {
+        		return false;
+        	}
         }
         return true;
 	}
@@ -114,10 +148,10 @@ public class NetworkUtil {
 		// Here we may want to check the network status.
 		checkNetwork();
 
+		HttpClient Client = new DefaultHttpClient();
         HttpPost request;
         
         try {
-        	
             request = new HttpPost();
         	if (op == LOGIN) {
         		request.setURI(new URI(LOGIN_URL));
@@ -135,7 +169,7 @@ public class NetworkUtil {
 	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         	}
             // Execute HTTP Post Request
-            HttpResponse response = mClient.execute(request);
+            HttpResponse response = Client.execute(request);
             
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             	if (op == LOGOUT) {
@@ -167,79 +201,89 @@ public class NetworkUtil {
     }
 
 	// return null means something wrong.
-	public static String attemptGetReceipt(String method, String uname, String id) {
-		HttpPost request;
-		
+	public static String attemptGetReceipt(String op, String id) {
 		// Here we may want to check the network status.
 		checkNetwork();
 		
 		try {
-			request = new HttpPost(new URI(RECEIPT_OP_URL));
-			if (method.equals(METHOD_RECEIVE_ALL_BASIC)) {
-		        // Add your data
-		        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		        nameValuePairs.add(new BasicNameValuePair("opcode", METHOD_RECEIVE_ALL_BASIC));
-		        nameValuePairs.add(new BasicNameValuePair("acc", uname));
-		        request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			JSONObject jsonstr = new JSONObject();
+			JSONObject param = new JSONObject();
+			try {
+				param.put("opcode", op);
+				param.put("acc", UserProfile.getUsername());
+				if (op.equals(METHOD_RECEIVE_ALL)) {
+			        // Add your data
+			        param.put("limitStart", "0");
+			        param.put("limitOffset", "7");
+				}
+				else if (op.equals(METHOD_RECEIVE_RECEIPT_DETAIL)) {
+					// Add your data
+					JSONArray rid = new JSONArray();
+					rid.put(Integer.valueOf(id));
+		            param.put("receiptIds", rid);
+		            
+				}
+				else if (op.equals(METHOD_RECEIVE_RECEIPT_ITEMS)) {
+					// Add your data
+					JSONArray rid = new JSONArray();
+					rid.put(Integer.valueOf(id));
+		            param.put("receiptIds", rid);
+				}
+				jsonstr.put("json", param);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			else if (method.equals(METHOD_RECEIVE_RECEIPT_DETAIL)) {
-				// Add your data
-	            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-	            nameValuePairs.add(new BasicNameValuePair("opcode", METHOD_RECEIVE_RECEIPT_DETAIL));
-	            nameValuePairs.add(new BasicNameValuePair("acc", uname));
-	            nameValuePairs.add(new BasicNameValuePair("receiptId", id));
-	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			}
-			else if (method.equals(METHOD_RECEIVE_RECEIPT_ITEMS)) {
-				// Add your data
-	            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-	            nameValuePairs.add(new BasicNameValuePair("opcode", METHOD_RECEIVE_RECEIPT_ITEMS));
-	            nameValuePairs.add(new BasicNameValuePair("acc", uname));
-	            nameValuePairs.add(new BasicNameValuePair("receiptId", id));
-	            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			}
-			
-            // Execute HTTP Post Request
-            HttpResponse response = mClient.execute(request);
+			URL url = new URL(RECEIPT_OP_URL);
+        	URLConnection connection = url.openConnection();
+        	connection.setDoOutput(true);
+        	OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+        	// Must put "json=" here for server to decoding the data
+        	String data = "json=" + jsonstr.toString();
+        	out.write(data);
+        	out.flush();
+        	out.close();
+
+        	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+        	String s = in.readLine();
+        	
+        	System.out.println("get "+s);
+        	
+        	return s;
             
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            	String s = EntityUtils.toString(response.getEntity());
-            	return s;
-            }
-            return null;
-		} catch (URISyntaxException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	public static boolean attemptSendReceipt(String uname, Receipt r) {
+	public static int attemptSendReceipt(String op, Receipt r) {
 		// Here we may want to check the network status.
 		checkNetwork();
         try {
-            // Add your data
-        	JSONObject basicInfo = new JSONObject();
-        	basicInfo.put("store_account", r.getEntry(0));			// store name
-        	basicInfo.put("tax", r.getEntry(3));					// tax
-        	basicInfo.put("receipt_time", "2011-07-12 06:12:32");	// receipt time
-        	basicInfo.put("receipt_id", "105");
-        	basicInfo.put("user_account", UserProfile.getUsername());
-        	JSONObject receipt = new JSONObject();
-        	receipt.put("receipt", basicInfo);
-        	receipt.put("opcode", "new_receipt");
         	JSONObject jsonstr = new JSONObject();
-        	jsonstr.put("json", receipt);
         	
+        	if (op.equals(METHOD_SEND_RECEIPT)) {
+        		// Add your data
+            	JSONObject basicInfo = new JSONObject();
+            	basicInfo.put("store_account", r.getEntry(ENTRY_STORE_ACC));// store name
+            	basicInfo.put("currency_mark", r.getEntry(ENTRY_CURRENCY));
+            	basicInfo.put("store_define_id", r.getEntry(ENTRY_RECEIPT_ID));
+            	basicInfo.put("source", r.getEntry(ENTRY_SOURCE));
+            	basicInfo.put("tax", r.getEntry(ENTRY_TAX));				// tax
+            	basicInfo.put("total_cost", r.getEntry(ENTRY_TOTAL));		// total price
+            	basicInfo.put("user_account", UserProfile.getUsername());
+            	JSONObject receipt = new JSONObject();
+            	receipt.put("receipt", basicInfo);
+            	receipt.put("items", r.getItemsJsonArray());
+            	receipt.put("opcode", op);
+            	receipt.put("acc", UserProfile.getUsername());
+            	jsonstr.put("json", receipt);
+        	}
         	URL url = new URL(RECEIPT_OP_URL);
         	URLConnection connection = url.openConnection();
         	connection.setDoOutput(true);
@@ -250,10 +294,14 @@ public class NetworkUtil {
         	out.write(data);
         	out.flush();
         	out.close();
-
+        	
         	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-        	System.out.println(in.readLine());
-        	return true;
+        	String s = in.readLine();
+        	System.out.println(s);
+        	if (Integer.valueOf(s) > 0) {
+        		return Integer.valueOf(s);
+        	}
+        	else return 0;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -261,26 +309,19 @@ public class NetworkUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;
+		return 0;
 	}
 	
 	public static String attemptSearch(String op, int range, String[] terms) {   
 		// Here we may want to check the network status.
 		checkNetwork();
-
-        HttpPost request;
         
         try {
-        	
-            request = new HttpPost();
-            request.setURI(new URI(RECEIPT_OP_URL));
-            
             JSONObject param = new JSONObject();
             param.put("acc", UserProfile.getUsername());
             param.put("opcode", "search");
             param.put("mobile", true);
-            JSONObject jsonstr = new JSONObject();
-            
+            JSONObject jsonstr = new JSONObject();            
         	if (op == METHOD_KEY_SEARCH) {
         		// Add your data
         		// Add keys if there is any.
@@ -307,6 +348,7 @@ public class NetworkUtil {
         		timeStart += ("-"+String.valueOf(c.get(Calendar.MONTH)+1));
         		timeStart += ("-"+String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
         		Calendar current = Calendar.getInstance();
+        		current.add(Calendar.DAY_OF_MONTH, 1);
         		String timeEnd = String.valueOf(current.get(Calendar.YEAR));
         		timeEnd += ("-"+String.valueOf(current.get(Calendar.MONTH)+1));
         		timeEnd += ("-"+String.valueOf(current.get(Calendar.DAY_OF_MONTH)));
@@ -321,7 +363,7 @@ public class NetworkUtil {
         	else if (op == METHOD_TAG_SEARCH) {
 
         	}
-        	else if (op == METHOD_DATE_SEARCH) {
+        	else if (op == METHOD_KEY_DATE_SEARCH) {
         		if (terms.length > 2) {
         			// Add keys if there is any.
             		JSONArray keys = new JSONArray();
@@ -332,18 +374,14 @@ public class NetworkUtil {
                 	param.put("keys", keys);
         		}
         		else if (terms.length < 2) {
-        			System.out.println("Wrong terms");
+        			System.out.println("Wrong terms: no start or end date.");
         			return null;
         		}
         		JSONObject timeRange = new JSONObject();
         		timeRange.put("start", terms[terms.length - 2]);
         		timeRange.put("end", terms[terms.length - 1]);
-        		System.out.println(terms[terms.length - 2]);
-        		System.out.println(terms[terms.length - 1]);
         		param.put("timeRange", timeRange);
-            	
             	jsonstr.put("json", param);
-
         	}
         	URL url = new URL(RECEIPT_OP_URL);
         	URLConnection connection = url.openConnection();
@@ -358,10 +396,9 @@ public class NetworkUtil {
 
         	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
         	return in.readLine();
-        	
-        } catch (URISyntaxException e) {   
-            e.printStackTrace();   
-         
+//        	String s = in.readLine();
+//        	System.out.println(s);
+//        	return s;
         } catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -377,5 +414,4 @@ public class NetworkUtil {
 		}
 		return null;
     }
-
 }

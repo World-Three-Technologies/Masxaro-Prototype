@@ -24,9 +24,14 @@ import android.widget.TextView;
 public class SearchResultView extends Activity implements OnClickListener {
 	public static final String TAG = "SearchResultViewActivity";
 	
+	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
+	
 	private Button mBackListBtn;
 	
 	private Receipt mReceipt;
+	
+	private boolean mSet;		// whether the view is already set, prevent from repeatedly
+								// add item entries for some situation, like press standby button.
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,12 +45,16 @@ public class SearchResultView extends Activity implements OnClickListener {
 		String detailstr = (String) getIntent().getSerializableExtra("detail");
 		String itemsstr = (String) getIntent().getSerializableExtra("items");
 		try {
-			mReceipt = new Receipt((new JSONArray(detailstr)).getJSONObject(0), true);
-			mReceipt.addItems(new JSONArray(itemsstr));
+			mReceipt = new Receipt((new JSONArray(detailstr)).getJSONObject(0), FROM_DB);
+			// if the items are empty.
+			if (itemsstr != null) {
+				mReceipt.addItems(new JSONArray(itemsstr));
+			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		mSet = false;
 	}
 	
 	@Override
@@ -53,7 +62,10 @@ public class SearchResultView extends Activity implements OnClickListener {
 		Log.i(TAG, "onResume()");
 		super.onResume();
 		Log.i(TAG, "handler post a new thread");
-		fillReceiptView();
+		if (mSet == false) {
+			fillReceiptView();
+			mSet = true; 			// the item entries are listed.
+		}
 	}
 	
 	@Override
@@ -82,7 +94,7 @@ public class SearchResultView extends Activity implements OnClickListener {
 	
 	private void fillBasicInfo() {
 		// Set all basicInfo entries: store name, id, time, tax, total .
-		for (int i = 0;i < ReceiptsManager.NUM_RECEIPT_ENTRY;i++) {
+		for (int i = 0;i < ReceiptsManager.NUM_RECEIPT_BASIC;i++) {
 			((TextView) findViewById(ReceiptsManager.ReceiptViewElements[i]))
 				.setText(mReceipt.getEntry(i));
 		}
@@ -97,11 +109,14 @@ public class SearchResultView extends Activity implements OnClickListener {
 		for (int i=0;i<numItems;i++) {
 			TableRow row1 = new TableRow(this);
 			TextView itemId = new TextView(this);
-			itemId.setText(String.valueOf(mReceipt.getItem(i).getItemId()));
-			itemId.setTextColor(getResources().getColor(R.color.black));
-			itemId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-			itemId.setPadding(10, 0, 0, 0);
-			row1.addView(itemId);
+			String id = mReceipt.getItem(i).getItemId();
+			if (Integer.valueOf(id) != -1) {
+				itemId.setText(id);
+				itemId.setTextColor(getResources().getColor(R.color.black));
+				itemId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+				itemId.setPadding(10, 0, 0, 0);
+				row1.addView(itemId);
+			}
 			
 			TableRow row2 = new TableRow(this);
 			TextView itemName = new TextView(this);

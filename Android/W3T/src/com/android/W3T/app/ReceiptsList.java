@@ -34,7 +34,6 @@ import java.util.Map;
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.Receipt;
 import com.android.W3T.app.rmanager.ReceiptsManager;
-import com.android.W3T.app.user.UserProfile;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -42,6 +41,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +51,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class ReceiptsList extends Activity implements OnClickListener {
@@ -63,32 +64,47 @@ public class ReceiptsList extends Activity implements OnClickListener {
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 //	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
 	
-	private static final String RECEIVE_ALL_BASIC = NetworkUtil.METHOD_RECEIVE_ALL_BASIC;
+	private static final String RECEIVE_ALL = NetworkUtil.METHOD_RECEIVE_ALL;
 	
 	private static final int ENTRY_STORE_NAME = Receipt.ENTRY_STORE_NAME;
 	private static final int ENTRY_TIME = Receipt.ENTRY_TIME;
+	
+	private static final int SYNC_MESSAGE = 1;
 	
 	private ListView mList;
 	private Button mSyncBtn;
 	private Button mBackFrontBtn;
 	
 	private ProgressDialog mSyncProgress;
-	private Handler mUpdateHandler = new Handler();
+	private Handler mUpdateHandler = new Handler() {
+        public void handleMessage(Message msg) {  
+            super.handleMessage(msg);  
+            switch (msg.what) {  
+            case SYNC_MESSAGE:  
+                Thread thread = new Thread(mReceiptThread);
+                thread.start();  
+                break;
+            }  
+        }
+	};
 	private Runnable mReceiptThread = new Runnable() {
 		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
-			// TODO: upload the receipt with FROM_NFC flag
-            NetworkUtil.syncUnsentReceipts();
 			// Download latest 7 receipts from database and upload non-uploaded receipts
 			// to the database.
-			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL_BASIC, UserProfile.getUsername(), null);
+			if (!NetworkUtil.syncUnsentReceipts()) {
+            	Toast.makeText(ReceiptsList.this, "Sending receipts occurred error", Toast.LENGTH_SHORT);
+            }
+			ReceiptsManager.initReceiptsManager();
+			String jsonstr = NetworkUtil.attemptGetReceipt(RECEIVE_ALL, null);
 			if (jsonstr != null) {
 				Log.i(TAG, "add new receipts");
-				// TODO: pick up the basic info of the latest 7 receipts and list them here.
 //				System.out.println(jsonstr);
 				// Set the IsUpload true
-//				ReceiptsManager.add(jsonstr, FROM_DB);
+				if (!ReceiptsManager.add(jsonstr, FROM_DB)){
+					Toast.makeText(ReceiptsList.this, "cannot add more receipts into the pool", Toast.LENGTH_SHORT);
+				}
 				Log.i(TAG, "finished new receipts");
 				Log.i(TAG, "update receipt view");
 				mSyncProgress.dismiss();
@@ -165,13 +181,11 @@ public class ReceiptsList extends Activity implements OnClickListener {
   			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos,
 					long id) {
-  				// TODO: should get the receipt id of the posth receipt here.
-  				// TODO: check whether the posth receipt in the latest receipt pool 
-  				// TODO: Display the posth receipt in the receipt pool.
   				final Intent receipt_view_intent = new Intent(ReceiptsList.this, ReceiptsView.class);
   				receipt_view_intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
   				receipt_view_intent.putExtra("pos", pos-1);
   				startActivity(receipt_view_intent);
+  				finish();
 			}  
         });
 	}
@@ -186,7 +200,9 @@ public class ReceiptsList extends Activity implements OnClickListener {
 			mSyncProgress.setMessage("Syncing...");
 			mSyncProgress.setCancelable(true);
 			mSyncProgress.show();
-			mUpdateHandler.post(mReceiptThread);
+			Message msg = new Message();
+			msg.what = SYNC_MESSAGE;
+			mUpdateHandler.sendMessage(msg);
 		}
 		else if (v == mBackFrontBtn) {
 			// Back to Front Page when there is no reciept
@@ -211,6 +227,8 @@ public class ReceiptsList extends Activity implements OnClickListener {
 				View row = super.getView(position, convertView, parent);
 		        TextView title = (TextView) row.findViewById(R.id.list_receipt_title);
 		        title.setTextColor(getResources().getColor(R.color.white));
+		        TextView time = (TextView) row.findViewById(R.id.list_receipt_time);
+		        time.setTextColor(getResources().getColor(R.color.white));
 		        return super.getView(position, convertView, parent);
 			}
 			return super.getView(position, convertView, parent);

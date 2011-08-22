@@ -34,44 +34,29 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Receipt implements Serializable{
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8704584220504619955L;
 	
+	public static final String PARAM_ITEM_ID = ReceiptItem.PARAM_ITEM_ID;
+	public static final String PARAM_ITEM_NAME = ReceiptItem.PARAM_ITEM_NAME;
+	public static final String PARAM_ITEM_QTY = ReceiptItem.PARAM_ITEM_QTY;
+	public static final String PARAM_ITEM_PRICE = ReceiptItem.PARAM_ITEM_PRICE;
+	public static final String PARAM_ITEM_DISCOUNT = ReceiptItem.PARAM_ITEM_DISCOUNT;
+	
+	// Receipt basic info entries which will be displayed on receipts.
 	public static final int ENTRY_STORE_NAME = 0;
 	public static final int ENTRY_TIME = 1;
-	public static final int ENTRY_ID = 2;
+	public static final int ENTRY_RECEIPT_ID = 2;
+	public static final int ENTRY_TAX = 3;
+	public static final int ENTRY_TOTAL = 4;
+	public static final int ENTRY_CURRENCY = 5;
+	public static final int ENTRY_CUT_DOWN = 6;
+	public static final int ENTRY_EXTRA_COST = 7;
+	public static final int ENTRY_SUB_COST = 8;
+	public static final int ENTRY_ID = 9;
+	public static final int ENTRY_STORE_ACC = 10;
+	public static final int ENTRY_SOURCE = 11;
 	
-	// JSON names of Receipt entries
-	public static final String PARAM_RECEIPT_ID = "receipt_id";
-	public static final String PARAM_RECEIPT_TIME = "receipt_time";
-	public static final String PARAM_RECEIPT_TAX = "tax";
-	public static final String PARAM_RECEIPT_TOTAL = "total_cost";
-	public static final String PARAM_RECEIPT_STORE_NAME = "store_name";
-//	public static final String PARAM_RECEIPT_STORE_ACC = "store_account";
-//	public static final String PARAM_RECEIPT_USER_ACC = "user_account";
-	public static final String PARAM_RECEIPT_IMAGE = "img";
-	public static final String PARAM_RECEIPT_DELETE = "delete";
-	
-	// JSON names of Item entries.
-	public static final String PARAM_ITEM_ID = "item_id";
-	public static final String PARAM_ITEM_NAME = "item_name";
-	public static final String PARAM_ITEM_QTY = "item_qty";
-	public static final String PARAM_ITEM_PRICE = "item_price";
-	
-//	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
-//	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
-	
-//	private String mReceiptId;
-//	private	String mStoreName;
-//	private String mTime;
-//	private String mTax;
-//	private String mTotal;
 	private BasicInfo basic;
-//	private String img;
-//	private String delete;
 	private ArrayList<ReceiptItem> mItems;	// Items in this receipt
 	private int mNumItems;			// Number of items
 	
@@ -79,26 +64,14 @@ public class Receipt implements Serializable{
 									// The receipt retrieved from database sets true.
 									// The receipt retrieved from nfc tag sets false
 	public Receipt() {
-//		mReceiptId = new String("ID@0000");
-//		mStoreName = new String("N/A");
-//		mTime = new String("N/A");
-//		mTotal = new String("N/A");
-//		mTax = new String("N/A");
 		basic = new BasicInfo();
-//		img = new String("N/A");
-//		delete = new String();
 		mItems = new ArrayList<ReceiptItem>();
 		mNumItems = 0;
 		mWhere = false;
 	}
 	
 	public Receipt(JSONObject str, boolean w) {
-		//			mReceiptId = str.get(PARAM_RECEIPT_ID).toString();
-		//			mTime = str.get(PARAM_RECEIPT_TIME).toString();
-		//			mStoreName = str.get(PARAM_RECEIPT_STORE_NAME).toString();
-		//			mTotal = str.get(PARAM_RECEIPT_TOTAL).toString();
-		//			mTax = str.get(PARAM_RECEIPT_TAX).toString();
-		basic = new BasicInfo(str);
+		basic = new BasicInfo(str, w);
 		mItems = new ArrayList<ReceiptItem>();
 		mNumItems = 0;
 		mWhere = w;
@@ -113,14 +86,35 @@ public class Receipt implements Serializable{
 		case ENTRY_TIME:
 			result = getTime();
 			break;
+		case ENTRY_RECEIPT_ID:
+			result = getReceiptId();
+			break;
+		case ENTRY_TAX:
+			result = getTax();
+			break;
+		case ENTRY_TOTAL:
+			result = getTotal();
+			break;
+		case ENTRY_CURRENCY:
+			result = getCurrency();
+			break;
+		case ENTRY_STORE_ACC:
+			result = getStoreAcc();
+			break;
+		case ENTRY_EXTRA_COST:
+			result = getExtraCost();
+			break;
+		case ENTRY_SUB_COST:
+			result = getSubCost();
+			break;
+		case ENTRY_CUT_DOWN:
+			result = getCutDown();
+			break;
 		case ENTRY_ID:
 			result = getId();
 			break;
-		case 3:
-			result = getTax();
-			break;
-		case 4:
-			result = getTotal();
+		case ENTRY_SOURCE:
+			result = getSource();
 			break;
 		default:
 			result = null;
@@ -133,18 +127,32 @@ public class Receipt implements Serializable{
 		return mItems.get(i);
 	}
 	
+	public JSONArray getItemsJsonArray() {
+		JSONArray items = new JSONArray();
+		for (int i=0;i<mNumItems;i++) {
+			ReceiptItem item = mItems.get(i);
+			JSONObject itemstr = new JSONObject();
+			try {
+				itemstr.put(PARAM_ITEM_ID, item.getItemId());
+				itemstr.put(PARAM_ITEM_NAME, item.getName());
+				itemstr.put(PARAM_ITEM_QTY, item.getQty());
+				itemstr.put(PARAM_ITEM_PRICE, item.getPrice());	
+				itemstr.put(PARAM_ITEM_DISCOUNT, item.getDiscount());
+				items.put(i, itemstr);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return items;
+	}
+	
 	// Called when there is a need to add items to a receipt, r.
 	public void addItems(JSONArray items) {
 		mNumItems = items.length();
-		
 		try {
 			for (int i=0;i<mNumItems;i++) {
-				JSONObject item = (JSONObject) items.get(i);
-				ReceiptItem newItem = new ReceiptItem();
-				newItem.setItemId(Integer.valueOf(item.getString(PARAM_ITEM_ID)));
-				newItem.setName(item.getString(PARAM_ITEM_NAME));
-				newItem.setQty(Integer.valueOf(item.getString(PARAM_ITEM_QTY)));
-				newItem.setPrice(Double.parseDouble(item.getString(PARAM_ITEM_PRICE)));
+				ReceiptItem newItem = new ReceiptItem((JSONObject)items.get(i));
 				mItems.add(newItem);
 			}
 		} catch (JSONException e) {
@@ -157,8 +165,16 @@ public class Receipt implements Serializable{
 		return mNumItems;
 	}
 	
+	public BasicInfo getBasicInfo() {
+		return basic;
+	}
+	
 	private String getId() {
 		return basic.getId();
+	}
+	
+	private String getReceiptId() {
+		return basic.getReceiptId();
 	}
 	
 	private String getStoreName() {
@@ -173,6 +189,10 @@ public class Receipt implements Serializable{
 		return basic.getTax();
 	}
 	
+	private String getCurrency() {
+		return basic.getCurrency();
+	}
+	
 	public boolean getWhere() {
 		return mWhere;
 	}
@@ -181,27 +201,27 @@ public class Receipt implements Serializable{
 		return basic.getTotal();
 	}
 	
-//	private void setId(String id) {
-//		mReceiptId = id; 
-//	}
-//
-//	private void setTime(String time) {
-//		mTime = time; 
-//	}
-//	
-//	private void setStoreName(String sn) {
-//		mStoreName = sn; 
-//	}
-//	
-//	private void setTotal(String tt) {
-//		mTotal = tt; 
-//	}
-//	
+	private String getStoreAcc() {
+		return basic.getStoreAcc();
+	}
+	
+	private String getSubCost() {
+		return basic.getSubCost();
+	}
+
+	private String getCutDown() {
+		return basic.getCutDownCost();
+	}
+	
+	private String getExtraCost() {
+		return basic.getExtraCost();
+	}
+	
+	private String getSource() {
+		return basic.getSource();
+	}
+	
 	public void setWhere(boolean w) {
 		mWhere = w;
 	}
-	
-//	private void setTax(String t) {
-//		mTax = t;
-//	}
 }
