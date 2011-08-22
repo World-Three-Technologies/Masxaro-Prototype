@@ -25,8 +25,6 @@
 
     $control = new UserCtrl();
     $profile = $control->getProfile($acc);
-    $contactControl = new contactCtrl(); 
-    $contacts = $contactControl->getContacts($acc,"user");
     
     ?>
     <div id="main" class="accounts-view" role="main">
@@ -54,69 +52,107 @@
         <div class="profile">
           <div class="content">
             <form action="userOperation.php" message="update successful" ajaxian>
+            <dl>
               <input type="hidden" name="opcode" value="update_profile"/>
               <input type="hidden" name="acc" value="<?php echo $profile["user_account"]?>"/>
-            Account name : <label><?php echo $profile["user_account"]?></label><br />
-            Name : <input type="text" class="required info-first_name" name="info-first_name" value="<?php echo $profile["first_name"]?>"/><br />
-            <button>Update</button>
-            </form>
-
-            <h4>Privacy Information</h4>
-            Company : <input type="text"/><br />
-            Address : <input type="text"/><br />
-            City :<input type="text"/><br />
-            State :<input type="text" /><br />
-            Country : 
-            <select>
-              <option value="US">US</option>
-              <option value="Canada">Canada</option>
-            </select> <br />
-            Zip code : <input type="text" /><br />
-            Age : <input type="text" /><br />
-            Gender : <input type="radio"/>Male <input type="radio"/>Female<br />
+              <dt>Account name</dt>
+              <dd><label><?php echo $profile["user_account"]?></label></dd>
+              <dt>First Name</dt>
+              <dd><input type="text" class="required info-first_name" name="info-first_name" value="<?php echo $profile["first_name"]?>"/></dd>
+              <button class="button">Update</button>
+            </dl>
+            </form><hr />
+            <dl>
+              <dt>Privacy Information</dt>
+              <dd>This information will only be used for provide better service. </dd>
+              <dt>Gender</dt>
+              <dd><input type="radio" name="gender"/>Male <input type="radio" name="gender"/>Female</dd>
+              <dt>Zip Code</dt>
+              <dd><input type="text" /></dd>
+              <dt>Age</dt>
+              <dd><input type="text" /></dd>
+            </dl> 
+            <button class="button">Update</button>
           </div>
           <aside>
-            <p>Description</p>
+            <p>You can change your account information here, these information will not be used for commercial spam.</p>
           </aside>
         </div>
 
         <div class="admin">
           <div class="content">
-            <h4>Change Password</h4>
-            Old Password : <input type="text"/>
-            New Password : <input type="text"/>
-            Confirm Password : <input type="text"/>
-              
-
-            <h4>Destroy Account</h4>
-            <button>Destroy</button>
+            <h4>Change your password</h4>
+            <dt>Old Password</dt>
+            <dd><input type="text"/></dd>
+            <dt>New Password</dt>
+            <dd><input type="text"/></dd>
+            <dt>Confirm Password</dt>
+            <dd><input type="text"/></dd>
+            <button class="button">Change password</button>
+            <hr />
+            <h4>Delete your account</h4>
+            <button class="button">Delete Account</button>
           </div>
           <aside></aside>
         </div>
 
         <div class="preference">
           <div class="content">
-            Privacy Level: Fully privacy, Connected, Engaged
-            Language: En <br/>
+            <h4>Privacy level</h4>
+            <dd>
+              <input type="radio" name="preference" />Fully private
+            </dd>
+            <dd>
+              <input type="radio" name="preference" />Conntected but anonymous</dd>
+            </dd>
+            <dd>
+              <input type="radio" name="preference" />Engaged & protected</dd>
+            <dt>Language</dt>
+            <dd>
+              <select>
+              	<option value="en">English</option>
+              	<option value="la">Spanish</option>
+              	<option value="zh">Chinese</option>
+              </select>
+            </dd>
           </div>
           <aside>
-            <p>test</p>
+            <p>Change your private level and language preference</p>
           </aside>
         </div>
         <div class="email">
           <div class="content">
-        <?php foreach($contacts as $contact){?>
-          Email : <input type="text" value="<?php echo $contact["value"];?>"/><br />
-        <?php } ?>
+            <dt>Your personal email address</dt>
+            <dd><input type="text" value="<?php echo $profile["personal"]?>"/></dd>
+            <dt>Masxaro email address</dt>
+            <dd><label><?php echo $profile["masxaro"]?></label></dd>
+            <button class="button">Update</button>
           </div>
-          <aside></aside>
+          <aside>This email address will be used to notify you on chnages or help you recover lost password,
+                 No commercial offerings will come to this address from masxaro.com.</aside>
         </div>
         <div class="credit">
           <div class="content">
-            <h3>Credit Card</h3>
-            Credit card information:<input type="text"/>
+            <h3>Conntected Credit Card</h3>
+            <dt>Conntect your credit card information to Masxaro.com</dt>
+            <dd class="credit">
+              <span>City</span>
+              <span>1234-xxxx-xxxx-3210</span>
+              <span>8/14</span>
+              <span class="close"/>
+            </dd>
+            <dd class="credit">
+              <span>Bank of America</span>
+              <span>1234-XXXX-XXXX-5678</span>
+              <span>9/15</span>
+              <span class="close"/>
+            </dd>
+            <button class="button">add new card</button>
+            <button class="button">submit card</button>
           </div>
           <aside>
+          <p>Conntect your credit card information to Masxaro will automatically 
+             record your spend and receipts.</p>
           </aside>
         </div>
     </div>

@@ -240,9 +240,20 @@ abstract class ClientCtrl extends Ctrl{
 			AND 
 				`verified`=1
 		";
+
 		
 		$this->db->select($sql);
 		$result = $this->db->fetchAssoc();
+
+    $contactCtrl = new ContactCtrl();
+    foreach($contactCtrl->getContacts($acc,"user") as $contact){
+      $email = explode("@",$contact["value"],2);
+      if($email[1] == "masxaro.com"){
+        $result[0]["masxaro"] = $contact["value"];
+      }else{
+        $result[0]["personal"] = $contact["value"];
+      }
+    };
 		
 		return $result[0];
 	}

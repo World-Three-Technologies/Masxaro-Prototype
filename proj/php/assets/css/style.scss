@@ -6,6 +6,7 @@ $grid : 24;
 $grid-width : $page-width / $grid;
 
 $header-color:white;
+$background-color:rgb(182,212,214);
 
 
 /*
@@ -27,6 +28,10 @@ $header-color:white;
 @mixin grid($grid-number){
   width: $grid-width * $grid-number;
 }
+
+@mixin gradient($start, $end){
+
+} 
 
 @mixin transition($sec){
   -webkit-transition:all $sec ease-in-out;
@@ -63,6 +68,22 @@ body{
       rgb(182,212,214) 25%,
       rgb(123,184,179) 84%
   );
+}
+
+.button{
+  @include round(5px);
+  background: -webkit-gradient(linear,0% 0,0% 100%, from(#fff),to(#e1e1e1));
+  height:34px;
+  line-height:36px;
+  margin:5px;
+  font-size:14px;
+  padding:0 13px;
+  &:hover{
+    background: $background-color;
+  }
+  &:active{
+    background: gray;
+  }
 }
 
 // header module
@@ -475,7 +496,7 @@ footer{
     display:block;
     float:left;
     li{
-      font-size:28px;
+      font-size:22px;
       padding:5px;
     }
     .active{
@@ -492,10 +513,50 @@ footer{
     .content{
       @include grid(12);
       float:left;
+      h4{
+        padding-bottom:10px;
+      }
+      dl{
+        margin-top:20px;
+      }
+      dt,dd{
+      padding:4px;
+      }
+      dt{
+        font-weight:bold;
+        font-size:16px;
+      }
+      dd{
+        input[type="text"],dd input[type="password"]{
+          @include grid(10);
+          margin-right:5px;
+          padding:5px;
+          font-size:14px;
+          color:#666;
+        }
+      }
+      dd.credit{
+        margin:5px;
+        position:relative;
+        @include round(10px);
+        background:$background-color;
+        font-size:16px;
+        padding:7px;
+        .close{
+          background:url(../img/close-icon.png) top no-repeat;
+          width:34px;
+          height:34px;
+          background-position:0 0;
+          position:absolute;
+          top:0;
+          right:0;
+        }
+      }
     }
     aside{
       @include grid(4);
       float:left;
+      padding-top:$grid-width/2;
     }
     .admin,.preference,.credit,.email{
       display:none;

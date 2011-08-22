@@ -133,6 +133,5 @@ Privacy & security are extremely important to all of us. We created masxaro from
     </div>
   </div> <!-- eo #container -->
   <?php include_once "layout/footer.php" ?>
-
 </body>
 </html>

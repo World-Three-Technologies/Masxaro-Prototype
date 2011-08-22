@@ -25,6 +25,21 @@ body {
   background-image: -webkit-gradient(linear, right top, right bottom, color-stop(0.25, #b6d4d6), color-stop(0.84, #7bb8b3));
   background-image: -moz-linear-gradient(center top, #b6d4d6 25%, #7bb8b3 84%); }
 
+.button {
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  background: -webkit-gradient(linear, 0% 0, 0% 100%, from(white), to(#e1e1e1));
+  height: 34px;
+  line-height: 36px;
+  margin: 5px;
+  font-size: 14px;
+  padding: 0 13px; }
+  .button:hover {
+    background: #b6d4d6; }
+  .button:active {
+    background: gray; }
+
 header {
   background-color: white;
   width: 100%;
@@ -356,7 +371,7 @@ footer {
   display: block;
   float: left; }
   .accounts-view nav li {
-    font-size: 28px;
+    font-size: 22px;
     padding: 5px; }
   .accounts-view nav .active {
     background: white; }
@@ -370,8 +385,41 @@ footer {
   .accounts-view .boards .content {
     width: 480px;
     float: left; }
+    .accounts-view .boards .content h4 {
+      padding-bottom: 10px; }
+    .accounts-view .boards .content dl {
+      margin-top: 20px; }
+    .accounts-view .boards .content dt, .accounts-view .boards .content dd {
+      padding: 4px; }
+    .accounts-view .boards .content dt {
+      font-weight: bold;
+      font-size: 16px; }
+    .accounts-view .boards .content dd input[type="text"], .accounts-view .boards .content dd dd input[type="password"] {
+      width: 400px;
+      margin-right: 5px;
+      padding: 5px;
+      font-size: 14px;
+      color: #666; }
+    .accounts-view .boards .content dd.credit {
+      margin: 5px;
+      position: relative;
+      border-radius: 10px;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      background: #b6d4d6;
+      font-size: 16px;
+      padding: 7px; }
+      .accounts-view .boards .content dd.credit .close {
+        background: url(../img/close-icon.png) top no-repeat;
+        width: 34px;
+        height: 34px;
+        background-position: 0 0;
+        position: absolute;
+        top: 0;
+        right: 0; }
   .accounts-view .boards aside {
     width: 160px;
-    float: left; }
+    float: left;
+    padding-top: 20px; }
   .accounts-view .boards .admin, .accounts-view .boards .preference, .accounts-view .boards .credit, .accounts-view .boards .email {
     display: none; }
