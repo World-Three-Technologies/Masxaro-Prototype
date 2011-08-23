@@ -43,12 +43,12 @@
         android:gravity="bottom"
     >
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/sync_btn"
+            android:background="@drawable/sync_btn_status"
             android:id="@id/sync_btn"
         />
         
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/backmain_btn"
+            android:background="@drawable/backmain_btn_status"
             android:id="@id/back_main_btn"
         />
     </LinearLayout>

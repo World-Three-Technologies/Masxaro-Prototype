@@ -59,8 +59,8 @@ public class ReceiptsView extends Activity implements OnClickListener,
 	public static final String TAG = "ReceiptsViewActivity";
 	
 	private static final String RECEIVE_ALL = NetworkUtil.METHOD_RECEIVE_ALL;
-	private static final int FLING_MIN_DISTANCE = 10;
-	private static final int FLING_MIN_VELOCITY = 10;
+	private static final int FLING_MIN_DISTANCE = 100;
+	private static final int FLING_MIN_VELOCITY = 100;
 	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
@@ -231,19 +231,37 @@ public class ReceiptsView extends Activity implements OnClickListener,
 			TextView itemName = new TextView(this);
 			TextView itemQty = new TextView(this);
 			TextView itemPrice = new TextView(this);
-			itemName.setText(ReceiptsManager.getReceipt(num).getItem(i).getName());
+			
+			final String name = ReceiptsManager.getReceipt(num).getItem(i).getName();
+			itemName.setText(name);
 			itemName.setTextColor(getResources().getColor(R.color.black));
 			itemName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			itemName.setWidth(170);
+			
+			itemName.setLines(1);
+			itemName.setClickable(true);
+			itemName.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(ReceiptsView.this, name, Toast.LENGTH_SHORT).show();
+				}
+				
+			});
+			
 			itemQty.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getQty()));
 			itemQty.setTextColor(getResources().getColor(R.color.black));
 			itemQty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 			itemQty.setGravity(Gravity.RIGHT);
 			itemQty.setPadding(0, 0, 10, 0);
+			itemQty.setWidth(60);
+			
 			itemPrice.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getPrice()));
 			itemPrice.setTextColor(getResources().getColor(R.color.black));
 			itemPrice.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 			itemPrice.setGravity(Gravity.RIGHT);
 			itemPrice.setPadding(0, 0, 10, 0);
+			
 			row2.addView(itemName);
 			row2.addView(itemQty);
 			row2.addView(itemPrice);
@@ -288,7 +306,7 @@ public class ReceiptsView extends Activity implements OnClickListener,
 			fillReceiptView(getNextReceipt(mCurReceipt));
 		    Toast.makeText(this, "Fling Right", Toast.LENGTH_SHORT).show();
 		}
-		else Toast.makeText(this, "nothing", Toast.LENGTH_SHORT).show();
+//		else Toast.makeText(this, "nothing", Toast.LENGTH_SHORT).show();
 		return false;
 	}
 

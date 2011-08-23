@@ -82,21 +82,19 @@
         >
 	        <TableLayout android:id="@+id/items_table" 
 	            android:layout_width="fill_parent" android:layout_height="fill_parent"
-                android:stretchColumns="0"
             >
 	            <TableRow>
 	                <TextView android:text="@string/receipt_info_item_id_lab"
-	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+	                    android:layout_width="170dip" android:layout_height="wrap_content"
 	                    android:textSize="17sp" android:textColor="@color/black" android:textStyle="bold" 
 	                    android:gravity="left"
 	                />
 	                <TextView android:text="@string/receipt_info_item_qty_lab"
-	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+	                    android:layout_width="60dip" android:layout_height="wrap_content"
 	                    android:textSize="17sp" android:textColor="@color/black" android:textStyle="bold"
 	                    android:gravity="left" android:paddingRight="20dip"
 	                />
 	                <TextView android:text="@string/receipt_info_item_price_lab"
-	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
 	                    android:textSize="17sp" android:textColor="@color/black" android:textStyle="bold"
 	                    android:gravity="left" android:paddingRight="20dip"
 	                />
@@ -166,12 +164,12 @@
         android:gravity="bottom" android:layout_weight="1.7"
     >
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/sync_btn"
+            android:background="@drawable/sync_btn_status"
             android:id="@id/sync_btn"
         />
         
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:background="@drawable/backlist_btn"
+            android:background="@drawable/backlist_btn_status"
             android:id="@+id/b_to_ls_btn"
         />
     </LinearLayout>

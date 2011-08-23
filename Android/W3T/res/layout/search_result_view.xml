@@ -165,7 +165,7 @@
         android:gravity="bottom" android:layout_weight="1.7"
     >
         <Button android:layout_width="fill_parent" android:layout_height="wrap_content"
-            android:background="@drawable/backmid_btn"
+            android:background="@drawable/backmid_btn_status"
             android:id="@id/b_to_ls_btn"
         />
     </LinearLayout>

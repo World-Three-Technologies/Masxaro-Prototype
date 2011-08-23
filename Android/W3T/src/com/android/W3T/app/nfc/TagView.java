@@ -57,6 +57,8 @@ import android.widget.Toast;
 public class TagView extends Activity {
 //	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
 	private static final boolean FROM_NFC = ReceiptsManager.FROM_NFC;
+	private static final boolean ONLINE = UserProfile.ONLINE;
+	private static final boolean OFFLINE = UserProfile.OFFLINE;
 	
 	private static final int UPLOAD_MESSAGE = 1;
 	
@@ -111,7 +113,7 @@ public class TagView extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (UserProfile.getStatus() == true) { 
+        if (UserProfile.getStatus() == ONLINE) { 
 	        setContentView(R.layout.received_tag_view);
 	        
 	        mItemsTable = (TableLayout) findViewById(R.id.items_table);
@@ -166,7 +168,7 @@ public class TagView extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (UserProfile.getStatus() == false){
+		if (UserProfile.getStatus() == OFFLINE){
         	Toast.makeText(this, "Please log in first.", Toast.LENGTH_SHORT).show();
         }
 	}
