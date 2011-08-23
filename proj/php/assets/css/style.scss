@@ -534,6 +534,9 @@ footer{
           border:1px green dotted;
           padding:5px 10px;
         }
+        tr:hover{
+          background:#EEE;
+        }
       }
       padding:3px;
       margin-left:40px;
@@ -541,6 +544,13 @@ footer{
     }
   }
 
+}
+
+#reports-view,#media-view,#deals-view{
+  background:white;
+  text-align:left;
+  padding:40px;
+  min-height:400px;
 }
 
 //account page
@@ -570,13 +580,11 @@ footer{
     @include grid(16);
     float:left;
     .content{
+      margin-top:18px;
       @include grid(12);
       float:left;
       h4{
         padding-bottom:10px;
-      }
-      dl{
-        margin-top:20px;
       }
       dt,dd{
       padding:4px;

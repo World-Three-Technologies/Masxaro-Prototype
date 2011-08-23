@@ -21,21 +21,22 @@
     </ul>
   </div>
   <div class="content clearfix">
-  <div class="chart">
-    <div>
-      <button class="tag button">By category</button>
-      <button class="store button">By store</button>
+    <div class="chart">
+      <div>
+        <button class="tag button">By category</button>
+        <button class="store button">By store</button>
+      </div>
+      <canvas id="analysis-canvas" width=500 height="400" style="border:1px solid green"></canvas>
     </div>
-    <canvas id="analysis-canvas" width=500 height="400" style="border:1px solid green"></canvas>
+    <div class="chart-data">
+      <table id="data-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Amount($)</th>
+          </tr>
+        </thead>
+      </table>
     </div>
-  <div class="chart-data">
-    <table id="data-table" border="1">
-      <thead>
-        <tr>
-          <th>Category</th>
-          <th>Amount</th>
-        </tr>
-      </thead>
-    </table>
   </div>
 </div>
