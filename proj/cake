@@ -2,7 +2,7 @@
 <?php 
   require "config.php";
 
-  $path = dirname(__FILE__);
+  $root = dirname(__FILE__);
 
   $task = $argv[1];
 
@@ -11,17 +11,17 @@
       runTest();
       break;
     case "build":
-      buildJavascripts();
+      buildJavascripts($root);
       break;
     case "seed":
       seed();
       break;
     case "spec":
       buildJavascripts();
-      system("open $path/php/assets/spec/SpecRunner.html");
+      system("open $root/php/assets/spec/SpecRunner.html");
       break;
     case "watch":
-      $css_path = $path."/php/assets/css";
+      $css_path = $root."/php/assets/css";
       system("sass --watch $css_path:$css_path");
       break;
     case "db":
@@ -39,7 +39,6 @@
     echo "usage:: ./cake [task]\n";
     echo "  test :: run testcase\n";
     echo "  seed :: insert data to database\n";
-    echo "  deploy :: deploy website to local address\n";
     echo "  spec :: run front-end test spec\n";
     echo "  watch :: watch scss file and compile into css\n";
     echo "  db :: show mysql console commend for refer...\n";
@@ -50,13 +49,13 @@
     system("phpunit $path/php/tests ");
   }
 
-  function buildJavascripts(){
+  function buildJavascripts($path){
     desc("concatenating javascript into app.js...");
-    system("cat LICENSE > php/assets/js/app.js");
-    system("cat php/assets/app/models/*.js >> php/assets/js/app.js");
-    system("cat php/assets/app/views/*.js >> php/assets/js/app.js");
-    system("cat php/assets/app/routers/*.js >> php/assets/js/app.js");
-    system("cat php/assets/app/app.js >> php/assets/js/app.js");
+    system("cat LICENSE > $path/php/assets/js/app.js");
+    system("cat $path/php/assets/app/models/*.js >> $path/php/assets/js/app.js");
+    system("cat $path/php/assets/app/views/*.js >> $path/php/assets/js/app.js");
+    system("cat $path/php/assets/app/routers/*.js >> $path/php/assets/js/app.js");
+    system("cat $path/php/assets/app/app.js >> $path/php/assets/js/app.js");
   }
 
   function seed(){

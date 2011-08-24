@@ -5,6 +5,8 @@ var ReceiptView = Backbone.View.extend({
   template:_.template($('#receipt-row-template').html() || "<div/>"),
   fullTemplate:_.template($('#receipt-full-template').html() || "<div/>"),
   itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
+  editTagArea :$(
+    "<input type='text' size='10' class='edit-tag'/><span class='delete-button'/>"),
   isEditing:false,
   tagState:[],
 
@@ -67,8 +69,7 @@ var ReceiptView = Backbone.View.extend({
   },
 
   newTag:function(){
-    var tag = $("<input type='text' size='10' class='edit-tag'/><span class='delete-button'/>");
-    this.$('.edit-area').append(tag);     
+    this.$('.edit-area').append(this.editTagArea);     
   },
 
   deleteTag:function(){

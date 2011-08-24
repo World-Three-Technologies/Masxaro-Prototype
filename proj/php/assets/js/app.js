@@ -16,6 +16,8 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
+//analysis.js:
+//
 var Analysis = Backbone.Model.extend({
   
   url:"analysisOperation.php",
@@ -36,24 +38,7 @@ var Receipt = Backbone.Model.extend({
   tagUrl: 'tagOperation.php',
 
   initialize:function(){
-    _.bindAll(this,'sync','updateTags','removeTags','saveTags');
-  },
-
-  sync:function(method,model,options){
-    model.set({"user_account":account});
-    var data = {};
-    if(method == "read"){
-      data = {
-        opcode : "user_get_receipt_detail",
-        receipt_id: model.get("receipt_id"),
-      }
-    }else if(method == "delete"){
-      data = {
-        opcode : "f_delete_receipt",
-        receipt_id: model.get("receipt_id")
-      }
-    }
-    $.post(this.url,data,options.success).error(options.error);
+    _.bindAll(this,'updateTags','removeTags','saveTags');
   },
 
   updateTags:function(oldTags){
@@ -197,39 +182,31 @@ window.AnalysisView = Backbone.View.extend({
 
   initialize:function(){
     _.bindAll(this,"drawChart","drawSlice","setTable",
-                   "initCanvas","fetchModel","fetchStore","fetchTag");
+                   "initCanvas","fetchModel","fetchModelByType","clear");
 
     this.model = new Analysis();
+    this.model.bind("change",this.drawChart);
+    this.model.bind("change",this.setTable);
 
     this.initCanvas();
-    
     this.fetchModel("tag");
+
   },
 
   events:{
-    "click .store":"fetchStore",
-    "click .tag":"fetchTag"
+    "click .button":"fetchModelByType",
   },
 
-  fetchStore:function(){
-    this.fetchModel("store");
-  },
-
-  fetchTag:function(){
-    this.fetchModel("tag");
+  fetchModelByType:function(){
+    this.fetchModel($(event.target).attr("data-type"));
   },
 
   fetchModel:function(type){
     
-    var view = this;
-    this.model.clear()
+    this.model.clear({slient:true});
     this.model.fetch({
       data:{"opcode":type},
       processData:true,
-      success:function(model){
-        view.setTable(model);
-        view.drawChart(model);
-      }
     });
   },
 
@@ -247,39 +224,42 @@ window.AnalysisView = Backbone.View.extend({
     this.params = {
       borderWidth:1,
       borderStyle:"#fff",
-      sliceGradientColour: "#ddd",
       labelFont : "bold 13px 'Trebuchet MS', Verdana, sans-serif",
       fontColor : "black"
     };
   },
 
   setTable:function(model){
-    var table = this.$("#data-table");
+    var table = this.$("#data-table"),
+        template = _.template("<tr><td><%= category %></td><td><%=value %></td></tr>");
+
     table.find("td").remove();
     _.each(model.attributes,function(v,k){
-      table.append($("<tr><td>"+v['category']+"</td><td>$"+v['value']+"</td></tr>"));
+      table.append($(template(v)));
     });
+  },
+
+  clear:function(){
+    this.ctx.clearRect(0,0,this.width,this.height);
   },
 
   drawChart:function(model){
 
-    var chartData = this.chartData = {},
-        currentPos = this.currentPos = 0,
-        totalValue = this.totalValue = model.totalValue();
+    var currentPos = this.currentPos = 0,
+        totalValue = this.totalValue = model.totalValue(),
+        view = this;
+
+    this.clear();
 
     _.each(model.attributes,function(v,k){
-      chartData[v['category']] = {
+      var chartData = {
         startAngle: 2 * Math.PI * currentPos,
         endAngle: 2 * Math.PI * (currentPos + ( v['value'] / totalValue) ),
         value : v['value']
       }
       currentPos += v['value'] / totalValue;
-    });
 
-    this.ctx.clearRect(0,0,this.width,this.height);
-    var view = this;
-    _.each(this.chartData,function(v,k){
-      view.drawSlice(k,v);
+      view.drawSlice(v['category'],chartData);
     });
   },
 
@@ -296,7 +276,7 @@ window.AnalysisView = Backbone.View.extend({
     ctx.arc(centerX,centerY,this.radius,startAngle,endAngle);
     ctx.lineTo(centerX,centerY);    
     ctx.closePath();
-    ctx.fillStyle = this.colors[(this.colorIndex++ % this.colors.length)];//this.params.sliceGradientColour; 
+    ctx.fillStyle = this.colors[(this.colorIndex++ % this.colors.length)];
     ctx.fill();
 
     ctx.fillStyle = this.params.fontColor;
@@ -312,13 +292,7 @@ window.AnalysisView = Backbone.View.extend({
   }
 });
 window.DashboardView = Backbone.View.extend({
-
   el:$("#dashboard-view"),
-  
-  initialize:function(){
-
-  }
-
 });
 window.DealsView = Backbone.View.extend({});
 window.MediaView = Backbone.View.extend({});
@@ -329,6 +303,8 @@ var ReceiptView = Backbone.View.extend({
   template:_.template($('#receipt-row-template').html() || "<div/>"),
   fullTemplate:_.template($('#receipt-full-template').html() || "<div/>"),
   itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
+  editTagArea :$(
+    "<input type='text' size='10' class='edit-tag'/><span class='delete-button'/>"),
   isEditing:false,
   tagState:[],
 
@@ -391,8 +367,7 @@ var ReceiptView = Backbone.View.extend({
   },
 
   newTag:function(){
-    var tag = $("<input type='text' size='10' class='edit-tag'/><span class='delete-button'/>");
-    this.$('.edit-area').append(tag);     
+    this.$('.edit-area').append(this.editTagArea);     
   },
 
   deleteTag:function(){
@@ -603,6 +578,7 @@ var AccountRouter = Backbone.Router.extend({
     $("."+page).show();
     $("#account-nav ."+page).addClass("active");
   },
+
   clearActive:function(){
     $(".active").removeClass("active");
   }
@@ -621,11 +597,11 @@ var AppRouter = Backbone.Router.extend({
   },
 
   getReceiptsView:function(){
-    return !this.receiptsView ? new ReceiptsView({model:this.receipts}): this.receiptsView
+    return this.receiptsView || new ReceiptsView({model:this.receipts});
   },
 
   getAnalysisView:function(){
-    return !this.analysisView ? new AnalysisView(): this.analysisView
+    return this.analysisView || new AnalysisView();
   },
 
   routes: {

@@ -12,11 +12,11 @@ var AppRouter = Backbone.Router.extend({
   },
 
   getReceiptsView:function(){
-    return !this.receiptsView ? new ReceiptsView({model:this.receipts}): this.receiptsView
+    return this.receiptsView || new ReceiptsView({model:this.receipts});
   },
 
   getAnalysisView:function(){
-    return !this.analysisView ? new AnalysisView(): this.analysisView
+    return this.analysisView || new AnalysisView();
   },
 
   routes: {

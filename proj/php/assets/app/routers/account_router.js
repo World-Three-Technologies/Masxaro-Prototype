@@ -18,6 +18,7 @@ var AccountRouter = Backbone.Router.extend({
     $("."+page).show();
     $("#account-nav ."+page).addClass("active");
   },
+
   clearActive:function(){
     $(".active").removeClass("active");
   }

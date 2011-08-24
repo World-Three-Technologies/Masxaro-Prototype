@@ -6,39 +6,31 @@ window.AnalysisView = Backbone.View.extend({
 
   initialize:function(){
     _.bindAll(this,"drawChart","drawSlice","setTable",
-                   "initCanvas","fetchModel","fetchStore","fetchTag");
+                   "initCanvas","fetchModel","fetchModelByType","clear");
 
     this.model = new Analysis();
+    this.model.bind("change",this.drawChart);
+    this.model.bind("change",this.setTable);
 
     this.initCanvas();
-    
     this.fetchModel("tag");
+
   },
 
   events:{
-    "click .store":"fetchStore",
-    "click .tag":"fetchTag"
+    "click .button":"fetchModelByType",
   },
 
-  fetchStore:function(){
-    this.fetchModel("store");
-  },
-
-  fetchTag:function(){
-    this.fetchModel("tag");
+  fetchModelByType:function(){
+    this.fetchModel($(event.target).attr("data-type"));
   },
 
   fetchModel:function(type){
     
-    var view = this;
-    this.model.clear()
+    this.model.clear({slient:true});
     this.model.fetch({
       data:{"opcode":type},
       processData:true,
-      success:function(model){
-        view.setTable(model);
-        view.drawChart(model);
-      }
     });
   },
 
@@ -56,39 +48,42 @@ window.AnalysisView = Backbone.View.extend({
     this.params = {
       borderWidth:1,
       borderStyle:"#fff",
-      sliceGradientColour: "#ddd",
       labelFont : "bold 13px 'Trebuchet MS', Verdana, sans-serif",
       fontColor : "black"
     };
   },
 
   setTable:function(model){
-    var table = this.$("#data-table");
+    var table = this.$("#data-table"),
+        template = _.template("<tr><td><%= category %></td><td><%=value %></td></tr>");
+
     table.find("td").remove();
     _.each(model.attributes,function(v,k){
-      table.append($("<tr><td>"+v['category']+"</td><td>$"+v['value']+"</td></tr>"));
+      table.append($(template(v)));
     });
+  },
+
+  clear:function(){
+    this.ctx.clearRect(0,0,this.width,this.height);
   },
 
   drawChart:function(model){
 
-    var chartData = this.chartData = {},
-        currentPos = this.currentPos = 0,
-        totalValue = this.totalValue = model.totalValue();
+    var currentPos = this.currentPos = 0,
+        totalValue = this.totalValue = model.totalValue(),
+        view = this;
+
+    this.clear();
 
     _.each(model.attributes,function(v,k){
-      chartData[v['category']] = {
+      var chartData = {
         startAngle: 2 * Math.PI * currentPos,
         endAngle: 2 * Math.PI * (currentPos + ( v['value'] / totalValue) ),
         value : v['value']
       }
       currentPos += v['value'] / totalValue;
-    });
 
-    this.ctx.clearRect(0,0,this.width,this.height);
-    var view = this;
-    _.each(this.chartData,function(v,k){
-      view.drawSlice(k,v);
+      view.drawSlice(v['category'],chartData);
     });
   },
 
@@ -105,7 +100,7 @@ window.AnalysisView = Backbone.View.extend({
     ctx.arc(centerX,centerY,this.radius,startAngle,endAngle);
     ctx.lineTo(centerX,centerY);    
     ctx.closePath();
-    ctx.fillStyle = this.colors[(this.colorIndex++ % this.colors.length)];//this.params.sliceGradientColour; 
+    ctx.fillStyle = this.colors[(this.colorIndex++ % this.colors.length)];
     ctx.fill();
 
     ctx.fillStyle = this.params.fontColor;

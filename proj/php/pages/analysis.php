@@ -23,8 +23,8 @@
   <div class="content clearfix">
     <div class="chart">
       <div>
-        <button class="tag button">By category</button>
-        <button class="store button">By store</button>
+        <button class="tag button" data-type="tag">By category</button>
+        <button class="store button" data-type="store">By store</button>
       </div>
       <canvas id="analysis-canvas" width=500 height="400" style="border:1px solid green"></canvas>
     </div>

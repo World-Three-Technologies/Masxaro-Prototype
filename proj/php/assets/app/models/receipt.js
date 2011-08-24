@@ -1,27 +1,9 @@
 var Receipt = Backbone.Model.extend({
 
-  url: 'receiptOperation.php',
   tagUrl: 'tagOperation.php',
 
   initialize:function(){
-    _.bindAll(this,'sync','updateTags','removeTags','saveTags');
-  },
-
-  sync:function(method,model,options){
-    model.set({"user_account":account});
-    var data = {};
-    if(method == "read"){
-      data = {
-        opcode : "user_get_receipt_detail",
-        receipt_id: model.get("receipt_id"),
-      }
-    }else if(method == "delete"){
-      data = {
-        opcode : "f_delete_receipt",
-        receipt_id: model.get("receipt_id")
-      }
-    }
-    $.post(this.url,data,options.success).error(options.error);
+    _.bindAll(this,'updateTags','removeTags','saveTags','changeTags');
   },
 
   updateTags:function(oldTags){
@@ -36,28 +18,22 @@ var Receipt = Backbone.Model.extend({
     if(!tags || tags.length == 0){
       return false;
     }
-    $.post(this.tagUrl,{
-      opcode:"add_receipt_tags",
-      user_account:account,
-      tags:tags,
-      receipt_id:this.id
-    }).success(function(data){
-      console.log(data);
-    });
+    this.changeTags("add_receipt_tags");
   },
 
   removeTags:function(tags){
     if(!tags || tags.length == 0){
       return false;
     }
+    this.changeTags("delete_receipt_tags");
+  },
+  
+  changeTags:function(opcode){
     $.post(this.tagUrl,{
-      opcode:"delete_receipt_tags",
+      opcode:opcode,
       user_account:account,
       tags:tags,
       receipt_id:this.id
-    }).success(function(data){
-      console.log(data);
     });
-             
   }
 });
