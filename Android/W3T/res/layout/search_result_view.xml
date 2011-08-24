@@ -82,7 +82,6 @@
         >
             <TableLayout android:id="@id/items_table" 
                 android:layout_width="fill_parent" android:layout_height="fill_parent"
-                android:stretchColumns="0"
             >
                 <TableRow>
                     <TextView android:text="@string/receipt_info_item_id_lab"

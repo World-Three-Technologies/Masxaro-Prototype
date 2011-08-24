@@ -40,14 +40,11 @@
     <string name="receipt_info_tax_lab">Tax:</string>
     <string name="empty_receipt">No Receipts. Please Refresh.</string>
     <string name="masxaro_email">\uff20Masxaro.com</string>
-<<<<<<< HEAD
-=======
     <string name="search_by_prompt">Search By</string><string name="search_range_prompt">Search Range</string>
     <string name="receipt_list_merchant">Merchant</string>
     <string name="receipt_list_date">Date/Time</string>
     <string name="receipt_list_title">Lastest Receipts</string>
     
->>>>>>> Android-Prototype
     
     
     
