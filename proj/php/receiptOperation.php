@@ -78,7 +78,14 @@ switch($opcode){
 		 * $receipt = array(
 		 * 		store_account=>'Mc_NYU',
 		 * 		user_account=>'w3t',
+		 * 		extra_cost=>10, (eg.,shipping fee, optional)
+		 * 		cut_down_cost=>15, (eg., gift card, optional)
+		 * 		sub_total_cost=>10, (sub_total_cost of items, optional)
 		 * 		tax=>10,
+		 * 		store_define_id=>'123-69381-91' (optional, receipt_id)
+		 * 		total_cost=>10,
+		 * 		currency_mark=>'$',
+		 * 		source=>'email'
 		 * );
 		 * 
 		 * @desc
@@ -97,20 +104,16 @@ switch($opcode){
 		 * 
 		 * @example
 		 * $items = array(
+		 * 		id=>'123123', (receipt_id, 
+		 * 						has to be set up when inserting items independently, or else is optional)
 		 * 		array(
-		 * 			receipt_id=>1,
-		 * 			item_id=>10,
+		 * 			item_id=>10,(optional)
 		 * 			item_name=>'fries-mid',
 		 * 			item_qty=>2,
+		 * 			item_discount=>10,(optional, %)
 		 * 			item_price=>1.99
-		 * 		),
-		 * 		array(
-		 * 			receipt_id=>1,
-		 * 			item_id=>2,
-		 * 			item_name=>'Salad',
-		 * 			item_qty=>1,
-		 * 			item_price=>1
-		 * 			)
+		 * 		)
+		 * 		...
 		 * );
 		 * 
 		 * 
@@ -123,8 +126,8 @@ switch($opcode){
 		
 	case 'new_receipt':
 		/**
-		 * @see 'new_item'
-		 * @see 'new_receipt_basic'
+		 * @see receiptOperation.php::new_item
+		 * @see receiptOperation.php::new_receipt_basic
 		 * 
 		 * POST:
 		 * @param array $receipt
@@ -135,22 +138,6 @@ switch($opcode){
 		 * @desc
 		 * insert a complete receipt with items, don't have to indicate receipt id
 		 * in items
-		 * 
-		 * @example
-		 * $items = array(
-		 * 		array(
-		 * 			item_id=>10,
-		 * 			item_name=>'fries-mid',
-		 * 			item_qty=>2,
-		 * 			item_price=>1.99
-		 * 		),
-		 * 		array(
-		 * 			item_id=>2,
-		 * 			item_name=>'Salad',
-		 * 			item_qty=>1,
-		 * 			item_price=>1
-		 * 			)
-		 * );
 		 * 
 		 */
 		
@@ -196,9 +183,17 @@ switch($opcode){
 		 * 
 		 * @example
 		 * return:
-		 * [{"id":"3","store_name":"McDonalds(NYU)","user_account":null,
-		 *   "receipt_time":"07-17-2011 12:32 PM","tax":"0.09","total_cost":"99.00",
-		 *   "currency_mark":"$","source":"default","img":null,"deleted":0,
+		 * [{"id":"3",
+		 * 	 "store_define_id":"123-3456-23", (null)
+		 * 	 "store_name":"McDonalds(NYU)",
+		 *   "receipt_time":"07-17-2011 12:32 PM",
+		 *   "extra_cost" : "0.00",
+		 *   "sub_total_cost" : "99.00",
+		 *   "cut_down_cost" : "0.00",
+		 *   "tax":"0.09",
+		 *   "total_cost":"99.00",
+		 *   "currency_mark":"$",
+		 *   "source":"default",
 		 *   "items":[{"item_id":"3","item_name":"Harry-Potter - IIIII123123123123",
 		 *             "item_qty":"1","item_discount":"1.00","item_price":"10.99"},
 		 *            {"item_id":"4","item_name":"Harry-potter - II",
@@ -219,6 +214,7 @@ switch($opcode){
 		 * @param array(int) $post['receiptIds']
 		 * 
 		 * @see ReceiptBuilder::getReceiptsItems
+		 * @see receiptOperation.php::user_get_all_receipt
 		 */
 		echo json_encode($ctrl->userGetReceiptItems($post['receiptIds']));
 		break;
@@ -232,18 +228,29 @@ switch($opcode){
 		 * 
 		 * @return receipts without items
 		 * 
-		 * @example return
-		 * [{"id":"1","store_name":"McDonalds(NYU)",
-		 *   "user_account":null,"receipt_time":"07-19-2011 08:59 PM",
-		 *   "tax":"0.10","total_cost":"14.00","currency_mark":"$",
-		 *   "source":"default","img":null,"deleted":0,"items":[],"tags":[]}]
+		 * @example 
+		 * return
+		 * [{"id":"3",
+		 * 	 "store_define_id":"123-3456-23", (null)
+		 * 	 "store_name":"McDonalds(NYU)",
+		 *   "user_account":null,
+		 *   "receipt_time":"07-17-2011 12:32 PM",
+		 *   "extra_cost" : "0.00",
+		 *   "sub_total_cost" : "99.00",
+		 *   "cut_down_cost" : "0.00",
+		 *   "tax":"0.09",
+		 *   "total_cost":"99.00",
+		 *   "currency_mark":"$",
+		 *   "source":"default",
+		 *   "items":[],
+		 *   "tags":[]}]
 		 */
 		echo json_encode($ctrl->getReceiptDetail($post['receiptIds']));
 		break;
 	
 	case 'search':
 		/**
-		 * @see searchingConHandler()
+		 * @see receiptOperation.php::searchingConHandler()
 		 * 
 		 * @return @see user_get_all_receipt 
 		 * 

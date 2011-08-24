@@ -189,7 +189,11 @@ class ReceiptBuilder {
 		$sql = <<<SEL
 			SELECT 
 				r.`id`,
-				DATE_FORMAT(r.`receipt_time`, '%m-%d-%Y %h:%i %p') as receipt_time, 
+				r.`store_define_id`,
+				DATE_FORMAT(r.`receipt_time`, '%Y-%m-%d %h:%i %p') as receipt_time,
+				r.`extra_cost`,
+				r.`sub_total_cost`,
+				r.`cut_down_cost`, 
 				r.`tax`,
 				r.`total_cost`,
 				r.`source`,
