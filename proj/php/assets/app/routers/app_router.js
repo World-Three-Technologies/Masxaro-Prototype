@@ -5,14 +5,14 @@ var AppRouter = Backbone.Router.extend({
     var user = this.user = new User({
       account:readCookie("user_acc"),
     });
+    window.account = user.get("account");
 
-    var receipts = this.receipts = new Receipts();
-    window.account = receipts.account = user.get("account");
     window.userView = new UserView({model:user});
+
   },
 
   getReceiptsView:function(){
-    return this.receiptsView || new ReceiptsView({model:this.receipts});
+    return this.receiptsView || new ReceiptsView({model:new Receipts()});
   },
 
   getAnalysisView:function(){

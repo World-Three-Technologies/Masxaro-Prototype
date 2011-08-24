@@ -5,21 +5,21 @@ var Receipts = Backbone.Collection.extend({
 
   limit:100,
 
+  defaultParams:function(){
+    return {
+      opcode : "user_get_all_receipt",
+      acc: window.account,
+      limitStart:0,
+      limitOffset:this.limit
+    };
+  },
+
   initialize:function(){
-    _.bindAll(this,"sync","search","searchByKeys","searchByTags");
+    _.bindAll(this,"sync","search","searchByKeys","searchByTags","defaultParams");
   },
 
   sync:function(method,model,options){
-    var data;
-    if(method == "read"){
-      data = {
-        opcode : "user_get_all_receipt",
-        acc: this.account,
-        limitStart:0,
-        limitOffset:this.limit
-      }
-    }
-    $.post(this.url,data,options.success).error(options.error);
+    $.post(this.url,this.defaultParams(),options.success).error(options.error);
   },
 
   searchByKeys:function(keys,success){
@@ -30,13 +30,14 @@ var Receipts = Backbone.Collection.extend({
     this.search({ tags:tags });
   },
 
-  search:function(data,success){
+  search:function(query,success){
     var model = this;
-    data["opcode"] = "search";
-    data["acc"] = account;
-    data["limitStart"] = 0;
-    data["limitOffset"] = this.limit;
-    $.post(this.url,data).success(function(data){
+
+    var params = this.defaultParams();
+    params["opcode"] = "search";
+    $.extend(params,query);
+
+    $.post(this.url,params).success(function(data){
       model.reset(data);
       if(success !== null && typeof success !== "undefined"){
         success();

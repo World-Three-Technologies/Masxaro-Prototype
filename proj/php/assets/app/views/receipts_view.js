@@ -22,6 +22,7 @@ window.ReceiptsView = Backbone.View.extend({
   },
 
   search:function(query,type){
+
     if(typeof query == "undefined" || query == ""){
       return;
     }
@@ -90,7 +91,7 @@ window.ReceiptsView = Backbone.View.extend({
 
     this.updateStatus();
 
-    if(this.end === this.model.length){
+    if(this.end == this.model.length){
       this.$(".more").hide();
     }else{
       this.$(".more").show();

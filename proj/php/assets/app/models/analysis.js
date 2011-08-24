@@ -1,5 +1,5 @@
 //analysis.js:
-//
+//get analysis data from server
 var Analysis = Backbone.Model.extend({
   
   url:"analysisOperation.php",

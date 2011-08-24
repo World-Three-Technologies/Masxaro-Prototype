@@ -17,7 +17,7 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
 //analysis.js:
-//
+//get analysis data from server
 var Analysis = Backbone.Model.extend({
   
   url:"analysisOperation.php",
@@ -34,11 +34,10 @@ var Analysis = Backbone.Model.extend({
 });
 var Receipt = Backbone.Model.extend({
 
-  url: 'receiptOperation.php',
   tagUrl: 'tagOperation.php',
 
   initialize:function(){
-    _.bindAll(this,'updateTags','removeTags','saveTags');
+    _.bindAll(this,'updateTags','removeTags','saveTags','changeTags');
   },
 
   updateTags:function(oldTags){
@@ -50,32 +49,23 @@ var Receipt = Backbone.Model.extend({
   },
 
   saveTags:function(tags){
-    if(!tags || tags.length == 0){
-      return false;
-    }
-    $.post(this.tagUrl,{
-      opcode:"add_receipt_tags",
-      user_account:account,
-      tags:tags,
-      receipt_id:this.id
-    }).success(function(data){
-      console.log(data);
-    });
+    tags || (tags = []);
+    this.changeTags("add_receipt_tags",tags);
   },
 
   removeTags:function(tags){
-    if(!tags || tags.length == 0){
-      return false;
-    }
+    tags || (tags = []);
+    this.changeTags("delete_receipt_tags",tags);
+  },
+  
+  changeTags:function(opcode,tags){
+    if(!tags || tags.length == 0) return;
     $.post(this.tagUrl,{
-      opcode:"delete_receipt_tags",
+      opcode:opcode,
       user_account:account,
       tags:tags,
       receipt_id:this.id
-    }).success(function(data){
-      console.log(data);
     });
-             
   }
 });
 var Receipts = Backbone.Collection.extend({
@@ -85,21 +75,21 @@ var Receipts = Backbone.Collection.extend({
 
   limit:100,
 
+  defaultParams:function(){
+    return {
+      opcode : "user_get_all_receipt",
+      acc: window.account,
+      limitStart:0,
+      limitOffset:this.limit
+    };
+  },
+
   initialize:function(){
-    _.bindAll(this,"sync","search","searchByKeys","searchByTags");
+    _.bindAll(this,"sync","search","searchByKeys","searchByTags","defaultParams");
   },
 
   sync:function(method,model,options){
-    var data;
-    if(method == "read"){
-      data = {
-        opcode : "user_get_all_receipt",
-        acc: this.account,
-        limitStart:0,
-        limitOffset:this.limit
-      }
-    }
-    $.post(this.url,data,options.success).error(options.error);
+    $.post(this.url,this.defaultParams(),options.success).error(options.error);
   },
 
   searchByKeys:function(keys,success){
@@ -110,13 +100,12 @@ var Receipts = Backbone.Collection.extend({
     this.search({ tags:tags });
   },
 
-  search:function(data,success){
+  search:function(query,success){
     var model = this;
-    data["opcode"] = "search";
-    data["acc"] = account;
-    data["limitStart"] = 0;
-    data["limitOffset"] = this.limit;
-    $.post(this.url,data).success(function(data){
+    var params = this.defaultParams();
+    params["opcode"] = "search";
+    $.extend(params,query);
+    $.post(this.url,params).success(function(data){
       model.reset(data);
       if(success !== null && typeof success !== "undefined"){
         success();
@@ -509,7 +498,7 @@ window.ReceiptsView = Backbone.View.extend({
 
     this.updateStatus();
 
-    if(this.end === this.model.length){
+    if(this.end == this.model.length){
       this.$(".more").hide();
     }else{
       this.$(".more").show();
@@ -546,16 +535,6 @@ var UserView = Backbone.View.extend({
   render:function(){
     $("#username").text("Hello, " + this.model.get("account")); 
     return this;
-  },
-  
-  readCookie:function(name){
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(";");
-    for(var i = 0; i<ca.length;i++){
-      var c = ca[i];
-      while (c.charAt(0)== ' ') c = c.substring(1,c.length);
-      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
   }
 });
 var AccountRouter = Backbone.Router.extend({
@@ -590,14 +569,14 @@ var AppRouter = Backbone.Router.extend({
     var user = this.user = new User({
       account:readCookie("user_acc"),
     });
+    window.account = user.get("account");
 
-    var receipts = this.receipts = new Receipts();
-    window.account = receipts.account = user.get("account");
     window.userView = new UserView({model:user});
+
   },
 
   getReceiptsView:function(){
-    return this.receiptsView || new ReceiptsView({model:this.receipts});
+    return this.receiptsView || new ReceiptsView({model:new Receipts()});
   },
 
   getAnalysisView:function(){

@@ -15,20 +15,17 @@ var Receipt = Backbone.Model.extend({
   },
 
   saveTags:function(tags){
-    if(!tags || tags.length == 0){
-      return false;
-    }
-    this.changeTags("add_receipt_tags");
+    tags || (tags = []);
+    this.changeTags("add_receipt_tags",tags);
   },
 
   removeTags:function(tags){
-    if(!tags || tags.length == 0){
-      return false;
-    }
-    this.changeTags("delete_receipt_tags");
+    tags || (tags = []);
+    this.changeTags("delete_receipt_tags",tags);
   },
   
-  changeTags:function(opcode){
+  changeTags:function(opcode,tags){
+    if(!tags || tags.length == 0) return;
     $.post(this.tagUrl,{
       opcode:opcode,
       user_account:account,
