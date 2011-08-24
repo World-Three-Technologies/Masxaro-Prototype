@@ -1,0 +1,14 @@
+Package: libnfc-dev
+Source: libnfc
+Version: 1.4.2-0
+Architecture: i386
+Maintainer: Romuald Conty <rconty@il4p.fr>
+Installed-Size: 228
+Depends: libnfc0, libusb-dev, libpcsclite-dev
+Section: devel
+Priority: optional
+Homepage: http://www.libnfc.org/
+Description: Near Field Communication library (development files)
+ libnfc is a Free Software library for Near Field Communication. Supported NFC hardware
+ devices are, theorically, all hardware based on the NXP PN531, PN532 or PN533 NFC
+ controller chip.

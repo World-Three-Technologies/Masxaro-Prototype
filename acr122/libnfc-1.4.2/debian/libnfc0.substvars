@@ -1,0 +1,2 @@
+shlibs:Depends=libc6 (>= 2.3.6-6~), libc6 (>= 2.7), libpcsclite1 (>= 1.5.5), libusb-0.1-4 (>= 2:0.1.12)
+misc:Depends=

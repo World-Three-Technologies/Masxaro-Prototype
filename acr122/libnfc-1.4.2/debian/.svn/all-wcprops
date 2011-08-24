@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/891/tags/libnfc-1.4.2/debian
+END
+control
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/891/tags/libnfc-1.4.2/debian/control
+END
+libnfc0.install
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/891/tags/libnfc-1.4.2/debian/libnfc0.install
+END
+compat
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/891/tags/libnfc-1.4.2/debian/compat
+END
+changelog
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/891/tags/libnfc-1.4.2/debian/changelog
+END
+libnfc-bin.install
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/891/tags/libnfc-1.4.2/debian/libnfc-bin.install
+END
+copyright
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/891/tags/libnfc-1.4.2/debian/copyright
+END
+libnfc-pn53x-examples.install
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/891/tags/libnfc-1.4.2/debian/libnfc-pn53x-examples.install
+END
+rules
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/891/tags/libnfc-1.4.2/debian/rules
+END
+libnfc-examples.install
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/891/tags/libnfc-1.4.2/debian/libnfc-examples.install
+END
+libnfc-dev.install
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/891/tags/libnfc-1.4.2/debian/libnfc-dev.install
+END
