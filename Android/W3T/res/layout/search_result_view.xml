@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+/*
+ * search_result_view.xml - The layout XML file of the search result receipt view screen  
+ *
+ *  Copyright 2011 World Three Technologies, Inc. 
+ *  All Rights Reserved.
+ * 
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Written by Yichao Yu <yichao@Masxaro>
+ *
+ */
+ -->
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search_result_view"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:orientation="vertical"
+>
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_margin="5dip" android:layout_weight="0.3"
+        android:background="@color/white"
+    >
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+            android:orientation="vertical"
+        >
+            <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dip" android:gravity="center"
+            >
+                <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:src="@drawable/sync"
+                    android:id="@id/receipt_sycn_flag"
+                />
+                <!-- Store Name -->
+                <TextView android:id="@id/store_name_txt"
+                    android:text="Store Name"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:textSize="20sp" android:textColor="@color/black" android:textStyle="bold"
+                />
+            </LinearLayout>
+            <!-- Receipt Time -->
+            <TextView android:id="@id/time_txt"
+                android:text="2011-06-21 15:43:12"
+                android:layout_width="fill_parent" android:layout_height="wrap_content"
+                android:paddingTop="3dip" android:gravity="center"
+                android:textSize="15sp" android:textColor="@color/black"
+            />
+            
+            <!-- Receipt ID -->
+            <TextView android:text="@string/receipt_info_id_lab"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:gravity="left" android:layout_marginLeft="10dip"
+                android:textColor="@color/black" android:textStyle="bold"
+            />
+            <TextView android:text="100"
+                android:id="@id/id_txt"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:gravity="left" android:layout_marginLeft="10dip"
+                android:textColor="@color/black"
+            />
+        
+        <!-- 35dip height per item, 5 items maximum for the emulator 
+           It starts from 55 dip. -->
+        <ScrollView android:layout_width="fill_parent" android:layout_height="240dip"
+            android:scrollbars="none"
+            android:layout_marginLeft="10dip"
+        >
+            <TableLayout android:id="@id/items_table" 
+                android:layout_width="fill_parent" android:layout_height="fill_parent"
+                android:stretchColumns="0"
+            >
+                <TableRow>
+                    <TextView android:text="@string/receipt_info_item_id_lab"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textSize="17sp" android:textColor="@color/black" android:textStyle="bold" 
+                        android:gravity="left"
+                    />
+                    <TextView android:text="@string/receipt_info_item_qty_lab"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textSize="17sp" android:textColor="@color/black" android:textStyle="bold"
+                        android:gravity="left" android:paddingRight="20dip"
+                    />
+                    <TextView android:text="@string/receipt_info_item_price_lab"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textSize="17sp" android:textColor="@color/black" android:textStyle="bold"
+                        android:gravity="left" android:paddingRight="20dip"
+                    />
+                </TableRow>
+            
+            <!-- First item in the receipt 
+                <TableRow>
+                    <TextView android:text="Beef burger" style="@style/receipt_item_id"/>
+                    <TextView android:text="1" style="@style/receipt_item_price_qty"/>
+                    <TextView android:text="9.10" style="@style/receipt_item_price_qty"/>
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="1010" style="@style/receipt_item_id"
+                        android:paddingLeft="10dip"
+                    />
+                </TableRow>
+                    -->
+            </TableLayout>
+        </ScrollView>
+        
+        <TableLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+            android:stretchColumns="0"
+            android:paddingTop="10dip" android:paddingBottom="10dip"
+        > 
+            <!-- Tax -->
+            <TableRow>
+                <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                <TextView android:text="@string/receipt_info_tax_lab"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_gravity="right" android:paddingRight="10sp"
+                    android:textColor="@color/black" android:textStyle="bold"
+                />
+                <TextView android:layout_width="wrap_content" android:layout_height="fill_parent"/>
+                <TextView android:text="0.1"
+                    android:id="@id/tax_txt"
+                    android:layout_width="wrap_content" android:layout_height="fill_parent"
+                    android:layout_gravity="right" android:paddingRight="10sp"
+                    android:textColor="@color/black"
+                />
+            </TableRow>
+            <!-- Total cost -->
+            <TableRow>
+                <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                <TextView android:text="@string/receipt_info_total_lab"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_gravity="right" android:paddingRight="10sp"
+                    android:textColor="@color/black" android:textStyle="bold"
+                />
+                <TextView android:layout_width="wrap_content" android:layout_height="fill_parent"
+                    android:id="@id/currency_txt"
+                    android:text="$" android:textColor="@color/black"
+                    android:layout_gravity="right" android:paddingRight="10sp"
+                />
+                <TextView android:text="15.00"
+                    android:id="@id/total_cost_txt"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_gravity="right" android:paddingRight="10sp"
+                    android:textColor="@color/black"
+                />
+            </TableRow>
+        </TableLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:gravity="bottom" android:layout_weight="1.7"
+    >
+        <Button android:layout_width="fill_parent" android:layout_height="wrap_content"
+            android:background="@drawable/backmid_btn_status"
+            android:id="@id/b_to_ls_btn"
+        />
+    </LinearLayout>
+
+</LinearLayout>

@@ -51,7 +51,11 @@
             
             <!-- Receipt Time -->
             <TextView android:id="@+id/tag_time_txt"
+<<<<<<< HEAD
                 android:text="2011-06-21 15:43:12"
+=======
+                android:text="N/A"
+>>>>>>> Android-Prototype
                 android:layout_width="fill_parent" android:layout_height="wrap_content"
                 android:paddingTop="3dip" android:gravity="center"
                 android:textSize="15sp" android:textColor="@color/black"
@@ -72,11 +76,20 @@
         </LinearLayout>
         <!-- 35dip height per item, 5 items maximum for the emulator 
            It starts from 55 dip. -->
+<<<<<<< HEAD
         <ScrollView android:layout_width="fill_parent" android:layout_height="230dip"
             android:scrollbars="none"
             android:layout_marginLeft="10dip"
         >
             <TableLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+=======
+        <ScrollView android:layout_width="fill_parent" android:layout_height="240dip"
+            android:scrollbars="none"
+            android:layout_marginLeft="10dip"
+        >
+            <TableLayout android:id="@id/items_table"  
+                android:layout_width="fill_parent" android:layout_height="fill_parent"
+>>>>>>> Android-Prototype
                 android:stretchColumns="0"
             >
                 <TableRow>
@@ -97,6 +110,7 @@
                     />
                 </TableRow>
                 
+<<<<<<< HEAD
                 <!-- Six items displaying in this part at most-->
                 <TableRow>
                     <TextView android:text="Beef burger" style="@style/receipt_item_id"/>
@@ -158,6 +172,10 @@
                         android:paddingLeft="10dip"
                     />
                 </TableRow>
+=======
+                <!-- Six items displaying in this part at most here. -->
+                
+>>>>>>> Android-Prototype
            </TableLayout>
        </ScrollView> 
         
@@ -172,6 +190,10 @@
                     android:layout_gravity="right" android:paddingRight="10sp"
                     android:textColor="@color/black" android:textStyle="bold"
                 />
+<<<<<<< HEAD
+=======
+                <TextView android:layout_width="wrap_content" android:layout_height="fill_parent"/>
+>>>>>>> Android-Prototype
                 <TextView android:text="10%"
                     android:id="@+id/tag_tax_txt"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -187,6 +209,14 @@
                     android:layout_gravity="right" android:paddingRight="10sp"
                     android:textColor="@color/black" android:textStyle="bold"
                 />
+<<<<<<< HEAD
+=======
+                <TextView android:layout_width="wrap_content" android:layout_height="fill_parent"
+                    android:id="@+id/tag_currency_txt"
+                    android:text="$" android:textColor="@color/black"
+                    android:layout_gravity="right" android:paddingRight="10sp"
+                />
+>>>>>>> Android-Prototype
                 <TextView android:text="15.00"
                     android:id="@+id/tag_total_cost_txt"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -201,12 +231,20 @@
         android:orientation="horizontal" android:layout_alignParentBottom="true"
     >
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:background="@drawable/accept_btn"
+=======
+            android:background="@drawable/accept_btn_status"
+>>>>>>> Android-Prototype
             android:id="@+id/receipt_confirm_btn"
         />
         
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:background="@drawable/reject_btn"
+=======
+            android:background="@drawable/reject_btn_status"
+>>>>>>> Android-Prototype
             android:id="@+id/receipt_reject_btn"
         />
     </LinearLayout>

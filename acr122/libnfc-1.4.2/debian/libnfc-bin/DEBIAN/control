@@ -1,0 +1,12 @@
+Package: libnfc-bin
+Source: libnfc
+Version: 1.4.2-0
+Architecture: i386
+Maintainer: Romuald Conty <rconty@il4p.fr>
+Installed-Size: 188
+Depends: libnfc0
+Section: devel
+Priority: optional
+Homepage: http://www.libnfc.org/
+Description: Near Field Communication binaries
+ Some binaries are provided with libnfc useful for developement (nfc-list, nfc-mfclassic, nfc-mfultralight, etc.).

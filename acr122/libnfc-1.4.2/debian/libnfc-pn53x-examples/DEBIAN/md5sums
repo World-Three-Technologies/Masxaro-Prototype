@@ -1,0 +1,11 @@
+e0c6c54a6fa722710c0f86b75e5d2b4e  usr/bin/pn53x-diagnose
+30be1a412290797b9e52951b1ed66ce8  usr/bin/pn53x-sam
+8b8904705d7290a487d31e3e3160c847  usr/bin/pn53x-tamashell
+3273ac114219caae1c97855c17f05a9f  usr/share/doc/libnfc-pn53x-examples/changelog.Debian.gz
+38bf0f1024f3a5da986fbd212b98802d  usr/share/doc/libnfc-pn53x-examples/changelog.gz
+325e7326d0a2ecd1bc866c9a97731399  usr/share/doc/libnfc-pn53x-examples/copyright
+e8f70c6400e7b736ce62c1c1befa2610  usr/share/doc/libnfc-pn53x-examples/scripts/UltraLightRead.cmd
+9d106d054b7fbdb06301fb1fcd231bbb  usr/share/doc/libnfc-pn53x-examples/scripts/UltraLightReadWrite.cmd
+54b9d9fb8b55dead7dbbbe950f1fcc73  usr/share/man/man1/pn53x-diagnose.1.gz
+3f4bf0ed6924823469518d411f89c6b3  usr/share/man/man1/pn53x-sam.1.gz
+48a5a9c2b6aaffb35b3aff2358aaa98d  usr/share/man/man1/pn53x-tamashell.1.gz

@@ -1,0 +1,12 @@
+Package: libnfc-examples
+Source: libnfc
+Version: 1.4.2-0
+Architecture: i386
+Maintainer: Romuald Conty <rconty@il4p.fr>
+Installed-Size: 472
+Depends: libnfc0
+Section: devel
+Priority: optional
+Homepage: http://www.libnfc.org/
+Description: Near Field Communication examples
+ Some examples are provided with libnfc for debugging and/or educational purpose (nfc-anticol, nfc-emulate, etc.).

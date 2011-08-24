@@ -24,8 +24,8 @@
  *
  */
  -->
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/receipt_view"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
     android:orientation="vertical"
@@ -36,7 +36,11 @@
         android:background="@color/white"
     >
         <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+<<<<<<< HEAD
             android:orientation="vertical"
+=======
+            android:orientation="vertical" 
+>>>>>>> Android-Prototype
         >
             <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -76,27 +80,46 @@
         
         <!-- 35dip height per item, 5 items maximum for the emulator 
            It starts from 55 dip. -->
+<<<<<<< HEAD
         <ScrollView android:layout_width="fill_parent" android:layout_height="230dip"
             android:scrollbars="none"
+=======
+        <ScrollView android:layout_width="fill_parent" android:layout_height="240dip"
+            android:scrollbars="none" android:id="@+id/fling"
+>>>>>>> Android-Prototype
             android:layout_marginLeft="10dip"
         >
 	        <TableLayout android:id="@+id/items_table" 
 	            android:layout_width="fill_parent" android:layout_height="fill_parent"
+<<<<<<< HEAD
                 android:stretchColumns="0"
             >
 	            <TableRow>
 	                <TextView android:text="@string/receipt_info_item_id_lab"
 	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+=======
+            >
+	            <TableRow>
+	                <TextView android:text="@string/receipt_info_item_id_lab"
+	                    android:layout_width="170dip" android:layout_height="wrap_content"
+>>>>>>> Android-Prototype
 	                    android:textSize="17sp" android:textColor="@color/black" android:textStyle="bold" 
 	                    android:gravity="left"
 	                />
 	                <TextView android:text="@string/receipt_info_item_qty_lab"
+<<<<<<< HEAD
 	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+=======
+	                    android:layout_width="60dip" android:layout_height="wrap_content"
+>>>>>>> Android-Prototype
 	                    android:textSize="17sp" android:textColor="@color/black" android:textStyle="bold"
 	                    android:gravity="left" android:paddingRight="20dip"
 	                />
 	                <TextView android:text="@string/receipt_info_item_price_lab"
+<<<<<<< HEAD
 	                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+=======
+>>>>>>> Android-Prototype
 	                    android:textSize="17sp" android:textColor="@color/black" android:textStyle="bold"
 	                    android:gravity="left" android:paddingRight="20dip"
 	                />
@@ -119,16 +142,28 @@
         
         <TableLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
             android:stretchColumns="0"
+<<<<<<< HEAD
+=======
+            android:shrinkColumns="2"
+>>>>>>> Android-Prototype
             android:paddingTop="10dip" android:paddingBottom="10dip"
         > 
             <!-- Tax -->
             <TableRow>
+<<<<<<< HEAD
                 <TextView android:layout_width="fill_parent" android:layout_height="match_parent"/>
+=======
+                <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+>>>>>>> Android-Prototype
                 <TextView android:text="@string/receipt_info_tax_lab"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:layout_gravity="right" android:paddingRight="10sp"
                     android:textColor="@color/black" android:textStyle="bold"
                 />
+<<<<<<< HEAD
+=======
+                <TextView android:layout_width="wrap_content" android:layout_height="fill_parent"/>
+>>>>>>> Android-Prototype
                 <TextView android:text="0.1"
                     android:id="@+id/tax_txt"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -138,12 +173,20 @@
             </TableRow>
             <!-- Total cost -->
             <TableRow>
-                <TextView android:layout_width="fill_parent" android:layout_height="match_parent"/>
+                <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"/>
                 <TextView android:text="@string/receipt_info_total_lab"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:layout_gravity="right" android:paddingRight="10sp"
                     android:textColor="@color/black" android:textStyle="bold"
                 />
+<<<<<<< HEAD
+=======
+                <TextView android:layout_width="wrap_content" android:layout_height="fill_parent"
+                    android:id="@+id/currency_txt"
+                    android:text="$" android:textColor="@color/black"
+                    android:layout_gravity="right" android:paddingRight="10sp"
+                />
+>>>>>>> Android-Prototype
                 <TextView android:text="15.00"
                     android:id="@+id/total_cost_txt"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -159,12 +202,20 @@
         android:gravity="bottom" android:layout_weight="1.7"
     >
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:background="@drawable/sync_btn"
+=======
+            android:background="@drawable/sync_btn_status"
+>>>>>>> Android-Prototype
             android:id="@id/sync_btn"
         />
         
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:background="@drawable/backlist_btn"
+=======
+            android:background="@drawable/backlist_btn_status"
+>>>>>>> Android-Prototype
             android:id="@+id/b_to_ls_btn"
         />
     </LinearLayout>

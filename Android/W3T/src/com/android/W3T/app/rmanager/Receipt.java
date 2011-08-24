@@ -27,12 +27,14 @@
 
 package com.android.W3T.app.rmanager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+<<<<<<< HEAD
 public class Receipt {
 	
 	public static final int ENTRY_STORE_NAME = 0;
@@ -66,6 +68,32 @@ public class Receipt {
 	private String mTotal;
 //	private String img;
 //	private String delete;
+=======
+public class Receipt implements Serializable{
+	private static final long serialVersionUID = 8704584220504619955L;
+	
+	public static final String PARAM_ITEM_ID = ReceiptItem.PARAM_ITEM_ID;
+	public static final String PARAM_ITEM_NAME = ReceiptItem.PARAM_ITEM_NAME;
+	public static final String PARAM_ITEM_QTY = ReceiptItem.PARAM_ITEM_QTY;
+	public static final String PARAM_ITEM_PRICE = ReceiptItem.PARAM_ITEM_PRICE;
+	public static final String PARAM_ITEM_DISCOUNT = ReceiptItem.PARAM_ITEM_DISCOUNT;
+	
+	// Receipt basic info entries which will be displayed on receipts.
+	public static final int ENTRY_STORE_NAME = 0;
+	public static final int ENTRY_TIME = 1;
+	public static final int ENTRY_RECEIPT_ID = 2;
+	public static final int ENTRY_TAX = 3;
+	public static final int ENTRY_TOTAL = 4;
+	public static final int ENTRY_CURRENCY = 5;
+	public static final int ENTRY_CUT_DOWN = 6;
+	public static final int ENTRY_EXTRA_COST = 7;
+	public static final int ENTRY_SUB_COST = 8;
+	public static final int ENTRY_ID = 9;
+	public static final int ENTRY_STORE_ACC = 10;
+	public static final int ENTRY_SOURCE = 11;
+	
+	private BasicInfo basic;
+>>>>>>> Android-Prototype
 	private ArrayList<ReceiptItem> mItems;	// Items in this receipt
 	private int mNumItems;			// Number of items
 	
@@ -73,6 +101,7 @@ public class Receipt {
 									// The receipt retrieved from database sets true.
 									// The receipt retrieved from nfc tag sets false
 	public Receipt() {
+<<<<<<< HEAD
 		mReceiptId = new String("ID@0000");
 		mStoreName = new String("N/A");
 		mTime = new String("N/A");
@@ -80,25 +109,19 @@ public class Receipt {
 		mTax = new String("N/A");
 //		img = new String("N/A");
 //		delete = new String();
+=======
+		basic = new BasicInfo();
+>>>>>>> Android-Prototype
 		mItems = new ArrayList<ReceiptItem>();
 		mNumItems = 0;
 		mWhere = false;
 	}
 	
 	public Receipt(JSONObject str, boolean w) {
-		try {
-			mReceiptId = str.get(PARAM_RECEIPT_ID).toString();
-			mTime = str.get(PARAM_RECEIPT_TIME).toString();
-			mStoreName = str.get(PARAM_RECEIPT_STORE_NAME).toString();
-			mTotal = str.get(PARAM_RECEIPT_TOTAL).toString();
-			mTax = str.get(PARAM_RECEIPT_TAX).toString();
-			mItems = new ArrayList<ReceiptItem>();
-			mNumItems = 0;
-			mWhere = w;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		basic = new BasicInfo(str, w);
+		mItems = new ArrayList<ReceiptItem>();
+		mNumItems = 0;
+		mWhere = w;
 	}
 	
 	public String getEntry(int i) {
@@ -110,14 +133,40 @@ public class Receipt {
 		case ENTRY_TIME:
 			result = getTime();
 			break;
+<<<<<<< HEAD
+		case ENTRY_ID:
+			result = getId();
+=======
+		case ENTRY_RECEIPT_ID:
+			result = getReceiptId();
+>>>>>>> Android-Prototype
+			break;
+		case ENTRY_TAX:
+			result = getTax();
+			break;
+		case ENTRY_TOTAL:
+			result = getTotal();
+			break;
+		case ENTRY_CURRENCY:
+			result = getCurrency();
+			break;
+		case ENTRY_STORE_ACC:
+			result = getStoreAcc();
+			break;
+		case ENTRY_EXTRA_COST:
+			result = getExtraCost();
+			break;
+		case ENTRY_SUB_COST:
+			result = getSubCost();
+			break;
+		case ENTRY_CUT_DOWN:
+			result = getCutDown();
+			break;
 		case ENTRY_ID:
 			result = getId();
 			break;
-		case 3:
-			result = getTax();
-			break;
-		case 4:
-			result = getTotal();
+		case ENTRY_SOURCE:
+			result = getSource();
 			break;
 		default:
 			result = null;
@@ -130,18 +179,35 @@ public class Receipt {
 		return mItems.get(i);
 	}
 	
+<<<<<<< HEAD
+=======
+	public JSONArray getItemsJsonArray() {
+		JSONArray items = new JSONArray();
+		for (int i=0;i<mNumItems;i++) {
+			ReceiptItem item = mItems.get(i);
+			JSONObject itemstr = new JSONObject();
+			try {
+				itemstr.put(PARAM_ITEM_ID, item.getItemId());
+				itemstr.put(PARAM_ITEM_NAME, item.getName());
+				itemstr.put(PARAM_ITEM_QTY, item.getQty());
+				itemstr.put(PARAM_ITEM_PRICE, item.getPrice());	
+				itemstr.put(PARAM_ITEM_DISCOUNT, item.getDiscount());
+				items.put(i, itemstr);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return items;
+	}
+	
+>>>>>>> Android-Prototype
 	// Called when there is a need to add items to a receipt, r.
 	public void addItems(JSONArray items) {
 		mNumItems = items.length();
-		
 		try {
 			for (int i=0;i<mNumItems;i++) {
-				JSONObject item = (JSONObject) items.get(i);
-				ReceiptItem newItem = new ReceiptItem();
-				newItem.setItemId(Integer.valueOf(item.getString(PARAM_ITEM_ID)));
-				newItem.setName(item.getString(PARAM_ITEM_NAME));
-				newItem.setQty(Integer.valueOf(item.getString(PARAM_ITEM_QTY)));
-				newItem.setPrice(Double.parseDouble(item.getString(PARAM_ITEM_PRICE)));
+				ReceiptItem newItem = new ReceiptItem((JSONObject)items.get(i));
 				mItems.add(newItem);
 			}
 		} catch (JSONException e) {
@@ -154,20 +220,32 @@ public class Receipt {
 		return mNumItems;
 	}
 	
+	public BasicInfo getBasicInfo() {
+		return basic;
+	}
+	
 	private String getId() {
-		return mReceiptId;
+		return basic.getId();
+	}
+	
+	private String getReceiptId() {
+		return basic.getReceiptId();
 	}
 	
 	private String getStoreName() {
-		return mStoreName;
+		return basic.getStoreName();
 	}
 	
 	private String getTime() {
-		return mTime;
+		return basic.getTime();
 	}
 	
 	private String getTax() {
-		return mTax;
+		return basic.getTax();
+	}
+	
+	private String getCurrency() {
+		return basic.getCurrency();
 	}
 	
 	public boolean getWhere() {
@@ -175,6 +253,7 @@ public class Receipt {
 	}
 	
 	private String getTotal() {
+<<<<<<< HEAD
 		return mTotal;
 	}
 	
@@ -201,6 +280,34 @@ public class Receipt {
 //	private void setTax(String t) {
 //		mTax = t;
 //	}
+=======
+		return basic.getTotal();
+	}
+	
+	private String getStoreAcc() {
+		return basic.getStoreAcc();
+	}
+	
+	private String getSubCost() {
+		return basic.getSubCost();
+	}
+
+	private String getCutDown() {
+		return basic.getCutDownCost();
+	}
+	
+	private String getExtraCost() {
+		return basic.getExtraCost();
+	}
+	
+	private String getSource() {
+		return basic.getSource();
+	}
+	
+	public void setWhere(boolean w) {
+		mWhere = w;
+	}
+>>>>>>> Android-Prototype
 }
 =======
 /*
