@@ -1,3 +1,5 @@
+//update receipt tags data from server
+//fetch receipts data in receipts.js
 var Receipt = Backbone.Model.extend({
 
   tagUrl: 'tagOperation.php',

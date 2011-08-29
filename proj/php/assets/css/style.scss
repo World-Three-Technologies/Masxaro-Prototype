@@ -8,7 +8,6 @@ $grid-width : $page-width / $grid;
 $header-color:white;
 $background-color:rgb(182,212,214);
 
-
 /*
  * mixins
  */
@@ -29,10 +28,6 @@ $background-color:rgb(182,212,214);
   width: $grid-width * $grid-number;
 }
 
-@mixin gradient($start, $end){
-
-} 
-
 @mixin transition($sec){
   -webkit-transition:all $sec ease-in-out;
   -moz-transition:all $sec ease-in-out;
@@ -41,6 +36,7 @@ $background-color:rgb(182,212,214);
   transition:all $sec ease-in-out;
 }
 
+//header font
 h1 { font-size: 32px;}
 h2 { font-size: 28px;}
 h3 { font-size: 24px;}
@@ -90,7 +86,7 @@ body{
 header{
   background-color: $header-color ;
   width:100%;
-  min-width:960px;
+  min-width:$page-width;
   height:40px;
   display:block;
   text-align:center;
@@ -525,8 +521,8 @@ footer{
     .chart-data{
       margin-top:40px;
       table{
+        @include grid(5);
         background:white;
-        width:200px;
         border-collapse:collapse;
         box-shadow:0 0 1em rgba(0,0,0,0.5);
         th,td{
@@ -543,7 +539,6 @@ footer{
       float:left;
     }
   }
-
 }
 
 #reports-view,#media-view,#deals-view{

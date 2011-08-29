@@ -16,7 +16,6 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-//analysis.js:
 //get analysis data from server
 var Analysis = Backbone.Model.extend({
   
@@ -32,6 +31,8 @@ var Analysis = Backbone.Model.extend({
     },0);
   }
 });
+//update receipt tags data from server
+//fetch receipts data in receipts.js
 var Receipt = Backbone.Model.extend({
 
   tagUrl: 'tagOperation.php',
@@ -68,6 +69,7 @@ var Receipt = Backbone.Model.extend({
     });
   }
 });
+//fetch receipts data and search receipts by keywords and tags
 var Receipts = Backbone.Collection.extend({
   model: Receipt,
 
@@ -102,9 +104,11 @@ var Receipts = Backbone.Collection.extend({
 
   search:function(query,success){
     var model = this;
+
     var params = this.defaultParams();
     params["opcode"] = "search";
     $.extend(params,query);
+
     $.post(this.url,params).success(function(data){
       model.reset(data);
       if(success !== null && typeof success !== "undefined"){
@@ -114,17 +118,21 @@ var Receipts = Backbone.Collection.extend({
   }
 });
 var User = Backbone.Model;
+//handle receipt action: tag clicked
+//and initiate tags when receipts_view loaded
 window.ActionView = Backbone.View.extend({
   
   el:$("#action-bar"),
 
   tagTemplate : _.template("<li class='tag-<%= tag %>'>"+
                            "<a href='#receipts/tag/<%= tag %>'><%= tag %></a></li>"),
+  recentTag:$('<li class="tag-recent"><a href="#receipts">recent</a></li>'),
 
   initialize:function(){
     _.bindAll(this,"setTags","setActive");   
 
-    this.$(".action").html('<li class="tag-recent"><a href="#receipts">Recent</a></li>');
+    this.$(".action").empty()
+        .append(this.recentTag);
     this.setTags("recent");
   },
 
@@ -139,6 +147,7 @@ window.ActionView = Backbone.View.extend({
       this.setActive(tag);
       return;
     }
+
     var view = this;
     $.post("tagOperation.php",{
       opcode : "get_user_tags",
@@ -163,38 +172,47 @@ window.ActionView = Backbone.View.extend({
     target.addClass("active");
   }
 });
+//draw pie-chart with analysis.js data
+//and show data in table
 window.AnalysisView = Backbone.View.extend({
   el:$("#analysis-view"),
 
+  //colors for pie-chart, will cycle in colors array
   colors:["#FF0","#FFF","#356","#A23","#F2A","#0E0","#AC5","0F0"],
   colorIndex:0,
+  tableTemplate:_.template("<tr><td><%= category %></td><td><%=value %></td></tr>"),
 
   initialize:function(){
     _.bindAll(this,"drawChart","drawSlice","setTable",
                    "initCanvas","fetchModel","fetchModelByType","clear");
 
     this.model = new Analysis();
+
     this.model.bind("change",this.drawChart);
     this.model.bind("change",this.setTable);
 
     this.initCanvas();
     this.fetchModel("tag");
-
   },
 
   events:{
     "click .button":"fetchModelByType",
   },
 
+  //view draw pie chart depend by receipt tag or receipt position 
+  //data type decided by the link attribute "data-type"
   fetchModelByType:function(){
     this.fetchModel($(event.target).attr("data-type"));
   },
 
   fetchModel:function(type){
     
+    //clear the model but not trigger change event
     this.model.clear({slient:true});
     this.model.fetch({
       data:{"opcode":type},
+      //set processData to encode data to params string,
+      //because backbone set processData off.
       processData:true,
     });
   },
@@ -219,10 +237,10 @@ window.AnalysisView = Backbone.View.extend({
   },
 
   setTable:function(model){
-    var table = this.$("#data-table"),
-        template = _.template("<tr><td><%= category %></td><td><%=value %></td></tr>");
+    var table = this.$("#data-table tbody"),
+        template = this.tableTemplate;
 
-    table.find("td").remove();
+    table.empty();
     _.each(model.attributes,function(v,k){
       table.append($(template(v)));
     });
@@ -285,6 +303,8 @@ window.DashboardView = Backbone.View.extend({
 });
 window.DealsView = Backbone.View.extend({});
 window.MediaView = Backbone.View.extend({});
+//render receipt in row and full mode
+//handle tag updates
 var ReceiptView = Backbone.View.extend({
 
   tagName:"tr",
@@ -292,8 +312,7 @@ var ReceiptView = Backbone.View.extend({
   template:_.template($('#receipt-row-template').html() || "<div/>"),
   fullTemplate:_.template($('#receipt-full-template').html() || "<div/>"),
   itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
-  editTagArea :$(
-    "<input type='text' size='10' class='edit-tag'/><span class='delete-button'/>"),
+  editTagArea :"<span><input type='text' size='10' class='edit-tag'/><span class='delete-button'/></span>",
   isEditing:false,
   tagState:[],
 
@@ -313,30 +332,26 @@ var ReceiptView = Backbone.View.extend({
 
   render:function(){
     var view = $(this.el);
-    view.css({height:70});
-    view.html(this.template(this.model.toJSON()));
+    //set height for animation effect
+    view.css({height:70})
+        .html(this.template(this.model.toJSON()));
 
     this.setDate(this.model.get("receipt_time"));
 
-    var text = this.getItemText(this.model.get("items"));
-    view.find(".items").html(text);
+    view.find(".items").html(
+      this.getItemText(this.model.get("items"))
+    );
+
     return this;
   },
 
+  //edit or save tags
   editTags:function(){
     //sequence is important here...
     var content = this.$(".content");
 
-    if(!this.isEditing){
-
-      content.addClass("editing");
-      this.isEditing = true;
-
-      this.$('.edit-button').text("[save]");
-      this.tagState = this.model.get("tags");
-
-    }else{
-      //set isEditing before render the receipt, so the input box will be disappear
+    if(this.isEditing){
+      //save tags
       content.removeClass("editing");
       this.isEditing = false;
 
@@ -344,49 +359,60 @@ var ReceiptView = Backbone.View.extend({
       this.model.updateTags(this.tagState);
 
       this.$('.edit-button').text("[edit]");
+    }else{
+      //edit tags
+      content.addClass("editing");
+      this.isEditing = true;
+
+      this.$('.edit-button').text("[save]");
+      this.tagState = this.model.get("tags");
     }
   },
 
+  //collect tags data from input
   getTags:function(){
-    var tags = [];
-    _.each(this.$(".edit-tag"),function(tag){
-      tags.push($(tag).val());
+    return _.map(this.$(".edit-tag"),function(tag){
+      return $(tag).val();
     });     
-    return tags;
   },
 
   newTag:function(){
-    this.$('.edit-area').append(this.editTagArea);     
+    this.$('.edit-area').append($(this.editTagArea));     
   },
 
   deleteTag:function(){
     var tag = $(event.target).prev().val();
+    $(event.target).parent().remove();
     var tags = this.model.get("tags");
     this.model.set({tags: _.without(tags,tag)});
   },
 
   animateReceipt:function(){
 
+    //hard coded animation height by item height
     var itemLength = this.model.get("items").length * 26 + 106;
           
     $(this.el).css({height:itemLength,opacity:0});
-    if(window.lastOpen && window.lastOpen != this){
-      window.lastOpen.render();
+
+    //close last opened view
+    if(ReceiptView.lastOpen && ReceiptView.lastOpen != this){
+      ReceiptView.lastOpen.render();
     }
-    window.lastOpen = this;
+    ReceiptView.lastOpen = this;
     setTimeout(this.showReceipt,300);
   },
 
+  //render full receipt
   showReceipt:function(){
 
     $(this.el).html(this.fullTemplate(this.model.toJSON())).css({opacity:1});
     this.setDate(this.model.get("receipt_time"));
 
     var items = $(this.el).find(".items"),
-        self = this;
+        view = this;
 
-    _.each(self.model.get("items"),function(model){
-      items.append(self.itemTemplate(model));
+    _.each(this.model.get("items"),function(model){
+      items.append(view.itemTemplate(model));
     });
 
     if(this.isEditing){
@@ -396,9 +422,9 @@ var ReceiptView = Backbone.View.extend({
   },
 
   getItemText:function(items){
-    return _.reduce(items,function(memo,item){
-      return memo + item.item_name + ", ";
-    },"").slice(0,-2);
+    return _.map(items,function(item){
+      return item.item_name;
+    }).join(", ");
   },
 
   setDate:function(date){
@@ -411,13 +437,11 @@ window.ReceiptsView = Backbone.View.extend({
 
   pageSize:10,
 
-  start:1,
-
-  end:1,
+  end:0,
 
   initialize:function(){
     _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
-                  "setEnd","search","after","fetch","error");
+                  "nextPage","search","after","fetch","error");
     this.model.bind("sync",this.before);
     this.model.bind("reset",this.render);
     this.actionView = new ActionView();
@@ -430,6 +454,7 @@ window.ReceiptsView = Backbone.View.extend({
   },
 
   search:function(query,type){
+
     if(typeof query == "undefined" || query == ""){
       return;
     }
@@ -437,66 +462,37 @@ window.ReceiptsView = Backbone.View.extend({
     this.before();
     if(type=="keys"){
       this.model.searchByKeys(keys,this.after);
-    }else{
+    }else if(type == "tags"){
       this.model.searchByTags(keys,this.after);
     }
   },
 
+  //handle search on search bar
   searchByForm:function(){
     var type = $("#search-type :checked").val()
     this.search($('#search-query').val(),type);
   },
-
   submitSearch:function(event){
     if(event.which == 13){
       this.searchByForm();
     }
   },
 
+  //pre handle view, show progress bar
   before:function(){
     this.cleanResults();
     this.$('.receipts-stat').hide();
     this.$('#ajax-loader').show();
   },
 
+  //hide progress bar and show status
   after:function(){
     this.$('#ajax-loader').hide();
     this.$('.receipts-stat').show();
   },
 
   updateStatus:function(){
-    this.$(".stat").text(this.start + " to "+ this.end +" in "+this.model.length);
-  },
-
-  render:function(){
-    this.cleanResults();
-    this.setEnd();
-
-    this.$('#ajax-loader').hide();
-
-    _.each(this.model.models.slice(0,this.end),this.renderReceipt);
-    this.updateStatus();
-
-    if(this.end >= this.model.length ){
-      this.$(".more").hide();
-    }else{
-      this.$(".more").show();
-    }
-    return this;
-  },
-
-  cleanResults:function(){
-    this.$('.row').remove();
-  },
-
-  renderMore:function(){
-    var pageLength = (this.end + this.pageSize <= this.model.length) 
-                     ? this.end + this.pageSize : this.model.length;
-    _.each(this.model.models.slice(this.end,pageLength),this.renderReceipt);
-
-    this.end = pageLength;
-
-    this.updateStatus();
+    this.$(".stat").text("1 to "+ this.end +" in "+this.model.length);
 
     if(this.end == this.model.length){
       this.$(".more").hide();
@@ -505,13 +501,34 @@ window.ReceiptsView = Backbone.View.extend({
     }
   },
 
+  render:function(){
+    this.cleanResults();
+    this.$('#ajax-loader').hide();
+
+    _.each(this.model.models.slice(0,this.nextPage()),this.renderReceipt);
+    this.updateStatus();
+    return this;
+  },
+
+  cleanResults:function(){
+    this.$('.row').remove();
+  },
+
+  renderMore:function(){
+    _.each(this.model.models.slice(this.end,this.nextPageLength()),this.renderReceipt);
+
+    this.updateStatus();
+  },
+
   renderReceipt:function(receipt){
     var view = new ReceiptView({model:receipt});
     this.el.children("table").append(view.render().el);
   },
 
-  setEnd:function(){
-    this.end = (this.model.length > 10) ? 10 : this.model.length;       
+  //return the next page's length and set the range
+  nextPage():function(){
+    return this.end = (this.end + this.pageSize <= this.model.length) ? 
+            this.end + this.pageSize : this.model.length;
   },
 
   fetch:function(options){
@@ -524,6 +541,7 @@ window.ReceiptsView = Backbone.View.extend({
   }
 });
 window.ReportsView = Backbone.View.extend({});
+//user view, show user name in header bar
 var UserView = Backbone.View.extend({
 
   initialize:function(){
@@ -562,10 +580,13 @@ var AccountRouter = Backbone.Router.extend({
     $(".active").removeClass("active");
   }
 });
+//main App 
+//handle routes and trigger correspond view
 var AppRouter = Backbone.Router.extend({
 
   initialize: function(){
     _.bindAll(this,"dashboard","receipts","search","searchTag","getReceiptsView","getAnalysisView");
+    //set the account and user view
     var user = this.user = new User({
       account:readCookie("user_acc"),
     });
@@ -575,6 +596,7 @@ var AppRouter = Backbone.Router.extend({
 
   },
 
+  //singleton for view
   getReceiptsView:function(){
     return this.receiptsView || new ReceiptsView({model:new Receipts()});
   },
@@ -595,6 +617,9 @@ var AppRouter = Backbone.Router.extend({
     "receipts/tag/:tag" : "searchTag"
   },
 
+  //set tab active 
+  //according the class name of tag,
+  // ex setView("receipts-view") => open "receipts" tab
   setView:function(name){
     this.setMainTab(name.split("-")[0]);
     $("#boards").removeClass().addClass(name);
@@ -605,6 +630,7 @@ var AppRouter = Backbone.Router.extend({
     $("#main-tab > ."+tab).addClass("active");
   },
 
+  //action for each route
   dashboard:function(){
     this.setView("dashboard-view");
     this.dashboardView = new DashboardView();
@@ -648,6 +674,7 @@ var AppRouter = Backbone.Router.extend({
   }
 });
 $(function(){
+  //init Backbone application 
   new AppRouter();
   Backbone.history.start({pushState:false});
 });

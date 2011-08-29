@@ -3,13 +3,11 @@ window.ReceiptsView = Backbone.View.extend({
 
   pageSize:10,
 
-  start:1,
-
-  end:1,
+  end:0,
 
   initialize:function(){
     _.bindAll(this,"render","renderMore","renderReceipt","cleanResults",
-                  "setEnd","search","after","fetch","error");
+                  "nextPage","search","after","fetch","error");
     this.model.bind("sync",this.before);
     this.model.bind("reset",this.render);
     this.actionView = new ActionView();
@@ -30,66 +28,37 @@ window.ReceiptsView = Backbone.View.extend({
     this.before();
     if(type=="keys"){
       this.model.searchByKeys(keys,this.after);
-    }else{
+    }else if(type == "tags"){
       this.model.searchByTags(keys,this.after);
     }
   },
 
+  //handle search on search bar
   searchByForm:function(){
     var type = $("#search-type :checked").val()
     this.search($('#search-query').val(),type);
   },
-
   submitSearch:function(event){
     if(event.which == 13){
       this.searchByForm();
     }
   },
 
+  //pre handle view, show progress bar
   before:function(){
     this.cleanResults();
     this.$('.receipts-stat').hide();
     this.$('#ajax-loader').show();
   },
 
+  //hide progress bar and show status
   after:function(){
     this.$('#ajax-loader').hide();
     this.$('.receipts-stat').show();
   },
 
   updateStatus:function(){
-    this.$(".stat").text(this.start + " to "+ this.end +" in "+this.model.length);
-  },
-
-  render:function(){
-    this.cleanResults();
-    this.setEnd();
-
-    this.$('#ajax-loader').hide();
-
-    _.each(this.model.models.slice(0,this.end),this.renderReceipt);
-    this.updateStatus();
-
-    if(this.end >= this.model.length ){
-      this.$(".more").hide();
-    }else{
-      this.$(".more").show();
-    }
-    return this;
-  },
-
-  cleanResults:function(){
-    this.$('.row').remove();
-  },
-
-  renderMore:function(){
-    var pageLength = (this.end + this.pageSize <= this.model.length) 
-                     ? this.end + this.pageSize : this.model.length;
-    _.each(this.model.models.slice(this.end,pageLength),this.renderReceipt);
-
-    this.end = pageLength;
-
-    this.updateStatus();
+    this.$(".stat").text("1 to "+ this.end +" in "+this.model.length);
 
     if(this.end == this.model.length){
       this.$(".more").hide();
@@ -98,13 +67,34 @@ window.ReceiptsView = Backbone.View.extend({
     }
   },
 
+  render:function(){
+    this.cleanResults();
+    this.$('#ajax-loader').hide();
+
+    _.each(this.model.models.slice(0,this.nextPage()),this.renderReceipt);
+    this.updateStatus();
+    return this;
+  },
+
+  cleanResults:function(){
+    this.$('.row').remove();
+  },
+
+  renderMore:function(){
+    _.each(this.model.models.slice(this.end,this.nextPageLength()),this.renderReceipt);
+
+    this.updateStatus();
+  },
+
   renderReceipt:function(receipt){
     var view = new ReceiptView({model:receipt});
     this.el.children("table").append(view.render().el);
   },
 
-  setEnd:function(){
-    this.end = (this.model.length > 10) ? 10 : this.model.length;       
+  //return the next page's length and set the range
+  nextPage():function(){
+    return this.end = (this.end + this.pageSize <= this.model.length) ? 
+            this.end + this.pageSize : this.model.length;
   },
 
   fetch:function(options){

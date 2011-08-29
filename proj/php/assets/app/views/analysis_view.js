@@ -1,35 +1,44 @@
+//draw pie-chart with analysis.js data
+//and show data in table
 window.AnalysisView = Backbone.View.extend({
   el:$("#analysis-view"),
 
+  //colors for pie-chart, will cycle in colors array
   colors:["#FF0","#FFF","#356","#A23","#F2A","#0E0","#AC5","0F0"],
   colorIndex:0,
+  tableTemplate:_.template("<tr><td><%= category %></td><td><%=value %></td></tr>"),
 
   initialize:function(){
     _.bindAll(this,"drawChart","drawSlice","setTable",
                    "initCanvas","fetchModel","fetchModelByType","clear");
 
     this.model = new Analysis();
+
     this.model.bind("change",this.drawChart);
     this.model.bind("change",this.setTable);
 
     this.initCanvas();
     this.fetchModel("tag");
-
   },
 
   events:{
     "click .button":"fetchModelByType",
   },
 
+  //view draw pie chart depend by receipt tag or receipt position 
+  //data type decided by the link attribute "data-type"
   fetchModelByType:function(){
     this.fetchModel($(event.target).attr("data-type"));
   },
 
   fetchModel:function(type){
     
+    //clear the model but not trigger change event
     this.model.clear({slient:true});
     this.model.fetch({
       data:{"opcode":type},
+      //set processData to encode data to params string,
+      //because backbone set processData off.
       processData:true,
     });
   },
@@ -54,10 +63,10 @@ window.AnalysisView = Backbone.View.extend({
   },
 
   setTable:function(model){
-    var table = this.$("#data-table"),
-        template = _.template("<tr><td><%= category %></td><td><%=value %></td></tr>");
+    var table = this.$("#data-table tbody"),
+        template = this.tableTemplate;
 
-    table.find("td").remove();
+    table.empty();
     _.each(model.attributes,function(v,k){
       table.append($(template(v)));
     });

@@ -1,3 +1,5 @@
+//render receipt in row and full mode
+//handle tag updates
 var ReceiptView = Backbone.View.extend({
 
   tagName:"tr",
@@ -5,8 +7,7 @@ var ReceiptView = Backbone.View.extend({
   template:_.template($('#receipt-row-template').html() || "<div/>"),
   fullTemplate:_.template($('#receipt-full-template').html() || "<div/>"),
   itemTemplate:_.template($('#receipt-item-template').html() || "<div/>"),
-  editTagArea :$(
-    "<input type='text' size='10' class='edit-tag'/><span class='delete-button'/>"),
+  editTagArea :"<span><input type='text' size='10' class='edit-tag'/><span class='delete-button'/></span>",
   isEditing:false,
   tagState:[],
 
@@ -26,30 +27,26 @@ var ReceiptView = Backbone.View.extend({
 
   render:function(){
     var view = $(this.el);
-    view.css({height:70});
-    view.html(this.template(this.model.toJSON()));
+    //set height for animation effect
+    view.css({height:70})
+        .html(this.template(this.model.toJSON()));
 
     this.setDate(this.model.get("receipt_time"));
 
-    var text = this.getItemText(this.model.get("items"));
-    view.find(".items").html(text);
+    view.find(".items").html(
+      this.getItemText(this.model.get("items"))
+    );
+
     return this;
   },
 
+  //edit or save tags
   editTags:function(){
     //sequence is important here...
     var content = this.$(".content");
 
-    if(!this.isEditing){
-
-      content.addClass("editing");
-      this.isEditing = true;
-
-      this.$('.edit-button').text("[save]");
-      this.tagState = this.model.get("tags");
-
-    }else{
-      //set isEditing before render the receipt, so the input box will be disappear
+    if(this.isEditing){
+      //save tags
       content.removeClass("editing");
       this.isEditing = false;
 
@@ -57,49 +54,60 @@ var ReceiptView = Backbone.View.extend({
       this.model.updateTags(this.tagState);
 
       this.$('.edit-button').text("[edit]");
+    }else{
+      //edit tags
+      content.addClass("editing");
+      this.isEditing = true;
+
+      this.$('.edit-button').text("[save]");
+      this.tagState = this.model.get("tags");
     }
   },
 
+  //collect tags data from input
   getTags:function(){
-    var tags = [];
-    _.each(this.$(".edit-tag"),function(tag){
-      tags.push($(tag).val());
+    return _.map(this.$(".edit-tag"),function(tag){
+      return $(tag).val();
     });     
-    return tags;
   },
 
   newTag:function(){
-    this.$('.edit-area').append(this.editTagArea);     
+    this.$('.edit-area').append($(this.editTagArea));     
   },
 
   deleteTag:function(){
     var tag = $(event.target).prev().val();
+    $(event.target).parent().remove();
     var tags = this.model.get("tags");
     this.model.set({tags: _.without(tags,tag)});
   },
 
   animateReceipt:function(){
 
+    //hard coded animation height by item height
     var itemLength = this.model.get("items").length * 26 + 106;
           
     $(this.el).css({height:itemLength,opacity:0});
-    if(window.lastOpen && window.lastOpen != this){
-      window.lastOpen.render();
+
+    //close last opened view
+    if(ReceiptView.lastOpen && ReceiptView.lastOpen != this){
+      ReceiptView.lastOpen.render();
     }
-    window.lastOpen = this;
+    ReceiptView.lastOpen = this;
     setTimeout(this.showReceipt,300);
   },
 
+  //render full receipt
   showReceipt:function(){
 
     $(this.el).html(this.fullTemplate(this.model.toJSON())).css({opacity:1});
     this.setDate(this.model.get("receipt_time"));
 
     var items = $(this.el).find(".items"),
-        self = this;
+        view = this;
 
-    _.each(self.model.get("items"),function(model){
-      items.append(self.itemTemplate(model));
+    _.each(this.model.get("items"),function(model){
+      items.append(view.itemTemplate(model));
     });
 
     if(this.isEditing){
@@ -109,9 +117,9 @@ var ReceiptView = Backbone.View.extend({
   },
 
   getItemText:function(items){
-    return _.reduce(items,function(memo,item){
-      return memo + item.item_name + ", ";
-    },"").slice(0,-2);
+    return _.map(items,function(item){
+      return item.item_name;
+    }).join(", ");
   },
 
   setDate:function(date){

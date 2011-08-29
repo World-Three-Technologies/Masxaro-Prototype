@@ -1,3 +1,4 @@
+//fetch receipts data and search receipts by keywords and tags
 var Receipts = Backbone.Collection.extend({
   model: Receipt,
 

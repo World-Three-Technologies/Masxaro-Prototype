@@ -1,3 +1,4 @@
+//user view, show user name in header bar
 var UserView = Backbone.View.extend({
 
   initialize:function(){

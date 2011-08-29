@@ -18,6 +18,10 @@ Date.prototype.format = function(){
 }
 
 //change post form to ajax form
+//require jquery validate
+//the form receive result 1 for success, and redirect to dest attribute, 
+//or alert message attribute
+//ex: <form action="/signin" message="success" dest="/portal"></form>
 var bindAjax = function(el){
   var target = $(el),
       action = target.attr("action"),

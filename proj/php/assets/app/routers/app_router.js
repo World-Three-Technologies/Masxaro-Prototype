@@ -1,7 +1,10 @@
+//main App 
+//handle routes and trigger correspond view
 var AppRouter = Backbone.Router.extend({
 
   initialize: function(){
     _.bindAll(this,"dashboard","receipts","search","searchTag","getReceiptsView","getAnalysisView");
+    //set the account and user view
     var user = this.user = new User({
       account:readCookie("user_acc"),
     });
@@ -11,6 +14,7 @@ var AppRouter = Backbone.Router.extend({
 
   },
 
+  //singleton for view
   getReceiptsView:function(){
     return this.receiptsView || new ReceiptsView({model:new Receipts()});
   },
@@ -31,6 +35,9 @@ var AppRouter = Backbone.Router.extend({
     "receipts/tag/:tag" : "searchTag"
   },
 
+  //set tab active 
+  //according the class name of tag,
+  // ex setView("receipts-view") => open "receipts" tab
   setView:function(name){
     this.setMainTab(name.split("-")[0]);
     $("#boards").removeClass().addClass(name);
@@ -41,6 +48,7 @@ var AppRouter = Backbone.Router.extend({
     $("#main-tab > ."+tab).addClass("active");
   },
 
+  //action for each route
   dashboard:function(){
     this.setView("dashboard-view");
     this.dashboardView = new DashboardView();
