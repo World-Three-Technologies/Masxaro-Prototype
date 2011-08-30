@@ -526,7 +526,7 @@ window.ReceiptsView = Backbone.View.extend({
   },
 
   //return the next page's length and set the range
-  nextPage():function(){
+  nextPage:function(){
     return this.end = (this.end + this.pageSize <= this.model.length) ? 
             this.end + this.pageSize : this.model.length;
   },
