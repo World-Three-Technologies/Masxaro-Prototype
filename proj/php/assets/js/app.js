@@ -515,7 +515,8 @@ window.ReceiptsView = Backbone.View.extend({
   },
 
   renderMore:function(){
-    _.each(this.model.models.slice(this.end,this.nextPageLength()),this.renderReceipt);
+    console.log(123);
+    _.each(this.model.models.slice(this.end,this.nextPage()),this.renderReceipt);
 
     this.updateStatus();
   },
