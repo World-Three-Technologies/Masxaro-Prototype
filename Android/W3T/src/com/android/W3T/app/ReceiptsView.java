@@ -241,12 +241,10 @@ public class ReceiptsView extends Activity implements OnClickListener,
 			itemName.setLines(1);
 			itemName.setClickable(true);
 			itemName.setOnClickListener(new OnClickListener() {
-
 				@Override
 				public void onClick(View v) {
 					Toast.makeText(ReceiptsView.this, name, Toast.LENGTH_SHORT).show();
 				}
-				
 			});
 			
 			itemQty.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getQty()));

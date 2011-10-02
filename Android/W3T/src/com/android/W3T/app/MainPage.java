@@ -55,13 +55,15 @@ import com.android.W3T.app.user.*;
 
 public class MainPage extends Activity {
 	public static final String TAG = "FrontPageActivity";
-	// Indicators for every dialog view.
+	// flags for every dialog view.
 	public static final int DIALOG_LOGIN = 1;
 	public static final int DIALOG_LOGOUT = 2;
 	
+	// flags for every logon/off status.
 	private static final boolean OFF_LINE = UserProfile.OFFLINE;
 	private static final boolean ON_LINE = UserProfile.ONLINE;
 	
+	// the content of the main page
 	private LinearLayout mMainPage;
 	private TextView mUname;
 	private ImageView mFractalImg;
@@ -78,9 +80,11 @@ public class MainPage extends Activity {
 	private AlertDialog mLogoutDialog;
 	private ProgressDialog mLogProgress;
 	
+	// Content on the login dialog
 	private EditText mUnameEdit;
 	private EditText mPwdEdit;
 	
+	// Buttons on the login dialog
 	private Button mSubmitBtn;
 	private Button mCancelBtn;	
 	
@@ -131,7 +135,7 @@ public class MainPage extends Activity {
 	}
 		
 	@Override
-	// Thinking of using context menu to display the menu bar next time.
+	// Create the option menus for main page.
 	public boolean onCreateOptionsMenu(Menu menu) {
 		Log.i(TAG, "onCreateOptionMenu(" + menu + ")");
         // Hold on to this
@@ -145,6 +149,7 @@ public class MainPage extends Activity {
     }
 	
 	@Override
+	// Select a menu option group according to log status.
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
 		Log.i(TAG, "onPrepareOptionMenu(" + menu + ")");
@@ -162,7 +167,7 @@ public class MainPage extends Activity {
 	}
 	
 	@Override
-	// All Toast messages are implemented later.
+	// Menu options selected.
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.i(TAG, "onOptionItemSelected(" + item + ")");
 		switch (item.getItemId()) {
@@ -239,9 +244,9 @@ public class MainPage extends Activity {
 	public boolean onKeyUp (int keyCode, KeyEvent event) {
 		Log.i(TAG, "onKeyUp(" + event + ")");
 		switch (keyCode) {
-		case KeyEvent.KEYCODE_DPAD_CENTER:
-			openOptionsMenu();
-			break;
+//		case KeyEvent.KEYCODE_DPAD_CENTER:
+//			openOptionsMenu();
+//			break;
 		case KeyEvent.KEYCODE_BACK:
 			return true;
 		default:
@@ -250,8 +255,8 @@ public class MainPage extends Activity {
 		return super.onKeyUp(keyCode, event);
 	}
 
+	// Login dialog is a custom dialog, we take care of every details of it.
 	private void setLoginDialog() {
-		// Login dialog is a custom dialog, we take care of every details of it.
 		if (mLoginDialog == null) {
 			mLoginDialog = new Dialog(MainPage.this);
 			// Set the Login dialog view
@@ -268,8 +273,8 @@ public class MainPage extends Activity {
 		}
 	}
 	
+	// Deal with submit button click event
 	private void setLoginListener() {
-		// Deal with submit button click event
 		mSubmitBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
             	// Close the Login dialog when trying to log in.
@@ -306,8 +311,9 @@ public class MainPage extends Activity {
 		});
 	}
 	
+	// Logout dialog is an alert dialog. One message and two buttons on it.
+	// The event listeners are implemented in this method.
 	private void setLogoutDialog() {
-		// Logout dialog is an alert dialog. One message and two buttons on it.
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(getResources().getString(R.string.logout_promote))
 		       .setCancelable(false)
@@ -332,6 +338,7 @@ public class MainPage extends Activity {
 		mLogoutDialog = builder.create();
 	}
 	
+	// Set the content of the main page, including the user name and Fern image.
 	private void setMainPage(String uname, int pic) {
 		mUname.setText((CharSequence)uname);
         // TODO: set the front page's fractal fern image to indicate different status.
@@ -341,24 +348,29 @@ public class MainPage extends Activity {
 	private class LoginTask extends AsyncTask<Void, Void, Void> {
 		private boolean isSuccessful = false; 
 		@Override
+		// Doing the logon/off operation in this async thread
 		protected Void doInBackground(Void... params) {
 			if (UserProfile.getStatus() == OFF_LINE) {
+				// log on:
 				isSuccessful = NetworkUtil.attemptLogin(mUnameEdit.getText().toString(),
 						mPwdEdit.getText().toString(), DIALOG_LOGIN);
 			}
 			else if (UserProfile.getStatus() == ON_LINE) {
+				// log off:
 				isSuccessful = NetworkUtil.attemptLogin(UserProfile.getUsername(),
 						null, DIALOG_LOGOUT);
 			}
 			return null;
 		}
 	    
+		// Give the response to the result of logon/off operation.
 	    protected void onPostExecute(Void result) {
 	    	super.onPostExecute(result);
 	    	String username = mUnameEdit.getText().toString();
 	    	mLogProgress.dismiss();
 	    	if (UserProfile.getStatus() == OFF_LINE) {
 		    	if (isSuccessful) {
+		    		// Prepare the ReceiptsManager and get the main page ready.
 		    		UserProfile.resetUserProfile(ON_LINE, username);
 		    		ReceiptsManager.initReceiptsManager();
 		    		setMainPage(UserProfile.getUsername()+getResources().getString(R.string.masxaro_email), 0);
@@ -371,6 +383,7 @@ public class MainPage extends Activity {
 	    	}
 	    	else if (UserProfile.getStatus() == ON_LINE) {
 	    		if (isSuccessful) {
+	    			// Clean all the stuffs of the previous user's.
 	    			Log.i(TAG, "reset user profile");
 		    		UserProfile.resetUserProfile(OFF_LINE, null);
 		    		Log.i(TAG, "reset front page");

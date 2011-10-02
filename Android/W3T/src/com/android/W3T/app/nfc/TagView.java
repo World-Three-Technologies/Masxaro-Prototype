@@ -25,9 +25,12 @@
 
 package com.android.W3T.app.nfc;
 
+import java.io.IOException;
+
 import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
 import com.android.W3T.app.ReceiptsList;
+import com.android.W3T.app.ReceiptsView;
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
 import com.android.W3T.app.user.UserProfile;
@@ -35,6 +38,7 @@ import com.android.W3T.app.user.UserProfile;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.nfc.FormatException;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -143,22 +147,21 @@ public class TagView extends Activity {
 				}
 	        });
         
-	        mAdapter = NfcAdapter.getDefaultAdapter(this);
+//mAdapter = NfcAdapter.getDefaultAdapter(this);
 	        
-	        Tag t = (Tag) this.getIntent().getExtras().get(NfcAdapter.EXTRA_TAG);
-	        Ndef n = Ndef.get(t);
-	        
-	        NdefMessage nm = n.getCachedNdefMessage();
-	        NdefRecord record = nm.getRecords()[0];
-	        String result = new String(record.getPayload());
-	        
-	        if (ReceiptsManager.getNumValid() == ReceiptsManager.NUM_RECEIPT) {
-	        	ReceiptsManager.deleteReceipt(6);
-	        }
-	        if (ReceiptsManager.add(result.substring(1), FROM_NFC)) {	//skip the first letter.
-	        	mReceipt = ReceiptsManager.getReceipt(ReceiptsManager.getNumValid()-1);
-	        }
-	        fillReceiptView();
+//	        Tag t = (Tag) this.getIntent().getExtras().get(NfcAdapter.EXTRA_TAG);
+	        NdefMessage msg = (NdefMessage) getIntent().getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)[0];
+//		    NdefMessage nm = n.getNdefMessage();
+	        NdefRecord record = msg.getRecords()[0];
+			String result = new String(record.getPayload());
+					        
+			if (ReceiptsManager.getNumValid() == ReceiptsManager.NUM_RECEIPT) {
+				ReceiptsManager.deleteReceipt(6);
+			}
+			if (ReceiptsManager.add(result.substring(1), FROM_NFC)) {	//skip the first letter.
+				mReceipt = ReceiptsManager.getReceipt(ReceiptsManager.getNumValid()-1);
+			}
+			fillReceiptView();
         }
         else {
         	Toast.makeText(this, "Please log in first.", Toast.LENGTH_SHORT).show();
@@ -171,6 +174,23 @@ public class TagView extends Activity {
 		if (UserProfile.getStatus() == OFFLINE){
         	Toast.makeText(this, "Please log in first.", Toast.LENGTH_SHORT).show();
         }
+		else {
+////mAdapter = NfcAdapter.getDefaultAdapter(this);
+//	        
+////	        Tag t = (Tag) this.getIntent().getExtras().get(NfcAdapter.EXTRA_TAG);
+//	        NdefMessage msg = (NdefMessage) getIntent().getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)[0];
+////		    NdefMessage nm = n.getNdefMessage();
+//	        NdefRecord record = msg.getRecords()[0];
+//			String result = new String(record.getPayload());
+//					        
+//			if (ReceiptsManager.getNumValid() == ReceiptsManager.NUM_RECEIPT) {
+//				ReceiptsManager.deleteReceipt(6);
+//			}
+//			if (ReceiptsManager.add(result.substring(1), FROM_NFC)) {	//skip the first letter.
+//				mReceipt = ReceiptsManager.getReceipt(ReceiptsManager.getNumValid()-1);
+//			}
+//			fillReceiptView();
+		}
 	}
 	
 	@Override
@@ -236,19 +256,34 @@ public class TagView extends Activity {
 			TextView itemName = new TextView(this);
 			TextView itemQty = new TextView(this);
 			TextView itemPrice = new TextView(this);
-			itemName.setText(mReceipt.getItem(i).getName());
+			
+			final String name = mReceipt.getItem(i).getName();
+			itemName.setText(name);
 			itemName.setTextColor(getResources().getColor(R.color.black));
 			itemName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			itemName.setWidth(170);
+			
+			itemName.setLines(1);
+			itemName.setClickable(true);
+			itemName.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(TagView.this, name, Toast.LENGTH_SHORT).show();
+				}
+			});
+			
 			itemQty.setText(String.valueOf(mReceipt.getItem(i).getQty()));
 			itemQty.setTextColor(getResources().getColor(R.color.black));
 			itemQty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 			itemQty.setGravity(Gravity.RIGHT);
 			itemQty.setPadding(0, 0, 10, 0);
+			
 			itemPrice.setText(String.valueOf(mReceipt.getItem(i).getPrice()));
 			itemPrice.setTextColor(getResources().getColor(R.color.black));
 			itemPrice.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 			itemPrice.setGravity(Gravity.RIGHT);
 			itemPrice.setPadding(0, 0, 10, 0);
+			
 			row2.addView(itemName);
 			row2.addView(itemQty);
 			row2.addView(itemPrice);

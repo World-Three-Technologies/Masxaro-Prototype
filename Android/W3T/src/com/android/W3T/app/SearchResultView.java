@@ -3,6 +3,7 @@ package com.android.W3T.app;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.android.W3T.app.nfc.TagView;
 import com.android.W3T.app.rmanager.Receipt;
 import com.android.W3T.app.rmanager.ReceiptsManager;
 
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SearchResultView extends Activity implements OnClickListener {
 	public static final String TAG = "SearchResultViewActivity";
@@ -122,19 +124,34 @@ public class SearchResultView extends Activity implements OnClickListener {
 			TextView itemName = new TextView(this);
 			TextView itemQty = new TextView(this);
 			TextView itemPrice = new TextView(this);
-			itemName.setText(mReceipt.getItem(i).getName());
+			
+			final String name = mReceipt.getItem(i).getName();
+			itemName.setText(name);
 			itemName.setTextColor(getResources().getColor(R.color.black));
 			itemName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+			itemName.setWidth(170);
+			
+			itemName.setLines(1);
+			itemName.setClickable(true);
+			itemName.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(SearchResultView.this, name, Toast.LENGTH_SHORT).show();
+				}
+			});
+			
 			itemQty.setText(String.valueOf(mReceipt.getItem(i).getQty()));
 			itemQty.setTextColor(getResources().getColor(R.color.black));
 			itemQty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 			itemQty.setGravity(Gravity.RIGHT);
 			itemQty.setPadding(0, 0, 10, 0);
+			
 			itemPrice.setText(String.valueOf(mReceipt.getItem(i).getPrice()));
 			itemPrice.setTextColor(getResources().getColor(R.color.black));
 			itemPrice.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 			itemPrice.setGravity(Gravity.RIGHT);
 			itemPrice.setPadding(0, 0, 10, 0);
+			
 			row2.addView(itemName);
 			row2.addView(itemQty);
 			row2.addView(itemPrice);
