@@ -90,7 +90,7 @@ public class ReceiptsView extends Activity implements OnClickListener,
         }  
 	};
 	private Runnable mReceiptThread = new Runnable() {
-		@Override
+//GJP		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
 			// Download latest 7 receipts from database and upload non-uploaded receipts
@@ -126,8 +126,8 @@ public class ReceiptsView extends Activity implements OnClickListener,
 		
 		((LinearLayout) findViewById(R.id.receipt_view)).setOnTouchListener(this);
 		((LinearLayout) findViewById(R.id.receipt_view)).setLongClickable(true);
-		((ScrollView) findViewById(R.id.fling)).setOnTouchListener(this);
-		((ScrollView) findViewById(R.id.fling)).setLongClickable(true);
+//GJP		((ScrollView) findViewById(R.id.fling)).setOnTouchListener(this);
+//GJP		((ScrollView) findViewById(R.id.fling)).setLongClickable(true);
 		mGestureDetector = new GestureDetector(this);
 		
 		mItemsTable = (TableLayout) findViewById(R.id.items_table);
@@ -141,7 +141,7 @@ public class ReceiptsView extends Activity implements OnClickListener,
 		fillReceiptView(id);
 	}
 	
-	@Override
+//GJP	@Override
 	public void onClick(View v) {
 		if (v == mSyncBtn) {
 			Log.i(TAG, "handler post a new thread");
@@ -241,10 +241,12 @@ public class ReceiptsView extends Activity implements OnClickListener,
 			itemName.setLines(1);
 			itemName.setClickable(true);
 			itemName.setOnClickListener(new OnClickListener() {
-				@Override
+
+//GJP				@Override
 				public void onClick(View v) {
 					Toast.makeText(ReceiptsView.this, name, Toast.LENGTH_SHORT).show();
 				}
+				
 			});
 			
 			itemQty.setText(String.valueOf(ReceiptsManager.getReceipt(num).getItem(i).getQty()));
@@ -278,19 +280,19 @@ public class ReceiptsView extends Activity implements OnClickListener,
 		finish();
 	}
 
-	@Override
+//GJP	@Override
 	public boolean onTouch(View v, MotionEvent e) {
 		// OnGestureListener will analyzes the given motion event
 		return mGestureDetector.onTouchEvent(e);
 	}
 
-	@Override
+//GJP	@Override
 	public boolean onDown(MotionEvent e) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+//GJP	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
 		if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE
@@ -308,26 +310,26 @@ public class ReceiptsView extends Activity implements OnClickListener,
 		return false;
 	}
 
-	@Override
+//GJP	@Override
 	public void onLongPress(MotionEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+//GJP	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
 			float distanceY) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+//GJP	@Override
 	public void onShowPress(MotionEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+//GJP	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
 		// TODO Auto-generated method stub
 		return false;

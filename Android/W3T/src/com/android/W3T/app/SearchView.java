@@ -119,7 +119,7 @@ public class SearchView extends Activity implements OnClickListener {
         }  
 	};
 	private Runnable mSearchThread = new Runnable() {
-		@Override
+//GJP		@Override
 		public void run() {
 			String text = mSearchTerms.getText().toString();
 			String[] terms;
@@ -175,7 +175,7 @@ public class SearchView extends Activity implements OnClickListener {
 		}
 	};
 	private Runnable mDownloadThread = new Runnable() {
-		@Override
+//GJP		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
 			String detailstr = null;
@@ -223,7 +223,7 @@ public class SearchView extends Activity implements OnClickListener {
 		super.onResume();
 	}
 	
-	@Override
+//GJP	@Override
 	public void onClick(View v) {
 		if (v == mSearchBtn) {
 			// Show a progress bar and do the search.
@@ -247,14 +247,14 @@ public class SearchView extends Activity implements OnClickListener {
 	    mSearchBySpinner.setAdapter(adapter1);
 	    
 	    mSearchBySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
+//GJP			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 				mSearchBy = pos;
 				Toast.makeText(parent.getContext(), "Search By " + parent.getItemAtPosition(pos).toString()
 						, Toast.LENGTH_SHORT).show();
 			}
 
-			@Override
+//GJP			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				
 			}
@@ -268,7 +268,7 @@ public class SearchView extends Activity implements OnClickListener {
 	    mSearchRangeSpinner.setAdapter(adapter2);
 	    
 	    mSearchRangeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
+//GJP			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 				setDateRange(pos);
 				if (pos < 4) {
@@ -278,14 +278,14 @@ public class SearchView extends Activity implements OnClickListener {
 						View range =((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.search_range_view, null);
 						mStartText = (EditText) range.findViewById(R.id.start_date);
 						mStartText.setOnClickListener(new OnClickListener() {
-							@Override
+//GJP							@Override
 							public void onClick(View v) {
 								showDialog(START_DATE_DIALOG_ID);
 							}
 						});
 						mEndText = (EditText) range.findViewById(R.id.end_date);
 						mEndText.setOnClickListener(new OnClickListener() {
-							@Override
+//GJP							@Override
 							public void onClick(View v) {
 								showDialog(END_DATE_DIALOG_ID);
 							}
@@ -297,7 +297,7 @@ public class SearchView extends Activity implements OnClickListener {
 						, Toast.LENGTH_SHORT).show();
 			}
 
-			@Override
+//GJP			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				
 			}
@@ -379,13 +379,15 @@ public class SearchView extends Activity implements OnClickListener {
 	        ResultListAdapter listAdapter = new ResultListAdapter(this, listItem, 
 	            R.layout.search_result_entry,
 	            new String[] {TITLE_TEXT, TIME_TEXT, CURRENCY_TEXT, TOTAL_TEXT},   
-	            new int[] {R.id.list_search_title,R.id.list_search_time, R.id.list_search_currency, R.id.list_search_total}
+	            new int[] {R.id.list_search_title,R.id.list_search_time
+//GJP	        		, R.id.list_search_currency
+	        		, R.id.list_search_total}
 	        );
 	        
 	        mResultList.setAdapter(listAdapter);
 	        
 	        mResultList.setOnItemClickListener(new OnItemClickListener() {  
-	  			@Override
+//GJP	  			@Override
 				public void onItemClick(AdapterView<?> parent, View view, int pos,
 						long id) {
 	  				mId = basics.get(pos-1).getId();
@@ -410,7 +412,7 @@ public class SearchView extends Activity implements OnClickListener {
 	    case START_DATE_DIALOG_ID:
 	        return new DatePickerDialog(this,
 	                    new OnDateSetListener() {
-							@Override
+//GJP							@Override
 							public void onDateSet(DatePicker view, int year,
 									int monthOfYear, int dayOfMonth) {
 								mStartDate = new StringBuilder()
@@ -425,7 +427,7 @@ public class SearchView extends Activity implements OnClickListener {
 	    case END_DATE_DIALOG_ID:
 	        return new DatePickerDialog(this,
 		        		new OnDateSetListener() {
-							@Override
+//GJP							@Override
 							public void onDateSet(DatePicker view, int year,
 									int monthOfYear, int dayOfMonth) {
 								Calendar c = Calendar.getInstance();

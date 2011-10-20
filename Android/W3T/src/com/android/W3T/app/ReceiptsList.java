@@ -88,7 +88,7 @@ public class ReceiptsList extends Activity implements OnClickListener {
         }
 	};
 	private Runnable mReceiptThread = new Runnable() {
-		@Override
+//GJP		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
 			// Download latest 7 receipts from database and upload non-uploaded receipts
@@ -178,7 +178,7 @@ public class ReceiptsList extends Activity implements OnClickListener {
         mList.setAdapter(listAdapter);
         
         mList.setOnItemClickListener(new OnItemClickListener() {  
-  			@Override
+//GJP  			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos,
 					long id) {
   				final Intent receipt_view_intent = new Intent(ReceiptsList.this, ReceiptsView.class);
@@ -190,7 +190,7 @@ public class ReceiptsList extends Activity implements OnClickListener {
         });
 	}
 	
-	@Override
+//GJP	@Override
 	public void onClick(View v) {
 		if (v == mSyncBtn) {
 			Log.i(TAG, "handler post a new thread");

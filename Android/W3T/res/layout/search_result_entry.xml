@@ -29,32 +29,25 @@
     android:layout_width="fill_parent" android:layout_height="30dip"
     android:layout_marginTop="5dip" android:layout_marginBottom="5dip"
 >
-    <TextView android:textSize="15sp"
+    <TextView android:textSize="15sp" android:textColor="@color/purple"
         android:id="@+id/list_search_title"
         android:layout_alignParentLeft="true"
-        android:layout_width="150dip" android:layout_height="fill_parent"
+        android:layout_width="wrap_content" android:layout_height="fill_parent"
         android:gravity="center"
     />
     
-    <TextView android:textSize="15sp"
+    <TextView android:textSize="13sp"
         android:id="@+id/list_search_time"
         android:layout_toRightOf="@id/list_search_title"
-        android:layout_width="90dip" android:layout_height="fill_parent"
-        android:gravity="center_vertical"
-    />
-    
-    <TextView android:textSize="13sp"
-        android:id="@+id/list_search_currency"
-        android:layout_toRightOf="@id/list_search_time"
-        android:layout_width="15dip" android:layout_height="fill_parent"
-        android:gravity="center_vertical"
+        android:layout_width="150dip" android:layout_height="fill_parent"
+        android:gravity="center"
     />
 
     <TextView android:textSize="15sp"
         android:id="@+id/list_search_total"
-        android:layout_toRightOf="@id/list_search_currency"
+        android:layout_toRightOf="@id/list_search_time"
         android:layout_width="fill_parent" android:layout_height="fill_parent"
-        android:gravity="center_vertical"
+        android:gravity="center"
     />
 
 </RelativeLayout>

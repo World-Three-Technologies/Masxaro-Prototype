@@ -40,19 +40,18 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class EmptyView extends Activity implements OnClickListener{
-	public static final String TAG = "EmptyViewActivity";
-	// Network parameter: receiving latest receipts from server.
+public static final String TAG = "EmptyViewActivity";
+	
 	private static final String RECEIVE_ALL = NetworkUtil.METHOD_RECEIVE_ALL;
-	// Receipt location flag: from the server.
+	
 	private static final boolean FROM_DB = ReceiptsManager.FROM_DB;
-	// for Message's what variable.
+	
 	private static final int SYNC_MESSAGE = 1;
-	// Buttons on this activity.
+	
 	private Button mSyncBtn;
 	private Button mBackMainBtn;
-	// Synchronize progress dialog
+	
 	private ProgressDialog mSyncProgress;
-	// Synchronize handler.
 	private Handler mUpdateHandler = new Handler() {
         public void handleMessage(Message msg) {  
             super.handleMessage(msg);  
@@ -64,9 +63,8 @@ public class EmptyView extends Activity implements OnClickListener{
             }  
         }  
 	};
-	// Synchronize Runnable.
 	private Runnable mReceiptThread = new Runnable() {
-		@Override
+//GJP		@Override
 		public void run() {
 			Log.i(TAG, "retrieve receipts from database");
 			// Download latest 7 receipts from database and upload non-uploaded receipts
@@ -107,7 +105,7 @@ public class EmptyView extends Activity implements OnClickListener{
 		mBackMainBtn.setOnClickListener(this);
 	}
 	
-	@Override
+//GJP	@Override
 	public void onClick(View v) {
 		if (v == mSyncBtn) {
 			Log.i(TAG, "handler post a new thread");

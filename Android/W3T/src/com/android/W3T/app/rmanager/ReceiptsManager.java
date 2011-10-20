@@ -54,7 +54,8 @@ public class ReceiptsManager {
 	public static final int PARAM_ID = 9;
 	
 	public final static int[] ReceiptViewElements = {
-		R.id.store_name_txt, R.id.time_txt, R.id.id_txt, R.id.tax_txt ,R.id.total_cost_txt, R.id.currency_txt
+		R.id.store_name_txt, R.id.time_txt, R.id.id_txt, R.id.tax_txt ,R.id.total_cost_txt
+//GJP		, R.id.currency_txt
 	};
 	
 	// This array stores all receipts in mobile app.

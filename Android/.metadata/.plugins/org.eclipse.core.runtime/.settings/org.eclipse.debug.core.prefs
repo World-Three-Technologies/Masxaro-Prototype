@@ -1,3 +1,0 @@
-#Tue Jun 07 18:28:15 CST 2011
-prefWatchExpressions=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\r\n<watchExpressions>\r\n<expression enabled\="true" text\="item.getItemId()"/>\r\n</watchExpressions>\r\n
-eclipse.preferences.version=1

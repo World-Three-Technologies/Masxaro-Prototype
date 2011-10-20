@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="hello">Hello World, main!</string>
-    <string name="app_name">W3T_app</string>
-    <string name="user_info_title">User Info</string>
-    <string name="logging_in_title">Logging In</string>
-</resources>

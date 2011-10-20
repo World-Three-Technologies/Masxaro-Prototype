@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">W3T_app</string>
-    <string name="main_login_user">Username</string>
-    <string name="main_login_password">Password</string>
-</resources>

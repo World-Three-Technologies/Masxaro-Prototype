@@ -28,7 +28,6 @@ package com.android.W3T.app.nfc;
 import com.android.W3T.app.NfcConnecting;
 import com.android.W3T.app.R;
 import com.android.W3T.app.ReceiptsList;
-import com.android.W3T.app.ReceiptsView;
 import com.android.W3T.app.network.NetworkUtil;
 import com.android.W3T.app.rmanager.*;
 import com.android.W3T.app.user.UserProfile;
@@ -70,7 +69,8 @@ public class TagView extends Activity {
 	private int mNumItemsInLast;
 	
 	private int[] ReceiptViewElements = {
-		R.id.tag_store_name_txt, R.id.tag_time_txt, R.id.tag_id_txt, R.id.tag_tax_txt ,R.id.tag_total_cost_txt, R.id.tag_currency_txt
+		R.id.tag_store_name_txt, R.id.tag_time_txt, R.id.tag_id_txt, R.id.tag_tax_txt ,R.id.tag_total_cost_txt
+//GJP		, R.id.tag_currency_txt
 	};
 	
 	private ProgressDialog mUploadProgress;
@@ -121,7 +121,7 @@ public class TagView extends Activity {
 	        
 	        mRejectBtn = (Button)findViewById(R.id.receipt_reject_btn);
 	        mRejectBtn.setOnClickListener(new OnClickListener() {
-				@Override
+//GJP				@Override
 				public void onClick(View v) {
 					final Intent nfc_intent = new Intent(TagView.this, NfcConnecting.class);
 					nfc_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -131,7 +131,7 @@ public class TagView extends Activity {
 	        });
 	        mConfirmBtn = (Button)findViewById(R.id.receipt_confirm_btn);
 	        mConfirmBtn.setOnClickListener(new OnClickListener() {
-				@Override
+//GJP				@Override
 				public void onClick(View v) {
 					mUploadProgress = new ProgressDialog(TagView.this);
 					mUploadProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -237,34 +237,19 @@ public class TagView extends Activity {
 			TextView itemName = new TextView(this);
 			TextView itemQty = new TextView(this);
 			TextView itemPrice = new TextView(this);
-			
-			final String name = mReceipt.getItem(i).getName();
-			itemName.setText(name);
+			itemName.setText(mReceipt.getItem(i).getName());
 			itemName.setTextColor(getResources().getColor(R.color.black));
 			itemName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-			itemName.setWidth(170);
-			
-			itemName.setLines(1);
-			itemName.setClickable(true);
-			itemName.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Toast.makeText(TagView.this, name, Toast.LENGTH_SHORT).show();
-				}
-			});
-			
 			itemQty.setText(String.valueOf(mReceipt.getItem(i).getQty()));
 			itemQty.setTextColor(getResources().getColor(R.color.black));
 			itemQty.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 			itemQty.setGravity(Gravity.RIGHT);
 			itemQty.setPadding(0, 0, 10, 0);
-			
 			itemPrice.setText(String.valueOf(mReceipt.getItem(i).getPrice()));
 			itemPrice.setTextColor(getResources().getColor(R.color.black));
 			itemPrice.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 			itemPrice.setGravity(Gravity.RIGHT);
 			itemPrice.setPadding(0, 0, 10, 0);
-			
 			row2.addView(itemName);
 			row2.addView(itemQty);
 			row2.addView(itemPrice);

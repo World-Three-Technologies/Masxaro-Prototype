@@ -28,12 +28,12 @@
     <string-array name="search_by">
         <item>Store or Item</item>
         <item>Tag</item>
+        <item>Date</item>
     </string-array>
     <string-array name="search_range">
         <item>Last 7 days</item>
         <item>Last 14 days</item>
         <item>Last 1 month</item>
         <item>Last 3 months</item>
-        <item>Custom</item>
     </string-array>
 </resources>
