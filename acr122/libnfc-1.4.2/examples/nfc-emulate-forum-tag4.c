@@ -66,7 +66,7 @@
 #include "nfc-utils.h"
 
 #define MAX_FRAME_LEN 		264
-#define NDEF_DESC_LEN 		7    // 1+1+4+1 header+typelen+payloadlen+type
+#define NDEF_DESC_LEN 		20   // 1+1+4+14 header(1)+typelen(1)+payloadlen(4)+type(14)
 #define NDEF_NLEN     		2    // NLEN of the NDEF msg
 #define MAX_SEND_PAYLOAD   	0xfb
 #define HIGH_BYTE_FLAG     	1
@@ -126,21 +126,34 @@ char* get_hi_lo(char *num, int flag) {
 void send_ndef_msg_header(int record, int msg, char *data) {
   byte_t *send_data;
   int i;
-    
+  //printf("header...\n");
   if (record > MAX_SEND_PAYLOAD) {
     send_data = (byte_t *) malloc(MAX_SEND_PAYLOAD*sizeof(byte_t));
-    send_data[0] = (byte_t) ((0xff00 & msg) >> 8);					// NLEN high byte
-    send_data[1] = (byte_t) (0xff & msg);	    					// NLEN low byte
-    send_data[2] = 0xc1;											// Mb, Mc etc.
-    send_data[3] = 0x01;											// type length
-    send_data[4] = 0x00;											// payload 3
-    send_data[5] = 0x00;											// payload 2
+    send_data[0] = (byte_t) ((0xff00 & msg) >> 8);			// NLEN high byte
+    send_data[1] = (byte_t) (0xff & msg);	    			// NLEN low byte
+    send_data[2] = 0xc4;						// 1110, 0100.
+    send_data[3] = 0x0e;						// type length 14
+    send_data[4] = 0x00;						// payload 3
+    send_data[5] = 0x00;						// payload 2
     send_data[6] = (byte_t) ((0xff00 & (msg-NDEF_DESC_LEN)) >> 8);	// payload 1
-    send_data[7] = (byte_t) (0xff & (msg-NDEF_DESC_LEN));			// payload 0
-    send_data[8] = 0x54;											// type 't'
-    send_data[9] = 0x02;											// start of text
-    for (i = 10;i<MAX_SEND_PAYLOAD;i++) {
-	  send_data[i] = (byte_t) data[i-10];
+    send_data[7] = (byte_t) (0xff & (msg-NDEF_DESC_LEN));		// payload 0
+send_data[8] = 0x6d;						// type 'm'
+send_data[9] = 0x61;						// type 'a'
+send_data[10] = 0x73;						// type 's'
+send_data[11] = 0x78;						// type 'x'
+send_data[12] = 0x61;						// type 'a'
+send_data[13] = 0x72;						// type 'r'
+send_data[14] = 0x6f;						// type 'o'
+send_data[15] = 0x2e;						// type '.'
+send_data[16] = 0x63;						// type 'c'
+send_data[17] = 0x6f;						// type 'o'
+send_data[18] = 0x6d;						// type 'm'
+send_data[19] = 0x3a;						// type ':'
+send_data[20] = 0x6d;						// type 'm'
+send_data[21] = 0x64;						// type 'd'
+   // send_data[22] = 0x02;						// UTF-8 and 2 byte long iso "en"
+    for (i = 22;i<MAX_SEND_PAYLOAD;i++) {
+	  send_data[i] = (byte_t) data[i-22];
       //printf("%02x ", send_data[i]);
     }
     send_data[i++] = 0x90;
@@ -150,7 +163,39 @@ void send_ndef_msg_header(int record, int msg, char *data) {
     free(send_data);
   }
   else {
-	/*
+    send_data = (byte_t *) malloc(MAX_SEND_PAYLOAD*sizeof(byte_t));
+    send_data[0] = (byte_t) ((0xff00 & msg) >> 8);			// NLEN high byte
+    send_data[1] = (byte_t) (0xff & msg);	    			// NLEN low byte
+    send_data[2] = 0xc4;						// 1110, 0100.
+    send_data[3] = 0x0e;						// type length 14
+    send_data[4] = 0x00;						// payload 3
+    send_data[5] = 0x00;						// payload 2
+    send_data[6] = (byte_t) ((0xff00 & (msg-NDEF_DESC_LEN)) >> 8);	// payload 1
+    send_data[7] = (byte_t) (0xff & (msg-NDEF_DESC_LEN));		// payload 0
+    send_data[8] = 0x6d;						// type 'm'
+send_data[9] = 0x61;						// type 'a'
+send_data[10] = 0x73;						// type 's'
+send_data[11] = 0x78;						// type 'x'
+send_data[12] = 0x61;						// type 'a'
+send_data[13] = 0x72;						// type 'r'
+send_data[14] = 0x6f;						// type 'o'
+send_data[15] = 0x2e;						// type '.'
+send_data[16] = 0x63;						// type 'c'
+send_data[17] = 0x6f;						// type 'o'
+send_data[18] = 0x6d;						// type 'm'
+send_data[19] = 0x3a;						// type ':'
+send_data[20] = 0x6d;						// type 'm'
+send_data[21] = 0x64;						// type 'd'		// type 'm'
+for (i = 22;i<record;i++) {
+	  send_data[i] = (byte_t) data[i-22];
+      //printf("%02x ", send_data[i]);
+    }	
+send_data[i++] = 0x90;
+    send_data[i] = 0x00;
+    send_bytes(send_data,record+2);
+    free(send_data);
+
+/*
 	send_data = (byte_t *) malloc(MAX_SEND_PAYLOAD*sizeof(byte_t));
     send_data[0] = 0x00;						// NLEN high byte
     send_data[1] = (byte_t) (0xff & msg);	    // NLEN low byte
@@ -182,7 +227,7 @@ void send_ndef_rest_msg(int file_sz, char *data) {
   int start = MAX_SEND_PAYLOAD - NDEF_DESC_LEN - NDEF_NLEN;
   int rest = file_sz - start;
   int i;
-  
+  //printf("rest %d", rest);
   while (rest > 0) {
 	receive_bytes();
 	if (rest > MAX_SEND_PAYLOAD) {
@@ -223,7 +268,7 @@ main (int argc, char *argv[])
   
   filename = (char *) malloc(10*sizeof(char));
   fflush(stdin);
-  printf("Please load receipt:\n");
+  printf("Please load a receipt:\n");
   gets(filename);
   
   if ((fp = fopen(filename, "r")) == NULL) {
@@ -299,7 +344,7 @@ main (int argc, char *argv[])
 //= ReadBinary CC
 //We send CC + OK
 //The possible NDEF msg size is 0x0ffe.
-  send_bytes((const byte_t*)"\x00\x0f\x20\x0f\xfe\x00\x34\x04\x06\xe1\x04\x0f\xfe\x00\xff\x90\x00",17);
+  send_bytes((const byte_t*)"\x00\x0f\x20\x05\xfe\x00\x34\x04\x06\xe1\x04\x05\xfe\x00\x00\x90\x00",17);
   receive_bytes();
 //Receiving data: 00  a4  00  00  02  e1  04
 //= Select NDEF
@@ -310,8 +355,8 @@ main (int argc, char *argv[])
 //Sent NDEF file Length, the length includes the NLEN and NDEF msg
 //The NLEN is the real NDEF msg, not the whole file.
   byte_t t[4];
-  t[0] = (byte_t) ((0xff00 & ndef_record_sz) >> 8);
-  t[1] = (byte_t) (0xff & ndef_record_sz);
+  t[0] = (byte_t) ((0xff00 & ndef_record_sz) >> 8);	// ndef_record_sz = ndef_file_sz + NDEF_NLEN + NDEF_DESC_LEN;
+  t[1] = (byte_t) (0xff & ndef_record_sz);		// ndef_msg_sz = ndef_file_sz + NDEF_DESC_LEN;
   t[2] = 0x90;
   t[3] = 0x00;
   send_bytes(t,4);

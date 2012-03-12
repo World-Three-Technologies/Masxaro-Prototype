@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+/*
+ * strings.xml - All String const used in app  
+ *
+ *  Copyright 2011 World Three Technologies, Inc. 
+ *  All Rights Reserved.
+ * 
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Written by Yichao Yu <yichao@Masxaro>
+ *
+ */
+ -->
+<resources>
+    <string name="app_name">Masxaro</string>
+    <string name="fp_not_login">Not Login</string><string name="login_username_lab">Username:</string>
+    <string name="login_password_lab">Password:</string>
+    <string name="login_submit_btn">Submit</string>
+    <string name="login_cancel_btn">Cancel</string>
+    <string name="login_keep_lab">Dont ask me next time</string>
+    <string name="receipt_info_id_lab">Receipt ID:</string>
+    
+    <string name="receipt_info_item_discount_lab">Discount:</string><string name="receipt_info_item_id_lab">Item:</string><string name="receipt_info_item_price_lab">Price:</string><string name="receipt_info_item_qty_lab">Qty:</string><string name="receipt_info_total_lab">Total Cost:</string><string name="nfc_txt">NFC Communicating</string>
+    <string name="logout_promote">Do you want to log out?</string>
+    <string name="receipt_confirm_btn">Accept</string>
+    <string name="receipt_reject_btn">Reject</string>
+    <string name="receipt_info_tax_lab">Tax:</string>
+    <string name="empty_receipt">No Receipts. Please Refresh.</string>
+    <string name="masxaro_email">\uff20Masxaro.com</string>
+    <string name="search_by_prompt">Search By</string><string name="search_range_prompt">Search Range</string>
+    <string name="receipt_list_merchant">Merchant</string>
+    <string name="receipt_list_date">Date/Time</string>
+    <string name="receipt_list_title">Lastest Receipts</string>
+    
+    
+    
+    
+    
+    
+    
+</resources>
