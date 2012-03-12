@@ -26,7 +26,7 @@
 #define HAVE_MEMSET 1
 
 /* define if you have readline */
-#define HAVE_READLINE 1
+/* #undef HAVE_READLINE */
 
 /* Define to 1 if you have the `select' function. */
 #define HAVE_SELECT 1
@@ -123,7 +123,7 @@
 #define STDC_HEADERS 1
 
 /* SVN revision */
-#define SVN_REVISION "891"
+#define SVN_REVISION "exported"
 
 /* Version number of package */
 #define VERSION "1.4.2"

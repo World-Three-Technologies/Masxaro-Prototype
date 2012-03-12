@@ -13,205 +13,110 @@
 
 m4_ifndef([AC_AUTOCONF_VERSION],
   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
-m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.67],,
-[m4_warning([this file was generated for autoconf 2.67.
+m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.68],,
+[m4_warning([this file was generated for autoconf 2.68.
 You have another version of autoconf.  It may work, but is not guaranteed to.
 If you have problems, you may need to regenerate the build system entirely.
 To do so, use the procedure documented by the package, typically `autoreconf'.])])
 
-AC_DEFUN([AC_CHECK_ENABLE_COVERAGE],
-[
-  AC_ARG_ENABLE([coverage],
-                AS_HELP_STRING([--enable-coverage],
-                               [Enable coverage]),
-                [cutter_enable_coverage=$enableval],
-                [cutter_enable_coverage=no])
-  if test "x$cutter_enable_coverage" != "xno"; then
-    ltp_version_list="1.6 1.7 1.8 1.9"
-    AC_PATH_TOOL(LCOV, lcov)
-    AC_PATH_TOOL(GENHTML, genhtml)
+# lt~obsolete.m4 -- aclocal satisfying obsolete definitions.    -*-Autoconf-*-
+#
+#   Copyright (C) 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
+#   Written by Scott James Remnant, 2004.
+#
+# This file is free software; the Free Software Foundation gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
 
-    if test -x "$LCOV"; then
-      AC_CACHE_CHECK([for ltp version],
-                     cutter_cv_ltp_version,
-                     [
-        ltp_version=`$LCOV -v 2>/dev/null | $SED -e 's/^.* //'`
-        cutter_cv_ltp_version="$ltp_version (NG)"
-        for ltp_check_version in $ltp_version_list; do
-          if test "$ltp_version" = "$ltp_check_version"; then
-            cutter_cv_ltp_version="$ltp_check_version (ok)"
-          fi
-        done
-      ])
-    fi
+# serial 5 lt~obsolete.m4
 
-    case "$cutter_cv_ltp_version" in
-      *\(ok\)*)
-        cutter_enable_coverage=yes
-        ;;
-      *)
-        cutter_enable_coverage=no
-        ;;
-    esac
-  fi
-  AC_MSG_CHECKING([for enabling coverage])
-  AC_MSG_RESULT($cutter_enable_coverage)
-])
+# These exist entirely to fool aclocal when bootstrapping libtool.
+#
+# In the past libtool.m4 has provided macros via AC_DEFUN (or AU_DEFUN)
+# which have later been changed to m4_define as they aren't part of the
+# exported API, or moved to Autoconf or Automake where they belong.
+#
+# The trouble is, aclocal is a bit thick.  It'll see the old AC_DEFUN
+# in /usr/share/aclocal/libtool.m4 and remember it, then when it sees us
+# using a macro with the same name in our local m4/libtool.m4 it'll
+# pull the old libtool.m4 in (it doesn't see our shiny new m4_define
+# and doesn't know about Autoconf macros at all.)
+#
+# So we provide this file, which has a silly filename so it's always
+# included after everything else.  This provides aclocal with the
+# AC_DEFUNs it wants, but when m4 processes it, it doesn't do anything
+# because those macros already exist, or will be overwritten later.
+# We use AC_DEFUN over AU_DEFUN for compatibility with aclocal-1.6. 
+#
+# Anytime we withdraw an AC_DEFUN or AU_DEFUN, remember to add it here.
+# Yes, that means every name once taken will need to remain here until
+# we give up compatibility with versions before 1.7, at which point
+# we need to keep only those names which we still refer to.
 
-AC_DEFUN([AC_CHECK_COVERAGE],
-[
-  ac_check_coverage_makefile=$1
-  if test -z "$ac_check_coverage_makefile"; then
-    ac_check_coverage_makefile=Makefile
-  fi
-  AC_SUBST(ac_check_coverage_makefile)
+# This is to help aclocal find these macros, as it can't see m4_define.
+AC_DEFUN([LTOBSOLETE_VERSION], [m4_if([1])])
 
-  AC_CHECK_ENABLE_COVERAGE
-
-  COVERAGE_CFLAGS=
-  if test "$cutter_enable_coverage" = "yes"; then
-    COVERAGE_CFLAGS="--coverage"
-  fi
-  AC_SUBST(COVERAGE_CFLAGS)
-  AM_CONDITIONAL([ENABLE_COVERAGE], [test "$cutter_enable_coverage" = "yes"])
-
-  COVERAGE_INFO_FILE="coverage.info"
-  AC_SUBST(COVERAGE_INFO_FILE)
-
-  COVERAGE_REPORT_DIR="coverage"
-  AC_SUBST(COVERAGE_REPORT_DIR)
-
-  if test "$GENHTML_OPTIONS" = ""; then
-    GENHTML_OPTIONS=""
-  fi
-  AC_SUBST(GENHTML_OPTIONS)
-
-  if test "$cutter_enable_coverage" = "yes"; then
-    AC_CONFIG_COMMANDS([coverage], [
-      if test -e "$ac_check_coverage_makefile" && \
-         grep -q '^coverage:' $ac_check_coverage_makefile; then
-        : # do nothing
-      else
-        sed -e 's/^        /	/g' <<EOS >>$ac_check_coverage_makefile
-.PHONY: coverage-clean coverage-report coverage coverage-force
-
-coverage-clean:
-	\$(LCOV) --compat-libtool --zerocounters --directory . \\
-	  --output-file \$(COVERAGE_INFO_FILE)
-
-coverage-report:
-	\$(LCOV) --compat-libtool --directory . \\
-	  --capture --output-file \$(COVERAGE_INFO_FILE)
-	\$(LCOV) --compat-libtool --directory . \\
-	  --extract \$(COVERAGE_INFO_FILE) "\`(cd '\$(top_srcdir)'; pwd)\`/*" \\
-	  --output-file \$(COVERAGE_INFO_FILE)
-	\$(GENHTML) --highlight --legend \\
-	  --output-directory \$(COVERAGE_REPORT_DIR) \\
-	  --prefix "\`(cd '\$(top_srcdir)'; pwd)\`" \\
-	  \$(GENHTML_OPTIONS) \$(COVERAGE_INFO_FILE)
-
-coverage: coverage-clean check coverage-report
-
-coverage-force:
-	\$(MAKE) \$(AM_MAKEFLAGS) coverage-clean
-	\$(MAKE) \$(AM_MAKEFLAGS) check || :
-	\$(MAKE) \$(AM_MAKEFLAGS) coverage-report
-EOS
-      fi
-    ],
-    [ac_check_coverage_makefile="$ac_check_coverage_makefile"])
-  fi
-])
-
-AC_DEFUN([AC_CHECK_CUTTER],
-[
-  AC_ARG_WITH([cutter],
-              AS_HELP_STRING([--with-cutter],
-                             [Use Cutter (default: auto)]),
-              [cutter_with_value=$withval],
-              [cutter_with_value=auto])
-  if test -z "$cutter_use_cutter"; then
-    if test "x$cutter_with_value" = "xno"; then
-      cutter_use_cutter=no
-    else
-      PKG_CHECK_MODULES(CUTTER, cutter $1,
-                        [cutter_use_cutter=yes],
-                        [cutter_use_cutter=no])
-    fi
-  fi
-  if test "$cutter_use_cutter" != "no"; then
-    _PKG_CONFIG(CUTTER, variable=cutter, cutter)
-    CUTTER=$pkg_cv_CUTTER
-  fi
-  ac_cv_use_cutter="$cutter_use_cutter" # for backward compatibility
-  AC_SUBST([CUTTER_CFLAGS])
-  AC_SUBST([CUTTER_LIBS])
-  AC_SUBST([CUTTER])
-])
-
-AC_DEFUN([AC_CHECK_GCUTTER],
-[
-  AC_CHECK_CUTTER($1)
-  if test "$cutter_use_cutter" = "no"; then
-    cutter_use_gcutter=no
-  fi
-  if test "x$cutter_use_gcutter" = "x"; then
-    PKG_CHECK_MODULES(GCUTTER, gcutter $1,
-                      [cutter_use_gcutter=yes],
-                      [cutter_use_gcutter=no])
-  fi
-  ac_cv_use_gcutter="$cutter_use_gcutter" # for backward compatibility
-  AC_SUBST([GCUTTER_CFLAGS])
-  AC_SUBST([GCUTTER_LIBS])
-])
-
-AC_DEFUN([AC_CHECK_CPPCUTTER],
-[
-  AC_CHECK_CUTTER($1)
-  if test "$cutter_use_cutter" = "no"; then
-    cutter_use_cppcutter=no
-  fi
-  if test "x$cutter_use_cppcutter" = "x"; then
-    PKG_CHECK_MODULES(CPPCUTTER, cppcutter $1,
-                      [cutter_use_cppcutter=yes],
-                      [cutter_use_cppcutter=no])
-  fi
-  ac_cv_use_cppcutter="$cutter_use_cppcutter" # for backward compatibility
-  AC_SUBST([CPPCUTTER_CFLAGS])
-  AC_SUBST([CPPCUTTER_LIBS])
-])
-
-AC_DEFUN([AC_CHECK_GDKCUTTER_PIXBUF],
-[
-  AC_CHECK_GCUTTER($1)
-  if test "$cutter_use_cutter" = "no"; then
-    cutter_use_gdkcutter_pixbuf=no
-  fi
-  if test "x$cutter_use_gdkcutter_pixbuf" = "x"; then
-    PKG_CHECK_MODULES(GDKCUTTER_PIXBUF, gdkcutter-pixbuf $1,
-                      [cutter_use_gdkcutter_pixbuf=yes],
-                      [cutter_use_gdkcutter_pixbuf=no])
-  fi
-  ac_cv_use_gdkcutter_pixbuf="$cutter_use_gdkcutter_pixbuf" # for backward compatibility
-  AC_SUBST([GDKCUTTER_PIXBUF_CFLAGS])
-  AC_SUBST([GDKCUTTER_PIXBUF_LIBS])
-])
-
-AC_DEFUN([AC_CHECK_SOUPCUTTER],
-[
-  AC_CHECK_GCUTTER($1)
-  if test "$cutter_use_cutter" = "no"; then
-    cutter_use_soupcutter=no
-  fi
-  if test "$cutter_use_soupcutter" != "no"; then
-    PKG_CHECK_MODULES(SOUPCUTTER, soupcutter $1,
-                      [cutter_use_soupcutter=yes],
-		      [cutter_use_soupcutter=no])
-  fi
-  ac_cv_use_soupcutter="$cutter_use_soupcutter" # for backward compatibility
-  AC_SUBST([SOUPCUTTER_CFLAGS])
-  AC_SUBST([SOUPCUTTER_LIBS])
-])
+m4_ifndef([AC_LIBTOOL_LINKER_OPTION],	[AC_DEFUN([AC_LIBTOOL_LINKER_OPTION])])
+m4_ifndef([AC_PROG_EGREP],		[AC_DEFUN([AC_PROG_EGREP])])
+m4_ifndef([_LT_AC_PROG_ECHO_BACKSLASH],	[AC_DEFUN([_LT_AC_PROG_ECHO_BACKSLASH])])
+m4_ifndef([_LT_AC_SHELL_INIT],		[AC_DEFUN([_LT_AC_SHELL_INIT])])
+m4_ifndef([_LT_AC_SYS_LIBPATH_AIX],	[AC_DEFUN([_LT_AC_SYS_LIBPATH_AIX])])
+m4_ifndef([_LT_PROG_LTMAIN],		[AC_DEFUN([_LT_PROG_LTMAIN])])
+m4_ifndef([_LT_AC_TAGVAR],		[AC_DEFUN([_LT_AC_TAGVAR])])
+m4_ifndef([AC_LTDL_ENABLE_INSTALL],	[AC_DEFUN([AC_LTDL_ENABLE_INSTALL])])
+m4_ifndef([AC_LTDL_PREOPEN],		[AC_DEFUN([AC_LTDL_PREOPEN])])
+m4_ifndef([_LT_AC_SYS_COMPILER],	[AC_DEFUN([_LT_AC_SYS_COMPILER])])
+m4_ifndef([_LT_AC_LOCK],		[AC_DEFUN([_LT_AC_LOCK])])
+m4_ifndef([AC_LIBTOOL_SYS_OLD_ARCHIVE],	[AC_DEFUN([AC_LIBTOOL_SYS_OLD_ARCHIVE])])
+m4_ifndef([_LT_AC_TRY_DLOPEN_SELF],	[AC_DEFUN([_LT_AC_TRY_DLOPEN_SELF])])
+m4_ifndef([AC_LIBTOOL_PROG_CC_C_O],	[AC_DEFUN([AC_LIBTOOL_PROG_CC_C_O])])
+m4_ifndef([AC_LIBTOOL_SYS_HARD_LINK_LOCKS], [AC_DEFUN([AC_LIBTOOL_SYS_HARD_LINK_LOCKS])])
+m4_ifndef([AC_LIBTOOL_OBJDIR],		[AC_DEFUN([AC_LIBTOOL_OBJDIR])])
+m4_ifndef([AC_LTDL_OBJDIR],		[AC_DEFUN([AC_LTDL_OBJDIR])])
+m4_ifndef([AC_LIBTOOL_PROG_LD_HARDCODE_LIBPATH], [AC_DEFUN([AC_LIBTOOL_PROG_LD_HARDCODE_LIBPATH])])
+m4_ifndef([AC_LIBTOOL_SYS_LIB_STRIP],	[AC_DEFUN([AC_LIBTOOL_SYS_LIB_STRIP])])
+m4_ifndef([AC_PATH_MAGIC],		[AC_DEFUN([AC_PATH_MAGIC])])
+m4_ifndef([AC_PROG_LD_GNU],		[AC_DEFUN([AC_PROG_LD_GNU])])
+m4_ifndef([AC_PROG_LD_RELOAD_FLAG],	[AC_DEFUN([AC_PROG_LD_RELOAD_FLAG])])
+m4_ifndef([AC_DEPLIBS_CHECK_METHOD],	[AC_DEFUN([AC_DEPLIBS_CHECK_METHOD])])
+m4_ifndef([AC_LIBTOOL_PROG_COMPILER_NO_RTTI], [AC_DEFUN([AC_LIBTOOL_PROG_COMPILER_NO_RTTI])])
+m4_ifndef([AC_LIBTOOL_SYS_GLOBAL_SYMBOL_PIPE], [AC_DEFUN([AC_LIBTOOL_SYS_GLOBAL_SYMBOL_PIPE])])
+m4_ifndef([AC_LIBTOOL_PROG_COMPILER_PIC], [AC_DEFUN([AC_LIBTOOL_PROG_COMPILER_PIC])])
+m4_ifndef([AC_LIBTOOL_PROG_LD_SHLIBS],	[AC_DEFUN([AC_LIBTOOL_PROG_LD_SHLIBS])])
+m4_ifndef([AC_LIBTOOL_POSTDEP_PREDEP],	[AC_DEFUN([AC_LIBTOOL_POSTDEP_PREDEP])])
+m4_ifndef([LT_AC_PROG_EGREP],		[AC_DEFUN([LT_AC_PROG_EGREP])])
+m4_ifndef([LT_AC_PROG_SED],		[AC_DEFUN([LT_AC_PROG_SED])])
+m4_ifndef([_LT_CC_BASENAME],		[AC_DEFUN([_LT_CC_BASENAME])])
+m4_ifndef([_LT_COMPILER_BOILERPLATE],	[AC_DEFUN([_LT_COMPILER_BOILERPLATE])])
+m4_ifndef([_LT_LINKER_BOILERPLATE],	[AC_DEFUN([_LT_LINKER_BOILERPLATE])])
+m4_ifndef([_AC_PROG_LIBTOOL],		[AC_DEFUN([_AC_PROG_LIBTOOL])])
+m4_ifndef([AC_LIBTOOL_SETUP],		[AC_DEFUN([AC_LIBTOOL_SETUP])])
+m4_ifndef([_LT_AC_CHECK_DLFCN],		[AC_DEFUN([_LT_AC_CHECK_DLFCN])])
+m4_ifndef([AC_LIBTOOL_SYS_DYNAMIC_LINKER],	[AC_DEFUN([AC_LIBTOOL_SYS_DYNAMIC_LINKER])])
+m4_ifndef([_LT_AC_TAGCONFIG],		[AC_DEFUN([_LT_AC_TAGCONFIG])])
+m4_ifndef([AC_DISABLE_FAST_INSTALL],	[AC_DEFUN([AC_DISABLE_FAST_INSTALL])])
+m4_ifndef([_LT_AC_LANG_CXX],		[AC_DEFUN([_LT_AC_LANG_CXX])])
+m4_ifndef([_LT_AC_LANG_F77],		[AC_DEFUN([_LT_AC_LANG_F77])])
+m4_ifndef([_LT_AC_LANG_GCJ],		[AC_DEFUN([_LT_AC_LANG_GCJ])])
+m4_ifndef([AC_LIBTOOL_LANG_C_CONFIG],	[AC_DEFUN([AC_LIBTOOL_LANG_C_CONFIG])])
+m4_ifndef([_LT_AC_LANG_C_CONFIG],	[AC_DEFUN([_LT_AC_LANG_C_CONFIG])])
+m4_ifndef([AC_LIBTOOL_LANG_CXX_CONFIG],	[AC_DEFUN([AC_LIBTOOL_LANG_CXX_CONFIG])])
+m4_ifndef([_LT_AC_LANG_CXX_CONFIG],	[AC_DEFUN([_LT_AC_LANG_CXX_CONFIG])])
+m4_ifndef([AC_LIBTOOL_LANG_F77_CONFIG],	[AC_DEFUN([AC_LIBTOOL_LANG_F77_CONFIG])])
+m4_ifndef([_LT_AC_LANG_F77_CONFIG],	[AC_DEFUN([_LT_AC_LANG_F77_CONFIG])])
+m4_ifndef([AC_LIBTOOL_LANG_GCJ_CONFIG],	[AC_DEFUN([AC_LIBTOOL_LANG_GCJ_CONFIG])])
+m4_ifndef([_LT_AC_LANG_GCJ_CONFIG],	[AC_DEFUN([_LT_AC_LANG_GCJ_CONFIG])])
+m4_ifndef([AC_LIBTOOL_LANG_RC_CONFIG],	[AC_DEFUN([AC_LIBTOOL_LANG_RC_CONFIG])])
+m4_ifndef([_LT_AC_LANG_RC_CONFIG],	[AC_DEFUN([_LT_AC_LANG_RC_CONFIG])])
+m4_ifndef([AC_LIBTOOL_CONFIG],		[AC_DEFUN([AC_LIBTOOL_CONFIG])])
+m4_ifndef([_LT_AC_FILE_LTDLL_C],	[AC_DEFUN([_LT_AC_FILE_LTDLL_C])])
+m4_ifndef([_LT_REQUIRED_DARWIN_CHECKS],	[AC_DEFUN([_LT_REQUIRED_DARWIN_CHECKS])])
+m4_ifndef([_LT_AC_PROG_CXXCPP],		[AC_DEFUN([_LT_AC_PROG_CXXCPP])])
+m4_ifndef([_LT_PREPARE_SED_QUOTE_VARS],	[AC_DEFUN([_LT_PREPARE_SED_QUOTE_VARS])])
+m4_ifndef([_LT_PROG_ECHO_BACKSLASH],	[AC_DEFUN([_LT_PROG_ECHO_BACKSLASH])])
+m4_ifndef([_LT_PROG_F77],		[AC_DEFUN([_LT_PROG_F77])])
+m4_ifndef([_LT_PROG_FC],		[AC_DEFUN([_LT_PROG_FC])])
+m4_ifndef([_LT_PROG_CXX],		[AC_DEFUN([_LT_PROG_CXX])])
 
 # pkg.m4 - Macros to locate and utilise pkg-config.            -*- Autoconf -*-
 # serial 1 (pkg-config-0.24)
@@ -350,7 +255,7 @@ $$1_PKG_ERRORS
 Consider adjusting the PKG_CONFIG_PATH environment variable if you
 installed software in a non-standard prefix.
 
-_PKG_TEXT])dnl
+_PKG_TEXT])
         ])
 elif test $pkg_failed = untried; then
      	AC_MSG_RESULT([no])
@@ -361,7 +266,7 @@ path to pkg-config.
 
 _PKG_TEXT
 
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.])dnl
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.])
         ])
 else
 	$1[]_CFLAGS=$pkg_cv_[]$1[]_CFLAGS
